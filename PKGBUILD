@@ -117,7 +117,7 @@ package_lib32-libgl() {
 }
 
 package_lib32-libgles() {
-  depends=('lib32-udev' 'libgles')
+  depends=('libgles')
   pkgdesc="Mesa GLES libraries (32-bit)"
 
   if [ "${_git}" = "true" ]; then
@@ -137,7 +137,7 @@ package_lib32-libgles() {
 }
 
 package_lib32-libegl() {
-  depends=('libegl')
+  depends=('lib32-udev' 'libegl')
   pkgdesc="Mesa libEGL libraries (32-bit)"
 
   if [ "${_git}" = "true" ]; then
