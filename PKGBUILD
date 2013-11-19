@@ -4,7 +4,7 @@
 pkgbase=lib32-mesa
 pkgname=('lib32-ati-dri' 'lib32-intel-dri' 'lib32-nouveau-dri' 'lib32-mesa' 'lib32-mesa-libgl')
 pkgver=9.2.3
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 makedepends=('python2' 'lib32-libxml2' 'lib32-expat' 'lib32-libx11' 'glproto' 'lib32-libdrm' 'dri2proto' 'lib32-libxxf86vm' 'lib32-libxdamage'
              'gcc-multilib' 'lib32-elfutils' 'lib32-llvm' 'lib32-systemd')
@@ -54,7 +54,7 @@ build() {
 
 package_lib32-ati-dri() {
   pkgdesc="Mesa drivers for AMD/ATI Radeon (32-bit)"
-  depends=("lib32-mesa-libgl=${pkgver}" 'lib32-libtxc_dxtn' 'ati-dri')
+  depends=('lib32-mesa-libgl' "lib32-mesa=${pkgver}" 'lib32-libtxc_dxtn' 'ati-dri')
 
   install -m755 -d ${pkgdir}/usr/lib32/xorg/modules/dri
   mv -v ${srcdir}/fakeinstall/usr/lib32/xorg/modules/dri/{r200,r300,r600,radeon,radeonsi}_dri.so ${pkgdir}/usr/lib32/xorg/modules/dri/
@@ -68,7 +68,7 @@ package_lib32-ati-dri() {
 
 package_lib32-intel-dri() {
   pkgdesc="Mesa DRI drivers for Intel (32-bit)"
-  depends=("lib32-mesa-libgl=${pkgver}" 'lib32-libtxc_dxtn' 'intel-dri')
+  depends=('lib32-mesa-libgl' "lib32-mesa=${pkgver}" 'lib32-libtxc_dxtn' 'intel-dri')
 
   install -m755 -d ${pkgdir}/usr/lib32/xorg/modules/dri
   mv -v ${srcdir}/fakeinstall/usr/lib32/xorg/modules/dri/{i915,i965}_dri.so ${pkgdir}/usr/lib32/xorg/modules/dri/
@@ -79,7 +79,7 @@ package_lib32-intel-dri() {
 
 package_lib32-nouveau-dri() {
   pkgdesc="Mesa drivers for Nouveau (32-bit)"
-  depends=("lib32-mesa-libgl=${pkgver}" 'lib32-libtxc_dxtn' 'nouveau-dri')
+  depends=('lib32-mesa-libgl' "lib32-mesa=${pkgver}" 'lib32-libtxc_dxtn' 'nouveau-dri')
 
   install -m755 -d ${pkgdir}/usr/lib32/xorg/modules/dri
   mv -v ${srcdir}/fakeinstall/usr/lib32/xorg/modules/dri/nouveau_{dri,vieux_dri}.so ${pkgdir}/usr/lib32/xorg/modules/dri/
@@ -101,6 +101,7 @@ package_lib32-mesa() {
 
   mv -v ${srcdir}/fakeinstall/* ${pkgdir}
   mv ${pkgdir}/usr/lib32/libGL.so.1.2.0 ${pkgdir}/usr/lib32/mesa-libGL.so.1.2.0
+  ln -s mesa-libGL.so.1.2.0 ${pkgdir}/usr/lib32/mesa-libGL.so.1
   rm ${pkgdir}/usr/lib32/libGL.so{,.1}
   rm -r ${pkgdir}/etc
   rm -r ${pkgdir}/usr/include
