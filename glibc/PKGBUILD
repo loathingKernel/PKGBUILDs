@@ -12,6 +12,7 @@ pkgrel=11
 arch=(x86_64)
 url='http://www.gnu.org/software/libc'
 license=(GPL LGPL)
+groups=('modified')
 makedepends=(git gd lib32-gcc-libs)
 options=(!strip staticlibs)
 _commit=de51f431ed6226ec68ca76e578f2cbd55b6262cb
