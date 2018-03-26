@@ -3,7 +3,7 @@
 # Contributor: HabarNam <habarnam@gmail.com>
 
 pkgname=orion
-pkgver=1.6.5.r5.gce0ac00
+pkgver=1.6.5.r6.gda84aed
 pkgrel=1
 pkgdesc="QML/C++-written desktop client for Twitch.tv"
 arch=('x86_64')
