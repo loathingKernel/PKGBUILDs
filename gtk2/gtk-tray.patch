@@ -1,0 +1,23 @@
+--- a/gtk/gtktrayicon-x11.c	
++++ a/gtk/gtktrayicon-x11.c	
+@@ -180,6 +180,10 @@ gtk_tray_icon_clear_manager_window (GtkTrayIcon *icon)
+       gdkwin = gdk_window_lookup_for_display (display,
+                                               icon->priv->manager_window);
+ 
++      /* This first case should be unnecessary, but might be needed if
++       * gdk_window_lookup_for_display () failed when adding the filter.
++       */
++      gdk_window_remove_filter (NULL, gtk_tray_icon_manager_filter, icon);
+       gdk_window_remove_filter (gdkwin, gtk_tray_icon_manager_filter, icon);
+ 
+       icon->priv->manager_window = None;
+@@ -510,6 +514,9 @@ gtk_tray_icon_update_manager_window (GtkTrayIcon *icon)
+       
+       gdk_window_add_filter (gdkwin, gtk_tray_icon_manager_filter, icon);
+ 
++      if (gdkwin == NULL)
++	  g_print ("GtkStatusIcon %p: something is wrong...");
++
+       gtk_tray_icon_get_orientation_property (icon);
+       gtk_tray_icon_get_visual_property (icon);
+ 
