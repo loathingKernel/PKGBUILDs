@@ -1,14 +1,14 @@
 
-pkgbase=nilmtk
-pkgname=(python-nilmtk python2-nilmtk)
-pkgver=0.3.alpha.r394.g218eb41
+pkgbase=nilm_metadata
+pkgname=(python-nilm_metadata python2-nilm_metadata)
+pkgver=0.2.2.r2.gc7348dd
 pkgrel=1
-pkgdesc="Non-Intrusive Load Monitoring Toolkit (nilmtk)"
+pkgdesc="A schema for modelling meters, measurements, appliances, buildings etc (nilmtk)"
 arch=('any')
-url="http://nilmtk.github.io/"
+url="http://nilm-metadata.readthedocs.org/"
 license=('Apache')
 makedepends=('python-setuptools' 'python2-setuptools')
-source=("$pkgbase"::'git+https://github.com/nilmtk/nilmtk.git')
+source=("$pkgbase"::'git+https://github.com/nilmtk/nilm_metadata.git')
 md5sums=('SKIP')
 
 pkgver() {
@@ -25,16 +25,16 @@ prepare() {
       $(find . -name '*.py')
 }
 
-package_python-nilmtk() {
-  depends=('python' 'python-nilm_metadata')
+package_python-nilm_metadata() {
+  depends=('python')
 
   cd "$pkgbase"
   python setup.py install --root="$pkgdir" --optimize=1
   install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
 
-package_python2-nilmtk() {
-  depends=('python2' 'python2-nilm_metadata')
+package_python2-nilm_metadata() {
+  depends=('python2')
 
   cd "$pkgbase"-py2
   python2 setup.py install --root="$pkgdir" --optimize=1
