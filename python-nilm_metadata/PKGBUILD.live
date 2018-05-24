@@ -26,7 +26,7 @@ prepare() {
 }
 
 package_python-nilm_metadata() {
-  depends=('python')
+  depends=('python' 'python-pyaml' 'python-dateutil' 'python-pytz')
 
   cd "$pkgbase"
   python setup.py install --root="$pkgdir" --optimize=1
@@ -34,7 +34,7 @@ package_python-nilm_metadata() {
 }
 
 package_python2-nilm_metadata() {
-  depends=('python2')
+  depends=('python2' 'python2-pyaml' 'python2-dateutil' 'python2-pytz')
 
   cd "$pkgbase"-py2
   python2 setup.py install --root="$pkgdir" --optimize=1

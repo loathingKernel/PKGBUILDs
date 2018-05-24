@@ -26,7 +26,11 @@ prepare() {
 }
 
 package_python-nilmtk() {
-  depends=('python' 'python-nilm_metadata')
+  depends=('python' 'python-nilm_metadata' 'cython' 'python-bottleneck' 'python-numpy'
+           'python-numexpr' 'python-pytables' 'python-pandas' 'python-matplotlib'
+           'python-networkx' 'python-scipy' 'python-scikit-learn' 'python-jupyter_core'
+           'python-jupyter_client' 'ipython' 'python-ipykernel' 'python-six' 'python-future'
+           'python-nose' 'python-coverage' 'python-pip' 'python-psycopg2' 'python-hmmlearn')
 
   cd "$pkgbase"
   python setup.py install --root="$pkgdir" --optimize=1
@@ -34,7 +38,11 @@ package_python-nilmtk() {
 }
 
 package_python2-nilmtk() {
-  depends=('python2' 'python2-nilm_metadata')
+  depends=('python2' 'python2-nilm_metadata' 'cython2' 'python2-bottleneck' 'python2-numpy'
+           'python2-numexpr' 'python2-pytables' 'python2-pandas' 'python2-matplotlib'
+           'python2-networkx' 'python2-scipy' 'python2-scikit-learn' 'python2-jupyter_core'
+           'python2-jupyter_client' 'ipython2' 'python2-ipykernel' 'python2-six' 'python2-future'
+           'python2-nose' 'python2-coverage' 'python2-pip' 'python2-psycopg2' 'python2-hmmlearn')
 
   cd "$pkgbase"-py2
   python2 setup.py install --root="$pkgdir" --optimize=1
