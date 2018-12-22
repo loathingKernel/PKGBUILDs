@@ -68,7 +68,7 @@ package_dxvk-wine32-git() {
 }
 
 package_dxvk-wine-git() {
-	pkgdesc="Dummy package to smooth the transition to the split packages"
-	depends=("dxvk-wine32-git" "dxvk-wine64-git")
+    pkgdesc="Dummy package to smooth the transition to the split packages"
+    depends=("dxvk-wine32-git" "dxvk-wine64-git")
     provides=("dxvk")
 }

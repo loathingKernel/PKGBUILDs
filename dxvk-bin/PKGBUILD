@@ -43,7 +43,7 @@ package_dxvk-win32-bin () {
 }
 
 package_dxvk-bin () {
-	pkgdesc="Dummy package to smooth the transition to the split packages"
-	depends=("dxvk-win32-bin" "dxvk-win64-bin")
+    pkgdesc="Dummy package to smooth the transition to the split packages"
+    depends=("dxvk-win32-bin" "dxvk-win64-bin")
     provides=("dxvk")
 }
