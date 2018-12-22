@@ -1,0 +1,2 @@
+#!/bin/sh
+winetricks --force /usr/share/dxvk/x_ARCH/setup_dxvk_aur.verb

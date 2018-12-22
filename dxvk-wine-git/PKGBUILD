@@ -1,0 +1,74 @@
+pkgbase=dxvk-wine-git
+pkgname=('dxvk-wine64-git' 'dxvk-wine32-git' 'dxvk-wine-git')
+pkgver=0.94.r6.g4e22e4bc
+pkgrel=1
+pkgdesc="A Vulkan-based compatibility layer for Direct3D 10/11 which allows running 3D applications on Linux using Wine. Winelib version"
+arch=('i686' 'x86_64')
+url="https://github.com/doitsujin/dxvk"
+license=('zlib/libpng')
+makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'wine')
+options=(!strip)
+source=("git+https://github.com/doitsujin/dxvk.git"
+        "setup_dxvk_aur"
+        "setup_dxvk_aur.verb"
+)
+sha256sums=("SKIP"
+            "b727c7d6b5ff8b96a85e114fc0a3c945c0c405e4c8a6d40a24db1f8aa10f8b01"
+            "15a9f9520819c1192512fef085fb713232fe3cd000192b9695e0f5a8fd1f43e1")
+
+pkgver() {
+    cd dxvk
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g'
+}
+
+build() {
+    meson dxvk "build/x64" \
+        --cross-file dxvk/build-wine64.txt \
+        --prefix "/usr/share/dxvk/x64" \
+        --bindir "" --libdir "" \
+        --buildtype "release" \
+        --strip \
+        -D enable_tests=false
+    ninja -C "build/x64"
+
+	meson dxvk "build/x32" \
+        --cross-file dxvk/build-wine32.txt \
+        --prefix "/usr/share/dxvk/x32" \
+        --bindir "" --libdir "" \
+        --buildtype "release" \
+        --strip \
+        -D enable_tests=false
+    ninja -C "build/x32"
+}
+
+_package_dxvk() {
+    DESTDIR="$pkgdir" ninja -C "build/x$1" install
+    install -Dm 644 setup_dxvk_aur.verb "$pkgdir/usr/share/dxvk/x$1/setup_dxvk_aur.verb"
+    install -Dm 755 setup_dxvk_aur "$pkgdir/usr/bin/setup_dxvk$1"
+    sed "s/_ARCH/$1/g" -i "$pkgdir/usr/share/dxvk/x$1/setup_dxvk_aur.verb"
+    sed "s/_ARCH/$1/g" -i "$pkgdir/usr/bin/setup_dxvk$1"
+}
+
+package_dxvk-wine64-git() {
+    arch=('x86_64')
+    depends=('vulkan-icd-loader' 'wine>=3.14' 'winetricks')
+    provides=("dxvk" "dxvk64")
+    conflicts=("dxvk64")
+
+    _package_dxvk 64
+}
+
+package_dxvk-wine32-git() {
+    arch=('i686' 'x86_64')
+    depends=('lib32-vulkan-icd-loader' 'wine>=3.14' 'winetricks')
+    provides=("dxvk" "dxvk32")
+    conflicts=("dxvk32")
+
+    _package_dxvk 32
+}
+
+package_dxvk-wine-git() {
+	pkgdesc="Dummy package to smooth the transition to the split packages"
+	depends=("dxvk-wine32-git" "dxvk-wine64-git")
+    provides=("dxvk")
+}
