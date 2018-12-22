@@ -31,7 +31,7 @@ build() {
         -D enable_tests=false
     ninja -C "build/x64"
 
-	meson dxvk "build/x32" \
+    meson dxvk "build/x32" \
         --cross-file dxvk/build-wine32.txt \
         --prefix "/usr/share/dxvk/x32" \
         --bindir "" --libdir "" \
