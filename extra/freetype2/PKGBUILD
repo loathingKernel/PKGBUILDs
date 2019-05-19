@@ -1,0 +1,108 @@
+# Maintainer: Jan de Groot <jgc@archlinux.org>
+
+pkgbase=freetype2
+pkgname=('freetype2' 'freetype2-demos' 'freetype2-docs')
+pkgver=2.10.0
+pkgrel=2
+pkgdesc="Font rasterization library"
+arch=(x86_64)
+license=('GPL')
+groups=('modified')
+url="https://www.freetype.org/"
+# adding harfbuzz for improved OpenType features auto-hinting
+# introduces a cycle dep to harfbuzz depending on freetype wanted by upstream
+depends=('zlib' 'bzip2' 'sh' 'libpng' 'harfbuzz')
+makedepends=('libx11')
+source=(https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${pkgver}.tar.bz2{,.sig}
+        https://download-mirror.savannah.gnu.org/releases/freetype/freetype-doc-${pkgver}.tar.bz2{,.sig}
+        https://download-mirror.savannah.gnu.org/releases/freetype/ft2demos-${pkgver}.tar.bz2{,.sig}
+        0007-cleartype.patch
+        0001-Enable-table-validation-modules.patch
+        0002-Enable-infinality-subpixel-hinting.patch
+        0003-Enable-long-PCF-family-names.patch
+        0004-pcf-Fix-handling-of-undefined-glyph-56067.patch
+        0005-freetype-2.5.2-more-demos.patch
+        freetype2.sh)
+sha1sums=('f6abf03e0e3189a0de883981c57d3861b5d314f5'
+          'SKIP'
+          '44c66dd52e65f1ceeb5863803cf0273d19aa4219'
+          'SKIP'
+          'a06c7149637122c71eb77d1aa07b037589a07882'
+          'SKIP'
+          '769ee34c98e78d1e6182476704ddec85f92da394'
+          '46fd67e6a594f6c2c473b9321ba64913984ba42f'
+          '4bf0c0749db09878b918cc404300f0d3e9091607'
+          'af76172be8135e74391b7ad1b82c2124ae0ad86c'
+          '74d0ae26620a22c03002ecfffd7bd4c8130d6f6c'
+          '72cfecbe738085eec475e012617661ad0cc9b76f'
+          'bc6df1661c4c33e20f5ce30c2da8ad3c2083665f')
+validpgpkeys=('58E0C111E39F5408C5D3EC76C1A60EACE707FDA5')
+
+prepare() {
+  # Rename source dir to allow building the demos
+  mv freetype-${pkgver} freetype2
+  mv ft2demos-${pkgver} freetype2-demos
+
+  cd freetype2
+  patch -Np1 -i ../0001-Enable-table-validation-modules.patch
+  patch -Np1 -i ../0002-Enable-infinality-subpixel-hinting.patch
+  patch -Np1 -i ../0003-Enable-long-PCF-family-names.patch
+  patch -Np1 -i ../0007-cleartype.patch
+
+  # https://bugs.archlinux.org/task/62395
+  patch -Np1 -i ../0004-pcf-Fix-handling-of-undefined-glyph-56067.patch
+
+  cd ../freetype2-demos
+  # enable more demos
+  patch -Np1 -i ../0005-freetype-2.5.2-more-demos.patch
+
+  # Suppress RPATH
+  sed -i '/X11_LIB:%=-R%/d' graph/x11/rules.mk
+}
+
+build() {
+  cd freetype2
+  ./configure --prefix=/usr --disable-static
+  make
+
+  # Build demos
+  cd ../freetype2-demos
+  make
+}
+
+check() {
+  cd freetype2
+  make -k check
+}
+
+package_freetype2() {
+  provides=('libfreetype.so')
+  install=freetype2.install
+  backup=('etc/profile.d/freetype2.sh')
+
+  cd freetype2
+  make DESTDIR="${pkgdir}" install
+  install -Dt "${pkgdir}/etc/profile.d" -m644 ../freetype2.sh
+}
+
+package_freetype2-demos() {
+  pkgdesc="Freetype tools and demos"
+  depends=('freetype2' 'libx11')
+
+  cd freetype2-demos
+  install -d "${pkgdir}/usr/bin"
+  for _i in bin/{f,t}t*; do
+    libtool --mode=install install $_i "${pkgdir}/usr/bin"
+  done
+}
+
+package_freetype2-docs() {
+  pkgdesc="Freetype documentation"
+  depends=('freetype2')
+
+  cd freetype2
+  install -d "${pkgdir}/usr/share/doc"
+  cp -a docs "${pkgdir}/usr/share/doc/freetype2"
+}
+
+# vim:set ts=2 sw=2 et:

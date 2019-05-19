@@ -1,0 +1,68 @@
+
+pkgname=dxvk-winelib-git
+pkgver=1.2.1.r0.gcdc5e93d
+pkgrel=1
+pkgdesc="A Vulkan-based compatibility layer for Direct3D 10/11 which allows running 3D applications on Linux using Wine, winelib version"
+arch=('x86_64')
+url="https://github.com/doitsujin/dxvk"
+license=('zlib/libpng')
+depends=('vulkan-icd-loader' 'wine>=4.0rc1' 'lib32-vulkan-icd-loader' 'bash')
+makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'wine')
+provides=("dxvk")
+conflicts=("dxvk")
+source=(
+    "git+https://github.com/doitsujin/dxvk.git"
+    "setup_dxvk"
+    "dxvk-async.patch"
+)
+sha256sums=(
+    "SKIP"
+    "b2413cabd8cca56e2d308ef5513edf1c7f909036ed2ccfeae17536a0e864dc96"
+    "32780432c2159d57ca0fb1863309cdb141fbfc506c6b9003acfa05896af90140"
+)
+
+pkgver() {
+    cd dxvk
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g'
+}
+
+prepare() {
+    cd dxvk
+    # Uncomment to enable dxvk async patch.
+    # Enable at your own risk, if you don't know what it is,
+    # leave it as is. You have been warned.
+    #patch -p1 -i ../dxvk-async.patch
+}
+
+build() {
+    meson dxvk "build/x64" \
+        --cross-file dxvk/build-wine64.txt \
+        --prefix "/usr/share/dxvk/x64" \
+        --bindir "" --libdir "" \
+        --buildtype "release" \
+        --strip \
+        --unity=off \
+        --optimization=2 \
+        -Denable_tests=false
+    ninja -C "build/x64" -v
+
+    meson dxvk "build/x32" \
+        --cross-file dxvk/build-wine32.txt \
+        --prefix "/usr/share/dxvk/x32" \
+        --bindir "" --libdir "" \
+        --buildtype "release" \
+        --strip \
+        --unity=off \
+        --optimization=2 \
+        -Denable_tests=false
+    ninja -C "build/x32" -v
+}
+
+package() {
+    DESTDIR="$pkgdir" ninja -C "build/x32" install
+    DESTDIR="$pkgdir" ninja -C "build/x64" install
+    install -Dm 755 -t "$pkgdir/usr/share/dxvk" dxvk/setup_dxvk.sh
+    install -Dm 644 -t "$pkgdir/usr/share/doc/dxvk" dxvk/dxvk.conf
+    install -Dm 644 -t "$pkgdir/usr/share/$pkgname" dxvk/LICENSE
+    install -Dm 755 -t "$pkgdir/usr/bin" setup_dxvk
+}

@@ -1,0 +1,43 @@
+# Maintainer: Giovanni Harting <539@idlegandalf.com>
+# Contributor: David McInnis <davidm@eagles.ewu.edu>
+# Contributor: HabarNam <habarnam@gmail.com>
+
+pkgname=orion
+pkgver=1.6.6.r2.gd535b18
+pkgrel=1
+pkgdesc="QML/C++-written desktop client for Twitch.tv"
+arch=('x86_64')
+url="https://github.com/alamminsalo/orion/"
+license=('GPL')
+depends=('mpv' 'qt5-svg' 'qt5-quickcontrols2' 'qt5-quickcontrols' 'qt5-graphicaleffects')
+makedepends=('git')
+source=("git+https://github.com/alamminsalo/orion.git"
+        'qmake.patch')
+sha256sums=('SKIP'
+            'SKIP')
+
+pkgver() {
+	cd "$srcdir/${pkgname}"
+	printf "%s" "$(git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')"
+}
+
+prepare() {
+    cd "$srcdir/${pkgname}"
+#    patch -p1 -i $srcdir/qmake.patch
+}
+
+build() {
+	cd "$srcdir/${pkgname}"
+	qmake CONFIG+=mpv \
+        QMAKE_CFLAGS_RELEASE="${CFLAGS}" \
+        QMAKE_CXXFLAGS_RELEASE="${CXXFLAGS}"
+	make
+}
+
+package() {
+    cd "$srcdir/${pkgname}"
+
+    install -Dm644 distfiles/orion.svg "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/orion.svg
+    install -Dm644 distfiles/Orion.desktop "${pkgdir}"/usr/share/applications/Orion.desktop
+    install -Dm755 orion "${pkgdir}"/usr/bin/orion
+}
