@@ -1,32 +1,39 @@
+# Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
-pkgname=dxvk-mingw
-pkgver=1.4.6
+pkgname=d9vk-winelib-git
+_tag=0.40
+pkgver=0.40.r0.654329864
 pkgrel=1
-pkgdesc="A Vulkan-based compatibility layer for Direct3D 10/11 which allows running 3D applications on Linux using Wine, mingw version"
+pkgdesc="A d3d9 to vk layer based off DXVK's codebase, winelib version"
 arch=('x86_64')
-url="https://github.com/doitsujin/dxvk"
+url="https://github.com/Joshua-Ashton/d9vk"
 license=('zlib/libpng')
 depends=('vulkan-icd-loader' 'wine>=4.0rc1' 'lib32-vulkan-icd-loader' 'bash')
-makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'wine' 'mingw-w64-gcc')
-provides=("dxvk")
-conflicts=("dxvk")
+makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'wine')
+provides=("d9vk")
+conflicts=("d9vk")
 source=(
-    "git+https://github.com/doitsujin/dxvk.git#tag=v$pkgver"
-    "setup_dxvk"
+    "git+https://github.com/Joshua-Ashton/d9vk.git"
+    "setup_d9vk"
     "dxvk-async.patch"
     "dxvk-mangohud.patch"
     "extraopts.patch"
 )
 sha256sums=(
     "SKIP"
-    "b2413cabd8cca56e2d308ef5513edf1c7f909036ed2ccfeae17536a0e864dc96"
+    "7147644664ef33d04f7b18683c47be95b5664c57cf6d63fdc019d915deebd37a"
     "6ff286091c20327e67252e1e6812830a42c990d1ee56541023eb217712209f3c"
     "2e335237623aaf006f8814fc9712f3a4be0d678cd0714879a3a4545f3bbf41ce"
     "acde3a23166f79fa87ab090200be2aabaf16e5876ce19b8270ad1179bb0bc7a5"
 )
 
+pkgver() {
+    cd d9vk
+    printf "%s.r%s.%s" "${_tag//-/_}" "$(git rev-list $_tag..HEAD --count)" "$(git rev-parse --short HEAD)"
+}
+
 prepare() {
-    cd dxvk
+    cd d9vk
     # If using -march=native and the CPU supports AVX, launching a d3d9
     # game can cause an Unhandled exception. The cause seems to be the
     # combination of AVX instructions and tree vectorization (implied by O3),
@@ -49,11 +56,11 @@ prepare() {
     # They are also filtered in Wine PKGBUILDs so remove them
     # for winelib versions too.
     CFLAGS="${CFLAGS/ -fno-plt/}"
-    LDFLAGS="${LDFLAGS/,-z,relro,-z,now/}"
-    sed -i build-win64.txt \
+    LDFLAGS="${LDFLAGS/,-z,now/}"
+    sed -i build-wine64.txt \
         -e "s|@CARGS@|\'${CFLAGS// /\',\'}\'|g" \
         -e "s|@LDARGS@|\'${LDFLAGS// /\',\'}\'|g"
-    sed -i build-win32.txt \
+    sed -i build-wine32.txt \
         -e "s|@CARGS@|\'${CFLAGS// /\',\'}\'|g" \
         -e "s|@LDARGS@|\'${LDFLAGS// /\',\'}\'|g"
     # Uncomment to enable dxvk async patch.
@@ -67,23 +74,29 @@ prepare() {
 }
 
 build() {
-    meson dxvk "build/x64" \
-        --cross-file dxvk/build-win64.txt \
-        --prefix "/usr/share/dxvk/x64" \
+    meson d9vk "build/x64" \
+        --cross-file d9vk/build-wine64.txt \
+        --prefix "/usr/share/d9vk/x64" \
         --bindir "" --libdir "" \
         --buildtype "release" \
         --optimization=3 \
         --strip \
+        -Denable_d3d10=false \
+        -Denable_d3d11=false \
+        -Denable_dxgi=false \
         -Denable_tests=false
     ninja -C "build/x64" -v
 
-    meson dxvk "build/x32" \
-        --cross-file dxvk/build-win32.txt \
-        --prefix "/usr/share/dxvk/x32" \
+    meson d9vk "build/x32" \
+        --cross-file d9vk/build-wine32.txt \
+        --prefix "/usr/share/d9vk/x32" \
         --bindir "" --libdir "" \
         --buildtype "release" \
         --optimization=3 \
         --strip \
+        -Denable_d3d10=false \
+        -Denable_d3d11=false \
+        -Denable_dxgi=false \
         -Denable_tests=false
     ninja -C "build/x32" -v
 }
@@ -91,8 +104,8 @@ build() {
 package() {
     DESTDIR="$pkgdir" ninja -C "build/x32" install
     DESTDIR="$pkgdir" ninja -C "build/x64" install
-    install -Dm 755 -t "$pkgdir/usr/share/dxvk" dxvk/setup_dxvk.sh
-    install -Dm 644 -t "$pkgdir/usr/share/doc/dxvk" dxvk/dxvk.conf
-    install -Dm 644 -t "$pkgdir/usr/share/$pkgname" dxvk/LICENSE
-    install -Dm 755 -t "$pkgdir/usr/bin" setup_dxvk
+    install -Dm 755 -t "$pkgdir/usr/share/d9vk" d9vk/setup_dxvk.sh
+    install -Dm 644 -t "$pkgdir/usr/share/doc/d9vk" d9vk/dxvk.conf
+    install -Dm 644 -t "$pkgdir/usr/share/$pkgname" d9vk/LICENSE
+    install -Dm 755 -t "$pkgdir/usr/bin" setup_d9vk
 }

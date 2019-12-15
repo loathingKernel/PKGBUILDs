@@ -1,6 +1,7 @@
+# Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
-pkgname=dxvk-mingw
-pkgver=1.4.6
+pkgname=dxvk-mingw-git
+pkgver=1.4.6.r55.gae7189f9
 pkgrel=1
 pkgdesc="A Vulkan-based compatibility layer for Direct3D 10/11 which allows running 3D applications on Linux using Wine, mingw version"
 arch=('x86_64')
@@ -11,7 +12,7 @@ makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'wine' 'mingw-w64-gcc')
 provides=("dxvk")
 conflicts=("dxvk")
 source=(
-    "git+https://github.com/doitsujin/dxvk.git#tag=v$pkgver"
+    "git+https://github.com/doitsujin/dxvk.git"
     "setup_dxvk"
     "dxvk-async.patch"
     "dxvk-mangohud.patch"
@@ -24,6 +25,11 @@ sha256sums=(
     "2e335237623aaf006f8814fc9712f3a4be0d678cd0714879a3a4545f3bbf41ce"
     "acde3a23166f79fa87ab090200be2aabaf16e5876ce19b8270ad1179bb0bc7a5"
 )
+
+pkgver() {
+    cd dxvk
+    printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g')"
+}
 
 prepare() {
     cd dxvk
@@ -61,7 +67,7 @@ prepare() {
     # and its implications, leave it as is. You have been warned.
     # I am not liable if anything happens to you by using it.
     # Patch enables async by default. YOU HAVE BEEN WARNED.
-    #patch -p1 -i ../dxvk-async.patch
+    patch -p1 -i ../dxvk-async.patch
     # Uncomment to enable Mango HUD for dxvk
     #patch -p1 -i ../dxvk-mangohud.patch
 }

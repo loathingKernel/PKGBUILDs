@@ -1,17 +1,18 @@
+# Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
-pkgname=dxvk-mingw
-pkgver=1.4.6
+pkgname=dxvk-winelib-git
+pkgver=1.3.r5.gf88658d8
 pkgrel=1
-pkgdesc="A Vulkan-based compatibility layer for Direct3D 10/11 which allows running 3D applications on Linux using Wine, mingw version"
+pkgdesc="A Vulkan-based compatibility layer for Direct3D 10/11 which allows running 3D applications on Linux using Wine, winelib version"
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
 license=('zlib/libpng')
 depends=('vulkan-icd-loader' 'wine>=4.0rc1' 'lib32-vulkan-icd-loader' 'bash')
-makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'wine' 'mingw-w64-gcc')
+makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'wine')
 provides=("dxvk")
 conflicts=("dxvk")
 source=(
-    "git+https://github.com/doitsujin/dxvk.git#tag=v$pkgver"
+    "git+https://github.com/doitsujin/dxvk.git"
     "setup_dxvk"
     "dxvk-async.patch"
     "dxvk-mangohud.patch"
@@ -24,6 +25,11 @@ sha256sums=(
     "2e335237623aaf006f8814fc9712f3a4be0d678cd0714879a3a4545f3bbf41ce"
     "acde3a23166f79fa87ab090200be2aabaf16e5876ce19b8270ad1179bb0bc7a5"
 )
+
+pkgver() {
+    cd dxvk
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g'
+}
 
 prepare() {
     cd dxvk
@@ -49,11 +55,11 @@ prepare() {
     # They are also filtered in Wine PKGBUILDs so remove them
     # for winelib versions too.
     CFLAGS="${CFLAGS/ -fno-plt/}"
-    LDFLAGS="${LDFLAGS/,-z,relro,-z,now/}"
-    sed -i build-win64.txt \
+    LDFLAGS="${LDFLAGS/,-z,now/}"
+    sed -i build-wine64.txt \
         -e "s|@CARGS@|\'${CFLAGS// /\',\'}\'|g" \
         -e "s|@LDARGS@|\'${LDFLAGS// /\',\'}\'|g"
-    sed -i build-win32.txt \
+    sed -i build-wine32.txt \
         -e "s|@CARGS@|\'${CFLAGS// /\',\'}\'|g" \
         -e "s|@LDARGS@|\'${LDFLAGS// /\',\'}\'|g"
     # Uncomment to enable dxvk async patch.
@@ -61,14 +67,14 @@ prepare() {
     # and its implications, leave it as is. You have been warned.
     # I am not liable if anything happens to you by using it.
     # Patch enables async by default. YOU HAVE BEEN WARNED.
-    #patch -p1 -i ../dxvk-async.patch
+    patch -p1 -i ../dxvk-async.patch
     # Uncomment to enable Mango HUD for dxvk
     #patch -p1 -i ../dxvk-mangohud.patch
 }
 
 build() {
     meson dxvk "build/x64" \
-        --cross-file dxvk/build-win64.txt \
+        --cross-file dxvk/build-wine64.txt \
         --prefix "/usr/share/dxvk/x64" \
         --bindir "" --libdir "" \
         --buildtype "release" \
@@ -78,7 +84,7 @@ build() {
     ninja -C "build/x64" -v
 
     meson dxvk "build/x32" \
-        --cross-file dxvk/build-win32.txt \
+        --cross-file dxvk/build-wine32.txt \
         --prefix "/usr/share/dxvk/x32" \
         --bindir "" --libdir "" \
         --buildtype "release" \
