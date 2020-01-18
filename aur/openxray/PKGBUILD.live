@@ -1,0 +1,91 @@
+# Contributor: chip_exe
+# https://aur.archlinux.org/packages/openxray-git/
+# <openxray@yahoo.com>
+
+pkgname=openxray
+_tag=558
+pkgver=1.6.02_558.r182.727fd9642
+pkgrel=1 
+pkgdesc="Unofficial X-Ray Engine Linux port (Originally developed by GSC Game World)"                                          
+arch=('x86_64') 
+url="https://github.com/OpenXRay/xray-16"
+license=('custom:Custom 3-сlause BSD')
+install=${pkgname%-git}.install
+makedepends=(
+    gcc
+    cmake
+    ncurses
+    pcre
+    pcre2
+    libglvnd
+    libjpeg6-turbo
+    gli
+    git
+)
+depends=(
+    glew
+    sdl2
+    openal
+    intel-tbb
+    crypto++
+    liblockfile
+    freeimage
+    libogg
+    libtheora
+    libvorbis
+    lzo
+    lzop
+    libjpeg-turbo
+    hicolor-icon-theme
+    xdg-utils
+)
+source=(git+https://github.com/OpenXRay/xray-16.git
+        $pkgname-GameSpy::git+https://github.com/OpenXRay/GameSpy.git
+        $pkgname-luabind::git+https://github.com/OpenXRay/luabind-deboostified.git
+        $pkgname-LuaJIT::git+https://github.com/OpenXRay/LuaJIT.git
+        $pkgname-jpeg::git+https://github.com/OpenXRay/libjpeg.git
+        $pkgname-OpenAutomate::git+https://github.com/OpenXRay/OpenAutomate.git
+)
+md5sums=(
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
+)
+
+pkgver() {
+  cd "$srcdir"/xray-16
+  printf "%s.r%s.%s" "1.6.02_$_tag" "$(git rev-list $_tag..HEAD --count)" "$(git rev-parse --short HEAD)"
+}
+
+prepare(){
+  pushd "$srcdir"/xray-16
+    for submodule in Externals/{GameSpy,luabind,LuaJIT,jpeg,OpenAutomate}; do
+        git submodule init "${submodule}"
+        git config submodule."${submodule}".url ../$pkgname-"${submodule#*/}"
+        git submodule update "${submodule}"
+    done
+  popd
+
+  [[ -d build ]] && rm -rf build
+  mkdir build
+}
+
+build() {
+  cd "$srcdir"/build
+
+  cmake ../xray-16 \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "$srcdir"/build
+  make DESTDIR="$pkgdir" install
+  mv "$pkgdir"/usr/games/ "$pkgdir"/usr/bin
+
+  mkdir -p "$pkgdir"/usr/share/licenses/${pkgname%-git}/
+  cp "$srcdir"/xray-16/License.txt "$pkgdir"/usr/share/licenses/${pkgname%-git}/
+}

@@ -1,0 +1,47 @@
+pkgbase = openxray
+	pkgdesc = Unofficial X-Ray Engine Linux port (Originally developed by GSC Game World)
+	pkgver = 1.6.02_558
+	pkgrel = 1
+	url = https://github.com/OpenXRay/xray-16
+	install = openxray.install
+	arch = x86_64
+	license = custom:Custom 3-сlause BSD
+	makedepends = gcc
+	makedepends = cmake
+	makedepends = ncurses
+	makedepends = pcre
+	makedepends = pcre2
+	makedepends = libglvnd
+	makedepends = libjpeg6-turbo
+	makedepends = gli
+	makedepends = git
+	depends = glew
+	depends = sdl2
+	depends = openal
+	depends = intel-tbb
+	depends = crypto++
+	depends = liblockfile
+	depends = freeimage
+	depends = libogg
+	depends = libtheora
+	depends = libvorbis
+	depends = lzo
+	depends = lzop
+	depends = libjpeg-turbo
+	depends = hicolor-icon-theme
+	depends = xdg-utils
+	source = git+https://github.com/OpenXRay/xray-16.git#tag=558
+	source = openxray-GameSpy::git+https://github.com/OpenXRay/GameSpy.git
+	source = openxray-luabind::git+https://github.com/OpenXRay/luabind-deboostified.git
+	source = openxray-LuaJIT::git+https://github.com/OpenXRay/LuaJIT.git
+	source = openxray-jpeg::git+https://github.com/OpenXRay/libjpeg.git
+	source = openxray-OpenAutomate::git+https://github.com/OpenXRay/OpenAutomate.git
+	md5sums = SKIP
+	md5sums = SKIP
+	md5sums = SKIP
+	md5sums = SKIP
+	md5sums = SKIP
+	md5sums = SKIP
+
+pkgname = openxray
+
