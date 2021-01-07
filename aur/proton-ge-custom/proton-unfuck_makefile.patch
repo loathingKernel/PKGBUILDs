@@ -1,0 +1,494 @@
+diff --git a/build/makefile_base.mak b/build/makefile_base.mak
+index e685cdd..f98cad8 100755
+--- a/build/makefile_base.mak
++++ b/build/makefile_base.mak
+@@ -69,7 +69,7 @@ endif
+ 
+ CC32 := gcc -m32 -mstackrealign
+ CXX32 := g++ -m32 -mstackrealign
+-PKG_CONFIG32 := i686-linux-gnu-pkg-config
++PKG_CONFIG32 := i686-pc-linux-gnu-pkg-config
+ 
+ cc-option = $(shell if test -z "`echo 'void*p=1;' | \
+               $(1) $(2) -S -o /dev/null -xc - 2>&1 | grep -- $(2) -`"; \
+@@ -109,8 +109,8 @@ SELECT_DOCKER_IMAGE :=
+ # controllable by SUBMAKE_JOBS.  Not ideal.
+ ifneq ($(CONTAINER_SHELL32)$(CONTAINER_SHELL64),)
+ 	SUBMAKE_JOBS ?= 36
+-	MAKE := make -j$(SUBMAKE_JOBS)
+ endif
++MAKE := make -j$(SUBMAKE_JOBS)
+ 
+ # Use default shell if no STEAMRT_ variables setup a container to invoke.  Commands will just run natively.
+ ifndef CONTAINER_SHELL64
+@@ -172,7 +172,8 @@ else
+     MESON_STRIP_ARG := --strip
+ endif
+ 
+-OPTIMIZE_FLAGS := -O2 -march=nocona $(call cc-option,$(CC),-mtune=core-avx2,) -mfpmath=sse
++CFLAGS ?= -O2 -march=nocona $(call cc-option,$(CC),-mtune=core-avx2,)
++OPTIMIZE_FLAGS := $(CFLAGS) -mfpmath=sse
+ SANITY_FLAGS   := -fwrapv -fno-strict-aliasing
+ COMMON_FLAGS   := $(OPTIMIZE_FLAGS) $(SANITY_FLAGS)
+ CARGO_BUILD_ARG := --release
+@@ -273,9 +274,11 @@ WINE_OUT_SERVER := $(DST_DIR)/bin/wineserver
+ WINE_OUT := $(WINE_OUT_BIN) $(WINE_OUT_SERVER)
+ # Tool-only build outputs needed for other projects
+ WINEGCC32 := $(TOOLS_DIR32)/bin/winegcc
++WINEGXX32 := $(TOOLS_DIR32)/bin/wineg++
+ WINEBUILD32 := $(TOOLS_DIR32)/bin/winebuild
+ WINE_BUILDTOOLS32 := $(WINEGCC32) $(WINEBUILD32)
+ WINEGCC64 := $(TOOLS_DIR64)/bin/winegcc
++WINEGXX64 := $(TOOLS_DIR64)/bin/wineg++
+ WINEBUILD64 := $(TOOLS_DIR64)/bin/winebuild
+ WINE_BUILDTOOLS64 := $(WINEGCC64) $(WINEBUILD64)
+ 
+@@ -292,14 +295,6 @@ VKD3D := $(SRCDIR)/vkd3d-proton
+ VKD3D_OBJ32 := ./obj-vkd3d32
+ VKD3D_OBJ64 := ./obj-vkd3d64
+ 
+-NASM_VER = 2.14.02
+-NASM_TARBALL := nasm-$(NASM_VER).tar.xz
+-NASM := $(SRCDIR)/contrib/nasm-$(NASM_VER)
+-NASM_OBJ32 := ./obj-nasm32
+-NASM_OBJ64 := ./obj-nasm64
+-NASM_BIN32 := $(TOOLS_DIR32)/bin/nasm
+-NASM_BIN64 := $(TOOLS_DIR64)/bin/nasm
+-
+ MEDIACONV := $(SRCDIR)/media-converter
+ MEDIACONV_OBJ32 := ./obj-media-converter32
+ MEDIACONV_OBJ64 := ./obj-media-converter64
+@@ -324,7 +319,6 @@ OBJ_DIRS := $(TOOLS_DIR32)        $(TOOLS_DIR64)        \
+             $(WINE_OBJ32)         $(WINE_OBJ64)         \
+             $(VRCLIENT_OBJ32)     $(VRCLIENT_OBJ64)     \
+             $(DXVK_OBJ32)         $(DXVK_OBJ64)         \
+-            $(NASM_OBJ32)        $(NASM_OBJ64)          \
+             $(MEDIACONV_OBJ32)    $(MEDIACONV_OBJ64)    \
+             $(VKD3D_OBJ32)        $(VKD3D_OBJ64)
+ 
+@@ -338,20 +332,14 @@ $(OBJ_DIRS):
+ 
+ .PHONY: downloads
+ 
+-NASM_TARBALL_URL := https://www.nasm.us/pub/nasm/releasebuilds/$(NASM_VER)/$(NASM_TARBALL)
+ GECKO64_TARBALL_URL := https://dl.winehq.org/wine/wine-gecko/$(GECKO_VER)/$(GECKO64_TARBALL)
+ GECKO32_TARBALL_URL := https://dl.winehq.org/wine/wine-gecko/$(GECKO_VER)/$(GECKO32_TARBALL)
+ MONO_TARBALL_URL := https://github.com/madewokherd/wine-mono/releases/download/wine-mono-$(WINEMONO_VER)/$(WINEMONO_TARBALL)
+ 
+-SHARED_NASM_TARBALL := $(SRCDIR)/../nasm/$(NASM_TARBALL)
+ SHARED_GECKO64_TARBALL := $(SRCDIR)/../gecko/$(GECKO64_TARBALL)
+ SHARED_GECKO32_TARBALL := $(SRCDIR)/../gecko/$(GECKO32_TARBALL)
+ SHARED_MONO_TARBALL := $(SRCDIR)/../mono/$(WINEMONO_TARBALL)
+ 
+-$(SHARED_NASM_TARBALL):
+-	mkdir -p $(dir $@)
+-	wget -O "$@" "$(NASM_TARBALL_URL)"
+-
+ $(SHARED_GECKO64_TARBALL):
+ 	mkdir -p $(dir $@)
+ 	wget -O "$@" "$(GECKO64_TARBALL_URL)"
+@@ -364,7 +352,7 @@ $(SHARED_MONO_TARBALL):
+ 	mkdir -p $(dir $@)
+ 	wget -O "$@" "$(MONO_TARBALL_URL)"
+ 
+-downloads: $(SHARED_NASM_TARBALL) $(SHARED_GECKO64_TARBALL) $(SHARED_GECKO32_TARBALL) $(SHARED_MONO_TARBALL)
++downloads: $(SHARED_GECKO64_TARBALL) $(SHARED_GECKO32_TARBALL) $(SHARED_MONO_TARBALL)
+ 
+ ##
+ ## dist/install -- steps to finalize the install
+@@ -373,7 +361,7 @@ downloads: $(SHARED_NASM_TARBALL) $(SHARED_GECKO64_TARBALL) $(SHARED_GECKO32_TAR
+ $(DST_DIR):
+ 	mkdir -p $@
+ 
+-STEAM_DIR := $(HOME)/.steam/root
++STEAM_DIR ?= $(HOME)/.steam/root
+ 
+ FILELOCK_TARGET := $(addprefix $(DST_BASE)/,filelock.py)
+ $(FILELOCK_TARGET): $(addprefix $(SRCDIR)/,filelock.py)
+@@ -410,9 +398,17 @@ DIST_WINEMONO := $(DIST_WINEMONO_DIR)/wine-mono-$(WINEMONO_VER)
+ DIST_FONTS := $(DST_DIR)/share/fonts
+ 
+ DIST_TARGETS := $(DIST_COPY_TARGETS) $(DIST_OVR32) $(DIST_OVR64) \
+-                $(DIST_GECKO32) $(DIST_GECKO64) $(DIST_WINEMONO) \
+                 $(DIST_COMPAT_MANIFEST) $(DIST_LICENSE) $(DIST_TOOLMANIFEST) $(DIST_OFL_LICENSE) $(DIST_FONTS)
+ 
++ifneq ($(SYSTEM_GECKO),1) # May be disabled by configure
++	DIST_TARGETS += $(DIST_GECKO32)
++	DIST_TARGETS += $(DIST_GECKO64)
++endif # SYSTEM_GECKO
++
++ifneq ($(SYSTEM_MONO),1) # May be disabled by configure
++	DIST_TARGETS += $(DIST_WINEMONO)
++endif # SYSTEM_MONO
++
+ DEPLOY_COPY_TARGETS := $(DIST_COPY_TARGETS) $(DIST_VERSION) $(DIST_LICENSE) $(DIST_TOOLMANIFEST) $(DIST_OFL_LICENSE)
+ REDIST_COPY_TARGETS := $(DEPLOY_COPY_TARGETS) $(DIST_COMPAT_MANIFEST)
+ 
+@@ -491,11 +487,11 @@ $(DIST_FONTS): fonts
+ ALL_TARGETS += dist
+ GOAL_TARGETS += dist
+ 
+-dist: $(DIST_TARGETS) wine gst_good gst_bad gst_ugly ffmpeg gst_libav lsteamclient steam dxvk vkd3d-proton vrclient | $(DST_DIR)
++dist: $(DIST_TARGETS) wine gst_good gst_bad gst_ugly ffmpeg gst_libav vrclient lsteamclient steam dxvk vkd3d-proton mediaconv | $(DST_DIR)
+ 	echo `date '+%s'` `GIT_DIR=$(abspath $(SRCDIR)/.git) git describe --tags` > $(DIST_VERSION)
+ 	cp $(DIST_VERSION) $(DST_BASE)/
+-	find $(DST_DIR)/lib/wine -type f -execdir chmod a-w '{}' '+'
+-	find $(DST_DIR)/lib64/wine -type f -execdir chmod a-w '{}' '+'
++	find $(DST_DIR)/lib/wine -type f -execdir chmod go-w '{}' '+'
++	find $(DST_DIR)/lib64/wine -type f -execdir chmod go-w '{}' '+'
+ 	rm -rf $(abspath $(DIST_PREFIX))
+ 	python3 $(SRCDIR)/default_pfx.py $(abspath $(DIST_PREFIX)) $(abspath $(DST_DIR)) $(STEAM_RUNTIME_RUNSH)
+ 
+@@ -515,8 +511,8 @@ install: dist | $(filter-out dist deploy install redist,$(MAKECMDGOALS))
+ redist: dist | $(filter-out dist deploy install redist,$(MAKECMDGOALS))
+ 	mkdir -p $(REDIST_DIR)
+ 	cp -a $(REDIST_COPY_TARGETS) $(REDIST_DIR)
+-	cp -a $(DST_BASE)/dist $(REDIST_DIR)
+-	@echo "Created redistribution at "$(REDIST_DIR)
++	tar -C $(DST_DIR) -c . | gzip -c -1 > $(REDIST_DIR)/proton_dist.tar.gz
++	@echo "Created redistribution tarball at "$(REDIST_DIR)"/proton_dist.tar.gz"
+ 
+ .PHONY: module32 module64 module
+ 
+@@ -531,6 +527,8 @@ module64:
+ module: module32 module64
+ 
+ GST_COMMON_MESON_ARGS := \
++	-Db_lto=true \
++	-Db_pie=true \
+ 	-Dexamples=disabled \
+ 	-Dtests=disabled \
+ 	-Dgtk_doc=disabled \
+@@ -598,14 +596,14 @@ gst_orc64: SHELL = $(CONTAINER_SHELL64)
+ gst_orc64: $(GST_ORC_CONFIGURE_FILES64)
+ 	PATH="$(abspath $(TOOLS_DIR64))/bin:$(PATH)" \
+ 	LD_LIBRARY_PATH="$(abspath $(TOOLS_DIR64))/lib:$(LD_LIBRARY_PATH)" \
+-	ninja -C "$(GST_ORC_OBJ64)" install
++	ninja -v -C "$(GST_ORC_OBJ64)" install
+ 	cp -a $(TOOLS_DIR64)/lib/liborc* $(DST_DIR)/lib64/
+ 
+ gst_orc32: SHELL = $(CONTAINER_SHELL32)
+ gst_orc32: $(GST_ORC_CONFIGURE_FILES32)
+ 	PATH="$(abspath $(TOOLS_DIR32))/bin:$(PATH)" \
+ 	LD_LIBRARY_PATH="$(abspath $(TOOLS_DIR32))/lib:$(LD_LIBRARY_PATH)" \
+-	ninja -C "$(GST_ORC_OBJ32)" install
++	ninja -v -C "$(GST_ORC_OBJ32)" install
+ 	cp -a $(TOOLS_DIR32)/lib/liborc* $(DST_DIR)/lib/
+ 
+ ##
+@@ -617,6 +615,9 @@ GSTREAMER_MESON_ARGS := \
+ 	-Dbenchmarks=disabled \
+ 	-Dtools=disabled \
+ 	-Dbash-completion=disabled \
++	-Dptp-helper-permissions=capabilities \
++	-Ddbghelp=disabled \
++	-Dpackage-name="GStreamer (Proton)" \
+ 	$(GST_COMMON_MESON_ARGS)
+ 
+ GSTREAMER_CONFIGURE_FILES32 := $(GSTREAMER_OBJ32)/build.ninja
+@@ -667,7 +668,7 @@ gstreamer64: SHELL = $(CONTAINER_SHELL64)
+ gstreamer64: $(GSTREAMER_CONFIGURE_FILES64)
+ 	PATH="$(abspath $(TOOLS_DIR64))/bin:$(PATH)" \
+ 	LD_LIBRARY_PATH="$(abspath $(TOOLS_DIR64))/lib:$(LD_LIBRARY_PATH)" \
+-	ninja -C "$(GSTREAMER_OBJ64)" install
++	ninja -v -C "$(GSTREAMER_OBJ64)" install
+ 	cp -a $(TOOLS_DIR64)/lib/libgst* $(DST_DIR)/lib64/ && \
+ 	cp -a $(TOOLS_DIR64)/lib/gstreamer-1.0 $(DST_DIR)/lib64/
+ 
+@@ -675,7 +676,7 @@ gstreamer32: SHELL = $(CONTAINER_SHELL32)
+ gstreamer32: $(GSTREAMER_CONFIGURE_FILES32)
+ 	PATH="$(abspath $(TOOLS_DIR32))/bin:$(PATH)" \
+ 	LD_LIBRARY_PATH="$(abspath $(TOOLS_DIR32))/lib:$(LD_LIBRARY_PATH)" \
+-	ninja -C "$(GSTREAMER_OBJ32)" install
++	ninja -v -C "$(GSTREAMER_OBJ32)" install
+ 	cp -a $(TOOLS_DIR32)/lib/libgst* $(DST_DIR)/lib/ && \
+ 	cp -a $(TOOLS_DIR32)/lib/gstreamer-1.0 $(DST_DIR)/lib/
+ 
+@@ -708,6 +709,8 @@ GST_BASE_MESON_ARGS := \
+ 	-Dx11=disabled \
+ 	-Dxshm=disabled \
+ 	-Dxvideo=disabled \
++	-Dtools=disabled \
++	-Dpackage-name="GStreamer Base Plugins (Proton)" \
+ 	$(GST_COMMON_MESON_ARGS)
+ 
+ GST_BASE_CONFIGURE_FILES32 := $(GST_BASE_OBJ32)/build.ninja
+@@ -758,7 +761,7 @@ gst_base64: SHELL = $(CONTAINER_SHELL64)
+ gst_base64: $(GST_BASE_CONFIGURE_FILES64)
+ 	PATH="$(abspath $(TOOLS_DIR64))/bin:$(PATH)" \
+ 	LD_LIBRARY_PATH="$(abspath $(TOOLS_DIR64))/lib:$(LD_LIBRARY_PATH)" \
+-	ninja -C "$(GST_BASE_OBJ64)" install
++	ninja -v -C "$(GST_BASE_OBJ64)" install
+ 	cp -a $(TOOLS_DIR64)/lib/libgst* $(DST_DIR)/lib64/ && \
+ 	cp -a $(TOOLS_DIR64)/lib/gstreamer-1.0 $(DST_DIR)/lib64/
+ 
+@@ -766,7 +769,7 @@ gst_base32: SHELL = $(CONTAINER_SHELL32)
+ gst_base32: $(GST_BASE_CONFIGURE_FILES32)
+ 	PATH="$(abspath $(TOOLS_DIR32))/bin:$(PATH)" \
+ 	LD_LIBRARY_PATH="$(abspath $(TOOLS_DIR32))/lib:$(LD_LIBRARY_PATH)" \
+-	ninja -C "$(GST_BASE_OBJ32)" install
++	ninja -v -C "$(GST_BASE_OBJ32)" install
+ 	cp -a $(TOOLS_DIR32)/lib/libgst* $(DST_DIR)/lib/ && \
+ 	cp -a $(TOOLS_DIR32)/lib/gstreamer-1.0 $(DST_DIR)/lib/
+ 
+@@ -817,11 +820,14 @@ GST_GOOD_MESON_ARGS := \
+ 	-Dtaglib=disabled \
+ 	-Dudp=disabled \
+ 	-Dv4l2=disabled \
++	-Dvideobox=disabled \
+ 	-Dvideocrop=disabled \
+ 	-Dvideomixer=disabled \
+ 	-Dwavenc=disabled \
+ 	-Dximagesrc=disabled \
+ 	-Dy4m=disabled \
++	-Dtools=disabled \
++	-Dpackage-name="GStreamer Good Plugins (Proton)" \
+ 	$(GST_COMMON_MESON_ARGS)
+ 
+ GST_GOOD_CONFIGURE_FILES32 := $(GST_GOOD_OBJ32)/build.ninja
+@@ -872,7 +878,7 @@ gst_good64: SHELL = $(CONTAINER_SHELL64)
+ gst_good64: $(GST_GOOD_CONFIGURE_FILES64)
+ 	PATH="$(abspath $(TOOLS_DIR64))/bin:$(PATH)" \
+ 	LD_LIBRARY_PATH="$(abspath $(TOOLS_DIR64))/lib:$(LD_LIBRARY_PATH)" \
+-	ninja -C "$(GST_GOOD_OBJ64)" install
++	ninja -v -C "$(GST_GOOD_OBJ64)" install
+ 	cp -a $(TOOLS_DIR64)/lib/libgst* $(DST_DIR)/lib64/ && \
+ 	cp -a $(TOOLS_DIR64)/lib/gstreamer-1.0 $(DST_DIR)/lib64/
+ 
+@@ -880,7 +886,7 @@ gst_good32: SHELL = $(CONTAINER_SHELL32)
+ gst_good32: $(GST_GOOD_CONFIGURE_FILES32)
+ 	PATH="$(abspath $(TOOLS_DIR32))/bin:$(PATH)" \
+ 	LD_LIBRARY_PATH="$(abspath $(TOOLS_DIR32))/lib:$(LD_LIBRARY_PATH)" \
+-	ninja -C "$(GST_GOOD_OBJ32)" install
++	ninja -v -C "$(GST_GOOD_OBJ32)" install
+ 	cp -a $(TOOLS_DIR32)/lib/libgst* $(DST_DIR)/lib/ && \
+ 	cp -a $(TOOLS_DIR32)/lib/gstreamer-1.0 $(DST_DIR)/lib/
+ 
+@@ -908,6 +914,9 @@ GST_BAD_MESON_ARGS := \
+ 	-Dopencv=disabled \
+ 	-Dvoamrwbenc=disabled \
+ 	-Dx265=disabled \
++	-Daom=disabled \
++	-Dlv2=disabled \
++	-Dpackage-name="GStreamer Bad Plugins (Proton)" \
+ 	$(GST_COMMON_MESON_ARGS)
+ 
+ GST_BAD_CONFIGURE_FILES32 := $(GST_BAD_OBJ32)/build.ninja
+@@ -980,6 +989,7 @@ GST_UGLY_MESON_ARGS := \
+         -Dglib-checks='disabled' \
+         -Dglib-checks='disabled' \
+         -Ddoc='disabled' \
++        -Dpackage-name="GStreamer Ugly Plugins (Proton)" \
+ 	$(GST_COMMON_MESON_ARGS)
+ 
+ GST_UGLY_CONFIGURE_FILES32 := $(GST_UGLY_OBJ32)/build.ninja
+@@ -1048,6 +1058,7 @@ gst_ugly32: $(GST_UGLY_CONFIGURE_FILES32)
+ 
+ GST_LIBAV_MESON_ARGS := \
+         -Ddoc=disabled \
++        -Dpackage-name="GStreamer FFmpeg Plugin (Proton)" \
+ 	$(GST_COMMON_MESON_ARGS)
+ 
+ GST_LIBAV_CONFIGURE_FILES32 := $(GST_LIBAV_OBJ32)/build.ninja
+@@ -1120,7 +1131,7 @@ FFMPEG_CONFIGURE_FILES64 := $(FFMPEG_OBJ64)/Makefile
+ 
+ # 64bit-configure
+ $(FFMPEG_CONFIGURE_FILES64): SHELL = $(CONTAINER_SHELL64)
+-$(FFMPEG_CONFIGURE_FILES64): $(FFMPEG)/configure $(MAKEFILE_DEP) nasm64 | $(FFMPEG_OBJ64)
++$(FFMPEG_CONFIGURE_FILES64): $(FFMPEG)/configure $(MAKEFILE_DEP) | $(FFMPEG_OBJ64)
+ 	cd $(dir $@) && \
+ 		PATH="$(abspath $(TOOLS_DIR64))/bin:$(PATH)" \
+ 		PKG_CONFIG="$(PKG_CONFIG64)" \
+@@ -1128,6 +1139,8 @@ $(FFMPEG_CONFIGURE_FILES64): $(FFMPEG)/configure $(MAKEFILE_DEP) nasm64 | $(FFMP
+ 		$(abspath $(FFMPEG))/configure \
+ 			--cc=$(CC_QUOTED) --cxx=$(CXX_QUOTED) \
+ 			--prefix=$(abspath $(TOOLS_DIR64)) \
++			--extra-cflags="$(COMMON_FLAGS)" \
++			--extra-ldflags="$(LDFLAGS)" \
+ 			--disable-static \
+ 			--enable-shared \
+ 			--disable-programs \
+@@ -1172,7 +1185,7 @@ $(FFMPEG_CONFIGURE_FILES64): $(FFMPEG)/configure $(MAKEFILE_DEP) nasm64 | $(FFMP
+ 
+ # 32-bit configure
+ $(FFMPEG_CONFIGURE_FILES32): SHELL = $(CONTAINER_SHELL32)
+-$(FFMPEG_CONFIGURE_FILES32): $(FFMPEG)/configure $(MAKEFILE_DEP) nasm32 | $(FFMPEG_OBJ32)
++$(FFMPEG_CONFIGURE_FILES32): $(FFMPEG)/configure $(MAKEFILE_DEP) | $(FFMPEG_OBJ32)
+ 	cd $(dir $@) && \
+ 		PATH="$(abspath $(TOOLS_DIR32))/bin:$(PATH)" \
+ 		PKG_CONFIG="$(PKG_CONFIG32)" \
+@@ -1180,7 +1193,8 @@ $(FFMPEG_CONFIGURE_FILES32): $(FFMPEG)/configure $(MAKEFILE_DEP) nasm32 | $(FFMP
+ 		$(abspath $(FFMPEG))/configure \
+ 			--cc="$(CC32)" --cxx="$(CXX32)" \
+ 			--prefix=$(abspath $(TOOLS_DIR32)) \
+-			--extra-cflags=$(FFMPEG_CROSS_CFLAGS) --extra-ldflags=$(FFMPEG_CROSS_LDFLAGS) \
++			--extra-cflags="$(COMMON_FLAGS) -m32" \
++			--extra-ldflags="$(LDFLAGS) -m32" \
+ 			--disable-static \
+ 			--enable-shared \
+ 			--disable-programs \
+@@ -1278,6 +1292,7 @@ $(FAUDIO_CONFIGURE_FILES32): $(FAUDIO)/CMakeLists.txt $(MAKEFILE_DEP) gst_base32
+ 		CC="$(CC32)" \
+ 		CXX="$(CXX32)" \
+ 		PKG_CONFIG="$(PKG_CONFIG32)" \
++		CFLAGS="$(OPTIMIZE_FLAGS)" \
+ 		cmake $(abspath $(FAUDIO)) \
+ 			-DCMAKE_INSTALL_PREFIX="$(abspath $(TOOLS_DIR32))" \
+ 			$(FAUDIO_CMAKE_FLAGS)
+@@ -1539,7 +1554,13 @@ $(WINE_CONFIGURE_FILES64): SHELL = $(CONTAINER_SHELL64)
+ $(WINE_CONFIGURE_FILES64): $(MAKEFILE_DEP) | faudio64 jxrlib64 gst_base64 $(WINE_OBJ64)
+ 	cd $(dir $@) && \
+ 		../$(WINE)/configure \
++			--with-x \
++			--with-gstreamer \
++			--with-faudio \
+ 			--without-curses \
++			--without-vkd3d \
++			--without-oss \
++			--disable-win16 \
+ 			--enable-win64 \
+ 			--disable-tests \
+ 			--prefix=$(abspath $(DST_DIR)) \
+@@ -1547,7 +1568,7 @@ $(WINE_CONFIGURE_FILES64): $(MAKEFILE_DEP) | faudio64 jxrlib64 gst_base64 $(WINE
+ 			STRIP=$(STRIP_QUOTED) \
+ 			CFLAGS="-I$(abspath $(TOOLS_DIR64))/include -g $(COMMON_FLAGS)" \
+ 			CROSSCFLAGS="-g $(COMMON_FLAGS)" \
+-			LDFLAGS="-L$(abspath $(TOOLS_DIR64))/lib" \
++			LDFLAGS=-L$(abspath $(TOOLS_DIR64))/lib \
+ 			PKG_CONFIG_PATH=$(abspath $(TOOLS_DIR64))/lib/pkgconfig \
+ 			JXRLIB_CFLAGS=-I$(abspath $(TOOLS_DIR64))/include/jxrlib \
+ 			CC=$(CC_QUOTED) \
+@@ -1559,14 +1580,20 @@ $(WINE_CONFIGURE_FILES32): SHELL = $(CONTAINER_SHELL32)
+ $(WINE_CONFIGURE_FILES32): $(MAKEFILE_DEP) | faudio32 jxrlib32 gst_base32 $(WINE_OBJ32)
+ 	cd $(dir $@) && \
+ 		../$(WINE)/configure \
++			--with-x \
++			--with-gstreamer \
++			--with-faudio \
+ 			--without-curses \
++			--without-vkd3d \
++			--without-oss \
++			--disable-win16 \
+ 			--disable-tests \
+ 			--prefix=$(abspath $(WINE_DST32)) \
+ 			LD_LIBRARY_PATH=$(abspath $(TOOLS_DIR32))/lib \
+ 			STRIP=$(STRIP_QUOTED) \
+ 			CFLAGS="-I$(abspath $(TOOLS_DIR32))/include -g $(COMMON_FLAGS)" \
+ 			CROSSCFLAGS="-g $(COMMON_FLAGS)" \
+-			LDFLAGS="-L$(abspath $(TOOLS_DIR32))/lib" \
++			LDFLAGS=-L$(abspath $(TOOLS_DIR32))/lib \
+ 			PKG_CONFIG_PATH=$(abspath $(TOOLS_DIR32))/lib/pkgconfig \
+ 			JXRLIB_CFLAGS=-I$(abspath $(TOOLS_DIR32))/include/jxrlib \
+ 			CC=$(CC_QUOTED) \
+@@ -1762,7 +1789,7 @@ dxvk_configure32: $(DXVK_CONFIGURE_FILES32)
+ dxvk: dxvk32 dxvk64
+ 
+ dxvk64: $(DXVK_CONFIGURE_FILES64)
+-	env PATH="$(abspath $(SRCDIR))/glslang/bin/:$(PATH)" ninja -C "$(DXVK_OBJ64)" install
++	env PATH="$(abspath $(SRCDIR))/glslang/bin/:$(PATH)" ninja -v -C "$(DXVK_OBJ64)" install
+ 	mkdir -p "$(DST_DIR)/lib64/wine/dxvk"
+ 	cp -f "$(DXVK_OBJ64)"/bin/dxgi.dll "$(DST_DIR)"/lib64/wine/dxvk/
+ 	cp -f "$(DXVK_OBJ64)"/bin/d3d11.dll "$(DST_DIR)"/lib64/wine/dxvk/
+@@ -1775,7 +1802,7 @@ dxvk64: $(DXVK_CONFIGURE_FILES64)
+ 
+ 
+ dxvk32: $(DXVK_CONFIGURE_FILES32)
+-	env PATH="$(abspath $(SRCDIR))/glslang/bin/:$(PATH)" ninja -C "$(DXVK_OBJ32)" install
++	env PATH="$(abspath $(SRCDIR))/glslang/bin/:$(PATH)" ninja -v -C "$(DXVK_OBJ32)" install
+ 	mkdir -p "$(DST_DIR)"/lib/wine/dxvk
+ 	cp -f "$(DXVK_OBJ32)"/bin/dxgi.dll "$(DST_DIR)"/lib/wine/dxvk/
+ 	cp -f "$(DXVK_OBJ32)"/bin/d3d11.dll "$(DST_DIR)"/lib/wine/dxvk/
+@@ -1805,7 +1832,7 @@ $(VKD3D_CONFIGURE_FILES32): $(VKD3D)/meson.build $(VKD3D)/build-win32.txt | $(VK
+ 
+ vkd3d32: SHELL = $(CONTAINER_SHELL32)
+ vkd3d32: $(VKD3D_CONFIGURE_FILES32)
+-	ninja -C "$(VKD3D_OBJ32)" install
++	ninja -v -C "$(VKD3D_OBJ32)" install
+ 	mkdir -p "$(DST_DIR)"/lib/wine/vkd3d-proton
+ 	cp -af "$(VKD3D_OBJ32)/bin/d3d12.dll" "$(DST_DIR)"/lib/wine/vkd3d-proton/
+ 	rm -f "$(DST_DIR)"/lib/wine/vkd3d-proton/version && if test -e $(SRCDIR)/.git; then ( cd $(SRCDIR) && git submodule status -- vkd3d-proton ) > "$(DST_DIR)"/lib/wine/vkd3d-proton/version; fi
+@@ -1822,7 +1849,7 @@ $(VKD3D_CONFIGURE_FILES64): $(VKD3D)/meson.build $(VKD3D)/build-win64.txt | $(VK
+ 
+ vkd3d64: SHELL = $(CONTAINER_SHELL64)
+ vkd3d64: $(VKD3D_CONFIGURE_FILES64)
+-	ninja -C "$(VKD3D_OBJ64)" install
++	ninja -v -C "$(VKD3D_OBJ64)" install
+ 	mkdir -p "$(DST_DIR)"/lib64/wine/vkd3d-proton
+ 	cp -af "$(VKD3D_OBJ64)/bin/d3d12.dll" "$(DST_DIR)"/lib64/wine/vkd3d-proton/
+ 	rm -f "$(DST_DIR)"/lib64/wine/vkd3d-proton/version && if test -e $(SRCDIR)/.git; then ( cd $(SRCDIR) && git submodule status -- vkd3d-proton ) > "$(DST_DIR)"/lib64/wine/vkd3d-proton/version; fi
+@@ -1852,75 +1879,6 @@ mediaconv64: $(MAKEFILE_DEP) gstreamer64 | $(MEDIACONV_OBJ64)
+ 
+ mediaconv: mediaconv32 mediaconv64
+ 
+-
+-##
+-## nasm -- necessary for ffmpeg, steam runtime does not have
+-##
+-
+-$(NASM):
+-	if [ -e "$(SRCDIR)/../nasm/$(NASM_TARBALL)" ]; then \
+-		mkdir -p $(dir $@); \
+-		tar -xf "$(SRCDIR)/../nasm/$(NASM_TARBALL)" -C "$(dir $@)"; \
+-	else \
+-		mkdir -p $(SRCDIR)/contrib/; \
+-		if [ ! -e "$(SRCDIR)/contrib/$(NASM_TARBALL)" ]; then \
+-			echo ">>>> Downloading nasm. To avoid this in future, put it here: $(SRCDIR)/../nasm/$(NASM_TARBALL)"; \
+-			wget -O "$(SRCDIR)/contrib/$(NASM_TARBALL)" "$(NASM_TARBALL_URL)"; \
+-		fi; \
+-		tar -xf "$(SRCDIR)/contrib/$(NASM_TARBALL)" -C "$(dir $@)"; \
+-	fi
+-
+-NASM_CONFIGURE_FILES32 := $(NASM_OBJ32)/Makefile
+-NASM_CONFIGURE_FILES64 := $(NASM_OBJ64)/Makefile
+-
+-# 64-bit configure
+-$(NASM_CONFIGURE_FILES64): SHELL = $(CONTAINER_SHELL64)
+-$(NASM_CONFIGURE_FILES64): $(MAKEFILE_DEP) $(NASM) | $(NASM_OBJ64)
+-	cd "$(NASM_OBJ64)" && \
+-		../$(NASM)/configure --prefix=$(abspath $(TOOLS_DIR64)) LIBS='-lrt'
+-
+-# 32-bit configure
+-$(NASM_CONFIGURE_FILES32): SHELL = $(CONTAINER_SHELL32)
+-$(NASM_CONFIGURE_FILES32): $(MAKEFILE_DEP) $(NASM) | $(NASM_OBJ32)
+-	cd "$(NASM_OBJ32)" && \
+-		../$(NASM)/configure --prefix=$(abspath $(TOOLS_DIR32)) LIBS='-lrt'
+-
+-
+-## nasm goals
+-NASM_TARGETS = nasm nasm_configure nasm32 nasm64 nasm_configure32 nasm_configure64
+-
+-ALL_TARGETS += $(NASM_TARGETS)
+-
+-.PHONY: $(NASM_TARGETS)
+-
+-nasm_configure: $(NASM_CONFIGURE_FILES32) $(NASM_CONFIGURE_FILES64)
+-
+-nasm_configure32: $(NASM_CONFIGURE_FILES32)
+-
+-nasm_configure64: $(NASM_CONFIGURE_FILES64)
+-
+-nasm: nasm32 nasm64
+-
+-# These have multiple targets that come from one invocation.  The way to do that is to have both targets on a single
+-# intermediate.
+-.INTERMEDIATE: nasm64-intermediate nasm32-intermediate
+-
+-$(NASM_BIN64) nasm64: nasm64-intermediate
+-
+-nasm64-intermediate: SHELL = $(CONTAINER_SHELL64)
+-nasm64-intermediate: $(NASM_CONFIGURE_FILES64) $(filter $(MAKECMDGOALS),nasm64)
+-	+$(MAKE) -C $(NASM_OBJ64)
+-	+$(MAKE) -C $(NASM_OBJ64) install
+-	touch $(NASM_BIN64)
+-
+-$(NASM_BIN32) nasm32: nasm32-intermediate
+-
+-nasm32-intermediate: SHELL = $(CONTAINER_SHELL32)
+-nasm32-intermediate: $(NASM_CONFIGURE_FILES32) $(filter $(MAKECMDGOALS),nasm32)
+-	+$(MAKE) -C $(NASM_OBJ32)
+-	+$(MAKE) -C $(NASM_OBJ32) install
+-	touch $(NASM_BIN32)
+-
+ ALL_TARGETS += fonts
+ GOAL_TARGETS += fonts
+ 
