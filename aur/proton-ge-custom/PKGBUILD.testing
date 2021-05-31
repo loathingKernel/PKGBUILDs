@@ -1,15 +1,15 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
-pkgname=proton-native
-_srctag=6.3-4
-_commit=
+pkgname=proton-ge-custom
+_srctag=6.9-GE-2
+_commit=f12fed6d53f5d9b85e8f233a8c0b7e295978b9a0
 pkgver=${_srctag//-/.}
 _geckover=2.47.2
 _monover=6.1.2
-pkgrel=2
+pkgrel=3
 epoch=1
-pkgdesc="Compatibility tool for Steam Play based on Wine and additional components. Monolithic distribution"
-url="https://github.com/ValveSoftware/Proton"
+pkgdesc="Compatibility tool for Steam Play based on Wine and additional components. GloriousEggroll's custom build"
+url="https://github.com/GloriousEggroll/proton-ge-custom"
 arch=(x86_64)
 options=(staticlibs)
 license=('custom')
@@ -29,9 +29,11 @@ depends=(
   libsm            lib32-libsm
   gcc-libs         lib32-gcc-libs
   libpcap          lib32-libpcap
+  lzo              lib32-lzo
   desktop-file-utils
   python
   steam-native-runtime
+  cabextract
 )
 
 makedepends=(autoconf ncurses bison perl fontforge flex mingw-w64-gcc
@@ -61,7 +63,6 @@ makedepends=(autoconf ncurses bison perl fontforge flex mingw-w64-gcc
   vulkan-icd-loader     lib32-vulkan-icd-loader
   sdl2                  lib32-sdl2
   libcups               lib32-libcups
-  rust                  lib32-rust-libs
   sane
   libgphoto2
   gsm
@@ -103,27 +104,35 @@ optdepends=(
 makedepends=(${makedepends[@]} ${depends[@]})
 #install=${pkgname}.install
 source=(
-    proton::git+https://github.com/ValveSoftware/Proton.git#tag=proton-${_srctag}
-    wine-valve::git+https://github.com/ValveSoftware/wine.git
+    proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#commit=${_commit}
+    wine::git://source.winehq.org/git/wine.git
+    wine-staging::git+https://github.com/wine-staging/wine-staging.git
     vkd3d-proton::git+https://github.com/HansKristian-Work/vkd3d-proton.git
-    dxvk-valve::git+https://github.com/ValveSoftware/dxvk.git
+    dxvk::git+https://github.com/doitsujin/dxvk.git
     openvr::git+https://github.com/ValveSoftware/openvr.git
     OpenXR-SDK::git+https://github.com/KhronosGroup/OpenXR-SDK.git
+    ffmpeg-meson::git+https://gitlab.freedesktop.org/gstreamer/meson-ports/ffmpeg.git
     liberation-fonts::git+https://github.com/liberationfonts/liberation-fonts.git
     SPIRV-Headers::git+https://github.com/KhronosGroup/SPIRV-Headers.git
     Vulkan-Headers::git+https://github.com/KhronosGroup/Vulkan-Headers.git
     dxil-spirv::git+https://github.com/HansKristian-Work/dxil-spirv.git
     FAudio::git+https://github.com/FNA-XNA/FAudio.git
+    protonfixes-gloriouseggroll::git+https://github.com/gloriouseggroll/protonfixes.git
+    lsteamclient-gloriouseggroll::git+https://github.com/gloriouseggroll/lsteamclient.git
+    vrclient_x64-gloriouseggroll::git+https://github.com/gloriouseggroll/vrclient_x64.git
     gstreamer::git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git
     gst-orc::git+https://gitlab.freedesktop.org/gstreamer/orc.git
     gst-plugins-base::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-base.git
     gst-plugins-good::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-good.git
+    gst-plugins-bad::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git
+    gst-plugins-ugly::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly.git
+    gst-libav::git+https://gitlab.freedesktop.org/gstreamer/gst-libav.git
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     proton-unfuck_makefile.patch
     proton-disable_lock.patch
     proton-user_compat_data.patch
-    dxvk-async.patch
+    patches-remove_broken.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -134,9 +143,10 @@ prepare() {
     # I know this is fugly and it should NOT be done
     # but the afdko package from AUR breaks regularly.
     # Install it from pip in a virtualenv
-    virtualenv --app-data "$srcdir"/build_venv/cache --no-wheel build_venv
+    virtualenv --no-wheel build_venv
     source build_venv/bin/activate
-    pip install --no-cache-dir afdko
+    pip install afdko
+    pip install pefile
 
     [ ! -d gecko ] && mkdir gecko
     mv wine-gecko-${_geckover}-x86{,_64}.tar.xz gecko/
@@ -145,20 +155,27 @@ prepare() {
     mv wine-mono-${_monover}-x86.tar.xz mono/
 
     [ ! -d build ] && mkdir build
-    cd proton
+    cd proton-ge-custom
     for submodule in openvr OpenXR-SDK fonts/liberation-fonts FAudio vkd3d-proton; do
         git submodule init "${submodule}"
         git config submodule."${submodule}".url "$srcdir"/"${submodule#*/}"
         git submodule update "${submodule}"
     done
+    git submodule init ffmpeg
+    git config submodule.ffmpeg.url "$srcdir"/ffmpeg-meson
+    git submodule update ffmpeg
 
-    for submodule in wine dxvk; do
+    for submodule in wine wine-staging; do
         git submodule init "${submodule}"
-        git config submodule."${submodule}".url "$srcdir"/"${submodule#*/}"-valve
+        git config submodule."${submodule}".url "$srcdir"/"${submodule#*/}"
         git submodule update "${submodule}"
     done
 
-    for submodule in gstreamer gst-{plugins-{base,good},orc}; do
+    git submodule init dxvk
+    git config submodule.dxvk.url "$srcdir"/dxvk
+    git submodule update --remote dxvk
+
+    for submodule in gstreamer gst-{plugins-{base,good,bad,ugly},libav,orc}; do
         git submodule init "${submodule}"
         git config submodule."${submodule}".url "$srcdir"/"${submodule#*/}"
         git submodule update "${submodule}"
@@ -177,21 +194,25 @@ prepare() {
     popd
     popd
 
+    for submodule in lsteamclient vrclient_x64 protonfixes; do
+        git submodule init "${submodule}"
+        git config submodule."${submodule}".url "$srcdir"/"${submodule#*/}-gloriouseggroll"
+        git submodule update "${submodule}"
+    done
 
+    patch -p1 -i "$srcdir"/patches-remove_broken.patch
+
+    ./patches/protonprep.sh
+
+#    sed 's/--with-mingw/--without-mingw/g' -i "$srcdir"/proton-unfuck_makefile.patch
     patch -p1 -i "$srcdir"/proton-unfuck_makefile.patch
     patch -p1 -i "$srcdir"/proton-disable_lock.patch
     patch -p1 -i "$srcdir"/proton-user_compat_data.patch
-
-    # Uncomment to enable dxvk async patch.
-    # Enable at your own risk. If you don't know what it is,
-    # and its implications, leave it as is. You have been warned.
-    # I am not liable if anything happens to you by using it.
-#    patch -p1 -i "$srcdir"/dxvk-async.patch
 }
 
 build() {
     cd build
-    ../proton/configure.sh \
+    ../proton-ge-custom/configure.sh \
         --steam-runtime=native \
         --no-steam-runtime \
         --build-name="${pkgname}"
@@ -201,8 +222,8 @@ build() {
     # This overrides CFLAGS from makepkg.conf, if you comment these you are on your own
     # If you want the "best" possbile optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
-    export CFLAGS="-O3 -march=nocona -mtune=core-avx2 -pipe"
-    export CXXFLAGS="-O3 -march=nocona -mtune=core-avx2 -pipe"
+    export CFLAGS="-O3 -march=native -pipe"
+    export CXXFLAGS="-O3 -march=native -pipe"
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
     # game can cause an Unhandled exception. The cause seems to be the
@@ -253,18 +274,21 @@ package() {
     mv "$_compatdir/${pkgname}"/LICENSE{,.OFL} \
         "$pkgdir/usr/share/licenses/${pkgname}"
 
-    cd "$_compatdir/${pkgname}/dist"
+    cd "$_compatdir/${pkgname}/files"
+    # NOTE: Reduces size by 40 MiB, worth it
     i686-w64-mingw32-strip --strip-unneeded \
-        $(find lib/wine \( -iname fakedlls \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
+        $(find lib/wine \( -iname fakedlls -or -iname i386-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
     x86_64-w64-mingw32-strip --strip-unneeded \
-        $(find lib64/wine \( -iname fakedlls \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
+        $(find lib64/wine \( -iname fakedlls -or -iname x86_64-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
 
+    # NOTE: Reduces size by 38 MiB, worth it
     local _geckodir="share/wine/gecko/wine-gecko-${_geckover}"
     i686-w64-mingw32-strip --strip-unneeded \
         $(find "$_geckodir"-x86 -iname "*.dll" -or -iname "*.exe")
     x86_64-w64-mingw32-strip --strip-unneeded \
         $(find "$_geckodir"-x86_64 -iname "*.dll" -or -iname "*.exe")
 
+    # NOTE: Reduces size by 0.16 MiB, not worth it
     local _monodir="share/wine/mono/wine-mono-${_monover}"
     i686-w64-mingw32-strip --strip-unneeded \
         $(find "$_monodir"/lib/mono -iname "*.dll" -or -iname "*.exe")
@@ -291,11 +315,19 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
             '8fab46ea2110b2b0beed414e3ebb4e038a3da04900e7a28492ca3c3ccf9fea94'
             'b4476706a4c3f23461da98bed34f355ff623c5d2bb2da1e2fa0c6a310bc33014'
             '463efcae9aec82e2ae51adbafe542f2a0674e1a1d0899d732077211f5c62d182'
-            '4af39c754e46cbd4e59c7d0190f6d23946a11f29fd11388cdfb675cdf4057d24'
-            '8263a3ffb7f8e7a5d81bfbffe1843d6f84502d3443fe40f065bcae02b36ba954'
+            'SKIP'
+            'SKIP'
             '20f7cd3e70fad6f48d2f1a26a485906a36acf30903bf0eefbf82a7c400e248f3'
-            '36aaba6847e4577df4a496d88c11b4b7049773f1f2b90aa4545093e16d5c6066'
+            'SKIP'
 )

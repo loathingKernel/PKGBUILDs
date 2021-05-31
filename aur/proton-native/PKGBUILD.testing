@@ -134,9 +134,9 @@ prepare() {
     # I know this is fugly and it should NOT be done
     # but the afdko package from AUR breaks regularly.
     # Install it from pip in a virtualenv
-    virtualenv --app-data "$srcdir"/build_venv/cache --no-wheel build_venv
+    virtualenv --no-wheel build_venv
     source build_venv/bin/activate
-    pip install --no-cache-dir afdko
+    pip install afdko
 
     [ ! -d gecko ] && mkdir gecko
     mv wine-gecko-${_geckover}-x86{,_64}.tar.xz gecko/
@@ -178,6 +178,7 @@ prepare() {
     popd
 
 
+#    sed 's/--with-mingw/--without-mingw/g' -i "$srcdir"/proton-unfuck_makefile.patch
     patch -p1 -i "$srcdir"/proton-unfuck_makefile.patch
     patch -p1 -i "$srcdir"/proton-disable_lock.patch
     patch -p1 -i "$srcdir"/proton-user_compat_data.patch
@@ -186,7 +187,7 @@ prepare() {
     # Enable at your own risk. If you don't know what it is,
     # and its implications, leave it as is. You have been warned.
     # I am not liable if anything happens to you by using it.
-#    patch -p1 -i "$srcdir"/dxvk-async.patch
+    patch -p1 -i "$srcdir"/dxvk-async.patch
 }
 
 build() {
@@ -201,8 +202,8 @@ build() {
     # This overrides CFLAGS from makepkg.conf, if you comment these you are on your own
     # If you want the "best" possbile optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
-    export CFLAGS="-O3 -march=nocona -mtune=core-avx2 -pipe"
-    export CXXFLAGS="-O3 -march=nocona -mtune=core-avx2 -pipe"
+    export CFLAGS="-O3 -march=native -pipe"
+    export CXXFLAGS="-O3 -march=native -pipe"
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
     # game can cause an Unhandled exception. The cause seems to be the
@@ -254,17 +255,20 @@ package() {
         "$pkgdir/usr/share/licenses/${pkgname}"
 
     cd "$_compatdir/${pkgname}/dist"
+    # NOTE: Reduces size by 40 MiB, worth it
     i686-w64-mingw32-strip --strip-unneeded \
         $(find lib/wine \( -iname fakedlls \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
     x86_64-w64-mingw32-strip --strip-unneeded \
         $(find lib64/wine \( -iname fakedlls \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
 
+    # NOTE: Reduces size by 38 MiB, worth it
     local _geckodir="share/wine/gecko/wine-gecko-${_geckover}"
     i686-w64-mingw32-strip --strip-unneeded \
         $(find "$_geckodir"-x86 -iname "*.dll" -or -iname "*.exe")
     x86_64-w64-mingw32-strip --strip-unneeded \
         $(find "$_geckodir"-x86_64 -iname "*.dll" -or -iname "*.exe")
 
+    # NOTE: Reduces size by 0.16 MiB, not worth it
     local _monodir="share/wine/mono/wine-mono-${_monover}"
     i686-w64-mingw32-strip --strip-unneeded \
         $(find "$_monodir"/lib/mono -iname "*.dll" -or -iname "*.exe")
