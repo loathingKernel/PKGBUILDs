@@ -3,24 +3,23 @@
 # <openxray@yahoo.com>
 
 pkgname=openxray
-_tag=558
+_tag=730
 pkgver=1.6.02_$_tag
 pkgrel=1 
 pkgdesc="Unofficial X-Ray Engine Linux port (Originally developed by GSC Game World)"                                          
 arch=('x86_64') 
 url="https://github.com/OpenXRay/xray-16"
 license=('custom:Custom 3-сlause BSD')
-install=$pkgname.install
+install=${pkgname%-git}.install
 makedepends=(
     gcc
+    git
     cmake
-    ncurses
-    pcre
-    pcre2
     libglvnd
     libjpeg6-turbo
-    gli
-    git
+    ncurses
+    pcre2
+    pcre
 )
 depends=(
     glew
@@ -36,10 +35,8 @@ depends=(
     lzo
     lzop
     libjpeg-turbo
-    hicolor-icon-theme
-    xdg-utils
 )
-source=(git+https://github.com/OpenXRay/xray-16.git#tag=$_tag
+source=($pkgname::git+https://github.com/OpenXRay/xray-16.git#tag=$_tag
         $pkgname-GameSpy::git+https://github.com/OpenXRay/GameSpy.git
         $pkgname-luabind::git+https://github.com/OpenXRay/luabind-deboostified.git
         $pkgname-LuaJIT::git+https://github.com/OpenXRay/LuaJIT.git
@@ -57,10 +54,10 @@ md5sums=(
 
 
 prepare(){
-  pushd "$srcdir"/xray-16
+  pushd "$srcdir"/${pkgname%-git}
     for submodule in Externals/{GameSpy,luabind,LuaJIT,jpeg,OpenAutomate}; do
         git submodule init "${submodule}"
-        git config submodule."${submodule}".url ../$pkgname-"${submodule#*/}"
+        git config submodule."${submodule}".url ../${pkgname%-git}-"${submodule#*/}"
         git submodule update "${submodule}"
     done
   popd
@@ -72,7 +69,12 @@ prepare(){
 build() {
   cd "$srcdir"/build
 
-  cmake ../xray-16 \
+  CFLAGS+=" -mno-avx"
+  CXXFLAGS+=" -mno-avx"
+#  CFLAGS="${CFLAGS//-O3/-O2}"
+#  CXXFLAGS="${CFLAGS//-O3/-O2}"
+
+  cmake ../${pkgname%-git}\
     -DCMAKE_BUILD_TYPE=Release
   make
 }
@@ -82,6 +84,6 @@ package() {
   make DESTDIR="$pkgdir" install
   mv "$pkgdir"/usr/games/ "$pkgdir"/usr/bin
 
-  mkdir -p "$pkgdir"/usr/share/licenses/$pkgname/
-  cp "$srcdir"/xray-16/License.txt "$pkgdir"/usr/share/licenses/$pkgname/
+  mkdir -p "$pkgdir"/usr/share/licenses/${pkgname%-git}/
+  cp "$srcdir"/${pkgname%-git}/License.txt "$pkgdir"/usr/share/licenses/${pkgname%-git}/
 }
