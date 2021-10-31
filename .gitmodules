@@ -4,6 +4,3 @@
 [submodule "local/readline6"]
 	path = local/readline6
 	url = https://aur.archlinux.org/readline6.git
-[submodule "local/proton-native"]
-	path = local/proton-native
-	url = https://aur.archlinux.org/proton-native.git
