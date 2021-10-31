@@ -6,37 +6,38 @@
 
 pkgbase=glibc
 pkgname=(glibc lib32-glibc)
-pkgver=2.29
-pkgrel=1
+pkgver=2.33
+pkgrel=5
 arch=(x86_64)
 url='https://www.gnu.org/software/libc'
 license=(GPL LGPL)
-groups=('modified')
 makedepends=(git gd lib32-gcc-libs python)
+optdepends=('perl: for mtrace')
 options=(!strip staticlibs)
-#_commit=067fc32968b601493f4b247a3ac00caeea3f3d61
+#_commit=3de512be7ea6053255afed6154db9ee31d4e557a
 #source=(git+https://sourceware.org/git/glibc.git#commit=$_commit
 source=(https://ftp.gnu.org/gnu/glibc/glibc-$pkgver.tar.xz{,.sig}
         locale.gen.txt
         locale-gen
         lib32-glibc.conf
-        # https://sourceware.org/bugzilla/show_bug.cgi?id=15533
-        # https://github.com/solus-project/linux-steam-integration/issues/15
-        fix-ld-audit-performance.patch
-        bz20338.patch
-        0001-Revert-elf-Correct-absolute-SHN_ABS-symbol-run-time-.patch
-        file-truncated-while-reading-soname-after-patchelf.patch)
+        sdt.h sdt-config.h
+        bz27343.patch
+        0001-nptl_db-Support-different-libpthread-ld.so-load-orde.patch
+        0002-nptl-Check-for-compatible-GDB-in-nptl-tst-pthread-gd.patch
+        0003-nptl-Do-not-build-nptl-tst-pthread-gdb-attach-as-PIE.patch)
 validpgpkeys=(7273542B39962DF7B299931416792B4EA25340F8 # Carlos O'Donell
               BC7C7372637EC10C57D7AA6579C43DFBF1CF2187) # Siddhesh Poyarekar
-md5sums=('e6c279d5b2f0736f740216f152acf974'
+md5sums=('390bbd889c7e8e8a7041564cb6b27cca'
          'SKIP'
          '07ac979b6ab5eeb778d55f041529d623'
          '476e9113489f93b348b21e144b6a8fcf'
          '6e052f1cb693d5d3203f50f9d4e8c33b'
-         '6efd1c873946e2965d62d50b8f9c1172'
-         'dc0d3ad59aeaaf591b085a77de6e03e9'
-         'af5d3c5227ac639effe39667a43879a1'
-         '0820504d2e83ee15f74a656771361872')
+         '91fec3b7e75510ae2ac42533aa2e695e'
+         '680df504c683640b02ed4a805797c0b2'
+         'cfe57018d06bf748b8ca1779980fef33'
+         '78f041fc66fee4ee372f13b00a99ff72'
+         '9e418efa189c20053e887398df2253cf'
+         '7a09f1693613897add1791e7aead19c9')
 
 prepare() {
   mkdir -p glibc-build lib32-glibc-build
@@ -44,14 +45,17 @@ prepare() {
   [[ -d glibc-$pkgver ]] && ln -s glibc-$pkgver glibc 
   cd glibc
 
-  local i; for i in ${source[@]}; do
-    case ${i%::*} in
-      *.patch)
-        msg2 "Applying ${i}"
-        patch -p1 -i "$srcdir/${i}"
-        ;;
-    esac
-  done
+  # commit c3479fb7939898ec22c655c383454d6e8b982a67
+  patch -p1 -i "$srcdir"/bz27343.patch
+
+  # nptl_db: Support different libpthread/ld.so load orders (bug 27744)
+  patch -p1 -i "$srcdir"/0001-nptl_db-Support-different-libpthread-ld.so-load-orde.patch
+
+  # nptl: Check for compatible GDB in nptl/tst-pthread-gdb-attach
+  patch -p1 -i "$srcdir"/0002-nptl-Check-for-compatible-GDB-in-nptl-tst-pthread-gd.patch
+
+  # nptl: Do not build nptl/tst-pthread-gdb-attach as PIE
+  patch -p1 -i "$srcdir"/0003-nptl-Do-not-build-nptl-tst-pthread-gdb-attach-as-PIE.patch
 }
 
 build() {
@@ -61,11 +65,14 @@ build() {
       --with-bugurl=https://bugs.archlinux.org/
       --enable-add-ons
       --enable-bind-now
+      --enable-cet
+      --enable-kernel=4.4
       --enable-lock-elision
       --enable-multi-arch
       --enable-stack-protector=strong
       --enable-stackguard-randomization
       --enable-static-pie
+      --enable-systemtap
       --disable-profile
       --disable-werror
   )
@@ -80,10 +87,14 @@ build() {
   # remove fortify for building libraries
   CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
 
+  #
+  CFLAGS=${CFLAGS/-fno-plt/}
+  CXXFLAGS=${CXXFLAGS/-fno-plt/}
+  LDFLAGS=${LDFLAGS/,-z,now/}
+
   "$srcdir/glibc/configure" \
       --libdir=/usr/lib \
       --libexecdir=/usr/lib \
-      --enable-cet \
       ${_configure_flags[@]}
 
   # build libraries with fortify disabled
@@ -96,6 +107,9 @@ build() {
   echo "CC += -D_FORTIFY_SOURCE=2" >> configparms
   echo "CXX += -D_FORTIFY_SOURCE=2" >> configparms
   make
+
+  # build info pages manually for reprducibility
+  make info
 
   cd "$srcdir/lib32-glibc-build"
   export CC="gcc -m32 -mstackrealign"
@@ -148,7 +162,6 @@ package_glibc() {
   backup=(etc/gai.conf
           etc/locale.gen
           etc/nscd.conf)
-  groups=(base)
 
   install -dm755 "$pkgdir/etc"
   touch "$pkgdir/etc/ld.so.conf"
@@ -188,11 +201,20 @@ package_glibc() {
       -not -name 'libthread_db-*.so' \
       -name '*-*.so' -type f -exec strip $STRIP_SHARED {} + 2> /dev/null || true
   fi
+
+  # Provide tracing probes to libstdc++ for exceptions, possibly for other
+  # libraries too. Useful for gdb's catch command.
+  install -Dm644 "$srcdir/sdt.h" "$pkgdir/usr/include/sys/sdt.h"
+  install -Dm644 "$srcdir/sdt-config.h" "$pkgdir/usr/include/sys/sdt-config.h"
+
+  # Provided by libxcrypt; keep the old shared library for backwards compatibility
+  rm -f "$pkgdir"/usr/include/crypt.h "$pkgdir"/usr/lib/libcrypt.{a,so}
 }
 
 package_lib32-glibc() {
   pkgdesc='GNU C Library (32-bit)'
   depends=("glibc=$pkgver")
+  options+=('!emptydirs')
 
   cd lib32-glibc-build
 
@@ -221,4 +243,7 @@ package_lib32-glibc() {
       -not -name 'libthread_db-*.so' \
       -name '*-*.so' -type f -exec strip $STRIP_SHARED {} + 2> /dev/null || true
   fi
+
+  # Provided by lib32-libxcrypt; keep the old shared library for backwards compatibility
+  rm -f "$pkgdir"/usr/lib32/libcrypt.{a,so}
 }
