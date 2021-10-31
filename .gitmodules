@@ -1,0 +1,3 @@
+[submodule "local/readline7"]
+	path = local/readline7
+	url = https://aur.archlinux.org/readline7.git
