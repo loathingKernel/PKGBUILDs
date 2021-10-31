@@ -9,6 +9,7 @@
 *.log.*
 *.sig
 
+configs/
 pkg/
 src/
 SRCDEST/
