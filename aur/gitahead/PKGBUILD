@@ -1,0 +1,68 @@
+# Maintainer:  Tim Schumacher <timschumi@gmx.de>
+# Contributor: KillWolfVlad <github.com/KillWolfVlad>
+# Contributor: WaveHack <email@wavehack.net>
+# Contributor: Whovian9369 <Whovian9369@gmail.com>
+# Contributor: Angelo Theodorou <encelo@gmail.com>
+
+pkgname=gitahead
+pkgver=2.6.3
+pkgrel=3
+pkgdesc='Understand your Git history!'
+url='https://www.gitahead.com/'
+arch=('x86_64')
+license=('MIT')
+depends=('desktop-file-utils' 'qt5-base' 'git')
+makedepends=('cmake' 'ninja' 'git' 'qt5-tools' 'qt5-translations')
+source=(
+  "git+https://github.com/gitahead/gitahead.git#tag=v${pkgver}"
+  "git+https://github.com/stinb/libgit2.git"
+  "git+https://github.com/libssh2/libssh2.git"
+  "git+https://github.com/git/git.git"
+  "git+https://github.com/commonmark/cmark.git"
+  "git+https://github.com/hunspell/hunspell"
+  "gitahead.desktop"
+  "gitahead.patch"
+  "gitahead.sh"
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'fe44a8de4f913add030c8c76fc312f90e88badabb2a4b9b8e6f8a5dc4415d9ee'
+  '096e8f3700d7d74884e81eae3282fa1b4fad1cfa7a179ff03f1a7d89867538a0'
+  'd327c209bed0ee3afece3121d781f74a09be195bb33654353ed27f248a914841'
+)
+
+prepare() {
+  cd $pkgname
+  for submodule in {libgit2,libssh2,git,cmark,hunspell}; do
+    git submodule init dep/"$submodule"/"$submodule"
+    git config submodule.dep/"$submodule"/"$submodule".url "$srcdir"/"$submodule"
+    git submodule update dep/"$submodule"/"$submodule"
+  done
+  patch --forward --strip=1 --input="${srcdir}/gitahead.patch"
+}
+
+build() {
+  cmake -S $pkgname -B build -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/$pkgname
+  ninja -C build
+}
+
+package() {
+  DESTDIR="$pkgdir" ninja -C build install
+  rm -rf "$pkgdir"/opt/$pkgname/{bin,include,lib,share}
+  rm -rf "$pkgdir"/opt/$pkgname/*.so.5
+  install -D -m755 "$srcdir"/$pkgname.sh "$pkgdir"/usr/bin/$pkgname
+  for size in 16x16{,@2x} 32x32{,@2x} 64x64{,@2x} 128x128{,@2x} 256x256{,@2x} 512x512{,@2x}; do
+    install -D -m644 "$pkgdir"/opt/$pkgname/Resources/GitAhead.iconset/icon_"$size".png \
+      "$pkgdir"/usr/share/icons/hicolor/"$size"/apps/$pkgname.png
+  done
+  install -D -m644 "$srcdir"/$pkgname/LICENSE.md "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  install -D -m644 "$srcdir"/$pkgname.desktop "$pkgdir"/usr/share/applications/$pkgname.desktop
+}
+
