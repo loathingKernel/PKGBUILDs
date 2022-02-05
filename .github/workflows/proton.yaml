@@ -1,0 +1,31 @@
+name: proton
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - 'public/proton'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Makepkg Build and Check
+      id: makepkg
+      uses: edlanglois/pkgbuild-action@v1
+      with:
+        pkgdir: "public/proton"
+        aurDeps: 1
+        namcapDisable: 1
+    - name: Print Package Files
+      run: |
+        echo "Successfully created the following package archive"
+        echo "Package: ${{ steps.makepkg.outputs.pkgfile0 }}"
+    - name: Upload Package Archive
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{ steps.makepkg.outputs.pkgfile0 }}
