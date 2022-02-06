@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - 'public/vitables'
+     - 'public/vitables/PKGBUILD'
 
 jobs:
   package:

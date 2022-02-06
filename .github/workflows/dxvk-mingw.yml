@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - 'public/dxvk-mingw'
+     - 'public/dxvk-mingw/PKGBUILD'
 
 jobs:
   package:
@@ -23,7 +23,9 @@ jobs:
       run: |
         echo "Successfully created the following package archive"
         echo "Package: ${{ steps.makepkg.outputs.pkgfile0 }}"
-    - name: Upload Package Archive
-      uses: actions/upload-artifact@v2
+    - uses: svenstaro/upload-release-action@v2
       with:
-        path: ${{ steps.makepkg.outputs.pkgfile0 }}
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        tag: packages
+        file: ${{ steps.makepkg.outputs.pkgfile0 }}
+        overwrite: true
