@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - 'public/proton'
+     - 'public/${{github.workflow}}/PKGBUILD'
 
 jobs:
   package:
@@ -18,14 +18,16 @@ jobs:
       id: makepkg
       uses: edlanglois/pkgbuild-action@v1
       with:
-        pkgdir: "public/proton"
+        pkgdir: "public/${{github.workflow}}"
         aurDeps: 1
         namcapDisable: 1
     - name: Print Package Files
       run: |
         echo "Successfully created the following package archive"
         echo "Package: ${{ steps.makepkg.outputs.pkgfile0 }}"
-    - name: Upload Package Archive
-      uses: actions/upload-artifact@v2
+    - uses: svenstaro/upload-release-action@v2
       with:
-        path: ${{ steps.makepkg.outputs.pkgfile0 }}
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        tag: packages
+        file: ${{ steps.makepkg.outputs.pkgfile0 }}
+        overwrite: true
