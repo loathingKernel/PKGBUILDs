@@ -1,0 +1,31 @@
+name: wine-ge-custom
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - 'public/wine-ge-custom/.SRCINFO'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Makepkg Build and Check
+      id: makepkg
+      uses: edlanglois/pkgbuild-action@v1
+      with:
+        pkgdir: "public/wine-ge-custom"
+    - name: Print Package Files
+      run: |
+        echo "Successfully created the following package archive"
+        echo "Package: ${{ steps.makepkg.outputs.pkgfile0 }}"
+    - uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        tag: packages
+        file: ${{ steps.makepkg.outputs.pkgfile0 }}
+        overwrite: true
