@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - 'public/dxvk-mingw/PKGBUILD'
+     - 'public/dxvk-mingw/.SRCINFO'
 
 jobs:
   package:

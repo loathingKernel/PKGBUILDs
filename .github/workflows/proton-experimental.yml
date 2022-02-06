@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - 'public/proton-experimental/PKGBUILD'
+     - 'public/proton-experimental/.SRCINFO'
 
 jobs:
   package:
@@ -20,7 +20,6 @@ jobs:
       with:
         pkgdir: "public/proton-experimental"
         aurDeps: 1
-        namcapDisable: 1
     - name: Print Package Files
       run: |
         echo "Successfully created the following package archive"
