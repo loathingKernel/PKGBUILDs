@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - 'public/${{github.workflow}}/PKGBUILD'
+     - 'public/proton-ge-custom/PKGBUILD'
 
 jobs:
   package:
@@ -18,7 +18,7 @@ jobs:
       id: makepkg
       uses: edlanglois/pkgbuild-action@v1
       with:
-        pkgdir: "public/${{github.workflow}}"
+        pkgdir: "public/proton-ge-custom"
         aurDeps: 1
         namcapDisable: 1
     - name: Print Package Files
