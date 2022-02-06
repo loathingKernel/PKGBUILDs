@@ -1,18 +1,18 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-experimental
-_srctag=6.3-20211027
+_srctag=6.3-20220119
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.2
-_monover=6.4.1
-_dxvkver=1.9.2
+_monover=7.0.0
+_asyncver=a9de5a9fc12d12a2cd50e3aeffae01e6f51ddbd4
 pkgrel=1
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch"
 url="https://github.com/ValveSoftware/Proton"
 arch=(x86_64 x86_64_v3)
-options=(!staticlibs !lto)
+options=(!staticlibs !lto emptydirs)
 license=('custom')
 
 depends=(
@@ -115,16 +115,17 @@ source=(
     gst-plugins-base::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-base.git
     gst-plugins-good::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-good.git
     gst-orc::git+https://gitlab.freedesktop.org/gstreamer/orc.git
-    vkd3d-proton::git+https://github.com/HansKristian-Work/vkd3d-proton.git
+    vkd3d-valve::git+https://github.com/ValveSoftware/vkd3d.git
     OpenXR-SDK::git+https://github.com/KhronosGroup/OpenXR-SDK.git
     dxvk-nvapi::git+https://github.com/jp7677/dxvk-nvapi.git
     dxil-spirv::git+https://github.com/HansKristian-Work/dxil-spirv.git
     SPIRV-Headers::git+https://github.com/KhronosGroup/SPIRV-Headers.git
     Vulkan-Headers::git+https://github.com/KhronosGroup/Vulkan-Headers.git
+    Vulkan-Loader::git+https://github.com/KhronosGroup/Vulkan-Loader.git
     vkd3d-zfigura::git+https://repo.or.cz/vkd3d/zf.git
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
-    https://raw.githubusercontent.com/Sporif/dxvk-async/${_dxvkver}/dxvk-async.patch
+    dxvk-async-${_asyncver}.patch::https://raw.githubusercontent.com/Sporif/dxvk-async/${_asyncver}/dxvk-async.patch
     wine-winevulkan_fsr.patch
     wine-more_8x5_res.patch
     proton-sanitize_makefile.patch
@@ -136,15 +137,47 @@ noextract=(
     wine-mono-${_monover}-x86.tar.xz
 )
 
+_make_wrappers () {
+    #     _arch     prefix   gcc    ld             as
+    local _i686=(  "i686"   "-m32" "-melf_i386"   "--32")
+    local _x86_64=("x86_64" "-m64" "-melf_x86_64" "--64")
+    local _opts=(_i686 _x86_64)
+    declare -n _opt
+    for _opt in "${_opts[@]}"; do
+        for l in ar ranlib nm; do
+            ln -s /usr/bin/$l wrappers/${_opt[0]}-pc-linux-gnu-$l
+        done
+        for t in gcc g++; do
+            install -Dm755 /dev/stdin wrappers/${_opt[0]}-pc-linux-gnu-$t <<EOF
+#!/usr/bin/bash
+$(which ccache 2> /dev/null) /usr/bin/$t ${_opt[1]} "\$@"
+EOF
+        done
+        install -Dm755 /dev/stdin wrappers/${_opt[0]}-pc-linux-gnu-ld <<EOF
+#!/usr/bin/bash
+/usr/bin/ld ${_opt[2]} "\$@"
+EOF
+        install -Dm755 /dev/stdin wrappers/${_opt[0]}-pc-linux-gnu-as <<EOF
+#!/usr/bin/bash
+/usr/bin/as ${_opt[3]} "\$@"
+EOF
+    done
+}
+
 prepare() {
     # I know this is fugly and it should NOT be done
     # but the afdko package from AUR breaks regularly.
     # Install it from pip in a virtualenv
+    [ -d build_venv ] && rm -rf build_venv
     virtualenv --no-wheel build_venv
     source build_venv/bin/activate
     pip install meson==0.59.3
     pip install afdko
     pip install pefile
+
+    # Provide wrappers to compiler tools
+    rm -rf wrappers && mkdir wrappers
+    _make_wrappers
 
     [ ! -d gecko ] && mkdir gecko
     mv wine-gecko-${_geckover}-x86{,_64}.tar.xz gecko/
@@ -154,14 +187,6 @@ prepare() {
 
     [ ! -d build ] && mkdir build
     cd proton
-
-    pushd media-converter
-        export RUSTUP_TOOLCHAIN=stable
-        export CARGO_HOME="${srcdir}"/build/.cargo
-        cargo update
-        cargo fetch --locked --target "i686-unknown-linux-gnu"
-        cargo fetch --locked --target "x86_64-unknown-linux-gnu"
-    popd
 
     _submodules=(
         wine-valve::wine
@@ -173,11 +198,12 @@ prepare() {
         gst-plugins-base
         gst-plugins-good
         gst-orc
-        vkd3d-proton
+        vkd3d-valve::vkd3d-proton
         OpenXR-SDK
         dxvk-nvapi
         SPIRV-Headers
         Vulkan-Headers
+        Vulkan-Loader
         vkd3d-zfigura::vkd3d
     )
 
@@ -206,9 +232,21 @@ prepare() {
         git submodule update external/Vulkan-Headers
     popd
 
+    pushd media-converter
+        export RUSTUP_TOOLCHAIN=stable
+        export CARGO_HOME="${srcdir}"/build/.cargo
+        cargo update
+        cargo fetch --locked --target "i686-unknown-linux-gnu"
+        cargo fetch --locked --target "x86_64-unknown-linux-gnu"
+    popd
+
     pushd wine
-        # Add FSR for fshack (doesn't compile)
-        #patch -p1 -i "$srcdir"/wine-winevulkan_fsr.patch
+        # From Arch Wine
+        sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i configure*
+        # Fix openldap 2.5+ detection
+        sed 's/-lldap_r/-lldap/' -i configure
+        # Add FSR for fshack
+        patch -p1 -i "$srcdir"/wine-winevulkan_fsr.patch
         # Adds more 16:10 resolutions for use with FSR
         patch -p1 -i "$srcdir"/wine-more_8x5_res.patch
     popd
@@ -218,17 +256,26 @@ prepare() {
         # Enable at your own risk. If you don't know what it is,
         # and its implications, leave it as is. You have been warned.
         # I am not liable if anything happens to you by using it.
-        patch -p1 -i "$srcdir"/dxvk-async.patch
+        patch -p1 -i "$srcdir"/dxvk-async-${_asyncver}.patch
     popd
 
 #    sed 's/--with-mingw/--without-mingw/g' -i "$srcdir"/proton-sanitize_makefile.patch
     patch -p1 -i "$srcdir"/proton-sanitize_makefile.patch
     patch -p1 -i "$srcdir"/proton-disable_lock.patch
     patch -p1 -i "$srcdir"/proton-user_compat_data.patch
+
+    # Remove repos from srcdir to save space
+    for submodule in "${_submodules[@]}"; do
+        rm -rf "$srcdir"/"${submodule%::*}"
+    done
+    rm -rf "$srcdir"/dxil-spirv
+    rm -rf "$srcdir"/Vulkan-Headers
+    rm -rf "$srcdir"/SPIRV-Headers
 }
 
 build() {
     source build_venv/bin/activate
+    export PATH="$(pwd)/wrappers:$PATH"
 
     cd build
     ROOTLESS_CONTAINER="" \
@@ -239,13 +286,30 @@ build() {
         --no-proton-sdk \
         --build-name="${pkgname}"
 
-    # Export CFLAGS used by upstream
-    # -O2 is adjusted to -O3 since AVX is disabled
-    # This overrides CFLAGS from makepkg.conf, if you comment these you are on your own
-    # If you want the "best" possbile optimizations for your system you can use
+    # Filter known bad flags before applying optimizations
+    # Filter fstack-protector{ ,-all,-strong} flag for MingW.
+    # https://github.com/Joshua-Ashton/d9vk/issues/476
+    export CFLAGS="${CFLAGS// -fstack-protector*([\-all|\-strong])/}"
+    export CXXFLAGS="${CXXFLAGS// -fstack-protector*([\-all|\-strong])/}"
+    # From wine-staging PKGBUILD
+    # Doesn't compile with these flags in MingW so remove them.
+    # They are also filtered in Wine PKGBUILDs so remove them
+    # for winelib versions too.
+    # Doesn't compile without remove these flags as of 4.10
+    export CFLAGS="${CFLAGS/ -fno-plt/}"
+    export CXXFLAGS="${CXXFLAGS/ -fno-plt/}"
+    export LDFLAGS="${LDFLAGS/,-z,now/}"
+    # MingW Wine builds fail with relro
+    export LDFLAGS="${LDFLAGS/,-z,relro/}"
+
+    # By default export FLAGS used by proton and ignore makepkg
+    # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
+    # If you want the "best" possible optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
-    export CFLAGS="-O3 -march=nehalem -mtune=haswell -pipe"
-    export CXXFLAGS="-O3 -march=nehalem -mtune=haswell -pipe"
+    # `-O2` is adjusted to `-O3` since AVX is disabled
+    export CFLAGS="-O2 -march=native -pipe" # -mtune=haswell"
+    export CXXFLAGS="-O2 -march=native -pipe" # -mtune=haswell"
+    export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
     # game can cause an Unhandled exception. The cause seems to be the
@@ -259,30 +323,13 @@ build() {
     # Relevant Wine issues
     # https://bugs.winehq.org/show_bug.cgi?id=45289
     # https://bugs.winehq.org/show_bug.cgi?id=43516
-    export CFLAGS+=" -mno-avx -mno-avx2"
-    export CXXFLAGS+=" -mno-avx -mno-avx2"
-    # Filter known bad flags before applying optimizations
-    # Filter fstack-protector{ ,-all,-strong} flag for MingW.
-    # https://github.com/Joshua-Ashton/d9vk/issues/476
-    #export CFLAGS+=" -fno-stack-protector"
-    export CFLAGS="${CFLAGS// -fstack-protector*([\-all|\-strong])/}"
-    #export CXXFLAGS+=" -fno-stack-protector"
-    export CXXFLAGS="${CXXFLAGS// -fstack-protector*([\-all|\-strong])/}"
-    # From wine-staging PKGBUILD
-    # Doesn't compile with these flags in MingW so remove them.
-    # They are also filtered in Wine PKGBUILDs so remove them
-    # for winelib versions too.
-    # Doesn't compile without remove these flags as of 4.10
-    export CFLAGS="${CFLAGS/ -fno-plt/}"
-    export CXXFLAGS="${CXXFLAGS/ -fno-plt/}"
-    export LDFLAGS="${LDFLAGS/,-z,now/}"
-    # MingW Wine builds fail with relro
-    export LDFLAGS="${LDFLAGS/,-z,relro/}"
+    #export CFLAGS+=" -mno-avx -mno-avx2"
+    #export CXXFLAGS+=" -mno-avx -mno-avx2"
 
     export RUSTUP_TOOLCHAIN=stable
     export WINEESYNC=0
     export WINEFSYNC=0
-    export DISPLAY=""
+    export DISPLAY=
     SUBJOBS=$([[ "$MAKEFLAGS" =~ -j\ *([1-9][0-9]*) ]] && echo "${BASH_REMATCH[1]}" || echo "$(nproc)") \
         make -j1 dist
 }
@@ -341,10 +388,11 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
+            'SKIP'
             '8fab46ea2110b2b0beed414e3ebb4e038a3da04900e7a28492ca3c3ccf9fea94'
             'b4476706a4c3f23461da98bed34f355ff623c5d2bb2da1e2fa0c6a310bc33014'
-            'a70c865e590058fa6fc3aa47425646405bdda27f78b9aa6d2030d2d2a8efadbb'
-            '9212a9c42ac8c9c7b9ba7378685b27e7ea0e7a8a8aaac1f3f4d37590ada3e991'
+            '2a047893f047b4f0f5b480f1947b7dda546cee3fec080beb105bf5759c563cd3'
+            'ddde07c98045a3bc15fab5eaf3c6a756a6a4b4eaeec646d4339168b86ac00463'
             'SKIP'
             'SKIP'
             'SKIP'
