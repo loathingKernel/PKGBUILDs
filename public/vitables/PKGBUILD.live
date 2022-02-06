@@ -46,3 +46,4 @@ package() {
   install -m644 "$srcdir"/vitables.svg "$pkgdir"/usr/share/pixmaps/
   mv "$pkgdir"/usr/'*' "$pkgdir"/usr/share/doc/"$pkgname"
 }
+
