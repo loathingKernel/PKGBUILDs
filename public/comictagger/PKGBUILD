@@ -19,8 +19,8 @@ depends=('python'
     'python-pyqt5'
     'python-pypdf2'
 )
-_commit=be698a17d68cb037e5874313f222b90b315918f1
-source=(git+https://github.com/lordwelch/comictagger.git#commit=$_commit)
+_commit=773735bf6e8db0e4edbb17afa5a858732382b867
+source=(git+https://github.com/comictagger/comictagger.git#commit=$_commit)
 sha256sums=('SKIP')
 
 pkgver() {
