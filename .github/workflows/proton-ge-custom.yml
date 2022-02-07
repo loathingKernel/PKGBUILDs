@@ -30,3 +30,4 @@ jobs:
         tag: packages
         file: ${{ steps.makepkg.outputs.pkgfile0 }}
         overwrite: true
+
