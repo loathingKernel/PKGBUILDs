@@ -19,6 +19,7 @@ jobs:
       uses: edlanglois/pkgbuild-action@v1
       with:
         pkgdir: "public/vkd3d-proton-mingw-git"
+        aurDeps: 1
     - name: Print Package Files
       run: |
         echo "Successfully created the following package archive"
