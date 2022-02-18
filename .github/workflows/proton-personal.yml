@@ -1,4 +1,4 @@
-name: proton
+name: proton testing
 
 on:
   workflow_dispatch:

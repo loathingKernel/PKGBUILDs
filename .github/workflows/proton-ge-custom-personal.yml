@@ -1,4 +1,4 @@
-name: proton-ge-custom
+name: proton-ge-custom testing
 
 on:
   workflow_dispatch:
