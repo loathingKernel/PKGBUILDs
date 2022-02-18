@@ -318,9 +318,9 @@ build() {
     # If you want the "best" possible optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
     # `-O2` is adjusted to `-O3` since AVX is disabled
-    export CFLAGS="-O3 -march=native -pipe" # -mtune=haswell -pipe"
-    export CXXFLAGS="-O3 -march=native -pipe" # -mtune=haswell -pipe"
-    export RUSTFLAGS="-C opt-level=3 -C target-cpu=native"
+    export CFLAGS="-O3 -march=haswell -pipe -mtune=haswell"
+    export CXXFLAGS="-O3 -march=haswell -pipe -mtune=haswell"
+    export RUSTFLAGS="-C opt-level=3 -C target-cpu=haswell"
     export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
