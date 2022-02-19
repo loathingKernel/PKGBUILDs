@@ -1,4 +1,4 @@
-name: proton-ge-custom personal
+name: wine-ge-custom personal
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - 'public/proton-ge-custom/.SRCINFO'
+     - 'public/wine-ge-custom/.SRCINFO'
 
 jobs:
   package:
@@ -18,8 +18,7 @@ jobs:
       id: makepkg
       uses: edlanglois/pkgbuild-action@v1
       with:
-        pkgdir: "public/proton-ge-custom"
-        aurDeps: 1
+        pkgdir: "public/wine-ge-custom"
         makepkgArgs: -p PKGBUILD.testing
     - name: Print Package Files
       run: |

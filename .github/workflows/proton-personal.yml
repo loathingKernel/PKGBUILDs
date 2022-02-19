@@ -1,4 +1,4 @@
-name: proton testing
+name: proton personal
 
 on:
   workflow_dispatch:
