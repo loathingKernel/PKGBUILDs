@@ -5,16 +5,17 @@
 # Contributor: Angelo Theodorou <encelo@gmail.com>
 
 pkgname=gitahead
-pkgver=2.6.3
-pkgrel=3
+pkgver=2.6.3.r89.711a963
+pkgrel=1
 pkgdesc='Understand your Git history!'
 url='https://www.gitahead.com/'
 arch=('x86_64')
 license=('MIT')
 depends=('desktop-file-utils' 'qt5-base' 'git')
 makedepends=('cmake' 'ninja' 'git' 'qt5-tools' 'qt5-translations')
+_commit=711a9633149ef8f9dd0d2d6becfee4e147b6458c
 source=(
-  "git+https://github.com/gitahead/gitahead.git#tag=v${pkgver}"
+  "git+https://github.com/gitahead/gitahead.git#commit=$_commit"
   "git+https://github.com/stinb/libgit2.git"
   "git+https://github.com/libssh2/libssh2.git"
   "git+https://github.com/git/git.git"
@@ -35,6 +36,11 @@ sha256sums=(
   '096e8f3700d7d74884e81eae3282fa1b4fad1cfa7a179ff03f1a7d89867538a0'
   'd327c209bed0ee3afece3121d781f74a09be195bb33654353ed27f248a914841'
 )
+
+pkgver() {
+  cd $pkgname
+  printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-\)g/r\1/;s/-/./g;s/v//g')"
+}
 
 prepare() {
   cd $pkgname
