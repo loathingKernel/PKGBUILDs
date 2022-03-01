@@ -149,7 +149,6 @@ prepare() {
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-nconfig"
   echo "-> Running localmodconfig..."
   make LLVM=1 LLVM_IAS=1 LSMOD=$HOME/.config/modprobed.db localmodconfig
-#    scripts/config --module CONFIG_WINESYNC
   make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-localmod"
   fi

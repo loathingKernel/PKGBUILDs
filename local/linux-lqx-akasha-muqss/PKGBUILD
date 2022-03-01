@@ -55,8 +55,8 @@ prepare() {
   if true; then
   echo "-> Native config..."
     # General Setup
-    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
-    scripts/config --enable  CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+#    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+#    scripts/config --enable  CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
     scripts/config --enable  CONFIG_EXPERT
     # IRQ subsystem
     scripts/config --disable CONFIG_GENERIC_IRQ_INJECTION
@@ -147,7 +147,6 @@ prepare() {
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-nconfig"
   echo "-> Running localmodconfig..."
   make LSMOD=$HOME/.config/modprobed.db localmodconfig
-#    scripts/config --module CONFIG_WINESYNC
   make nconfig
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-localmod"
   fi

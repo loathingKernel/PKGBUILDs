@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-native
-pkgver=5.15.3.zen1
+pkgver=5.16.10.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Native'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -26,7 +26,7 @@ validpgpkeys=(
   'C5ADB4F3FEBBCE27A3E54D7D9AE4078033F8024D'  # Steven Barrett <steven@liquorix.net>
 )
 sha256sums=('SKIP'
-            'c939d9562586349d2d8dca11d964d17cd010f72260726b982f256c87d0ee5816')
+            '4fb8b32bd7f9b11fa9e546d705982500f8e6ae63e0a49b9d2f2931f86905648e')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -55,8 +55,8 @@ prepare() {
   if true; then
   echo "-> Native config..."
     # General Setup
-    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
-    scripts/config --enable  CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+#    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+#    scripts/config --enable  CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
     scripts/config --enable  CONFIG_EXPERT
     # IRQ subsystem
     scripts/config --disable CONFIG_GENERIC_IRQ_INJECTION
@@ -113,7 +113,6 @@ prepare() {
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-nconfig"
   echo "-> Running localmodconfig..."
   make LSMOD=$HOME/.config/modprobed.db localmodconfig
-#    scripts/config --module CONFIG_WINESYNC
   make nconfig
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-localmod"
   fi
@@ -168,11 +167,11 @@ _package-headers() {
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
 
-  # add objtool for external module building and enabled VALIDATION_STACK option
+  # required when STACK_VALIDATION is enabled
   install -Dt "$builddir/tools/objtool" tools/objtool/objtool
 
-  # add xfs and shmem for aufs building
-  mkdir -p "$builddir"/{fs/xfs,mm}
+  # required when DEBUG_INFO_BTF_MODULES is enabled
+  install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
 
   echo "Installing headers..."
   cp -t "$builddir" -a include

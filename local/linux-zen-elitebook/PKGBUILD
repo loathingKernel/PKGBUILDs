@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-native
-pkgver=5.14.7.zen1
+pkgver=5.15.3.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Native'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -17,7 +17,6 @@ options=('!strip')
 _srcname=zen-kernel
 source=(
   "$_srcname::git+https://github.com/zen-kernel/zen-kernel?signed#tag=$_srctag"
-  0001-winesync.patch
   config         # the main kernel config file
 )
 validpgpkeys=(
@@ -27,8 +26,7 @@ validpgpkeys=(
   'C5ADB4F3FEBBCE27A3E54D7D9AE4078033F8024D'  # Steven Barrett <steven@liquorix.net>
 )
 sha256sums=('SKIP'
-            'SKIP'
-            'e4dafc832ab5c7401d06a4758048e40e9a3ba7db6e764061708c9bf063e05bff')
+            'c939d9562586349d2d8dca11d964d17cd010f72260726b982f256c87d0ee5816')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -110,13 +108,13 @@ prepare() {
     # Kernel Testing and Coverage
     scripts/config --enable  CONFIG_MEMTEST
   make olddefconfig
+  diff -u ../config .config || :
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-native"
   echo "-> Running nconfig..."
   make nconfig
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-nconfig"
   echo "-> Running localmodconfig..."
   make LSMOD=$HOME/.config/modprobed.db localmodconfig
-  scripts/config --module CONFIG_WINESYNC
   make nconfig
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-localmod"
   fi
