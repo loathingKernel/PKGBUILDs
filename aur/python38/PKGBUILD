@@ -9,7 +9,7 @@ shopt -s extglob
 pkgbase=python
 pkgname=(python38 python38-tests)
 pkgver=3.8.12
-pkgrel=1
+pkgrel=2
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="Next generation of the python high-level scripting language, version 3.8"
