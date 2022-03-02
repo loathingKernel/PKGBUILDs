@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom
-_srctag=GE-Proton7-4
+_srctag=GE-Proton7-5
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.2
@@ -248,7 +248,7 @@ prepare() {
     for submodule in gst-plugins-rs media-converter; do
     pushd $submodule
         export RUSTUP_TOOLCHAIN=stable
-        export CARGO_HOME="${srcdir}"/build/.cargo
+        export CARGO_HOME="${SRCDEST}"/proton-cargo
         cargo update
         cargo fetch --locked --target "i686-unknown-linux-gnu"
         cargo fetch --locked --target "x86_64-unknown-linux-gnu"
@@ -332,6 +332,9 @@ build() {
     # AVX2 for 64bit is disabled below.
     export CFLAGS+=" -mno-avx2"
     export CXXFLAGS+=" -mno-avx2"
+
+    # Copy cargo registry to the expected location
+    cp -r "${SRCDEST}"/proton-cargo "${srcdir}"/build/.cargo
 
     export RUSTUP_TOOLCHAIN=stable
     export WINEESYNC=0
