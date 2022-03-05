@@ -1,6 +1,6 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
-pkgbase=linux-zen-native
+pkgbase=linux-zen-elitebook
 pkgver=5.15.3.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Native'
@@ -76,7 +76,7 @@ prepare() {
     scripts/config --disable CONFIG_CPU_SUP_CENTAUR
     scripts/config --disable CONFIG_CPU_SUP_ZHAOXIN
     scripts/config --disable CONFIG_GENERIC_CPU
-    scripts/config --enable  CONFIG_MNATIVE_INTEL
+    scripts/config --enable  CONFIG_MBROADWELL
     scripts/config --set-val CONFIG_NR_CPUS 8
     scripts/config --disable CONFIG_MICROCODE_AMD
     scripts/config --disable CONFIG_NUMA
@@ -116,7 +116,7 @@ prepare() {
   make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-nconfig"
   echo "-> Running localmodconfig..."
-  make LLVM=1 LLVM_IAS=1 LSMOD=$HOME/.config/modprobed.db localmodconfig
+  make LLVM=1 LLVM_IAS=1 LSMOD="${startdir}/modprobed.db" localmodconfig
   make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver%.*}-${pkgrel}-localmod"
   fi
