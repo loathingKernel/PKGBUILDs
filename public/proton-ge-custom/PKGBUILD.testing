@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom
-_srctag=GE-Proton7-5
+_srctag=GE-Proton7-8
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.2
@@ -255,7 +255,7 @@ prepare() {
     popd
     done
 
-    ./patches/protonprep-valve.sh
+    ./patches/protonprep-valve-staging.sh
 
     pushd wine
         # From Arch Wine
@@ -266,7 +266,6 @@ prepare() {
         patch -p1 -i "$srcdir"/wine-more_8x5_res.patch
     popd
 
-#    sed 's/--with-mingw/--without-mingw/g' -i "$srcdir"/proton-sanitize_makefile.patch
     patch -p1 -i "$srcdir"/proton-sanitize_makefile.patch
     patch -p1 -i "$srcdir"/proton-disable_lock.patch
     patch -p1 -i "$srcdir"/proton-user_compat_data.patch
@@ -333,10 +332,8 @@ build() {
     export CFLAGS+=" -mno-avx2"
     export CXXFLAGS+=" -mno-avx2"
 
-    # Copy cargo registry to the expected location
-    cp -r "${SRCDEST}"/proton-cargo "${srcdir}"/build/.cargo
-
     export RUSTUP_TOOLCHAIN=stable
+    export CARGO_HOME="${SRCDEST}"/proton-cargo
     export WINEESYNC=0
     export WINEFSYNC=0
     export DISPLAY=
