@@ -9,7 +9,7 @@ shopt -s extglob
 pkgbase=python
 pkgname=(python38 python38-tests)
 pkgver=3.8.12
-pkgrel=2
+pkgrel=3
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="Next generation of the python high-level scripting language, version 3.8"
@@ -25,6 +25,7 @@ sha256sums=('b1d3a76420375343b5e8a22fceb1ac65b77193e9ed27146524f0a9db058728ea'
             '8eb389be1babe03a0231001dc16dd2d69a3ea0fbf6b8c976a580787e7ff1594c')
 validpgpkeys=('0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D'  # Ned Deily (Python release signing key) <nad@python.org>
               'E3FF2839C048B25C084DEBE9B26995E310250568') # Łukasz Langa (GPG langa.pl) <lukasz@langa.pl>
+provides=("python=$pkgver" "python${_pybasever//./}-pip" "python${_pybasever//./}-setuptools")
 
 prepare() {
   cd Python-${pkgver}
@@ -53,12 +54,13 @@ build() {
   # PGO should be done with -O3
   # Also included the -fno-semantic-interposition optimization:
   # https://fedoraproject.org/wiki/Changes/PythonNoSemanticInterpositionSpeedup
-  CFLAGS="${CFLAGS/-O2/-O3} -fno-semantic-interposition"
+  CFLAGS="${CFLAGS/-O2/-O3} -fno-semantic-interposition -ffat-lto-objects"
   LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
   # Disable bundled pip & setuptools
   ./configure --prefix=/usr \
               --enable-shared \
+              --with-threads \
               --with-computed-gotos \
               --enable-optimizations \
               --with-lto \
@@ -68,7 +70,7 @@ build() {
               --with-system-ffi \
               --with-system-libmpdec \
               --enable-loadable-sqlite-extensions \
-              --without-ensurepip \
+              --with-ensurepip \
               --with-tzpath=/usr/share/zoneinfo
 
   # Obtain next free server number for xvfb-run; this even works in a chroot environment.
