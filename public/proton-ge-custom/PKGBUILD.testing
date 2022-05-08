@@ -131,8 +131,8 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     wine-more_8x5_res.patch
-    proton-sanitize_makefile.patch
-    proton-disable_lock.patch
+    0001-AUR-pkgbuild-changes.patch
+    0002-RevertMe-Use-one-job-for-autoconf-targets-because-of.patch
     proton-user_compat_data.patch
 )
 noextract=(
@@ -267,8 +267,8 @@ prepare() {
         patch -p1 -i "$srcdir"/wine-more_8x5_res.patch
     popd
 
-    patch -p1 -i "$srcdir"/proton-sanitize_makefile.patch
-    patch -p1 -i "$srcdir"/proton-disable_lock.patch
+    patch -p1 -i "$srcdir"/0001-AUR-pkgbuild-changes.patch
+    patch -p1 -i "$srcdir"/0002-RevertMe-Use-one-job-for-autoconf-targets-because-of.patch
     patch -p1 -i "$srcdir"/proton-user_compat_data.patch
 
     # Remove repos from srcdir to save space
