@@ -197,7 +197,7 @@ prepare() {
 
     _submodules=(
         wine-valve::wine
-        dxvk-valve::dxvk
+        dxvk
         openvr
         liberation-fonts::fonts/liberation-fonts
         gstreamer
