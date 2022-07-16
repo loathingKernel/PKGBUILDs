@@ -8,8 +8,8 @@ shopt -s extglob
 
 pkgbase=python
 pkgname=(python38 python38-tests)
-pkgver=3.8.12
-pkgrel=3
+pkgver=3.8.13
+pkgrel=2
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="Next generation of the python high-level scripting language, version 3.8"
@@ -20,12 +20,12 @@ depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib')
 makedepends=('tk' 'sqlite' 'valgrind' 'bluez-libs' 'mpdecimal' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-font')
 source=("https://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"{,.asc}
         mpdecimal-2.5.1.patch)
-sha256sums=('b1d3a76420375343b5e8a22fceb1ac65b77193e9ed27146524f0a9db058728ea'
+sha256sums=('6f309077012040aa39fe8f0c61db8c0fa1c45136763299d375c9e5756f09cf57'
             'SKIP'
             '8eb389be1babe03a0231001dc16dd2d69a3ea0fbf6b8c976a580787e7ff1594c')
 validpgpkeys=('0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D'  # Ned Deily (Python release signing key) <nad@python.org>
               'E3FF2839C048B25C084DEBE9B26995E310250568') # Łukasz Langa (GPG langa.pl) <lukasz@langa.pl>
-provides=("python=$pkgver" "python${_pybasever//./}-pip" "python${_pybasever//./}-setuptools")
+provides=("python=$_pybasever")
 
 prepare() {
   cd Python-${pkgver}
@@ -70,7 +70,7 @@ build() {
               --with-system-ffi \
               --with-system-libmpdec \
               --enable-loadable-sqlite-extensions \
-              --with-ensurepip \
+              --without-ensurepip \
               --with-tzpath=/usr/share/zoneinfo
 
   # Obtain next free server number for xvfb-run; this even works in a chroot environment.
@@ -101,8 +101,6 @@ package_python38() {
               'mpdecimal: for decimal'
               'xz: for lzma'
               'tk: for tkinter')
-  provides=('python3')
-  replaces=('python3')
 
   cd Python-${pkgver}
 
@@ -133,7 +131,7 @@ package_python38() {
 
 package_python38-tests() {
   pkgdesc="Regression tests packages for Python"
-  depends=('python')
+  depends=('python38')
 
   cd Python-${pkgver}
 
