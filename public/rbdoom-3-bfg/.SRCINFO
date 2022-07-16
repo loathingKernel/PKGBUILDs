@@ -1,0 +1,28 @@
+pkgbase = rbdoom-3-bfg
+	pkgdesc = Doom 3 BFG Edition with modern engine features like PBR, Baked Global Illumination, Soft Shadows
+	pkgver = 1.4.0
+	pkgrel = 1
+	url = https://github.com/RobertBeckebans/RBDOOM-3-BFG
+	install = rbdoom-3-bfg.install
+	arch = x86_64
+	license = GPL3
+	makedepends = git
+	makedepends = cmake
+	makedepends = glu
+	depends = ffmpeg
+	depends = openal
+	depends = sdl2
+	optdepends = doom3bfg-data: packaged game data files
+	options = !lto
+	source = git+https://github.com/RobertBeckebans/RBDOOM-3-BFG.git#tag=v1.4.0
+	source = glslang::git+https://github.com/KhronosGroup/glslang.git
+	source = rbdoom-3-bfg.desktop
+	source = rbdoom-3-bfg.png
+	source = rbdoom-3-bfg-launcher
+	sha256sums = SKIP
+	sha256sums = SKIP
+	sha256sums = 414085bd095261665a5cbf6f575b101ae32f24f9e2b00d4ce7eeaa2cd9a6de72
+	sha256sums = 0fb6a3bb9b47cad65d5012ba20dc9de3b1487f4ac1908ee847e6087511b7f09e
+	sha256sums = f2690f82beedee7f1f4c981851437e6e0141482a694b44828dd04d372eb934e9
+
+pkgname = rbdoom-3-bfg
