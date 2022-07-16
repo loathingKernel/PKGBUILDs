@@ -1,0 +1,56 @@
+# Maintainer: robertfoster
+# Contributor: Mike Swanson <mikeonthecomputer@gmail.com>
+# Contributor:
+
+pkgname=dhewm3
+pkgver=1.5.2
+pkgrel=1
+pkgdesc="Doom 3 engine with native 64-bit support, SDL, and OpenAL"
+arch=('i686' 'x86_64')
+url="https://github.com/dhewm/dhewm3"
+license=('GPL3')
+depends=('curl' 'libjpeg' 'libvorbis' 'openal' 'sdl2')
+optdepends=('doom3-data')
+makedepends=('cmake')
+source=("${url}/archive/${pkgver}.tar.gz"
+  "${pkgname}-launcher"
+  "${pkgname}.desktop"
+  "${pkgname}.png"
+)
+options=(!lto)
+install="${pkgname}.install"
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  cmake -Wno-dev \
+    -B build \
+    -DCMAKE_BUILD_TYPE="Release" \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DREPRODUCIBLE_BUILD=1 \
+    -DD3XP=1 \
+    -DDEDICATED=1 \
+    -S neo
+  cmake --build build
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  DESTDIR="${pkgdir}" \
+    cmake --install build
+
+  install -Dm644 "${srcdir}/${pkgname}.desktop" \
+    "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -Dm644 "${srcdir}/${pkgname}.png" \
+    "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  install -Dm644 base/default.cfg \
+    "${pkgdir}/usr/share/dhewm3/base/default.cfg"
+  install -dm755 "${pkgdir}/usr/share/dhewm3/d3xp"
+  install -Dm755 "${srcdir}/$pkgname-launcher" \
+    "${pkgdir}/usr/bin/${pkgname}-launcher"
+}
+
+sha256sums=('0652d85bcc470b8535dee0fc6badd57a82a183984f7a02a3fa13937436166eb0'
+            '5019006303a11b51612824b7609c98bff973c8b787821513ee1416bbea28d37d'
+            'bd4862bde1a6d9ff7d8bec8e2dcede20c5d8bc8b0d4fe99a829949e4a06e4301'
+            '4f17fd5c3b7ada4c6d2445d760d9d83bf782398d40ad6369cd58f2c373b93b86')

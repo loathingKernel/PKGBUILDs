@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=dhewm3
+Exec=dhewm3-launcher
+Icon=dhewm3
+StartupNotify=true
+Terminal=false
+Type=Application
+Comment=Doom 3 source port
+Categories=Game;ActionGame;
+Path=
