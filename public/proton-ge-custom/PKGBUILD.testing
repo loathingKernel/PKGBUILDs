@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom
-_srctag=GE-Proton7-27
+_srctag=GE-Proton7-28
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.3
@@ -31,7 +31,6 @@ depends=(
   libpcap          lib32-libpcap
   lzo              lib32-lzo
   libxkbcommon     lib32-libxkbcommon
-  faudio           lib32-faudio
   libvpx           lib32-libvpx
   'sdl2>=2.0.16'   'lib32-sdl2>=2.0.16'
   libsoup3         lib32-libsoup3
@@ -104,7 +103,6 @@ provides=('proton')
 #install=${pkgname}.install
 source=(
     proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#tag=${_srctag}
-#    proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#commit=${_commit}
     wine-valve::git+https://github.com/ValveSoftware/wine.git
     dxvk::git+https://github.com/doitsujin/dxvk.git
     openvr::git+https://github.com/ValveSoftware/openvr.git
@@ -132,7 +130,11 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     0001-AUR-pkgbuild-changes.patch
-    0001-Add-PROTON_USER_COMPAT_DATA-environment-variable.patch
+)
+# Optional patches
+source+=(
+    0001-Add-user-compat-data-path-env-variable.patch
+    70-proton-add_fsr_res_by_aspect_ratio.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -255,11 +257,11 @@ prepare() {
         sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i configure*
         # Fix openldap 2.5+ detection
         sed 's/-lldap_r/-lldap/' -i configure
-        # Adds more 16:10 resolutions for use with FSR
+        patch -p1 -i "$srcdir"/70-proton-add_fsr_res_by_aspect_ratio.patch
     popd
 
     patch -p1 -i "$srcdir"/0001-AUR-pkgbuild-changes.patch
-    patch -p1 -i "$srcdir"/0001-Add-PROTON_USER_COMPAT_DATA-environment-variable.patch
+    patch -p1 -i "$srcdir"/0001-Add-user-compat-data-path-env-variable.patch
 
     # Remove repos from srcdir to save space
     for submodule in "${_submodules[@]}"; do
@@ -286,10 +288,9 @@ build() {
     # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
     # If you want the "best" possible optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
-    # `-O2` is adjusted to `-O3` since AVX is disabled
-    export CFLAGS="-O3 -march=haswell -mtune=haswell -pipe"
-    export CXXFLAGS="-O3 -march=haswell -mtune=haswell -pipe"
-    export RUSTFLAGS="-C opt-level=3 -C target-cpu=haswell"
+    export CFLAGS="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
+    export CXXFLAGS="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
+    export RUSTFLAGS="-C opt-level=2 -C target-cpu=haswell"
     export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
@@ -380,5 +381,8 @@ sha256sums=('SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '60314f255031b2f4dc49f22eacfcd2b3b8b2b491120d703b4b62cc1fef0f9bdd'
+            'SKIP')
+sha256sums+=(
             'SKIP'
-            'a23a31c2879699129c86ab9a768e7ba657496d22e27d7609709802c2821e9822')
+            'SKIP'
+)
