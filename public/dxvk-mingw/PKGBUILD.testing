@@ -1,8 +1,9 @@
 # Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
 pkgname=dxvk-mingw
-pkgver=1.10.1.r237.gce48b57f
+pkgver=1.10.3
 _asyncver=master
+_asyncver=1111b69
 pkgrel=1
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
 arch=('x86_64')
@@ -14,7 +15,7 @@ provides=('dxvk' 'd9vk' "dxvk=$pkgver")
 conflicts=('dxvk' 'd9vk')
 options=(!lto !staticlibs)
 source=(
-    "git+https://github.com/doitsujin/dxvk.git"
+    "git+https://github.com/doitsujin/dxvk.git#tag=v$pkgver"
     "dxvk-async-${_asyncver}.patch::https://raw.githubusercontent.com/Sporif/dxvk-async/${_asyncver}/dxvk-async.patch"
     "dxvk-async-conf.patch"
     "dxvk-extraopts.patch"
@@ -23,7 +24,8 @@ source=(
 
 pkgver() {
     cd dxvk
-    printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g')"
+    #printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g')"
+    printf "%s" "$pkgver"
 }
 
 prepare() {
@@ -33,16 +35,15 @@ prepare() {
     # Enable at your own risk. If you don't know what it is,
     # and its implications, leave it as is. You have been warned.
     # I am not liable if anything happens to you by using it.
-    #patch -p1 -i "$srcdir"/dxvk-async-${_asyncver}.patch
-    #patch -p1 -i "$srcdir"/dxvk-async-conf.patch
+    patch -p1 -i "$srcdir"/dxvk-async-${_asyncver}.patch
+    patch -p1 -i "$srcdir"/dxvk-async-conf.patch
 
     # By default export FLAGS used by proton and ignore makepkg
     # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
     # If you want the "best" possible optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
-    # `-O2` is adjusted to `-O3` since AVX is disabled
-    export CFLAGS="-O3 -march=haswell -mtune=haswell -pipe"
-    export CXXFLAGS="-O3 -march=haswell -mtune=haswell -pipe"
+    export CFLAGS="-O2 -march=haswell -mtune=haswell -pipe"
+    export CXXFLAGS="-O2 -march=haswell -mtune=haswell -pipe"
     export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # Uncomment to enable extra optimizations
