@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom
-_srctag=GE-Proton7-28
+_srctag=GE-Proton7-29
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.3
@@ -134,7 +134,6 @@ source=(
 # Optional patches
 source+=(
     0001-Add-user-compat-data-path-env-variable.patch
-    70-proton-add_fsr_res_by_aspect_ratio.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -257,7 +256,6 @@ prepare() {
         sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i configure*
         # Fix openldap 2.5+ detection
         sed 's/-lldap_r/-lldap/' -i configure
-        patch -p1 -i "$srcdir"/70-proton-add_fsr_res_by_aspect_ratio.patch
     popd
 
     patch -p1 -i "$srcdir"/0001-AUR-pkgbuild-changes.patch
@@ -383,6 +381,5 @@ sha256sums=('SKIP'
             '60314f255031b2f4dc49f22eacfcd2b3b8b2b491120d703b4b62cc1fef0f9bdd'
             'SKIP')
 sha256sums+=(
-            'SKIP'
             'SKIP'
 )
