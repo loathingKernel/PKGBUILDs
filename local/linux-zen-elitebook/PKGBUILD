@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=5.15.3.zen1
+pkgver=5.19.7.zen2
 pkgrel=1
 pkgdesc='Linux ZEN Native'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -9,8 +9,7 @@ url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
-  bc kmod libelf pahole cpio perl tar xz
-  xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick
+  bc libelf pahole cpio perl tar xz
   git
 )
 options=('!strip')
@@ -26,7 +25,7 @@ validpgpkeys=(
   'C5ADB4F3FEBBCE27A3E54D7D9AE4078033F8024D'  # Steven Barrett <steven@liquorix.net>
 )
 sha256sums=('SKIP'
-            'c939d9562586349d2d8dca11d964d17cd010f72260726b982f256c87d0ee5816')
+            '49c471ab3cf341c6333f08957c0c3cfccc38a7cef2c9ca1895888f4674b441ec')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -83,12 +82,12 @@ prepare() {
     scripts/config --set-val CONFIG_HZ 300
     scripts/config --disable CONFIG_KEXEC_FILE
     scripts/config --disable CONFIG_CRASH_DUMP
-    scripts/config --disable CONFIG_RANDOMIZE_BASE
-    scripts/config --disable CONFIG_DYNAMIC_MEMORY_LAYOUT
-    scripts/config --set-val CONFIG_PHYSICAL_ALIGN 0x1000000
+#    scripts/config --disable CONFIG_RANDOMIZE_BASE
+#    scripts/config --disable CONFIG_DYNAMIC_MEMORY_LAYOUT
+#    scripts/config --set-val CONFIG_PHYSICAL_ALIGN 0x1000000
     # CPU Frequency scaling
     # EFI (Extensible Firmware Interface) Support
-    scripts/config --disable CONFIG_EFI_SOFT_RESERVE    
+#    scripts/config --disable CONFIG_EFI_SOFT_RESERVE    
     # Memory Management options
     scripts/config --disable CONFIG_MEMORY_HOTPLUG
     scripts/config --disable CONFIG_TRANSPARENT_HUGEPAGE_ALWAYS
@@ -131,9 +130,10 @@ build() {
 _package() {
   pkgdesc="The $pkgdesc kernel and modules"
   depends=(coreutils kmod initramfs)
-  optdepends=('crda: to set the correct wireless channels of your country'
+  optdepends=('wireless-regdb: to set the correct wireless channels of your country'
               'linux-firmware: firmware images needed for some devices')
-  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE VHBA-MODULE)
+  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE VHBA-MODULE
+            UKSMD-BUILTIN)
   replaces=()
 
   cd $_srcname
@@ -149,7 +149,8 @@ _package() {
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 modules_install
+  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+    DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build and source links
   rm "$modulesdir"/{source,build}
@@ -169,11 +170,11 @@ _package-headers() {
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
 
-  # add objtool for external module building and enabled VALIDATION_STACK option
+  # required when STACK_VALIDATION is enabled
   install -Dt "$builddir/tools/objtool" tools/objtool/objtool
 
-  # add xfs and shmem for aufs building
-  mkdir -p "$builddir"/{fs/xfs,mm}
+  # required when DEBUG_INFO_BTF_MODULES is enabled
+  install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
 
   echo "Installing headers..."
   cp -t "$builddir" -a include

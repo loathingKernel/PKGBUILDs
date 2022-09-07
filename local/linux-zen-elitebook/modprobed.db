@@ -1,7 +1,6 @@
 ac97_bus
 aesni_intel
 af_alg
-agpgart
 algif_hash
 algif_skcipher
 at24
@@ -11,6 +10,7 @@ bnep
 bridge
 btbcm
 btintel
+btmtk
 btrtl
 btusb
 ccm
@@ -60,6 +60,7 @@ ipt_REJECT
 irqbypass
 iTCO_vendor_support
 iTCO_wdt
+iwlmei
 iwlmvm
 iwlwifi
 joydev
@@ -79,6 +80,7 @@ mc
 mei
 mei_hdcp
 mei_me
+mei_pxp
 mei_wdt
 mmc_core
 mousedev
@@ -130,11 +132,15 @@ snd_hda_codec_hdmi
 snd_hda_codec_realtek
 snd_hda_core
 snd_hda_intel
+snd_hrtimer
 snd_hwdep
 snd_intel_dspcfg
 snd_intel_sdw_acpi
 snd_pcm
 snd_pcm_dmaengine
+snd_seq
+snd_seq_device
+snd_seq_dummy
 snd_soc_core
 snd_timer
 soundcore
