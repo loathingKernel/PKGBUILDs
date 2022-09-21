@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom
-_srctag=GE-Proton7-33
+_srctag=GE-Proton7-35
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.3
@@ -101,7 +101,7 @@ optdepends=(
 
 makedepends=(${makedepends[@]} ${depends[@]})
 provides=('proton')
-#install=${pkgname}.install
+install=${pkgname}.install
 source=(
     proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#tag=${_srctag}
     wine-valve::git+https://github.com/ValveSoftware/wine.git
@@ -119,6 +119,7 @@ source=(
     Vulkan-Headers::git+https://github.com/KhronosGroup/Vulkan-Headers.git
     SPIRV-Headers::git+https://github.com/KhronosGroup/SPIRV-Headers.git
     Vulkan-Loader::git+https://github.com/KhronosGroup/Vulkan-Loader.git
+    glslang::git+https://github.com/KhronosGroup/glslang.git
     gst-libav::git+https://gitlab.freedesktop.org/gstreamer/gst-libav.git
     ffmpeg::git+https://git.ffmpeg.org/ffmpeg.git
     dav1d::git+https://code.videolan.org/videolan/dav1d.git
@@ -203,6 +204,7 @@ prepare() {
         Vulkan-Headers
         SPIRV-Headers
         Vulkan-Loader
+        glslang
         gst-libav
         ffmpeg::FFmpeg
         dav1d
@@ -360,6 +362,7 @@ package() {
 }
 
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
