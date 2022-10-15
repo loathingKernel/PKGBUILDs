@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=5.19.7.zen2
+pkgver=6.0.1.zen2
 pkgrel=1
 pkgdesc='Linux ZEN Native'
 _srctag=v${pkgver%.*}-${pkgver##*.}
@@ -25,7 +25,7 @@ validpgpkeys=(
   'C5ADB4F3FEBBCE27A3E54D7D9AE4078033F8024D'  # Steven Barrett <steven@liquorix.net>
 )
 sha256sums=('SKIP'
-            '49c471ab3cf341c6333f08957c0c3cfccc38a7cef2c9ca1895888f4674b441ec')
+            '4415388555aab8845e60f6b3996e3a75b8159d516b7b04a6adb8ade54de3ff9c')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -55,8 +55,8 @@ prepare() {
   echo "-> Native config..."
     # General Setup
     scripts/config --disable CONFIG_ZEN_INTERACTIVE
-    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
-    scripts/config --enable  CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+#    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+#    scripts/config --enable  CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
     scripts/config --enable  CONFIG_EXPERT
     # IRQ subsystem
     scripts/config --disable CONFIG_GENERIC_IRQ_INJECTION
