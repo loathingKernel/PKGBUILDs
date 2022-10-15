@@ -29,6 +29,8 @@ crypto_user
 curve25519_x86_64
 deflate
 drm
+drm_buddy
+drm_display_helper
 drm_kms_helper
 e1000e
 ehci_hcd
@@ -39,6 +41,7 @@ fat
 fb_sys_fops
 ff_memless
 fuse
+gf128mul
 ghash_clmulni_intel
 glue_helper
 gspca_main
@@ -119,6 +122,8 @@ nf_reject_ipv4
 ntfs3
 pktcdvd
 poly1305_x86_64
+polyval_clmulni
+polyval_generic
 raid0
 raid6_pq
 rapl
