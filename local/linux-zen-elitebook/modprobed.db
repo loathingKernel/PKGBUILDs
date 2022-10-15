@@ -1,6 +1,7 @@
 ac97_bus
 aesni_intel
 af_alg
+agpgart
 algif_hash
 algif_skcipher
 at24
@@ -14,6 +15,7 @@ btmtk
 btrtl
 btusb
 ccm
+cdc_ether
 cec
 cfg80211
 cmac
@@ -28,6 +30,9 @@ cryptd
 crypto_simd
 crypto_user
 drm
+drm_buddy
+drm_display_helper
+drm_dp_helper
 drm_kms_helper
 e1000e
 ecc
@@ -36,6 +41,7 @@ f2fs
 fat
 fb_sys_fops
 fuse
+gf128mul
 ghash_clmulni_intel
 hp_accel
 hp_wmi
@@ -53,6 +59,8 @@ intel_rapl_msr
 intel_spi
 intel_spi_platform
 intel_uncore
+ipmi_devintf
+ipmi_msghandler
 iptable_filter
 iptable_nat
 ip_tables
@@ -82,6 +90,7 @@ mei_hdcp
 mei_me
 mei_pxp
 mei_wdt
+mii
 mmc_core
 mousedev
 mtd
@@ -113,10 +122,13 @@ nft_reject_inet
 nft_reject_ipv4
 ntfs3
 platform_profile
+polyval_clmulni
+polyval_generic
 psmouse
 rapl
 rfcomm
 rfkill
+rndis_host
 rng_core
 rtsx_pci
 rtsx_pci_sdmmc
@@ -149,6 +161,8 @@ soundwire_cadence
 soundwire_generic_allocation
 soundwire_intel
 sparse_keymap
+spi_intel
+spi_intel_platform
 spi_nor
 stp
 syscopyarea
@@ -163,6 +177,7 @@ uas
 usbhid
 usbip_core
 usbip_host
+usbnet
 usb_storage
 uvcvideo
 vfat
@@ -173,6 +188,7 @@ videobuf2_memops
 videobuf2_v4l2
 videobuf2_vmalloc
 videodev
+vivaldi_fmap
 winesync
 wireguard
 wireless_hotkey
