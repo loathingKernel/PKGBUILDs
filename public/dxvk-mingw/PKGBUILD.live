@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
 pkgname=dxvk-mingw
-pkgver=1.10.3
+pkgver=2.0.r0.g8f8a9369
 _asyncver=master
 pkgrel=1
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
@@ -15,6 +15,8 @@ conflicts=('dxvk' 'd9vk')
 options=(!lto !staticlibs)
 source=(
     "git+https://github.com/doitsujin/dxvk.git"
+    "git+https://github.com/KhronosGroup/Vulkan-Headers.git"
+    "git+https://github.com/KhronosGroup/SPIRV-Headers.git"
     "dxvk-async-${_asyncver}.patch::https://raw.githubusercontent.com/Sporif/dxvk-async/${_asyncver}/dxvk-async.patch"
     "dxvk-async-conf.patch"
     "dxvk-extraopts.patch"
@@ -28,6 +30,11 @@ pkgver() {
 
 prepare() {
     cd dxvk
+
+    git submodule init include/{vulkan,spirv}
+    git submodule set-url include/vulkan "$srcdir/Vulkan-Headers"
+    git submodule set-url include/spirv "$srcdir/SPIRV-Headers"
+    git -c protocol.file.allow=always submodule update include/{vulkan,spirv}
 
     # Uncomment to enable dxvk async patch.
     # Enable at your own risk. If you don't know what it is,
@@ -85,22 +92,20 @@ prepare() {
 }
 
 build() {
-    meson dxvk "build/x64" \
+    meson setup dxvk "build/x64" \
         --cross-file dxvk/build-win64.txt \
         --prefix "/usr/share/dxvk/x64" \
         --bindir "" --libdir "" \
         --buildtype "plain" \
-        --strip \
-        -Denable_tests=false
+        --strip
     ninja -C "build/x64" -v
 
-    meson dxvk "build/x32" \
+    meson setup dxvk "build/x32" \
         --cross-file dxvk/build-win32.txt \
         --prefix "/usr/share/dxvk/x32" \
         --bindir "" --libdir "" \
         --buildtype "plain" \
-        --strip \
-        -Denable_tests=false
+        --strip
     ninja -C "build/x32" -v
 }
 
@@ -115,6 +120,8 @@ package() {
 }
 
 sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
             'SKIP'
             'c9c2f02bce1e1e93d511aff73484208456835d4d7601a36ab4524939472fc401'
             'bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362'
