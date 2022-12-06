@@ -1,0 +1,37 @@
+pkgbase = vkd3d-proton-mingw-git
+	pkgdesc = Fork of VKD3D. Development branches for Protons Direct3D 12 implementation
+	pkgver = 2.7.r0.g4df36617
+	pkgrel = 1
+	url = https://github.com/HansKristian-Work/vkd3d-proton
+	arch = x86_64
+	license = LGPL-2.1
+	makedepends = ninja
+	makedepends = meson>=0.43
+	makedepends = glslang
+	makedepends = git
+	makedepends = mingw-w64-gcc
+	makedepends = mingw-w64-tools
+	depends = vulkan-icd-loader
+	depends = lib32-vulkan-icd-loader
+	depends = bash
+	provides = vkd3d-proton
+	provides = d3d12.dll
+	provides = vkd3d-proton=2.7.r0.g4df36617
+	conflicts = vkd3d-proton
+	conflicts = d3d12.dll
+	options = !lto
+	options = !staticlibs
+	source = git+https://github.com/HansKristian-Work/vkd3d-proton.git
+	source = git+https://github.com/HansKristian-Work/dxil-spirv.git
+	source = git+https://github.com/KhronosGroup/Vulkan-Headers.git
+	source = git+https://github.com/KhronosGroup/SPIRV-Headers.git
+	source = setup_vkd3d_proton
+	source = vkd3d-proton-extraopts.patch
+	sha256sums = SKIP
+	sha256sums = SKIP
+	sha256sums = SKIP
+	sha256sums = SKIP
+	sha256sums = 67815eed9d47bbf610e23c6a1e4954c11371886c2ca73555dd9f1d6fbebb1323
+	sha256sums = 8fc019d1dca8c52b6af96c40ff06a6c215aad3e713ae17be72c7422f1ba45634
+
+pkgname = vkd3d-proton-mingw-git
