@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - 'public/python-unrar-cffi/.SRCINFO'
+     - 'aur/python-unrar-cffi/.SRCINFO'
 
 jobs:
   package:
@@ -18,7 +18,7 @@ jobs:
       id: makepkg
       uses: loathingkernel/pkgbuild-action@master
       with:
-        pkgdir: "public/python-unrar-cffi"
+        pkgdir: "aur/python-unrar-cffi"
         pacmanConf: "misc/packages_pacman.conf"
         makepkgConf: "misc/packages_makepkg.conf"
         repoReleaseTag: "packages"
