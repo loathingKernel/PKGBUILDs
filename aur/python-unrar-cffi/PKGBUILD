@@ -14,6 +14,7 @@ depends=(python-{build,installer,wheel}
 )
 makedepends=(
   'python-pytest'
+  'python-pytest-runner'
 )
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
 sha256sums=('9de6d907c0728724be07acfcb479eadf2692f1039ca7cf2df268abb5dfaf4b5d')

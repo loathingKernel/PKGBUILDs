@@ -6,6 +6,7 @@ pkgbase = python-unrar-cffi
 	arch = any
 	license = Apache
 	makedepends = python-pytest
+	makedepends = python-pytest-runner
 	depends = python-build
 	depends = python-installer
 	depends = python-wheel
