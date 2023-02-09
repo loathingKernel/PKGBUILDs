@@ -19,6 +19,8 @@ jobs:
       uses: loathingkernel/pkgbuild-action@master
       with:
         pkgdir: "public/comictagger"
+        pacmanConf: "packages_pacman.conf"
+        makepkgConf: "packages_makepkg.conf"
         repoReleaseTag: "packages"
     - name: Print Package Files
       run: |
