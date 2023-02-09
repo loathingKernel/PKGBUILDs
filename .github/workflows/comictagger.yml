@@ -19,7 +19,6 @@ jobs:
       uses: loathingkernel/pkgbuild-action@master
       with:
         pkgdir: "public/comictagger"
-        aurDeps: 1
         repoReleaseTag: "packages"
     - name: Print Package Files
       run: |
