@@ -13,19 +13,51 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Makepkg Build and Check
       id: makepkg
-      uses: loathingkernel/pkgbuild-action@v1
+      uses: loathingkernel/pkgbuild-action@master
       with:
         pkgdir: "public/wine-ge-custom"
+        pacmanConf: "misc/packages_pacman.conf"
+        makepkgConf: "misc/packages_makepkg.conf"
+        multilib: true
+        repoReleaseTag: "packages"
     - name: Print Package Files
       run: |
         echo "Successfully created the following package archive"
         echo "Package: ${{ steps.makepkg.outputs.pkgfile0 }}"
+        echo "Package: ${{ steps.makepkg.outputs.repofile0 }}"
+        echo "Package: ${{ steps.makepkg.outputs.repofile1 }}"
+        echo "Package: ${{ steps.makepkg.outputs.repofile2 }}"
+        echo "Package: ${{ steps.makepkg.outputs.repofile3 }}"
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{secrets.GITHUB_TOKEN}}
         tag: packages
         file: ${{ steps.makepkg.outputs.pkgfile0 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        tag: packages
+        file: ${{ steps.makepkg.outputs.repofile0 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        tag: packages
+        file: ${{ steps.makepkg.outputs.repofile1 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        tag: packages
+        file: ${{ steps.makepkg.outputs.repofile2 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        tag: packages
+        file: ${{ steps.makepkg.outputs.repofile3 }}
         overwrite: true
