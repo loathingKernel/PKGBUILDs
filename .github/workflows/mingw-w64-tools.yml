@@ -21,6 +21,7 @@ jobs:
         pkgdir: "aur/mingw-w64-tools"
         pacmanConf: "misc/packages_pacman.conf"
         makepkgConf: "misc/packages_makepkg.conf"
+        makepkgArgs: --skippgpcheck
         repoReleaseTag: "packages"
     - name: Print Package Files
       run: |
