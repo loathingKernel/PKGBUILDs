@@ -22,6 +22,7 @@ jobs:
         pacmanConf: "misc/packages_pacman.conf"
         makepkgConf: "misc/packages_makepkg.conf"
         makepkgArgs: -p PKGBUILD.testing
+        multilib: true
         repoReleaseTag: "packages"
     - name: Print Package Files
       run: |

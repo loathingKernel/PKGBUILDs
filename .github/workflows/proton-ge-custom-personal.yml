@@ -22,6 +22,7 @@ jobs:
         pacmanConf: "misc/personal_pacman.conf"
         makepkgConf: "misc/personal_makepkg.conf"
         makepkgArgs: -p PKGBUILD.testing
+        multilib: true
         repoReleaseTag: "personal"
     - name: Print Package Files
       run: |
