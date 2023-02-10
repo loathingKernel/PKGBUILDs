@@ -1,4 +1,4 @@
-name: proton-ge-custom
+name: afdko
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - 'public/proton-ge-custom/.SRCINFO'
+     - 'aur/afdko/.SRCINFO'
 
 jobs:
   package:
@@ -18,10 +18,9 @@ jobs:
       id: makepkg
       uses: loathingkernel/pkgbuild-action@master
       with:
-        pkgdir: "public/proton-ge-custom"
+        pkgdir: "aur/afdko"
         pacmanConf: "misc/packages_pacman.conf"
         makepkgConf: "misc/packages_makepkg.conf"
-        multilib: true
         repoReleaseTag: "packages"
     - name: Print Package Files
       run: |
