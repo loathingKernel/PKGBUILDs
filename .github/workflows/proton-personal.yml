@@ -1,4 +1,4 @@
-name: proton personal
+name: proton-personal
 
 on:
   workflow_dispatch:

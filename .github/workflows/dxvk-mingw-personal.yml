@@ -1,4 +1,4 @@
-name: dxvk-mingw personal
+name: dxvk-mingw-personal
 
 on:
   workflow_dispatch:
