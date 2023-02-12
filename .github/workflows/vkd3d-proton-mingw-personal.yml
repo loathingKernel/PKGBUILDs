@@ -1,4 +1,4 @@
-name: vkd3d-proton-mingw
+name: vkd3d-proton-mingw-personal
 
 on:
   workflow_dispatch:
@@ -19,9 +19,10 @@ jobs:
       uses: loathingkernel/pkgbuild-action@master
       with:
         pkgdir: "public/vkd3d-proton-mingw"
-        pacmanConf: "misc/packages_pacman.conf"
-        makepkgConf: "misc/packages_makepkg.conf"
-        repoReleaseTag: "packages"
+        pacmanConf: "misc/personal_pacman.conf"
+        makepkgConf: "misc/personal_makepkg.conf"
+        makepkgArgs: -p PKGBUILD.testing
+        repoReleaseTag: "personal"
     - name: Print Package Files
       run: |
         echo "Successfully created the following package archive"
@@ -33,30 +34,30 @@ jobs:
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{secrets.GITHUB_TOKEN}}
-        tag: packages
+        tag: personal
         file: ${{ steps.makepkg.outputs.pkgfile0 }}
         overwrite: true
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{secrets.GITHUB_TOKEN}}
-        tag: packages
+        tag: personal
         file: ${{ steps.makepkg.outputs.repofile0 }}
         overwrite: true
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{secrets.GITHUB_TOKEN}}
-        tag: packages
+        tag: personal
         file: ${{ steps.makepkg.outputs.repofile1 }}
         overwrite: true
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{secrets.GITHUB_TOKEN}}
-        tag: packages
+        tag: personal
         file: ${{ steps.makepkg.outputs.repofile2 }}
         overwrite: true
     - uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{secrets.GITHUB_TOKEN}}
-        tag: packages
+        tag: personal
         file: ${{ steps.makepkg.outputs.repofile3 }}
         overwrite: true
