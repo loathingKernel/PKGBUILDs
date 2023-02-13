@@ -1,4 +1,4 @@
-name: vkd3d-proton-mingw-git
+name: vkd3d-proton-mingw-git-personal
 
 on:
   workflow_dispatch:
