@@ -21,7 +21,6 @@ jobs:
         pkgdir: "aur/pi-hole-ftl"
         pacmanConf: "misc/packages_pacman.conf"
         makepkgConf: "misc/packages_makepkg.conf"
-        multilib: true
         repoReleaseTag: "packages"
     - name: Print Package Files
       run: |
