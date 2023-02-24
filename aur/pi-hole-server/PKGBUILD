@@ -8,7 +8,6 @@ pkgver=5.15.5
 pkgrel=1
 _wwwpkgname=AdminLTE
 _wwwpkgver=5.18.4
-_now=`date +%N`
 pkgdesc='The Pi-hole is an advertising-aware DNS/Web server. Arch adaptation for lan wide DNS server.'
 arch=('any')
 license=('EUPL-1.2')
@@ -28,8 +27,8 @@ backup=('etc/dnsmasq.d/01-pihole.conf' 'etc/pihole/adlists.list' 'etc/dnsmasq.co
 
 source=($pkgname-core-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/archive/v$pkgver.tar.gz
 	    $pkgname-admin-$_wwwpkgver.tar.gz::https://github.com/$_pkgname/$_wwwpkgname/archive/v$_wwwpkgver.tar.gz
-        arch-server-core-$pkgver-$_now.patch::"https://raw.githubusercontent.com/max72bra/pi-hole-server-archlinux-customization/master/arch-server-core-$pkgver.patch"
-        arch-server-admin-$_wwwpkgver-$_now.patch::"https://raw.githubusercontent.com/max72bra/pi-hole-server-archlinux-customization/master/arch-server-admin-$_wwwpkgver.patch"
+        arch-server-core-$pkgver.patch::"https://raw.githubusercontent.com/max72bra/pi-hole-server-archlinux-customization/master/arch-server-core-$pkgver.patch"
+        arch-server-admin-$_wwwpkgver.patch::"https://raw.githubusercontent.com/max72bra/pi-hole-server-archlinux-customization/master/arch-server-admin-$_wwwpkgver.patch"
 	    dnsmasq.include
 	    lighttpd.pi-hole.conf
 	    nginx.pi-hole.conf
@@ -61,9 +60,9 @@ sha256sums=('fa723c7573b0441b5f28300313eb99508853df1752720208f6cf6008da63abc2'
 
 prepare() {
   cd "$srcdir"/"$_pkgname"-"$pkgver"
-  patch -Np1 -i "$srcdir"/arch-server-core-$pkgver-$_now.patch
+  patch -Np1 -i "$srcdir"/arch-server-core-$pkgver.patch
   cd "$srcdir"/"$_wwwpkgname"-"$_wwwpkgver"
-  patch -Np1 -i "$srcdir"/arch-server-admin-$_wwwpkgver-$_now.patch
+  patch -Np1 -i "$srcdir"/arch-server-admin-$_wwwpkgver.patch
 }
 
 package() {
