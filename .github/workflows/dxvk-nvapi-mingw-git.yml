@@ -3,12 +3,12 @@ name: dxvk-nvapi-mingw-git
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 0 */3 * *'
+    - cron:  '0 3 */3 * *'
   push:
     branches:
      - master
     paths:
-     - 'local/dxvk-nvapi-mingw-git/.SRCINFO'
+     - 'public/dxvk-nvapi-mingw-git/.SRCINFO'
 
 jobs:
   package:
@@ -20,7 +20,7 @@ jobs:
       id: makepkg
       uses: loathingkernel/pkgbuild-action@master
       with:
-        pkgdir: "local/dxvk-nvapi-mingw-git"
+        pkgdir: "public/dxvk-nvapi-mingw-git"
         pacmanConf: "misc/packages_pacman.conf"
         makepkgConf: "misc/packages_makepkg.conf"
         repoReleaseTag: "packages"
