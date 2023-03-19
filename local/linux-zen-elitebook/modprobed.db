@@ -1,7 +1,6 @@
 ac97_bus
 aesni_intel
 af_alg
-agpgart
 algif_hash
 algif_skcipher
 at24
@@ -66,6 +65,7 @@ iptable_nat
 ip_tables
 ipt_REJECT
 irqbypass
+isofs
 iTCO_vendor_support
 iTCO_wdt
 iwlmei

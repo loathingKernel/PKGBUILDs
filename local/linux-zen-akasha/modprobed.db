@@ -28,6 +28,7 @@ crypto_simd
 crypto_user
 curve25519_x86_64
 deflate
+dm_mod
 drm
 drm_buddy
 drm_display_helper
@@ -118,7 +119,14 @@ nf_nat_irc
 nf_nat_pptp
 nf_nat_sip
 nf_nat_tftp
+nfnetlink
 nf_reject_ipv4
+nf_tables
+nft_chain_nat
+nft_ct
+nft_masq
+nft_reject
+nft_reject_ipv4
 ntfs3
 pktcdvd
 poly1305_x86_64
@@ -130,6 +138,7 @@ rapl
 rfkill
 rng_core
 sg
+sha512_ssse3
 snd
 snd_compress
 snd_hda_codec
