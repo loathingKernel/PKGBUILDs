@@ -5,7 +5,7 @@
 # Contributor: Partha Chowdhury <kira.laucas@gmail.com>
 
 pkgname=conky
-pkgver=1.18.1
+pkgver=1.18.2.r3.g1474cd09
 _gitcommit=a21a8f7d26f07f1dc5c144be2120e8bc6721159f
 pkgrel=1
 pkgdesc='Lightweight system monitor for X'
@@ -18,9 +18,7 @@ depends=(
   'libxml2' 'libpulse' 'libxnvctrl' 'systemd-libs' 'ncurses' 'curl'
   'tolua++' 'cairo' 'librsvg'
   libncursesw.so libXNVCtrl.so libsystemd.so libpulse.so libcurl.so)
-#source=("git+https://github.com/brndnmtthws/conky.git#commit=${_gitcommit}?signed")
-#v1.17.0 commit not signed
-source=("git+https://github.com/brndnmtthws/conky.git#tag=v$pkgver?signed")
+source=("git+https://github.com/brndnmtthws/conky.git")
 sha512sums=('SKIP')
 b2sums=('SKIP')
 validpgpkeys=(
@@ -29,7 +27,7 @@ validpgpkeys=(
 
 pkgver() {
   cd ${pkgname}
-  git describe --tags --match 'v*' | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
