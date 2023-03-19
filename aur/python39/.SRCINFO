@@ -38,7 +38,3 @@ pkgname = python39
 	optdepends = mpdecimal: for decimal
 	optdepends = xz: for lzma
 	optdepends = tk: for tkinter
-
-pkgname = python39-tests
-	pkgdesc = Regression tests packages for Python
-	depends = python39

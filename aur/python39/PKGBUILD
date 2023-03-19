@@ -7,7 +7,7 @@
 shopt -s extglob
 
 pkgbase=python
-pkgname=(python39 python39-tests)
+pkgname=(python39)
 pkgver=3.9.16
 pkgrel=2
 _pybasever=${pkgver%.*}
