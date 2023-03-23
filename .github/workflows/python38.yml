@@ -27,6 +27,7 @@ jobs:
       run: |
         echo "Successfully created the following package archive"
         echo "Package: ${{ steps.makepkg.outputs.pkgfile0 }}"
+        echo "Package: ${{ steps.makepkg.outputs.pkgfile1 }}"
         echo "Package: ${{ steps.makepkg.outputs.repofile0 }}"
         echo "Package: ${{ steps.makepkg.outputs.repofile1 }}"
         echo "Package: ${{ steps.makepkg.outputs.repofile2 }}"
@@ -36,6 +37,12 @@ jobs:
         repo_token: ${{secrets.GITHUB_TOKEN}}
         tag: packages
         file: ${{ steps.makepkg.outputs.pkgfile0 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{secrets.GITHUB_TOKEN}}
+        tag: packages
+        file: ${{ steps.makepkg.outputs.pkgfile1 }}
         overwrite: true
     - uses: svenstaro/upload-release-action@v2
       with:
