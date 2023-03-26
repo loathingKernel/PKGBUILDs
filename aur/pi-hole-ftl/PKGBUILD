@@ -8,6 +8,7 @@ _pkgname=FTL
 _servicename=pihole-FTL
 pkgver=5.22
 pkgrel=1
+#_now=`date +%N`
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc="The Pi-hole FTL engine"
 url="https://github.com/pi-hole/FTL"
