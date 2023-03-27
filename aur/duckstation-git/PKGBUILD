@@ -1,0 +1,83 @@
+# Maintainer: katt <magunasu.b97@gmail.com>
+
+pkgname=duckstation-git
+pkgver=r6051.3bbce19d
+pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
+pkgrel=1
+arch=(x86_64 aarch64)
+url=https://github.com/stenzek/duckstation
+license=(GPL3)
+depends=(
+    sdl2 
+    qt6-base
+    alsa-lib
+    libxrandr
+    libglvnd
+    libx11
+    wayland
+    hicolor-icon-theme)
+makedepends=(
+    git
+    cmake
+    clang
+    lld
+    llvm
+    extra-cmake-modules
+    qt6-wayland
+    qt6-tools
+    libdrm
+    libpulse
+    jack2
+    sndio
+    ninja) # include jack2 to build jack cubeb backend
+optdepends=(libdrm qt6-wayland libpulse sndio jack2)
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+options=(!lto)
+source=(
+    git+https://github.com/stenzek/duckstation.git
+    duckstation-qt.desktop
+    duckstation-qt.sh)
+sha256sums=('SKIP'
+            '51094e60b84873325cfe630fd7092d0db73e1c4ee94ccfc0806f742252a4009a'
+            '8a535f22bf6b3b759044a9489a5d1a3111e6b37cd84924a6509f6a14cdaf16bb')
+
+pkgver() {
+    cd "${srcdir}/${pkgname%-git}"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cmake -B build -S duckstation \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+        -DBUILD_NOGUI_FRONTEND=OFF \
+        -DBUILD_QT_FRONTEND=ON \
+        -DUSE_DRMKMS=ON \
+        -DUSE_EGL=ON \
+        -DUSE_SDL2=ON \
+        -DUSE_WAYLAND=ON \
+        -DUSE_X11=ON \
+        -G Ninja \
+        -Wno-dev
+    ninja -C build
+}
+
+package() {
+    # Main files
+    install -m755 -d "${pkgdir}/opt"
+    cp -rv build/bin "${pkgdir}/opt/${pkgname%-git}"
+
+    # Symlink to /usr/bin
+    install -Dm755 "${srcdir}/duckstation-qt.sh" "${pkgdir}/usr/bin/duckstation-qt"
+
+    # Desktop file
+    install -Dm644 "${srcdir}/duckstation-qt.desktop" "${pkgdir}/usr/share/applications/duckstation-qt.desktop"
+    install -Dm644 "${pkgname%-git}/data/resources/images/duck.png" "${pkgdir}/usr/share/icons/hicolor/64x64/apps/duckstation-qt.png"
+}
+
