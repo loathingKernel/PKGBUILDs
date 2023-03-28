@@ -47,13 +47,17 @@ makedepends=(
     git
     ninja
     libpulse
+    jack2
+    sndio
     p7zip
     qt6-wayland
     qt6-tools
 )
 optdepends=(
-  'qt6-wayland: Wayland support'
-  'libpulse: Pulseaudio support'
+    'qt6-wayland: Wayland support'
+    'libpulse: Pulseaudio support'
+    'jack2: Jack2 support'
+    'sndio: sndio support'
 )
 provides=(${pkgname%-git})
 conflicts=(${pkgname%-git})
@@ -77,7 +81,7 @@ source=(
 install=pcsx2-git.install
 
 prepare() {
-  cd pcsx2
+    cd pcsx2
     local submodule
     _pcsx2_submodules=(
         xz-pcsx2::3rdparty/xz/xz
@@ -115,8 +119,9 @@ pkgver() {
 }
 
 build() {
-  cmake -S pcsx2 -B build \
+    cmake -S pcsx2 -B build \
     -G Ninja \
+    -Wno-dev \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_C_COMPILER=clang \
     -DCMAKE_CXX_COMPILER=clang++ \
@@ -137,10 +142,10 @@ build() {
     -DUSE_SYSTEM_ZSTD=ON \
     -DDISABLE_ADVANCE_SIMD=ON \
     -DDISABLE_BUILD_DATE=ON
-  ninja -C build -v
+    ninja -C build
 
-  7z a -r cheats_ni.zip pcsx2_patches/cheats_ni/*
-  7z a -r cheats_ws.zip pcsx2_patches/cheats_ws/*
+    7z a -r cheats_ni.zip pcsx2_patches/cheats_ni/*
+    7z a -r cheats_ws.zip pcsx2_patches/cheats_ws/*
 }
 
 package() {
