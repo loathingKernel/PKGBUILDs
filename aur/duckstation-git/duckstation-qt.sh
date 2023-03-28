@@ -1,3 +1,2 @@
-#/usr/bin/bash
-/opt/duckstation/duckstation-qt $@
-
+#!/usr/bin/bash
+/opt/duckstation/duckstation-qt "$@"
