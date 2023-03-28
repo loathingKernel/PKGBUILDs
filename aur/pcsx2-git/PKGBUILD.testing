@@ -4,7 +4,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.4272.r0.g42155dd11
+pkgver=1.7.4282.r0.g6d7eceb4f
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -142,7 +142,7 @@ build() {
     -DUSE_SYSTEM_ZSTD=ON \
     -DDISABLE_ADVANCE_SIMD=ON \
     -DDISABLE_BUILD_DATE=ON
-    ninja -C build
+    ninja -C build -v
 
     7z a -r cheats_ni.zip pcsx2_patches/cheats_ni/*
     7z a -r cheats_ws.zip pcsx2_patches/cheats_ws/*
@@ -161,9 +161,6 @@ package() {
 }
 
 b2sums=('SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'

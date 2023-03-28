@@ -65,7 +65,7 @@ build() {
         -DUSE_X11=ON \
         -G Ninja \
         -Wno-dev
-    ninja -C build
+    ninja -C build -v
 }
 
 package() {
