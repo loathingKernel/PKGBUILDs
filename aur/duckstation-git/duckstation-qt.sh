@@ -1,2 +1,3 @@
 #!/usr/bin/bash
-/opt/duckstation/duckstation-qt "$@"
+# shellcheck disable=SC2068
+/opt/duckstation/duckstation-qt $@
