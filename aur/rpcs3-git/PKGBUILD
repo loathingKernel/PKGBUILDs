@@ -85,7 +85,7 @@ prepare() {
     3rdparty/libusb/libusb
     3rdparty/zlib/zlib
 #    3rdparty/ffmpeg
-    llvm
+    3rdparty/llvm/llvm
   )
   for path in ${_submodules[@]}; do
     git -c protocol.file.allow=always submodule update --init --filter=tree:0 "$path"
@@ -97,9 +97,9 @@ build() {
   BAD_FLAG="-Wp,-D_GLIBCXX_ASSERTIONS"
   CXXFLAGS="${CXXFLAGS//$BAD_FLAG/}"
 
-#    pushd rpcs3/3rdparty/ffmpeg/
-#    ./linux_x86-64.sh
-#    popd
+#  pushd rpcs3/3rdparty/ffmpeg/
+#  ./linux_x86-64.sh
+#  popd
 
   cmake -S rpcs3 -B build \
     -G Ninja \
@@ -113,6 +113,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
     -DUSE_NATIVE_INSTRUCTIONS=OFF \
+    -DBUILD_LLVM=ON \
     -DUSE_SYSTEM_FFMPEG=ON \
     -DUSE_SYSTEM_WOLFSSL=OFF \
     -DUSE_SYSTEM_XXHASH=OFF \
