@@ -2,7 +2,7 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.27.r43.g4d4a70ad0e
+pkgver=0.0.27.r108.g6981cbb985
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
@@ -38,6 +38,7 @@ depends=(
 )
 makedepends=(
   cmake
+  ninja
   git
   libglvnd
   libpulse
@@ -52,8 +53,10 @@ conflicts=(rpcs3)
 options=(!emptydirs !lto)
 source=(
   git+https://github.com/RPCS3/rpcs3.git
+  git+https://github.com/llvm/llvm-project.git
 )
 sha256sums=(
+  SKIP
   SKIP
 )
 
@@ -64,6 +67,10 @@ pkgver() {
 
 prepare() {
   cd rpcs3
+  git submodule init 3rdparty/llvm/llvm
+  git config submodule.3rdparty/llvm/llvm.url "${srcdir}"/llvm-project
+  git -c protocol.file.allow=always submodule update 3rdparty/llvm/llvm
+  rm -r "${srcdir}"/llvm-project
   git remote set-url origin https://github.com/RPCS3/rpcs3.git
   _submodules=(
     3rdparty/hidapi/hidapi
@@ -71,21 +78,13 @@ prepare() {
     3rdparty/SPIRV/SPIRV-Tools
     3rdparty/SPIRV/SPIRV-Headers
     3rdparty/yaml-cpp/yaml-cpp
-#    3rdparty/xxHash
     3rdparty/cubeb/cubeb
     3rdparty/asmjit/asmjit
-#    3rdparty/FAudio
     3rdparty/wolfssl/wolfssl
-#    3rdparty/libpng/libpng
-#    3rdparty/curl/curl
-#    3rdparty/pugixml
     3rdparty/flatbuffers
     3rdparty/miniupnp/miniupnp
     3rdparty/SoundTouch/soundtouch
-#    3rdparty/libusb/libusb
-#    3rdparty/zlib/zlib
 #    3rdparty/ffmpeg
-    3rdparty/llvm/llvm
   )
   for path in ${_submodules[@]}; do
     git -c protocol.file.allow=always submodule update --init --filter=tree:0 "$path"
