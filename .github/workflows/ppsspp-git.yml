@@ -1,28 +1,29 @@
-name: proton-ge-custom
+name: ppsspp-git
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron:  '0 0 */7 * *'
   push:
     branches:
      - master
     paths:
-     - public/proton-ge-custom/.SRCINFO
+     - public/ppsspp-git/.SRCINFO
 
 jobs:
   public:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: public/proton-ge-custom
+      pkgdir: public/ppsspp-git
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
-      multilib: true
+      makepkg_args: -p PKGBUILD
       release_tag: loathk-public
   personal:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: public/proton-ge-custom
+      pkgdir: public/ppsspp-git
       pacman_conf: .github/conf/personal_pacman.conf
       makepkg_conf: .github/conf/personal_makepkg.conf
-      makepkg_args: -p PKGBUILD.testing
-      multilib: true
+      makepkg_args: -p PKGBUILD
       release_tag: loathk-personal

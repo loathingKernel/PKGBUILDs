@@ -6,57 +6,21 @@ on:
     branches:
      - master
     paths:
-     - 'public/vkd3d-proton-mingw/.SRCINFO'
+     - public/vkd3d-proton-mingw/.SRCINFO
 
 jobs:
-  package:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    - name: Makepkg Build and Check
-      id: makepkg
-      uses: loathingkernel/pkgbuild-action@master
-      with:
-        pkgdir: "public/vkd3d-proton-mingw"
-        pacmanConf: "misc/packages_pacman.conf"
-        makepkgConf: "misc/packages_makepkg.conf"
-        repoReleaseTag: "packages"
-    - name: Print Package Files
-      run: |
-        echo "Successfully created the following package archive"
-        echo "Package: ${{ steps.makepkg.outputs.pkgfile0 }}"
-        echo "Repo: ${{ steps.makepkg.outputs.repofile0 }}"
-        echo "Repo: ${{ steps.makepkg.outputs.repofile1 }}"
-        echo "Repo: ${{ steps.makepkg.outputs.repofile2 }}"
-        echo "Repo: ${{ steps.makepkg.outputs.repofile3 }}"
-    - uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{secrets.GITHUB_TOKEN}}
-        tag: packages
-        file: ${{ steps.makepkg.outputs.pkgfile0 }}
-        overwrite: true
-    - uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{secrets.GITHUB_TOKEN}}
-        tag: packages
-        file: ${{ steps.makepkg.outputs.repofile0 }}
-        overwrite: true
-    - uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{secrets.GITHUB_TOKEN}}
-        tag: packages
-        file: ${{ steps.makepkg.outputs.repofile1 }}
-        overwrite: true
-    - uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{secrets.GITHUB_TOKEN}}
-        tag: packages
-        file: ${{ steps.makepkg.outputs.repofile2 }}
-        overwrite: true
-    - uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{secrets.GITHUB_TOKEN}}
-        tag: packages
-        file: ${{ steps.makepkg.outputs.repofile3 }}
-        overwrite: true
+  public:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: public/vkd3d-proton-mingw
+      pacman_conf: .github/conf/public_pacman.conf
+      makepkg_conf: .github/conf/public_makepkg.conf
+      release_tag: loathk-public
+  personal:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: public/vkd3d-proton-mingw
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD.testing
+      release_tag: loathk-personal

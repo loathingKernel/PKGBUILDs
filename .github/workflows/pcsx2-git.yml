@@ -1,0 +1,21 @@
+name: pcsx2-git
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 */7 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - aur/pcsx2-git/.SRCINFO
+
+jobs:
+  personal:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: aur/pcsx2-git
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD
+      release_tag: loathk-personal

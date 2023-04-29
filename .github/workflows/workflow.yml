@@ -1,0 +1,120 @@
+name: Package
+
+on:
+  workflow_call:
+    inputs:
+      pkgdir:
+        required: true
+        type: string
+      pacman_conf:
+        required: true
+        type: string
+      makepkg_conf:
+        required: true
+        type: string
+      makepkg_args:
+        required: false
+        type: string
+      multilib:
+        required: false
+        type: boolean
+      release_tag:
+        required: true
+        type: string
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Makepkg Build and Check
+      id: makepkg
+      uses: loathingkernel/pkgbuild-action@master
+      with:
+        pkgdir: ${{ inputs.pkgdir }}
+        pacmanConf: ${{ inputs.pacman_conf }}
+        makepkgConf: ${{ inputs.makepkg_conf }}
+        makepkgArgs: ${{ inputs.makepkg_args }}
+        multilib: ${{ inputs.multilib == 'true' }}
+        repoReleaseTag: ${{ inputs.release_tag }}
+
+    - name: Print Package Files
+      run: |
+        echo "* Successfully created the following package archives"
+        echo "    New Package: ${{ steps.makepkg.outputs.pkgfile0 }}"
+        echo "    New Package: ${{ steps.makepkg.outputs.pkgfile1 }}"
+        echo "    New Package: ${{ steps.makepkg.outputs.pkgfile2 }}"
+        echo "    New Package: ${{ steps.makepkg.outputs.pkgfile3 }}"
+        echo "* Replacing these archives in the repository"
+        echo "    Old Package: ${{ steps.makepkg.outputs.remfile0 }}"
+        echo "    Old Package: ${{ steps.makepkg.outputs.remfile1 }}"
+        echo "    Old Package: ${{ steps.makepkg.outputs.remfile2 }}"
+        echo "    Old Package: ${{ steps.makepkg.outputs.remfile3 }}"
+        echo "* Repository database files"
+        echo "    Repo: ${{ steps.makepkg.outputs.repofile0 }}"
+        echo "    Repo: ${{ steps.makepkg.outputs.repofile1 }}"
+        echo "    Repo: ${{ steps.makepkg.outputs.repofile2 }}"
+        echo "    Repo: ${{ steps.makepkg.outputs.repofile3 }}"
+
+    - uses: svenstaro/upload-release-action@v2
+      name: Upload ${{ steps.makepkg.outputs.pkgfile0 }}
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        file: ${{ steps.makepkg.outputs.pkgfile0 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      name: Upload ${{ steps.makepkg.outputs.pkgfile1 }}
+      if: ${{ steps.makepkg.outputs.pkgfile1 != '' }}
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        file: ${{ steps.makepkg.outputs.pkgfile1 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      name: Upload ${{ steps.makepkg.outputs.pkgfile2 }}
+      if: ${{ steps.makepkg.outputs.pkgfile2 != '' }}
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        file: ${{ steps.makepkg.outputs.pkgfile2 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      name: Upload ${{ steps.makepkg.outputs.pkgfile3 }}
+      if: ${{ steps.makepkg.outputs.pkgfile3 != '' }}
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        file: ${{ steps.makepkg.outputs.pkgfile3 }}
+        overwrite: true
+
+    - uses: svenstaro/upload-release-action@v2
+      name: Upload ${{ steps.makepkg.outputs.repofile0 }}
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        file: ${{ steps.makepkg.outputs.repofile0 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      name: Upload ${{ steps.makepkg.outputs.repofile1 }}
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        file: ${{ steps.makepkg.outputs.repofile1 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      name: Upload ${{ steps.makepkg.outputs.repofile2 }}
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        file: ${{ steps.makepkg.outputs.repofile2 }}
+        overwrite: true
+    - uses: svenstaro/upload-release-action@v2
+      name: Upload ${{ steps.makepkg.outputs.repofile3 }}
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        file: ${{ steps.makepkg.outputs.repofile3 }}
+        overwrite: true

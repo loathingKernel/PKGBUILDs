@@ -1,0 +1,26 @@
+name: Publish
+
+inputs:
+  release_tag:
+    required: true
+    type: string
+  files:
+    required: true
+    type: string
+  token:
+    requried: true
+    type: string
+
+runs:
+  using: "composite"
+  strategy:
+    matrix:
+      files: ${{ fromJson( inputs.files ) }}
+  steps:
+    - uses: svenstaro/upload-release-action@v2
+      name: Upload to releases
+      with:
+        repo_token: ${{ inputs.token }}
+        tag: ${{ inputs.release_tag }}
+        file: ${{ matrix.files }}
+        overwrite: true

@@ -1,0 +1,21 @@
+name: rpcs3-git
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 */7 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - aur/rpcs3-git/.SRCINFO
+
+jobs:
+  personal:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: aur/rpcs3-git
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD
+      release_tag: loathk-personal
