@@ -10,9 +10,6 @@ pkgbase = dxvk-mingw-git
 	makedepends = glslang
 	makedepends = git
 	makedepends = mingw-w64-gcc
-	depends = vulkan-icd-loader
-	depends = lib32-vulkan-icd-loader
-	depends = bash
 	provides = dxvk
 	provides = d9vk
 	provides = dxvk=2.1.r17.g1acf8851
@@ -40,3 +37,7 @@ pkgbase = dxvk-mingw-git
 	sha256sums = c1f6a18b03d1612b60f8081428f00cfac5e66315fe9d42719f01cf5564deeeff
 
 pkgname = dxvk-mingw-git
+	depends = vulkan-icd-loader
+	depends = lib32-vulkan-icd-loader
+	depends = wine
+	depends = bash
