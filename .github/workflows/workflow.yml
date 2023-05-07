@@ -48,24 +48,24 @@ jobs:
         echo "    New Package: ${{ steps.makepkg.outputs.pkgfile2 }}"
         echo "    New Package: ${{ steps.makepkg.outputs.pkgfile3 }}"
         echo "* Replacing these archives in the repository"
-        echo "    Old Package: ${{ steps.makepkg.outputs.remfile0 }}"
-        echo "    Old Package: ${{ steps.makepkg.outputs.remfile1 }}"
-        echo "    Old Package: ${{ steps.makepkg.outputs.remfile2 }}"
-        echo "    Old Package: ${{ steps.makepkg.outputs.remfile3 }}"
+        echo "    Old Package: ${{ steps.makepkg.outputs.oldfile0 }}"
+        echo "    Old Package: ${{ steps.makepkg.outputs.oldfile1 }}"
+        echo "    Old Package: ${{ steps.makepkg.outputs.oldfile2 }}"
+        echo "    Old Package: ${{ steps.makepkg.outputs.oldfile3 }}"
         echo "* Repository database files"
         echo "    Repo: ${{ steps.makepkg.outputs.repofile0 }}"
         echo "    Repo: ${{ steps.makepkg.outputs.repofile1 }}"
         echo "    Repo: ${{ steps.makepkg.outputs.repofile2 }}"
         echo "    Repo: ${{ steps.makepkg.outputs.repofile3 }}"
 
-    - uses: svenstaro/upload-release-action@v2
+    - uses: svenstaro/upload-release-action@2.5.0
       name: Upload ${{ steps.makepkg.outputs.pkgfile0 }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.pkgfile0 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@v2
+    - uses: svenstaro/upload-release-action@2.5.0
       name: Upload ${{ steps.makepkg.outputs.pkgfile1 }}
       if: ${{ steps.makepkg.outputs.pkgfile1 != '' }}
       with:
@@ -73,7 +73,7 @@ jobs:
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.pkgfile1 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@v2
+    - uses: svenstaro/upload-release-action@2.5.0
       name: Upload ${{ steps.makepkg.outputs.pkgfile2 }}
       if: ${{ steps.makepkg.outputs.pkgfile2 != '' }}
       with:
@@ -81,7 +81,7 @@ jobs:
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.pkgfile2 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@v2
+    - uses: svenstaro/upload-release-action@2.5.0
       name: Upload ${{ steps.makepkg.outputs.pkgfile3 }}
       if: ${{ steps.makepkg.outputs.pkgfile3 != '' }}
       with:
@@ -90,31 +90,63 @@ jobs:
         file: ${{ steps.makepkg.outputs.pkgfile3 }}
         overwrite: true
 
-    - uses: svenstaro/upload-release-action@v2
+    - uses: svenstaro/upload-release-action@2.5.0
       name: Upload ${{ steps.makepkg.outputs.repofile0 }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.repofile0 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@v2
+    - uses: svenstaro/upload-release-action@2.5.0
       name: Upload ${{ steps.makepkg.outputs.repofile1 }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.repofile1 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@v2
+    - uses: svenstaro/upload-release-action@2.5.0
       name: Upload ${{ steps.makepkg.outputs.repofile2 }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.repofile2 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@v2
+    - uses: svenstaro/upload-release-action@2.5.0
       name: Upload ${{ steps.makepkg.outputs.repofile3 }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.repofile3 }}
         overwrite: true
+
+    - uses: flcdrg/remove-release-asset-action@v2.0.3
+      name: Remove ${{ steps.makepkg.outputs.oldfile0 }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ inputs.release_tag }}
+        asset_name: ${{ steps.makepkg.outputs.oldfile0 }}
+    - uses: flcdrg/remove-release-asset-action@v2.0.3
+      name: Remove ${{ steps.makepkg.outputs.oldfile1 }}
+      if: ${{ steps.makepkg.outputs.oldfile1 != '' }}      
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ inputs.release_tag }}
+        asset_name: ${{ steps.makepkg.outputs.oldfile1 }}
+    - uses: flcdrg/remove-release-asset-action@v2.0.3
+      name: Remove ${{ steps.makepkg.outputs.oldfile2 }}
+      if: ${{ steps.makepkg.outputs.oldfile2 != '' }}      
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ inputs.release_tag }}
+        asset_name: ${{ steps.makepkg.outputs.oldfile2 }}
+    - uses: flcdrg/remove-release-asset-action@v2.0.3
+      name: Remove ${{ steps.makepkg.outputs.oldfile3 }}
+      if: ${{ steps.makepkg.outputs.oldfile3 != '' }}      
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ inputs.release_tag }}
+        asset_name: ${{ steps.makepkg.outputs.oldfile3 }}
