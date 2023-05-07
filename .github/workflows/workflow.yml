@@ -119,35 +119,39 @@ jobs:
         file: ${{ steps.makepkg.outputs.repofile3 }}
         overwrite: true
 
-    - uses: flcdrg/remove-release-asset-action@v2.0.3
+    - uses: mknejp/delete-release-assets@v1
       name: Remove ${{ steps.makepkg.outputs.oldfile0 }}
       if: ${{ steps.makepkg.outputs.oldfile0 != '' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        release_id: ${{ inputs.release_tag }}
-        asset_name: ${{ steps.makepkg.outputs.oldfile0 }}
-    - uses: flcdrg/remove-release-asset-action@v2.0.3
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        fail-if-no-assets: false
+        fail-if-no-release: true
+        assets: ${{ steps.makepkg.outputs.oldfile0 }}
+    - uses: mknejp/delete-release-assets@v1
       name: Remove ${{ steps.makepkg.outputs.oldfile1 }}
       if: ${{ steps.makepkg.outputs.oldfile1 != '' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        release_id: ${{ inputs.release_tag }}
-        asset_name: ${{ steps.makepkg.outputs.oldfile1 }}
-    - uses: flcdrg/remove-release-asset-action@v2.0.3
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        assets: ${{ steps.makepkg.outputs.oldfile1 }}
+        fail-if-no-assets: false
+        fail-if-no-release: true
+    - uses: mknejp/delete-release-assets@v1
       name: Remove ${{ steps.makepkg.outputs.oldfile2 }}
       if: ${{ steps.makepkg.outputs.oldfile2 != '' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        release_id: ${{ inputs.release_tag }}
-        asset_name: ${{ steps.makepkg.outputs.oldfile2 }}
-    - uses: flcdrg/remove-release-asset-action@v2.0.3
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        assets: ${{ steps.makepkg.outputs.oldfile2 }}
+        fail-if-no-assets: false
+        fail-if-no-release: true
+    - uses: mknejp/delete-release-assets@v1
       name: Remove ${{ steps.makepkg.outputs.oldfile3 }}
       if: ${{ steps.makepkg.outputs.oldfile3 != '' }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        release_id: ${{ inputs.release_tag }}
-        asset_name: ${{ steps.makepkg.outputs.oldfile3 }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: ${{ inputs.release_tag }}
+        assets: ${{ steps.makepkg.outputs.oldfile3 }}
+        fail-if-no-assets: false
+        fail-if-no-release: true
