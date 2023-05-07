@@ -121,6 +121,7 @@ jobs:
 
     - uses: flcdrg/remove-release-asset-action@v2.0.3
       name: Remove ${{ steps.makepkg.outputs.oldfile0 }}
+      if: ${{ steps.makepkg.outputs.oldfile0 != '' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -128,7 +129,7 @@ jobs:
         asset_name: ${{ steps.makepkg.outputs.oldfile0 }}
     - uses: flcdrg/remove-release-asset-action@v2.0.3
       name: Remove ${{ steps.makepkg.outputs.oldfile1 }}
-      if: ${{ steps.makepkg.outputs.oldfile1 != '' }}      
+      if: ${{ steps.makepkg.outputs.oldfile1 != '' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -136,7 +137,7 @@ jobs:
         asset_name: ${{ steps.makepkg.outputs.oldfile1 }}
     - uses: flcdrg/remove-release-asset-action@v2.0.3
       name: Remove ${{ steps.makepkg.outputs.oldfile2 }}
-      if: ${{ steps.makepkg.outputs.oldfile2 != '' }}      
+      if: ${{ steps.makepkg.outputs.oldfile2 != '' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -144,7 +145,7 @@ jobs:
         asset_name: ${{ steps.makepkg.outputs.oldfile2 }}
     - uses: flcdrg/remove-release-asset-action@v2.0.3
       name: Remove ${{ steps.makepkg.outputs.oldfile3 }}
-      if: ${{ steps.makepkg.outputs.oldfile3 != '' }}      
+      if: ${{ steps.makepkg.outputs.oldfile3 != '' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
