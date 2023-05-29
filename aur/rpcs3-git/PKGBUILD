@@ -2,7 +2,7 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.27.r108.g6981cbb985
+pkgver=0.0.27.r299.g5a365506f7
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
@@ -86,6 +86,7 @@ prepare() {
     3rdparty/SoundTouch/soundtouch
     3rdparty/libusb/libusb
     3rdparty/zlib/zlib
+    3rdparty/rtmidi/rtmidi
 #    3rdparty/ffmpeg
   )
   for path in ${_submodules[@]}; do

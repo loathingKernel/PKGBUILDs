@@ -84,6 +84,7 @@ prepare() {
     3rdparty/flatbuffers
     3rdparty/miniupnp/miniupnp
     3rdparty/SoundTouch/soundtouch
+    3rdparty/rtmidi/rtmidi
 #    3rdparty/ffmpeg
   )
   for path in ${_submodules[@]}; do
