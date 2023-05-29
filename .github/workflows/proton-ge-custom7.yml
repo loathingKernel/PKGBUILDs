@@ -6,13 +6,13 @@ on:
     branches:
      - master
     paths:
-     - public/proton-ge-custom7/.SRCINFO
+     - local/proton-ge-custom7/.SRCINFO
 
 jobs:
   public:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: public/proton-ge-custom7
+      pkgdir: local/proton-ge-custom7
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
       multilib: true
@@ -20,7 +20,7 @@ jobs:
   personal:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: public/proton-ge-custom7
+      pkgdir: local/proton-ge-custom7
       pacman_conf: .github/conf/personal_pacman.conf
       makepkg_conf: .github/conf/personal_makepkg.conf
       makepkg_args: -p PKGBUILD.testing
