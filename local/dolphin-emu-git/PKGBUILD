@@ -38,6 +38,7 @@ depends=(
   minizip-ng
   pugixml
   qt6-base
+  qt6-svg
   sfml
   zlib
 )
@@ -99,6 +100,7 @@ build() {
     -DENABLE_TESTS=OFF \
     -DUSE_MGBA=ON \
     -DUSE_SHARED_ENET=ON \
+    -DENABLE_AUTOUPDATE=OFF \
     -Wno-dev
   cmake --build build
 }

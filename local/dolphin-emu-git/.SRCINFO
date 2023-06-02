@@ -35,6 +35,7 @@ pkgbase = dolphin-emu-git
 	depends = minizip-ng
 	depends = pugixml
 	depends = qt6-base
+	depends = qt6-svg
 	depends = sfml
 	depends = zlib
 	optdepends = pulseaudio: PulseAudio backend
