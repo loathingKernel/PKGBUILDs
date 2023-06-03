@@ -49,6 +49,8 @@ makedepends=(
   python
 )
 optdepends=('pulseaudio: PulseAudio backend')
+provides=(dolphin-emu)
+conflicts=(dolphin-emu)
 options=(!emptydirs)
 _commit=34527cadcce49a9a78f05949973b0930ac4dd999
 source=(
