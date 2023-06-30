@@ -48,6 +48,7 @@ depends=(
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
+  python
   giflib                lib32-giflib
   gnutls                lib32-gnutls
   libxinerama           lib32-libxinerama

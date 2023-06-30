@@ -11,6 +11,7 @@ pkgbase = wine-staging
 	makedepends = perl
 	makedepends = flex
 	makedepends = mingw-w64-gcc
+	makedepends = python
 	makedepends = giflib
 	makedepends = lib32-giflib
 	makedepends = gnutls
