@@ -15,6 +15,7 @@ jobs:
       pkgdir: multilib/wine-staging
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
+      makepkg_args: --skippgpcheck
       multilib: true
       release_tag: loathk-public
   personal:
@@ -23,6 +24,6 @@ jobs:
       pkgdir: multilib/wine-staging
       pacman_conf: .github/conf/personal_pacman.conf
       makepkg_conf: .github/conf/personal_makepkg.conf
-      makepkg_args: -p PKGBUILD.testing
+      makepkg_args: --skippgpcheck -p PKGBUILD.testing
       multilib: true
       release_tag: loathk-personal
