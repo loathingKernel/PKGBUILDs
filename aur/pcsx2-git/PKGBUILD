@@ -39,6 +39,7 @@ depends=(
 )
 makedepends=(
     cmake
+    extra-cmake-modules
     clang
     lld
     llvm

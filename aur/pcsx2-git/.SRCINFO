@@ -10,6 +10,7 @@ pkgbase = pcsx2-git
 	license = LGPL2.1
 	license = LGPL3
 	makedepends = cmake
+	makedepends = extra-cmake-modules
 	makedepends = clang
 	makedepends = lld
 	makedepends = llvm
