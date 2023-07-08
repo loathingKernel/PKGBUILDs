@@ -6,7 +6,7 @@
 
 pkgname=wine-staging
 pkgver=8.11
-pkgrel=3.1
+pkgrel=4.1
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -50,6 +50,7 @@ depends=(
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
+  git
   python
   giflib                #lib32-giflib
   gnutls                #lib32-gnutls
