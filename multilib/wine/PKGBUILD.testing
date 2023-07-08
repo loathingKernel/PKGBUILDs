@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=8.11
-pkgrel=3
+pkgrel=4
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -42,6 +42,7 @@ depends=(
   desktop-file-utils
 )
 makedepends=(autoconf bison perl flex mingw-w64-gcc
+  git
   python
   giflib                lib32-giflib
   gnutls                lib32-gnutls
