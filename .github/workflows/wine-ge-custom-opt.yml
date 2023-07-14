@@ -1,0 +1,28 @@
+name: wine-ge-custom-opt
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - public/wine-ge-custom-opt/.SRCINFO
+
+jobs:
+  public:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: public/wine-ge-custom-opt
+      pacman_conf: .github/conf/public_pacman.conf
+      makepkg_conf: .github/conf/public_makepkg.conf
+      multilib: true
+      release_tag: loathk-public
+  personal:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: public/wine-ge-custom-opt
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD.testing
+      multilib: true
+      release_tag: loathk-personal
