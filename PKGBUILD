@@ -4,8 +4,8 @@
 # Contributor: Daniel Maslowski <info@orangecms.org>
 
 pkgname=minio
-pkgver=2023.07.11
-_timever=T21-29-34Z
+pkgver=2023.07.18
+_timever=T17-49-40Z
 _pkgver="${pkgver//./-}${_timever//:/-}"
 pkgrel=1
 pkgdesc='Object storage server compatible with Amazon S3'
@@ -26,19 +26,23 @@ sha512sums=('SKIP'
             '7e4617aed266cf48a2ff9b0e80e31641d998537c78d2c56ce97b828cfc77d96dbf64728d4235dac7382d6e5b201388bef6722959302de5e2298d93f4ec1e0e63')
 
 build() {
+  cd minio
+
   export CGO_LDFLAGS="${LDFLAGS}"
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CPPFLAGS="${CPPFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
-  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+  GO_LDFLAGS="\
+      -linkmode=external \
+      -compressdwarf=false \
+      -X github.com/minio/minio/cmd.Version=${pkgver//./-}${_timever} \
+      -X github.com/minio/minio/cmd.CopyrightYear=$(date +%Y) \
+      -X github.com/minio/minio/cmd.ReleaseTag=${pkgver//./-}${_timever} \
+      -X github.com/minio/minio/cmd.CommitID=$(git rev-parse RELEASE.${_pkgver}) \
+      -X github.com/minio/minio/cmd.ShortCommitID=$(git rev-parse --short RELEASE.${_pkgver})"
 
-  cd minio
-
-  sed -i "s/Version.*/Version = \"${pkgver//./-}${_timever}\"/g" cmd/build-constants.go
-  sed -i "s/ReleaseTag.*/ReleaseTag = \"RELEASE.${_pkgver}\"/g" cmd/build-constants.go
-  sed -i "s/CommitID.*/CommitID = \"$(git rev-parse HEAD)\"/g" cmd/build-constants.go
-
-  go build .
+  go build -ldflags "$GO_LDFLAGS" .
 }
 
 package() {
