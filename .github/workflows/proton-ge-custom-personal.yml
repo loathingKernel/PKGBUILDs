@@ -1,4 +1,4 @@
-name: proton-ge-custom [public]
+name: proton-ge-custom [personal]
 
 on:
   workflow_dispatch:
@@ -9,12 +9,12 @@ on:
      - public/proton-ge-custom/.SRCINFO
 
 jobs:
-  public:
+  personal:
     uses: ./.github/workflows/workflow.yml
     with:
       pkgdir: public/proton-ge-custom
-      pacman_conf: .github/conf/public_pacman.conf
-      makepkg_conf: .github/conf/public_makepkg.conf
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD.testing
       multilib: true
-      release_tag: loathk-public
-
+      release_tag: loathk-personal
