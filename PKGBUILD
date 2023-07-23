@@ -6,7 +6,8 @@
 pkgbase=lib32-mesa
 pkgname=(
   'lib32-vulkan-mesa-layers'
-  'lib32-opencl-mesa'
+  'lib32-opencl-clover-mesa'
+  #'lib32-opencl-rusticl-mesa'
   'lib32-vulkan-intel'
   'lib32-vulkan-radeon'
   'lib32-vulkan-swrast'
@@ -16,7 +17,7 @@ pkgname=(
   'lib32-mesa'
 )
 pkgver=23.1.4
-pkgrel=1
+pkgrel=2
 pkgdesc="An open-source implementation of the OpenGL specification (32-bit)"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -162,8 +163,8 @@ package_lib32-vulkan-mesa-layers() {
   install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
 
-package_lib32-opencl-mesa() {
-  pkgdesc="OpenCL support for AMD/ATI Radeon mesa drivers (32-bit)"
+package_lib32-opencl-clover-mesa() {
+  pkgdesc="OpenCL support with clover for mesa drivers (32-bit)"
   depends=(
     'lib32-clang'
     'lib32-expat'
@@ -173,14 +174,40 @@ package_lib32-opencl-mesa() {
 
     'libclc'
     'spirv-llvm-translator'
-    'opencl-mesa'
+    'opencl-clover-mesa'
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
   provides=('lib32-opencl-driver')
+  replaces=("lib32-opencl-mesa<=23.1.4-1")
+  conflicts=('lib32-opencl-mesa')
 
-  rm -rv fakeinstall/etc/OpenCL
-  _install fakeinstall/$_libdir/lib*OpenCL*
+  rm -v fakeinstall/etc/OpenCL/vendors/mesa.icd
+  _install fakeinstall/$_libdir/libMesaOpenCL*
   _install fakeinstall/$_libdir/gallium-pipe
+
+  install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
+}
+
+package_lib32-opencl-rusticl-mesa() {
+  pkgdesc="OpenCL support with rusticl for mesa drivers (32-bit)"
+  depends=(
+    'lib32-clang'
+    'lib32-expat'
+    'lib32-libdrm'
+    'lib32-libelf'
+    'lib32-zstd'
+
+    'libclc'
+    'spirv-llvm-translator'
+    'opencl-rusticl-mesa'
+  )
+  optdepends=('opencl-headers: headers necessary for OpenCL development')
+  provides=('lib32-opencl-driver')
+  replaces=("lib32-opencl-mesa<=23.1.4-1")
+  conflicts=('lib32-opencl-mesa')
+
+  rm -v fakeinstall/etc/OpenCL/vendors/rusticl.icd
+  _install fakeinstall/$_libdir/libRusticlOpenCL*
 
   install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
 }
