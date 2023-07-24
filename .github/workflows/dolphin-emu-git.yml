@@ -11,6 +11,14 @@ on:
      - local/dolphin-emu-git/.SRCINFO
 
 jobs:
+  public:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: local/dolphin-emu-git
+      pacman_conf: .github/conf/public_pacman.conf
+      makepkg_conf: .github/conf/public_makepkg.conf
+      makepkg_args: -p PKGBUILD
+      release_tag: loathk-public
   personal:
     uses: ./.github/workflows/workflow.yml
     with:
