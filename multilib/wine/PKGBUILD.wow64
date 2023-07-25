@@ -4,7 +4,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=8.12
+pkgver=8.13
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -15,7 +15,7 @@ source=(https://dl.winehq.org/wine/source/8.x/$pkgname-$_pkgbasever.tar.xz{,.sig
         wine-isolate_home.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('6b9eab7ca1ed5a13202b1250d8d95f6bd8ee5176f0c39b5358aedaf28f7f23543f4a73bf0782c3b4e50936813fc2a459582b5d294569c976ace784fbd9e0af1b'
+sha512sums=('952c670635f91879cf6908343a04c0f41ae54e213123242e24fc282f9705fbe3b800dc1de454b6cfb1ebb89431b0e6eb3df3b094c1d9f4e69835d0f1b8f4fcb5'
             'SKIP'
             'SKIP'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
@@ -106,6 +106,7 @@ prepare() {
   patch -p1 -i "$_tkg_path"/proton/LAA/LAA-unix.patch
   patch -p1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
   patch -p1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
+  patch -p1 -i "$_tkg_path"/proton/valve_proton_fullscreen_hack/FS_bypass_compositor.patch
 
   patch -p1 -i "$srcdir"/wine-wmclass.patch
   patch -p1 -i "$srcdir"/wine-isolate_home.patch
