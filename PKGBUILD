@@ -7,7 +7,7 @@ pkgbase=lib32-mesa
 pkgname=(
   'lib32-vulkan-mesa-layers'
   'lib32-opencl-clover-mesa'
-  #'lib32-opencl-rusticl-mesa'
+  'lib32-opencl-rusticl-mesa'
   'lib32-vulkan-intel'
   'lib32-vulkan-radeon'
   'lib32-vulkan-swrast'
@@ -16,8 +16,8 @@ pkgname=(
   'lib32-mesa-vdpau'
   'lib32-mesa'
 )
-pkgver=23.1.4
-pkgrel=2
+pkgver=23.2.0
+pkgrel=1
 pkgdesc="An open-source implementation of the OpenGL specification (32-bit)"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -39,12 +39,16 @@ makedepends=(
   'lib32-libxxf86vm'
   'lib32-llvm'
   'lib32-lm_sensors'
+  'lib32-rust-libs'
+  'lib32-spirv-llvm-translator'
+  'lib32-spirv-tools'
   'lib32-systemd'
   'lib32-vulkan-icd-loader'
   'lib32-wayland'
+  'lib32-xcb-util-keysyms'
   'lib32-zstd'
 
-  # shared with lib32-mesa
+  # shared between mesa and lib32-mesa
   'clang'
   'cmake'
   'elfutils'
@@ -52,18 +56,19 @@ makedepends=(
   'libclc'
   'meson'
   'python-mako'
+  'python-ply'
+  'rust-bindgen'
   'wayland-protocols'
   'xorgproto'
-
 )
 source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
   LICENSE
 )
-sha256sums=('7261a17fb94867e3dc5a90d8a1f100fa04b0cbbde51d25302c0872b5e9a10959'
+sha256sums=('1ee543dadc62eb9b11152a3045fec302b7a81cec1993cfd62e51b0e769a1c2df'
             'SKIP'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
-b2sums=('9c696766f4f7af9a2d12c6e7663f300e4dbcfc27ee210770151a8be76b3413b51aad1e2a00f4cf38695cf26d5b684e38a65de8a63723597a0ff97f3a9935b1a1'
+b2sums=('de0dfc701fe8ebfa424e8e915ada30ec1431b87a173e0d1fd9b76c215d28777b06940870336ea19169595ec878599fd11dcb321e684e84572a64c92987558b7d'
         'SKIP'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
@@ -74,14 +79,34 @@ validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l
               '57551DE15B968F6341C248F68D8E31AFC32428A6') # Eric Engestrom <eric@engestrom.ch>
 
 prepare() {
+  cat >lib32.txt <<END
+[binaries]
+c = ['gcc', '-m32']
+cpp = ['g++', '-m32']
+rust = ['rustc', '--target', 'i686-pc-linux-gnu']
+pkgconfig = 'i686-pc-linux-gnu-pkg-config'
+llvm-config = 'llvm-config32'
+strip = 'strip'
+
+[paths]
+libdir = 'lib32'
+
+[host_machine]
+system = 'linux'
+subsystem = 'linux'
+kernel = 'linux'
+cpu_family = 'x86'
+cpu = 'i686'
+endian = 'little'
+END
+
   cd mesa-$pkgver
 }
 
-_libdir=usr/lib32
-
 build() {
+
   local meson_options=(
-    --libdir=/$_libdir
+    --cross-file lib32.txt
     -D android-libbacktrace=disabled
     -D b_ndebug=true
     -D dri3=enabled
@@ -91,7 +116,7 @@ build() {
     -D gallium-nine=true
     -D gallium-omx=disabled
     -D gallium-opencl=icd
-    -D gallium-rusticl=false
+    -D gallium-rusticl=true
     -D gallium-va=enabled
     -D gallium-vdpau=enabled
     -D gallium-xa=enabled
@@ -100,7 +125,7 @@ build() {
     -D gles2=enabled
     -D glvnd=true
     -D glx=dri
-    -D intel-clc=disabled
+    -D intel-clc=enabled
     -D libunwind=enabled
     -D llvm=enabled
     -D lmsensors=enabled
@@ -111,7 +136,7 @@ build() {
     -D shared-glapi=enabled
     -D valgrind=disabled
     -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc
-    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental
+    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio
     -D vulkan-layers=device-select,intel-nullhw,overlay
   )
 
@@ -119,13 +144,17 @@ build() {
   CFLAGS+=' -g1'
   CXXFLAGS+=' -g1'
 
-  export CC="gcc -m32"
-  export CXX="g++ -m32"
-  export PKG_CONFIG="i686-pc-linux-gnu-pkg-config"
-  export LLVM_CONFIG="llvm-config32"
+  export BINDGEN_EXTRA_CLANG_ARGS="-m32"
 
   arch-meson mesa-$pkgver build "${meson_options[@]}"
   meson configure build # Print config
+
+  # Evil: Hack build to make proc-macro crate native
+  sed -e '/^rule rust_COMPILER$/irule rust_HACK\n command = rustc -C linker=gcc $ARGS $in\n deps = gcc\n depfile = $targetdep\n description = Compiling native Rust source $in\n' \
+      -e '/^build src\/gallium\/frontends\/rusticl\/librusticl_proc_macros\.so:/s/rust_COMPILER/rust_HACK/' \
+      -e '/^ LINK_ARGS =/s/ src\/gallium\/frontends\/rusticl\/librusticl_proc_macros\.so//' \
+      -i build/build.ninja
+
   meson compile -C build
 
   # fake installation to be seperated into packages
@@ -142,6 +171,8 @@ _install() {
     mv -v "${src}" "${dir}/"
   done
 }
+
+_libdir=usr/lib32
 
 package_lib32-vulkan-mesa-layers() {
   pkgdesc="Mesa's Vulkan layers (32-bit)"
@@ -170,10 +201,10 @@ package_lib32-opencl-clover-mesa() {
     'lib32-expat'
     'lib32-libdrm'
     'lib32-libelf'
+    'lib32-spirv-llvm-translator'
     'lib32-zstd'
 
     'libclc'
-    'spirv-llvm-translator'
     'opencl-clover-mesa'
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
@@ -195,10 +226,11 @@ package_lib32-opencl-rusticl-mesa() {
     'lib32-expat'
     'lib32-libdrm'
     'lib32-libelf'
+    'lib32-lm_sensors'
+    'lib32-spirv-llvm-translator'
     'lib32-zstd'
 
     'libclc'
-    'spirv-llvm-translator'
     'opencl-rusticl-mesa'
   )
   optdepends=('opencl-headers: headers necessary for OpenCL development')
@@ -220,6 +252,7 @@ package_lib32-vulkan-intel() {
     'lib32-libxshmfence'
     'lib32-systemd'
     'lib32-wayland'
+    'lib32-xcb-util-keysyms'
     'lib32-zstd'
   )
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
@@ -241,6 +274,7 @@ package_lib32-vulkan-radeon() {
     'lib32-llvm-libs'
     'lib32-systemd'
     'lib32-wayland'
+    'lib32-xcb-util-keysyms'
     'lib32-zstd'
 
     'vulkan-radeon'
@@ -265,6 +299,7 @@ package_lib32-vulkan-swrast() {
     'lib32-llvm-libs'
     'lib32-systemd'
     'lib32-wayland'
+    'lib32-xcb-util-keysyms'
     'lib32-zstd'
   )
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
@@ -286,6 +321,7 @@ package_lib32-vulkan-virtio() {
     'lib32-libxshmfence'
     'lib32-systemd'
     'lib32-wayland'
+    'lib32-xcb-util-keysyms'
     'lib32-zstd'
   )
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
