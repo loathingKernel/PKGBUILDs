@@ -75,8 +75,7 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
-        'SKIP'
-        '83aa91ed5a78ed4e661ce20f9ae5a28ea7c1c7f63c999ac8f6c23f5e8518cadaec44b3fa6e7deb557cbe8ea4aaab11fec8da751f0c669139af618b78c137287b')
+        'SKIP')
 
 prepare() {
   cd dolphin-emu
