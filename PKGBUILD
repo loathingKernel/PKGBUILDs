@@ -16,8 +16,9 @@ pkgname=(
   'lib32-mesa-vdpau'
   'lib32-mesa'
 )
-pkgver=23.2.0
+pkgver=23.1.5
 pkgrel=1
+epoch=1
 pkgdesc="An open-source implementation of the OpenGL specification (32-bit)"
 url="https://www.mesa3d.org/"
 arch=('x86_64')
@@ -45,7 +46,6 @@ makedepends=(
   'lib32-systemd'
   'lib32-vulkan-icd-loader'
   'lib32-wayland'
-  'lib32-xcb-util-keysyms'
   'lib32-zstd'
 
   # shared between mesa and lib32-mesa
@@ -65,10 +65,10 @@ source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
   LICENSE
 )
-sha256sums=('1ee543dadc62eb9b11152a3045fec302b7a81cec1993cfd62e51b0e769a1c2df'
+sha256sums=('3cf88576fdebf24fc4047067936131c90cb6541c27365996b79b661dec1fb153'
             'SKIP'
             '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537')
-b2sums=('de0dfc701fe8ebfa424e8e915ada30ec1431b87a173e0d1fd9b76c215d28777b06940870336ea19169595ec878599fd11dcb321e684e84572a64c92987558b7d'
+b2sums=('9919de93df171dd884ef39f52e480e62ef7f4cd55e43b507316af7de39b222ddec12914628d136d40a80f8398f517708a67a64b99858bba3c86686956b7c91bc'
         'SKIP'
         '1ecf007b82260710a7bf5048f47dd5d600c168824c02c595af654632326536a6527fbe0738670ee7b921dd85a70425108e0f471ba85a8e1ca47d294ad74b4adb')
 validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
@@ -79,34 +79,12 @@ validpgpkeys=('8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l
               '57551DE15B968F6341C248F68D8E31AFC32428A6') # Eric Engestrom <eric@engestrom.ch>
 
 prepare() {
-  cat >lib32.txt <<END
-[binaries]
-c = ['gcc', '-m32']
-cpp = ['g++', '-m32']
-rust = ['rustc', '--target', 'i686-pc-linux-gnu']
-pkgconfig = 'i686-pc-linux-gnu-pkg-config'
-llvm-config = 'llvm-config32'
-strip = 'strip'
-
-[paths]
-libdir = 'lib32'
-
-[host_machine]
-system = 'linux'
-subsystem = 'linux'
-kernel = 'linux'
-cpu_family = 'x86'
-cpu = 'i686'
-endian = 'little'
-END
-
   cd mesa-$pkgver
 }
 
 build() {
-
   local meson_options=(
-    --cross-file lib32.txt
+    --cross-file lib32
     -D android-libbacktrace=disabled
     -D b_ndebug=true
     -D dri3=enabled
@@ -136,7 +114,7 @@ build() {
     -D shared-glapi=enabled
     -D valgrind=disabled
     -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc
-    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio
+    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio-experimental
     -D vulkan-layers=device-select,intel-nullhw,overlay
   )
 
@@ -252,7 +230,6 @@ package_lib32-vulkan-intel() {
     'lib32-libxshmfence'
     'lib32-systemd'
     'lib32-wayland'
-    'lib32-xcb-util-keysyms'
     'lib32-zstd'
   )
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
@@ -274,7 +251,6 @@ package_lib32-vulkan-radeon() {
     'lib32-llvm-libs'
     'lib32-systemd'
     'lib32-wayland'
-    'lib32-xcb-util-keysyms'
     'lib32-zstd'
 
     'vulkan-radeon'
@@ -299,7 +275,6 @@ package_lib32-vulkan-swrast() {
     'lib32-llvm-libs'
     'lib32-systemd'
     'lib32-wayland'
-    'lib32-xcb-util-keysyms'
     'lib32-zstd'
   )
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
@@ -321,7 +296,6 @@ package_lib32-vulkan-virtio() {
     'lib32-libxshmfence'
     'lib32-systemd'
     'lib32-wayland'
-    'lib32-xcb-util-keysyms'
     'lib32-zstd'
   )
   optdepends=('lib32-vulkan-mesa-layers: additional vulkan layers')
