@@ -29,7 +29,7 @@ makedepends=(
     libpulse
     jack
     sndio
-    ninja) # include jack2 to build jack cubeb backend
+    ninja)
 optdepends=(libdrm qt6-wayland libpulse sndio jack2)
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
