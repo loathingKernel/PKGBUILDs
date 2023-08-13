@@ -46,7 +46,7 @@ makedepends=(
     git
     ninja
     libpulse
-    jack2
+    jack
     sndio
     p7zip
     qt6-wayland
