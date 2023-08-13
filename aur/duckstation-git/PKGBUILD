@@ -8,7 +8,7 @@ arch=(x86_64 aarch64)
 url=https://github.com/stenzek/duckstation
 license=(GPL3)
 depends=(
-    sdl2 
+    sdl2
     qt6-base
     alsa-lib
     libxrandr
@@ -27,7 +27,7 @@ makedepends=(
     qt6-tools
     libdrm
     libpulse
-    jack2
+    jack
     sndio
     ninja) # include jack2 to build jack cubeb backend
 optdepends=(libdrm qt6-wayland libpulse sndio jack2)
@@ -52,6 +52,8 @@ build() {
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_C_COMPILER=clang \
         -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_C_FLAGS="$CXXFLAGS -Wno-error=format-security" \
+        -DCMAKE_CXX_FLAGS="$CXXFLAGS -Wno-error=format-security" \
         -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
         -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
         -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
