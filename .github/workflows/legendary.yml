@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - aur/legendaery/.SRCINFO
+     - aur/legendary/.SRCINFO
 
 jobs:
   public:
