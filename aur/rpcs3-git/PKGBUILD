@@ -2,7 +2,7 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.27.r299.g5a365506f7
+pkgver=0.0.29.r106.g8772219492
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
@@ -28,11 +28,8 @@ depends=(
   qt6-declarative
   qt6-multimedia
   qt6-svg
-  sdl2
   vulkan-icd-loader
   zlib
-  curl
-  pugixml
 # newer system flatbuffers is incompatible with the version RPCS3 depends on
 # flatbuffers
 )
@@ -42,11 +39,13 @@ makedepends=(
   git
   libglvnd
   libpulse
+  jack
   python
   vulkan-validation-layers
 )
 optdepends=(
   libpulse
+  jack
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
@@ -122,8 +121,8 @@ build() {
     -DUSE_SYSTEM_FAUDIO=OFF \
     -DUSE_SYSTEM_LIBUSB=OFF \
     -DUSE_SYSTEM_SDL=OFF \
-    -DUSE_SYSTEM_LIBPNG=OFF \
-    -DUSE_SYSTEM_ZLIB=OFF \
+    -DUSE_SYSTEM_LIBPNG=ON \
+    -DUSE_SYSTEM_ZLIB=ON \
     -DUSE_SYSTEM_CURL=OFF \
     -DUSE_SYSTEM_FLATBUFFERS=OFF \
     -DUSE_SYSTEM_PUGIXML=OFF \
