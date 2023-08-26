@@ -24,6 +24,6 @@ jobs:
       pkgdir: multilib/wine
       pacman_conf: .github/conf/personal_pacman.conf
       makepkg_conf: .github/conf/personal_makepkg.conf
-      makepkg_args: --skippgpcheck -p PKGBUILD.testing
-      multilib: true
+      makepkg_args: --skippgpcheck -p PKGBUILD.wow64
+      multilib: false
       release_tag: loathk-personal
