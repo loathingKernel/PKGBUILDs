@@ -8,8 +8,8 @@ shopt -s extglob
 
 pkgbase=python
 pkgname=(python39 python39-tests)
-pkgver=3.9.17
-pkgrel=2
+pkgver=3.9.18
+pkgrel=1
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="Next generation of the python high-level scripting language, version 3.9"
@@ -20,7 +20,7 @@ depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib')
 makedepends=('tk' 'sqlite' 'bluez-libs' 'mpdecimal' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-font')
 source=("https://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"{,.asc}
         mpdecimal-2.5.1.patch)
-sha512sums=('994d92346e563a4635411808744eac8207c68e6fc9c1db1c2eb4103dad8553aaad4a8116e38c61f28cb17905a12cc46dccdde985e1c45882bf1815081b88b6be'
+sha512sums=('aab155aca757d298394eddb91ff9a8f239665bd46feb495c6b6f735bbcb7489c05c858cc4cd08f1575c24f293b33492d763e9a140d92f0b2b0cc81a165a677c7'
             'SKIP'
             '58f683cbfdc6aa84c03d068c1bc2f1d8d2c17ba4f7b632c14ab1d529d8332e767354266c3815e239427497fff1a42ec2a37739ea312d24cb76a69dcf1c98c0ad')
 validpgpkeys=('0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D'  # Ned Deily (Python release signing key) <nad@python.org>

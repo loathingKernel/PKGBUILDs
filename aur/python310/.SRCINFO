@@ -1,6 +1,6 @@
 pkgbase = python
 	pkgdesc = Next generation of the python high-level scripting language, version 3.10
-	pkgver = 3.10.12
+	pkgver = 3.10.13
 	pkgrel = 1
 	url = https://www.python.org/
 	arch = x86_64
@@ -22,12 +22,12 @@ pkgbase = python
 	depends = openssl
 	depends = zlib
 	provides = python=3.10
-	source = https://www.python.org/ftp/python/3.10.12/Python-3.10.12.tar.xz
-	source = https://www.python.org/ftp/python/3.10.12/Python-3.10.12.tar.xz.asc
+	source = https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tar.xz
+	source = https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tar.xz.asc
 	validpgpkeys = 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
 	validpgpkeys = E3FF2839C048B25C084DEBE9B26995E310250568
 	validpgpkeys = A035C8C19219BA821ECEA86B64E628F8D684696D
-	sha512sums = 5ea018e71bfe7872e02eaf8aef56d5583c0880e4ce5fbbdf8ea76da20c2e94ac6a3ba8badb4b7d1bc21853402a3b63541b04181737417b1626e786b696595cf5
+	sha512sums = 7579772e501486b2b07f78142082dee1e99c7643640098860ac0cf2ca87daf7588b0c00b1db1960146b37f56a6ed98fd08297c25c9a19b612cf6e6a258984da8
 	sha512sums = SKIP
 
 pkgname = python310
