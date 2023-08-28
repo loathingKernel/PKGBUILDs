@@ -17,7 +17,7 @@ pkgname=(
   'lib32-mesa'
 )
 pkgver=23.1.6
-pkgrel=3
+pkgrel=4
 epoch=1
 pkgdesc="An open-source implementation of the OpenGL specification (32-bit)"
 url="https://www.mesa3d.org/"
@@ -366,8 +366,6 @@ package_lib32-mesa() {
     'mesa'
   )
   optdepends=(
-    'lib32-libva-mesa-driver: for accelerated video playback'
-    'lib32-mesa-vdpau: for accelerated video playback'
     'opengl-man-pages: for the OpenGL API man pages'
   )
   provides=(
