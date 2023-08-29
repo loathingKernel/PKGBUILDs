@@ -2,7 +2,7 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.29.r106.g8772219492
+pkgver=0.0.29.r130.g565a208f20
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
@@ -64,7 +64,6 @@ pkgver() {
 
 prepare() {
   cd rpcs3
-  git remote set-url origin https://github.com/RPCS3/rpcs3.git
   _submodules=(
     3rdparty/llvm/llvm
     3rdparty/hidapi/hidapi
@@ -88,8 +87,9 @@ prepare() {
     3rdparty/rtmidi/rtmidi
 #    3rdparty/ffmpeg
   )
+  git remote set-url origin https://github.com/RPCS3/rpcs3.git
   for path in ${_submodules[@]}; do
-    git -c protocol.file.allow=always submodule update --init --filter=tree:0 "$path"
+    git submodule update --init --filter=tree:0 --recursive "$path"
   done
 }
 
