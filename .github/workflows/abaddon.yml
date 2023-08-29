@@ -1,0 +1,18 @@
+name: abaddon
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/abaddon/.SRCINFO
+
+jobs:
+  public:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: aur/abaddon
+      pacman_conf: .github/conf/public_pacman.conf
+      makepkg_conf: .github/conf/public_makepkg.conf
+      release_tag: loathk-public
