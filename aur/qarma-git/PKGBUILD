@@ -1,7 +1,7 @@
 pkgname=qarma-git
-pkgver=72.605ea42
+pkgver=87.3004c98
 pkgrel=1
-pkgdesc="A drop-in replacement clone for zenity, written in Qt, Qt5 build"
+pkgdesc="A drop-in replacement clone for zenity, written in Qt5"
 arch=('i686' 'x86_64')
 url="https://github.com/luebking/qarma"
 license=('GPL')
