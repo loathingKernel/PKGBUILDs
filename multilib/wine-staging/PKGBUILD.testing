@@ -5,8 +5,8 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=8.14
-pkgrel=2
+pkgver=8.15
+pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -19,9 +19,9 @@ source=(https://dl.winehq.org/wine/source/8.x/wine-$_winever.tar.xz{,.sign}
         wine-isolate_home.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('cf293546c29379237e8c2b7526b16faa0df6a255aa1718097be4382604da4f84f7fad8486a931f39020fe63548625641cf68a822c975f56c30aaa2aa8a024176'
+sha512sums=('d450dfe868ac7c7cb26ccc5e6d492c1311395c5f8b150610f5b1e78451d303b63b67c7e0ad48d6a66ae5265c5bc16da970544cf12195d8635cc3fc96c4a26cad'
             'SKIP'
-            'c126ddd49f2c89b61448c71779f022f7031b19f1bc346d4aa1e8dbe4845f2c5d80e92810db5e0bbc0cae3d5f8466e2ab9a2c5685923318aedfb766669504a7db'
+            '23d956dd9a5d5b8cb4efd5dcb5a0fd5926539b7e45d230920e20a84d27ecd6e4b1cc8285d328a0be622f66c48d453b577a4eeb096f8a866760da81cc47410a2a'
             'SKIP'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
