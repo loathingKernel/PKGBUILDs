@@ -1,27 +1,78 @@
 #!/usr/bin/bash
 
-conf="$HOME/.config/dhewm3/launcher.conf"
+base_name="$(basename "$0")"
+path_name=dhewm3-launcher
+conf_dir="${XDG_CONFIG_HOME:-$HOME/.config}"/"$path_name"
+data_dir="${XDG_DATA_HOME:-$HOME/.local/share}"/"$path_name"
 
+if [ -f "$(which yad)" ]; then
+    gui="$(which yad) --splash --class=$base_name --name=$base_name --title=$base_name"
+    file_select="$gui --file --directory"
+fi
+if [ -f "$(which zenity)" ]; then
+    gui="$(which zenity) --class=$base_name --name=$base_name --title=$base_name"
+    file_select="$gui --file-selection --directory"
+fi
+
+if [ ! -f "$(which mergerfs)" ]; then
+    error_text="mergerfs is not installed."
+    if [ -z "$gui" ]; then
+        printf "%s: %s" "$(basename "$0")" "$error_text"
+    else
+        $gui --error --text="$error_text"
+    fi
+    exit 1
+fi
+
+if [ ! -d "$conf_dir" ]; then
+    mkdir -p "$conf_dir"
+fi
+
+conf="$conf_dir"/launcher.conf
+old_conf="$HOME"/.config/dhewm3/launcher.conf
+if [ ! -f "$conf" ] && [ -f "$old_conf" ]; then
+    mv "$old_conf" "$conf"
+fi
 if [ -f "$conf" ]; then
     source "$conf"
 else
-    conf_dir=$(dirname "$conf")
-    if [ ! -d "$conf_dir" ]; then
-        mkdir -p "$conf_dir"
-    fi
     echo "install_dir=\"\"" > "$conf"
 fi
 
 basepath=""
-if [  -z "$install_dir" ]; then
-    printf "%s: install_dir is not set.\n\n" "$(basename "$0")"
-    printf "\tThe default install locations will be searched.\n"
-    printf "\tIf dhewm3 fails to start, specify the Doom 3 \n"
-    printf "\tinstallation directory in %s.\n\n" "$conf"
-else
-    basepath="+set fs_basepath $install_dir"
+if [ -z "$install_dir" ]; then
+    if [ -z "$gui" ]; then
+        printf "%s: install_dir is not set." "$base_name"
+        printf "\n\n"
+        printf "\tThe default install locations will be searched.\n"
+        printf "\tIf dhewm3 fails to start, specify the Doom 3\n"
+        printf "\tinstallation directory in %s.\n\n" "$conf"
+    else
+        info_text="install_dir is not set in the configuration file \n$conf\n"
+        info_text+="Without it, the default locations will be searched for game files.\n"
+        info_text+="\nDo you want to set it now?\n"
+        if $gui --question --text="$info_text"; then
+            install_dir="$($file_select)"
+            if [ -n "$install_dir" ]; then
+                echo "install_dir=\"$install_dir\"" >> "$conf"
+            fi
+        fi
+    fi
+fi
+
+if [ -n "$install_dir" ]; then
+    if [ ! -d "$data_dir" ]; then
+        mkdir -p "$data_dir"
+    fi
+    mergerfs -o fsname=Doom3 /usr/share/games/doom3:"$install_dir" "$data_dir"
+    basepath="+set fs_basepath $data_dir"
 fi
 
 # Disable terminal support too, if the user knows
 # what they are doing, they don't need the launcher anyways
-exec dhewm3 +set in_tty 0 $basepath "$@"
+dhewm3 +set in_tty 0 $basepath "$@"
+
+if mountpoint -q "$data_dir"; then
+    umount "$data_dir"
+fi
+exit 0

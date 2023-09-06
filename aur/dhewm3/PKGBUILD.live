@@ -3,32 +3,46 @@
 # Contributor:
 
 pkgname=dhewm3
-pkgver=1.5.2.r1.gcc0f49f
+pkgver=1.5.2.r40.ba986a2
 pkgrel=1
 pkgdesc="Doom 3 engine with native 64-bit support, SDL, and OpenAL"
 arch=('i686' 'x86_64')
 url="https://github.com/dhewm/dhewm3"
 license=('GPL3')
-depends=('curl' 'libjpeg' 'libvorbis' 'openal' 'sdl2')
-optdepends=('doom3-data')
-makedepends=('cmake' 'git')
-source=("git+${url}.git"
-  "${pkgname}-launcher"
-  "${pkgname}.desktop"
-  "${pkgname}.png"
+depends=(
+  curl
+  libjpeg
+  libvorbis
+  openal
+  sdl2
 )
+makedepends=(
+  git
+  cmake
+  ninja
+)
+optdepends=(
+  'doom3-data: packaged game data files'
+  'doom3bfg-data: packaged game data files'
+  'mergerfs: required by the included launcher script to setup the correct file structure'
+  'zenity: UI for the included launcher script'
+  'yad: alternative UI for the included launcher script'
+)
+install=$pkgname.install
 options=(!lto)
-install="${pkgname}.install"
-
+source=(
+  git+https://github.com/dhewm/dhewm3.git
+  dhewm3-launcher
+)
 
 pkgver() {
-  cd "${pkgname}"
-  printf "%s" "$(git describe --long --tags 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')"
+  cd dhewm3
+  printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-\)g/r\1/;s/-/./g;s/^v//g')"
 }
 
 build() {
-  cd "${pkgname}"
-  cmake -Wno-dev \
+  cmake \
+    -S dhewm3/neo \
     -B build \
     -DCMAKE_BUILD_TYPE="Release" \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -36,27 +50,28 @@ build() {
     -DREPRODUCIBLE_BUILD=1 \
     -DD3XP=1 \
     -DDEDICATED=1 \
-    -S neo
-  cmake --build build
+    -GNinja \
+    -Wno-dev
+  cmake --build build --verbose
 }
 
 package() {
-  cd "${pkgname}"
-  DESTDIR="${pkgdir}" \
-    cmake --install build
+  DESTDIR="${pkgdir}" cmake --install build
+  install -dm755 "$pkgdir"/usr/share/games/doom3
+  cp -r dhewm3/base "$pkgdir"/usr/share/games/doom3/
+  cp -r dhewm3/dist/linux/share "$pkgdir"/usr/
 
-  install -Dm644 "${srcdir}/${pkgname}.desktop" \
-    "${pkgdir}/usr/share/applications/${pkgname}.desktop"
-  install -Dm644 "${srcdir}/${pkgname}.png" \
-    "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-  install -Dm644 base/default.cfg \
-    "${pkgdir}/usr/share/dhewm3/base/default.cfg"
-  install -dm755 "${pkgdir}/usr/share/dhewm3/d3xp"
-  install -Dm755 "${srcdir}/$pkgname-launcher" \
-    "${pkgdir}/usr/bin/${pkgname}-launcher"
+  install -Dm755 -t /usr/bin/ dhewm3-launcher
+  cd "$pkgdir"/usr/share/applications
+  sed \
+    -e '/^Name=/ s/$/ Launcher/' \
+    -e 's/Exec=dhewm3/Exec=dhewm3-launcher/g' \
+    org.dhewm3.Dhewm3.desktop > org.dhewm3.Dhewm3.launcher.desktop
+  sed \
+    -e '/^Name=/ s/$/ Launcher/' \
+    -e 's/Exec=dhewm3/Exec=dhewm3-launcher/g' \
+    org.dhewm3.Dhewm3.d3xp.desktop > org.dhewm3.Dhewm3.d3xp.launcher.desktop
 }
 
 sha256sums=('SKIP'
-            '5019006303a11b51612824b7609c98bff973c8b787821513ee1416bbea28d37d'
-            'bd4862bde1a6d9ff7d8bec8e2dcede20c5d8bc8b0d4fe99a829949e4a06e4301'
-            '4f17fd5c3b7ada4c6d2445d760d9d83bf782398d40ad6369cd58f2c373b93b86')
+            '7fc188ccf0d7fb449c53324d712ccc5b16b91c73a264f64b3d3bc3f4df738672')
