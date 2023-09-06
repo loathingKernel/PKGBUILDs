@@ -1,7 +1,7 @@
 pkgbase = dhewm3
 	pkgdesc = Doom 3 engine with native 64-bit support, SDL, and OpenAL
 	pkgver = 1.5.2
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/dhewm/dhewm3
 	install = dhewm3.install
 	arch = i686

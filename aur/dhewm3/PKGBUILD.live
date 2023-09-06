@@ -61,7 +61,7 @@ package() {
   cp -r dhewm3/base "$pkgdir"/usr/share/games/doom3/
   cp -r dhewm3/dist/linux/share "$pkgdir"/usr/
 
-  install -Dm755 -t /usr/bin/ dhewm3-launcher
+  install -Dm755 -t "$pkgdir"/usr/bin/ dhewm3-launcher
   cd "$pkgdir"/usr/share/applications
   sed \
     -e '/^Name=/ s/$/ Launcher/' \

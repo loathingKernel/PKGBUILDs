@@ -5,7 +5,7 @@
 pkgname=dhewm3
 _srctag=1.5.2
 pkgver=${_srctag//-/.}
-pkgrel=1
+pkgrel=2
 pkgdesc="Doom 3 engine with native 64-bit support, SDL, and OpenAL"
 arch=('i686' 'x86_64')
 url="https://github.com/dhewm/dhewm3"
@@ -57,7 +57,7 @@ package() {
   cp -r dhewm3/base "$pkgdir"/usr/share/games/doom3/
   cp -r dhewm3/dist/linux/share "$pkgdir"/usr/
 
-  install -Dm755 -t /usr/bin/ dhewm3-launcher
+  install -Dm755 -t "$pkgdir"/usr/bin/ dhewm3-launcher
   cd "$pkgdir"/usr/share/applications
   sed \
     -e '/^Name=/ s/$/ Launcher/' \
