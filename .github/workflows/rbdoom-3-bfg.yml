@@ -1,0 +1,29 @@
+name: rbdoom-3-bfg
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 7 */7 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - public/rbdoom-3-bfg/.SRCINFO
+
+jobs:
+  public:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: public/rbdoom-3-bfg
+      pacman_conf: .github/conf/public_pacman.conf
+      makepkg_conf: .github/conf/public_makepkg.conf
+      makepkg_args: -p PKGBUILD.live
+      release_tag: loathk-public
+  personal:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: public/rbdoom-3-bfg
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD.live
+      release_tag: loathk-personal
