@@ -1,7 +1,7 @@
 pkgbase = dhewm3
 	pkgdesc = Doom 3 engine with native 64-bit support, SDL, and OpenAL
 	pkgver = 1.5.2
-	pkgrel = 2
+	pkgrel = 3
 	url = https://github.com/dhewm/dhewm3
 	install = dhewm3.install
 	arch = i686
@@ -16,14 +16,13 @@ pkgbase = dhewm3
 	depends = openal
 	depends = sdl2
 	optdepends = doom3-data: packaged game data files
-	optdepends = doom3bfg-data: packaged game data files
+	optdepends = pyside6: for the included launcher script
+	optdepends = python-pyxdg: for the included launcher script
 	optdepends = mergerfs: required by the included launcher script to setup the correct file structure
-	optdepends = zenity: UI for the included launcher script
-	optdepends = yad: alternative UI for the included launcher script
 	options = !lto
 	source = git+https://github.com/dhewm/dhewm3.git#tag=1.5.2
 	source = dhewm3-launcher
 	sha256sums = SKIP
-	sha256sums = 7fc188ccf0d7fb449c53324d712ccc5b16b91c73a264f64b3d3bc3f4df738672
+	sha256sums = 977e77241ded496a4a3cace9255565768d7819da8a95ec5a64ee4bbc8d664665
 
 pkgname = dhewm3

@@ -23,10 +23,9 @@ makedepends=(
 )
 optdepends=(
   'doom3-data: packaged game data files'
-  'doom3bfg-data: packaged game data files'
+  'pyside6: for the included launcher script'
+  'python-pyxdg: for the included launcher script'
   'mergerfs: required by the included launcher script to setup the correct file structure'
-  'zenity: UI for the included launcher script'
-  'yad: alternative UI for the included launcher script'
 )
 install=$pkgname.install
 options=(!lto)
@@ -74,4 +73,4 @@ package() {
 }
 
 sha256sums=('SKIP'
-            '7fc188ccf0d7fb449c53324d712ccc5b16b91c73a264f64b3d3bc3f4df738672')
+            '977e77241ded496a4a3cace9255565768d7819da8a95ec5a64ee4bbc8d664665')
