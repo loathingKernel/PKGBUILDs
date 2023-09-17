@@ -1,7 +1,7 @@
 pkgbase = wine-staging
 	pkgdesc = A compatibility layer for running Windows programs - Staging branch
 	pkgver = 8.15
-	pkgrel = 1
+	pkgrel = 2
 	url = https://www.wine-staging.com
 	install = wine.install
 	arch = x86_64
@@ -105,9 +105,7 @@ pkgbase = wine-staging
 	optdepends = ffmpeg
 	optdepends = dosbox
 	provides = wine=8.15
-	provides = wine-wow64=8.15
 	conflicts = wine
-	conflicts = wine-wow64
 	options = !staticlibs
 	options = !lto
 	source = https://dl.winehq.org/wine/source/8.x/wine-8.15.tar.xz
