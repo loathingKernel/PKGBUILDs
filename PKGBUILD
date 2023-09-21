@@ -1,11 +1,12 @@
 # Maintainer: Sven-Hendrik Haase <svenstaro@archlinux.org>
 # Maintainer: Christian Heusel <gromit@archlinux.org>
+# Maintainer: Justin Kromlinger <hashworks@archlinux.org>
 # Contributor: Frederik Schwan <frederik dot schwan at linux dot com>
 # Contributor: Daniel Maslowski <info@orangecms.org>
 
 pkgname=minio
-pkgver=2023.09.16
-_timever=T01-01-47Z
+pkgver=2023.09.20
+_timever=T22-49-55Z
 _pkgver="${pkgver//./-}${_timever//:/-}"
 pkgrel=1
 pkgdesc='Object storage server compatible with Amazon S3'
