@@ -1,0 +1,22 @@
+pkgbase = minio
+	pkgdesc = Object storage server compatible with Amazon S3
+	pkgver = 2023.09.27
+	pkgrel = 1
+	url = https://minio.io
+	arch = x86_64
+	license = AGPL3
+	makedepends = go
+	makedepends = git
+	depends = glibc
+	options = !strip
+	backup = etc/minio/minio.conf
+	source = git+https://github.com/minio/minio.git#tag=RELEASE.2023-09-27T15-22-50Z
+	source = minio.conf
+	source = minio.service
+	source = minio.sysusers
+	sha512sums = SKIP
+	sha512sums = 9fb09d19af9d7a00e4680cd92d208ddd44ce52328f6efee68d7ee47f591cbe77ee88ce139a677bcf8836de0643de18c6c7c4005d50b0056f9b861c3d595e5233
+	sha512sums = f4df8e50618712b6e5f62e2674eca4430ef17ef003426bd83ea6b427da4e0fb519589cc14547b08db4b4a0de114488920071295a680b0c1cb5fd508d31576190
+	sha512sums = 7e4617aed266cf48a2ff9b0e80e31641d998537c78d2c56ce97b828cfc77d96dbf64728d4235dac7382d6e5b201388bef6722959302de5e2298d93f4ec1e0e63
+
+pkgname = minio
