@@ -65,5 +65,7 @@ pkgbase = dolphin-emu-git
 	b2sums = SKIP
 	b2sums = SKIP
 	b2sums = SKIP
+	b2sums = SKIP
+	b2sums = SKIP
 
 pkgname = dolphin-emu-git

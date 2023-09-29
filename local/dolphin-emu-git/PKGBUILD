@@ -78,6 +78,8 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
+        'SKIP'
+        'SKIP'
         'SKIP')
 
 prepare() {
