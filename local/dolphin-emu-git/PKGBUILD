@@ -22,6 +22,7 @@ depends=(
   libavutil.so
   libcurl.so
   libevdev
+  #libfmt.so
   libgl
   #libmgba
   libminiupnpc.so
@@ -53,7 +54,7 @@ optdepends=('pulseaudio: PulseAudio backend')
 provides=(dolphin-emu)
 conflicts=(dolphin-emu)
 options=(!emptydirs)
-_commit=34527cadcce49a9a78f05949973b0930ac4dd999
+_commit=032c77b462a220016f23c5079e71bb23e0ad2adf
 source=(
   dolphin-emu::git+https://github.com/dolphin-emu/dolphin.git
   git+https://github.com/mozilla/cubeb.git
@@ -65,6 +66,8 @@ source=(
   git+https://github.com/KhronosGroup/SPIRV-Cross.git
   git+https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
   git+https://github.com/zlib-ng/zlib-ng.git
+  git+https://github.com/curl/curl.git
+  git+https://github.com/fmtlib/fmt.git
 )
 b2sums=('SKIP'
         'SKIP'
@@ -79,7 +82,7 @@ b2sums=('SKIP'
 
 prepare() {
   cd dolphin-emu
-  for submodule in Externals/{cubeb/cubeb,implot/implot,libspng/libspng,mGBA/mgba,rcheevos/rcheevos,spirv_cross/SPIRV-Cross,VulkanMemoryAllocator,zlib-ng/zlib-ng}; do
+  for submodule in Externals/{cubeb/cubeb,implot/implot,libspng/libspng,mGBA/mgba,rcheevos/rcheevos,spirv_cross/SPIRV-Cross,VulkanMemoryAllocator,zlib-ng/zlib-ng,curl/curl,fmt/fmt}; do
     git submodule init ${submodule}
     git config submodule.${submodule}.url ../${submodule##*/}
     git -c protocol.file.allow=always submodule update ${submodule}
