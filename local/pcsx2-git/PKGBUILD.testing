@@ -4,7 +4,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.4965.r0.gd6822b85b
+pkgver=1.7.5067.r0.g7b1f6d7ce
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -36,6 +36,9 @@ depends=(
     libpng
     hicolor-icon-theme
     xcb-util-cursor
+    fmt
+    libzip
+    zstd
 )
 makedepends=(
     cmake
@@ -73,12 +76,9 @@ prepare() {
     _pcsx2_submodules=(
         3rdparty/xz/xz
         3rdparty/gtest
-        3rdparty/fmt/fmt
-        3rdparty/libchdr/libchdr
         3rdparty/rapidyaml/rapidyaml
         3rdparty/glslang/glslang
         3rdparty/vulkan-headers
-        3rdparty/zstd/zstd
         3rdparty/rcheevos/rcheevos
     )
     git remote set-url origin https://github.com/PCSX2/pcsx2.git
@@ -109,11 +109,11 @@ build() {
     -DWAYLAND_API=ON \
     -DENABLE_SETCAP=OFF \
     -DUSE_SYSTEM_LIBS=OFF \
-    -DUSE_SYSTEM_FMT=OFF \
-    -DUSE_SYSTEM_LIBZIP=OFF \
+    -DUSE_SYSTEM_FMT=ON \
+    -DUSE_SYSTEM_LIBZIP=ON \
     -DUSE_SYSTEM_RYML=OFF \
     -DUSE_SYSTEM_SDL2=ON \
-    -DUSE_SYSTEM_ZSTD=OFF \
+    -DUSE_SYSTEM_ZSTD=ON \
     -DDISABLE_ADVANCE_SIMD=ON \
     -DDISABLE_BUILD_DATE=ON
     ninja -C build -v

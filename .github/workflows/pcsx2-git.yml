@@ -8,13 +8,13 @@ on:
     branches:
      - master
     paths:
-     - aur/pcsx2-git/.SRCINFO
+     - local/pcsx2-git/.SRCINFO
 
 jobs:
   public:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: aur/pcsx2-git
+      pkgdir: local/pcsx2-git
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
       makepkg_args: -p PKGBUILD
@@ -22,7 +22,7 @@ jobs:
   personal:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: aur/pcsx2-git
+      pkgdir: local/pcsx2-git
       pacman_conf: .github/conf/personal_pacman.conf
       makepkg_conf: .github/conf/personal_makepkg.conf
       makepkg_args: -p PKGBUILD
