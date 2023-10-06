@@ -1,7 +1,7 @@
 pkgbase = wine-staging
 	pkgdesc = A compatibility layer for running Windows programs - Staging branch
 	pkgver = 8.17.1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://www.wine-staging.com
 	install = wine.install
 	arch = x86_64
@@ -120,7 +120,7 @@ pkgbase = wine-staging
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
 	sha512sums = 3826e20494a919ef1972d91c9391a3ae916d52b55e62e8fb7fc2c9c3ae6a7b363b40d8388cb4b9b3e45bae134a2de46e8158f8eaec7948216d9cd8ef32ab627f
 	sha512sums = SKIP
-	sha512sums = 699d3caec080686986a3b66a6c905d4542a3f06a12def3f30ad9d97484c9a0c2ba00ab81ae75a8ec83eaad0ef8029fcc702ac2c1f0a46c60118b9e451afe7613
+	sha512sums = ae015251c5dd1bf23be038362ec2acbf351836a9bd9e7c2ef2d005fa36b75de18919ecba99b43b881e2fa63edc99b07ad1665a25b9efb486a986cf06d51083a6
 	sha512sums = SKIP
 	sha512sums = 30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569
 	sha512sums = 3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282
