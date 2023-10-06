@@ -4,7 +4,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=8.16
+pkgver=8.17
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -15,7 +15,7 @@ source=(https://dl.winehq.org/wine/source/8.x/$pkgname-$_pkgbasever.tar.xz{,.sig
         wine-isolate_home.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('0ba83beacd842e53173c07c30fa4ee57424af0d00b9f168b8bd310c40ea06e26dfc09f4a1991b788a8c4bd2b6eeb439e60b0deff6249424a00fa2940c95662b6'
+sha512sums=('3826e20494a919ef1972d91c9391a3ae916d52b55e62e8fb7fc2c9c3ae6a7b363b40d8388cb4b9b3e45bae134a2de46e8158f8eaec7948216d9cd8ef32ab627f'
             'SKIP'
             'SKIP'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
