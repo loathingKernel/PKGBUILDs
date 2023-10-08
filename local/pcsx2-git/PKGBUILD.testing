@@ -4,7 +4,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.5067.r0.g7b1f6d7ce
+pkgver=1.7.5092.r0.gec53e8949
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -80,6 +80,7 @@ prepare() {
         3rdparty/glslang/glslang
         3rdparty/vulkan-headers
         3rdparty/rcheevos/rcheevos
+        3rdparty/libwebp/libwebp
     )
     git remote set-url origin https://github.com/PCSX2/pcsx2.git
     for path in ${_pcsx2_submodules[@]}; do
