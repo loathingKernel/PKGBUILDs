@@ -5,12 +5,12 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=8.17.1
-pkgrel=2
+pkgver=8.18
+pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
-#_winever=$_pkgbasever
-_winever=${_pkgbasever%.*}
+_winever=$_pkgbasever
+#_winever=${_pkgbasever%.*}
 
 source=(https://dl.winehq.org/wine/source/8.x/wine-$_winever.tar.xz{,.sign}
         "https://github.com/wine-staging/wine-staging/archive/v$_pkgbasever/wine-staging-v$_pkgbasever.tar.gz"
@@ -19,9 +19,9 @@ source=(https://dl.winehq.org/wine/source/8.x/wine-$_winever.tar.xz{,.sign}
         wine-isolate_home.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('3826e20494a919ef1972d91c9391a3ae916d52b55e62e8fb7fc2c9c3ae6a7b363b40d8388cb4b9b3e45bae134a2de46e8158f8eaec7948216d9cd8ef32ab627f'
+sha512sums=('0f8e6b5c6709930bc7f774d92cd025976f6442c3785a224b5988a37152f3a875150b228f12442e9b9c0d9e7884568aca26159df86d48f2550a630625fef3c8b9'
             'SKIP'
-            'ae015251c5dd1bf23be038362ec2acbf351836a9bd9e7c2ef2d005fa36b75de18919ecba99b43b881e2fa63edc99b07ad1665a25b9efb486a986cf06d51083a6'
+            '1016849b3381a3ac039c2376517a5c7857f632eb1e49e9e3d6feedbc8c4e182da1a7117e89a1a1e4798121176e04b8f91cf3f3c001abf767398a3c3cd38850fb'
             'SKIP'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
@@ -70,8 +70,11 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   gst-plugins-good      #lib32-gst-plugins-good
   vulkan-icd-loader     #lib32-vulkan-icd-loader
   sdl2                  #lib32-sdl2
+  libcups               #lib32-libcups
+  sane
   libgphoto2
   ffmpeg
+  samba
   opencl-headers
 )
 
@@ -91,9 +94,11 @@ optdepends=(
   gst-plugins-good      #lib32-gst-plugins-good
   vulkan-icd-loader     #lib32-vulkan-icd-loader
   sdl2                  #lib32-sdl2
+  sane
   libgphoto2
   ffmpeg
-  dosbox
+  cups
+  samba           dosbox
 )
 
 provides=("wine=$pkgver" "wine-wow64=$pkgver")
