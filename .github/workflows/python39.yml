@@ -6,13 +6,13 @@ on:
     branches:
      - master
     paths:
-     - aur/python39/.SRCINFO
+     - local/python39/.SRCINFO
 
 jobs:
   public:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: aur/python39
+      pkgdir: local/python39
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
       makepkg_args: --skippgpcheck

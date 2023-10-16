@@ -7,25 +7,24 @@
 shopt -s extglob
 
 pkgbase=python
-pkgname=(python39 python39-tests)
-pkgver=3.9.18
-pkgrel=1
+pkgname=(python38 python38-tests)
+pkgver=3.8.18
+pkgrel=2
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
-pkgdesc="Next generation of the python high-level scripting language, version 3.9"
+pkgdesc="Next generation of the python high-level scripting language, version 3.8"
 arch=('x86_64')
 license=('custom')
 url="https://www.python.org/"
 depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib')
-makedepends=('tk' 'sqlite' 'bluez-libs' 'mpdecimal' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-font')
+makedepends=('tk' 'sqlite' 'valgrind' 'bluez-libs' 'mpdecimal' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-font')
 source=("https://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"{,.asc}
         mpdecimal-2.5.1.patch)
-sha512sums=('aab155aca757d298394eddb91ff9a8f239665bd46feb495c6b6f735bbcb7489c05c858cc4cd08f1575c24f293b33492d763e9a140d92f0b2b0cc81a165a677c7'
+sha256sums=('3ffb71cd349a326ba7b2fadc7e7df86ba577dd9c4917e52a8401adbda7405e3f'
             'SKIP'
-            '58f683cbfdc6aa84c03d068c1bc2f1d8d2c17ba4f7b632c14ab1d529d8332e767354266c3815e239427497fff1a42ec2a37739ea312d24cb76a69dcf1c98c0ad')
+            '8eb389be1babe03a0231001dc16dd2d69a3ea0fbf6b8c976a580787e7ff1594c')
 validpgpkeys=('0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D'  # Ned Deily (Python release signing key) <nad@python.org>
               'E3FF2839C048B25C084DEBE9B26995E310250568') # Łukasz Langa (GPG langa.pl) <lukasz@langa.pl>
-provides=("python=$_pybasever")
 
 prepare() {
   cd Python-${pkgver}
@@ -58,7 +57,6 @@ build() {
   LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
   # Disable bundled pip & setuptools
-  export ax_cv_c_float_words_bigendian=no
   ./configure --prefix=/usr \
               --enable-shared \
               --with-computed-gotos \
@@ -94,7 +92,7 @@ check() {
     "${srcdir}/Python-${pkgver}/python" -m test.regrtest -v -uall -x test_tk -x test_ttk_guionly
 }
 
-package_python39() {
+package_python38() {
   optdepends=('python-setuptools'
               'python-pip'
               'sqlite'
@@ -129,9 +127,9 @@ package_python39() {
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
-package_python39-tests() {
+package_python38-tests() {
   pkgdesc="Regression tests packages for Python"
-  depends=('python39')
+  depends=('python38')
 
   cd Python-${pkgver}
 
