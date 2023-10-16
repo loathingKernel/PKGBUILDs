@@ -4,7 +4,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=8.17
+pkgver=8.18
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -15,7 +15,7 @@ source=(https://dl.winehq.org/wine/source/8.x/$pkgname-$_pkgbasever.tar.xz{,.sig
         wine-isolate_home.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('3826e20494a919ef1972d91c9391a3ae916d52b55e62e8fb7fc2c9c3ae6a7b363b40d8388cb4b9b3e45bae134a2de46e8158f8eaec7948216d9cd8ef32ab627f'
+sha512sums=('0f8e6b5c6709930bc7f774d92cd025976f6442c3785a224b5988a37152f3a875150b228f12442e9b9c0d9e7884568aca26159df86d48f2550a630625fef3c8b9'
             'SKIP'
             'SKIP'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
@@ -60,8 +60,11 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   gst-plugins-good      lib32-gst-plugins-good
   vulkan-icd-loader     lib32-vulkan-icd-loader
   sdl2                  lib32-sdl2
+  libcups               lib32-libcups
   libgphoto2
+  sane
   vulkan-headers
+  samba
   opencl-headers
 )
 optdepends=(
@@ -80,7 +83,9 @@ optdepends=(
   vulkan-icd-loader     lib32-vulkan-icd-loader
   sdl2                  lib32-sdl2
   libgphoto2
-  dosbox
+  sane
+  cups
+  samba           dosbox
 )
 makedepends=(${makedepends[@]} ${depends[@]})
 install=wine.install
