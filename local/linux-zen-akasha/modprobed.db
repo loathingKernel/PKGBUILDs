@@ -11,15 +11,18 @@ binder_linux
 blake2b_generic
 blake2s_x86_64
 bridge
+br_netfilter
 btrfs
 cdrom
 cec
 cfg80211
 chacha_x86_64
+cifs_arc4
 coretemp
 crc16
 crc32c_generic
 crc32c_intel
+crc32_generic
 crc32_pclmul
 crc_itu_t
 crct10dif_pclmul
@@ -50,9 +53,12 @@ gspca_ov534
 hid_logitech
 hwmon_vid
 i2c_algo_bit
+i2c_dev
 i2c_i801
 i2c_smbus
 i915
+ib_cm
+ib_core
 intel_cstate
 intel_gtt
 intel_pmc_bxt
@@ -71,8 +77,10 @@ irqbypass
 isofs
 iTCO_vendor_support
 iTCO_wdt
+iw_cm
 jbd2
 jc42
+ksmbd
 kvm
 kvm_intel
 ledtrig_audio
@@ -107,6 +115,7 @@ nf_conntrack
 nf_conntrack_ftp
 nf_conntrack_h323
 nf_conntrack_irc
+nf_conntrack_netlink
 nf_conntrack_pptp
 nf_conntrack_sip
 nf_conntrack_tftp
@@ -128,6 +137,7 @@ nft_masq
 nft_reject
 nft_reject_ipv4
 ntfs3
+overlay
 pktcdvd
 poly1305_x86_64
 polyval_clmulni
@@ -135,6 +145,7 @@ polyval_generic
 raid0
 raid6_pq
 rapl
+rdma_cm
 rfkill
 rng_core
 sg
@@ -199,6 +210,7 @@ xhci_pci_renesas
 xor
 xpad
 x_tables
+xt_addrtype
 xt_comment
 xt_conntrack
 xt_MASQUERADE
