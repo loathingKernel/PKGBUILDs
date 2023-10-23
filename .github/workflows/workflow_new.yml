@@ -42,7 +42,7 @@ jobs:
     - name: Prepare Cache
       uses: actions/cache@v3
       with:
-        path: ~/.ccache
+        path: ./.ccache
         key: ${{ github.workflow }}-${{ github.job }}-ccache
 
     - name: Makepkg Build and Check
