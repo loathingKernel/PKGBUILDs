@@ -27,11 +27,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+
+    - name: Prepare Cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.ccache
+        key: ccache-${{ github.workflow }}-${{ github.action }}
 
     - name: Makepkg Build and Check
       id: makepkg
-      uses: loathingkernel/pkgbuild-action@master
+      uses: ./.github/actions/pkgbuild
       with:
         pkgdir: ${{ inputs.pkgdir }}
         pacmanConf: ${{ inputs.pacman_conf }}
