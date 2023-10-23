@@ -33,7 +33,9 @@ jobs:
       uses: actions/cache@v3
       with:
         path: ./.ccache
-        key: ${{ github.workflow }}-${{ inputs.release_tag }}-ccache
+        key: ${{ github.workflow }}-${{ inputs.release_tag }}-${{ github.run_id }}
+        restore-keys: |
+          ${{ github.workflow }}-${{ inputs.release_tag }}
 
     - name: Makepkg Build and Check
       id: makepkg
