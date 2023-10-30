@@ -1,4 +1,4 @@
-name: lgogdownloader
+name: lgogdownloader-qt5
 
 on:
   workflow_dispatch:
@@ -6,13 +6,13 @@ on:
     branches:
      - master
     paths:
-     - aur/lgogdownloader/.SRCINFO
+     - aur/lgogdownloader-qt5/.SRCINFO
 
 jobs:
   public:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: aur/lgogdownloader
+      pkgdir: aur/lgogdownloader-qt5
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
       release_tag: loathk-public
