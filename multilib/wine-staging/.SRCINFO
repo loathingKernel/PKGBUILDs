@@ -1,6 +1,6 @@
 pkgbase = wine-staging
 	pkgdesc = A compatibility layer for running Windows programs - Staging branch
-	pkgver = 8.18
+	pkgver = 8.19
 	pkgrel = 1
 	url = https://www.wine-staging.com
 	install = wine.install
@@ -111,13 +111,13 @@ pkgbase = wine-staging
 	optdepends = cups
 	optdepends = samba
 	optdepends = dosbox
-	provides = wine=8.18
+	provides = wine=8.19
 	conflicts = wine
 	options = !staticlibs
 	options = !lto
-	source = https://dl.winehq.org/wine/source/8.x/wine-8.18.tar.xz
-	source = https://dl.winehq.org/wine/source/8.x/wine-8.18.tar.xz.sign
-	source = https://github.com/wine-staging/wine-staging/archive/v8.18/wine-staging-v8.18.tar.gz
+	source = https://dl.winehq.org/wine/source/8.x/wine-8.19.tar.xz
+	source = https://dl.winehq.org/wine/source/8.x/wine-8.19.tar.xz.sign
+	source = https://github.com/wine-staging/wine-staging/archive/v8.19/wine-staging-v8.19.tar.gz
 	source = git+https://github.com/Frogging-Family/wine-tkg-git.git
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
@@ -125,9 +125,9 @@ pkgbase = wine-staging
 	source = wine-binfmt.conf
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = 0f8e6b5c6709930bc7f774d92cd025976f6442c3785a224b5988a37152f3a875150b228f12442e9b9c0d9e7884568aca26159df86d48f2550a630625fef3c8b9
+	sha512sums = ad4178c5e9f336eb968f0c378e3819794507447728acd10d642c1d66e0745837e47a70579bc9c7d9bec4510ca47e230bf4ab05ddf39323669ed24a6fce9f8c02
 	sha512sums = SKIP
-	sha512sums = 1016849b3381a3ac039c2376517a5c7857f632eb1e49e9e3d6feedbc8c4e182da1a7117e89a1a1e4798121176e04b8f91cf3f3c001abf767398a3c3cd38850fb
+	sha512sums = 764cb824250aba7390dcede8b5269fc2c58f3bab8e0bef5e7bfb33ba553d1b506e0e5d8e11e6ee960958bd22086127c178e418767e8051c2767949b74df2afb1
 	sha512sums = SKIP
 	sha512sums = 30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569
 	sha512sums = 3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282
