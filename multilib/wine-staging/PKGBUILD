@@ -6,7 +6,7 @@
 
 pkgname=wine-staging
 pkgver=8.19
-pkgrel=2
+pkgrel=3
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -171,6 +171,7 @@ build() {
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
+    --disable-win16 \
     --disable-tests \
     --enable-win64 \
     --with-xattr
@@ -194,6 +195,7 @@ build() {
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
+    --disable-win16 \
     --disable-tests \
     --with-xattr \
     --libdir=/usr/lib32 \

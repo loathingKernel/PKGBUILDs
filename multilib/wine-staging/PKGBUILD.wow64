@@ -6,7 +6,7 @@
 
 pkgname=wine-staging
 pkgver=8.19
-pkgrel=2
+pkgrel=3
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -152,7 +152,7 @@ build() {
   # From Proton
   OPTIMIZE_FLAGS="-O2 -march=haswell -mtune=haswell -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
-  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS -s -mno-avx -mno-avx2"
+  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS -s -mno-avx2 -mno-avx"
 
   msg2 "Building Wine-64..."
 
@@ -171,8 +171,9 @@ build() {
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
+    --disable-win16 \
     --disable-tests \
-    --enable-archs=i386,x86_64 \
+    --enable-archs=x86_64,i386 \
     --with-xattr
 
   make

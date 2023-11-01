@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=8.19
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -155,6 +155,7 @@ build() {
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
+    --disable-win16 \
     --disable-tests \
     --enable-win64
   # Gstreamer was disabled for FS#33655
@@ -185,6 +186,7 @@ build() {
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
+    --disable-win16 \
     --disable-tests \
     "${_wine32opts[@]}"
 
