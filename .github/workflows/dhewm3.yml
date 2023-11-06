@@ -8,13 +8,13 @@ on:
     branches:
      - master
     paths:
-     - aur/dhewm3/.SRCINFO
+     - local/dhewm3/.SRCINFO
 
 jobs:
   public:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: aur/dhewm3
+      pkgdir: local/dhewm3
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
       makepkg_args: -p PKGBUILD.live
@@ -22,7 +22,7 @@ jobs:
   personal:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: aur/dhewm3
+      pkgdir: local/dhewm3
       pacman_conf: .github/conf/personal_pacman.conf
       makepkg_conf: .github/conf/personal_makepkg.conf
       makepkg_args: -p PKGBUILD.live
