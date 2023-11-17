@@ -1,49 +1,53 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=6.4.4.zen1
+pkgver=6.5.8.zen1
 pkgrel=1
-pkgdesc='Linux ZEN Native'
-_srctag=v${pkgver%.*}-${pkgver##*.}
-url="https://github.com/zen-kernel/zen-kernel/commits/$_srctag"
+pkgdesc='Linux ZEN Elitebook'
+url='https://github.com/zen-kernel/zen-kernel'
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
   bc
   cpio
   gettext
-  git
   libelf
   pahole
   perl
+  python
   tar
   xz
 
 )
 options=('!strip')
-_srcname=zen-kernel
+_srcname=linux-${pkgver%.*}
+_srctag=v${pkgver%.*}-${pkgver##*.}
 source=(
-  "$_srcname::git+https://github.com/zen-kernel/zen-kernel?signed#tag=$_srctag"
+  https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
+  $url/releases/download/$_srctag/linux-$_srctag.patch.zst{,.sig}
   config  # the main kernel config file
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
   A2FF3A36AAA56654109064AB19802F8B0D70FC30  # Jan Alexander Steffens (heftig)
-  C5ADB4F3FEBBCE27A3E54D7D9AE4078033F8024D  # Steven Barrett <steven@liquorix.net>
 )
-b2sums=('SKIP'
-        '259b889056573ca178c66eaeee32df053d677e861788288c21f10fe861b66d4e82da4800b1f2b90dc85a98473928528019e54c1885e9f4683d69c1dbb869a9f5')
+# https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
+sha256sums=('299cca897d90deaa176eebec42f0a80eeb7516afed330a45c14da9de086cf717'
+            'SKIP'
+            '762b30867af8e9f2ffc05b5070cd5fed57ce21fb6fed1a74febd428605b7deae'
+            'SKIP'
+            '4de9475254b54ff08f9cb1ca7d69e0eab2a4c2765bbdb9db79d6bb2225df2a9b')
+b2sums=('5d104cfd8f1f08b181ab85bb251e0a2fc1b37a791f396e83fab82ff5aeadc0c69a746359a6005dc766546c5a880235e1b4c477d67bd7b33ef6c4aaf4a8ea488b'
+        'SKIP'
+        '9ce09ae10689f68b442568ae58f72a306696c3b7fb1087b569738382f31133218532bebcdb946aade777d869eea08617e38206ec77510d808eb3b84d5bc691c3'
+        'SKIP'
+        'a33473ba721e7cf2de2cfeef3b2d54605c207c75604aca9a5d6be8020368e848f674ef6662d78fd864dd775bcbbb4c649c6e6721783fdc56fdd383963b735437')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 export KCFLAGS="-pipe"
-
-_make() {
-  test -s version
-  make KERNELRELEASE="$(<version)" "$@"
-}
 
 prepare() {
   cd $_srcname
@@ -51,14 +55,12 @@ prepare() {
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
-  make defconfig
-  make -s kernelrelease > version
-  make mrproper
 
   local src
   for src in "${source[@]}"; do
     src="${src%%::*}"
     src="${src##*/}"
+    src="${src%.zst}"
     [[ $src = *.patch ]] || continue
     echo "Applying patch $src..."
     patch -Np1 < "../$src"
@@ -69,16 +71,16 @@ prepare() {
   if true; then
   echo "-> Native config..."
     # General Setup (phoronix says that 03 is not better)
-    scripts/config --disable CONFIG_ZEN_INTERACTIVE
-    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
-    scripts/config --enable  CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
+#    scripts/config --disable CONFIG_ZEN_INTERACTIVE
+#    scripts/config --disable CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3
+#    scripts/config --enable  CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
     scripts/config --enable  CONFIG_EXPERT
     # Mitigations
     scripts/config --disable CONFIG_SPECULATION_MITIGATIONS
     # IRQ subsystem
     scripts/config --disable CONFIG_GENERIC_IRQ_INJECTION
     # CPU/Task time and stats accounting
-    scripts/config --enable  CONFIG_PSI_DEFAULT_DISABLED
+#    scripts/config --enable  CONFIG_PSI_DEFAULT_DISABLED
     # Kernel Performance Events And Counters
     scripts/config --disable CONFIG_SLAB_FREELIST_HARDENED
     scripts/config --disable CONFIG_SLUB_CPU_PARTIAL
@@ -94,15 +96,17 @@ prepare() {
     scripts/config --set-val CONFIG_NR_CPUS 8
     scripts/config --disable CONFIG_MICROCODE_AMD
     scripts/config --disable CONFIG_NUMA
-    scripts/config --disable CONFIG_HZ_1000
-    scripts/config --enable  CONFIG_HZ_300
-    scripts/config --set-val CONFIG_HZ 300
+#    scripts/config --disable CONFIG_HZ_1000
+#    scripts/config --enable  CONFIG_HZ_300
+#    scripts/config --set-val CONFIG_HZ 300
     scripts/config --disable CONFIG_KEXEC_FILE
     scripts/config --disable CONFIG_CRASH_DUMP
 #    scripts/config --disable CONFIG_RANDOMIZE_BASE
 #    scripts/config --disable CONFIG_DYNAMIC_MEMORY_LAYOUT
 #    scripts/config --set-val CONFIG_PHYSICAL_ALIGN 0x1000000
     # CPU Frequency scaling
+#    scripts/config --disable CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
+#    scripts/config --enable  CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
     # EFI (Extensible Firmware Interface) Support
 #    scripts/config --disable CONFIG_EFI_SOFT_RESERVE    
     # Memory Management options
@@ -123,24 +127,25 @@ prepare() {
 #    scripts/config --module  CONFIG_USB_EHCI_HCD
     # Kernel Testing and Coverage
     scripts/config --enable  CONFIG_MEMTEST
-  _make olddefconfig
+  make olddefconfig
   diff -u ../config .config || :
-  cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-native"
+  cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage1-native"
   echo "-> Running nconfig..."
-  _make nconfig
-  cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-nconfig"
+  make nconfig
+  cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage2-nconfig"
   echo "-> Running localmodconfig..."
-  _make LSMOD="${startdir}/modprobed.db" localmodconfig
-  _make nconfig
-  cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-localmod"
+  make LSMOD="${startdir}/modprobed.db" localmodconfig
+  make nconfig
+  cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage3-localmod"
   fi
 
+  make -s kernelrelease > version
   echo "Prepared $pkgbase version $(<version)"
 }
 
 build() {
   cd $_srcname
-  _make all
+  make all
 }
 
 _package() {
@@ -170,13 +175,13 @@ _package() {
   echo "Installing boot image..."
   # systemd expects to find the kernel here to allow hibernation
   # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
-  install -Dm644 "$(_make -s image_name)" "$modulesdir/vmlinuz"
+  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
 
   # Used by mkinitcpio to name the kernel
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  ZSTD_CLEVEL=19 _make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+  ZSTD_CLEVEL=19 make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build and source links

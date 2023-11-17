@@ -192,6 +192,7 @@ usbhid
 usbip_core
 usbip_host
 usb_storage
+veth
 vfat
 vhba
 video
