@@ -11,10 +11,8 @@ pkgbase = d8vk-mingw-git
 	makedepends = git
 	makedepends = mingw-w64-gcc
 	provides = d8vk
-	provides = d9vk
 	provides = d8vk=1.7.1.r2367.g1a039a47
 	conflicts = d8vk
-	conflicts = d9vk
 	options = !lto
 	options = !staticlibs
 	source = git+https://github.com/AlpyneDreams/d8vk.git

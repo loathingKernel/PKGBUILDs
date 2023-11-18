@@ -8,8 +8,8 @@ arch=('x86_64')
 url="https://github.com/AlpyneDreams/d8vk"
 license=('zlib/libpng')
 makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'mingw-w64-gcc')
-provides=('d8vk' 'd9vk' "d8vk=$pkgver")
-conflicts=('d8vk' 'd9vk')
+provides=('d8vk' "d8vk=$pkgver")
+conflicts=('d8vk')
 options=(!lto !staticlibs)
 source=(
     "git+https://github.com/AlpyneDreams/d8vk.git"
