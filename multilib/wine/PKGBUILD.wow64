@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=8.20
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 _tkg_commit=9828c75b0589a2a851848dc5bfbe785272ae8b70
@@ -156,7 +156,6 @@ build() {
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
-    --disable-win16 \
     --disable-tests \
     --enable-archs=x86_64,i386
   # Gstreamer was disabled for FS#33655
