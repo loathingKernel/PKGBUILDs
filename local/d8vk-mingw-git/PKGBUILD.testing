@@ -1,45 +1,45 @@
 # Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
-pkgname=dxvk-nvapi-mingw-git
-pkgver=0.6.4.r16.g03cc59d
+pkgname=d8vk-mingw-git
+pkgver=1.7.1.r2367.g1a039a47
 pkgrel=1
-pkgdesc='Alternative NVAPI implementation on top of DXVK'
+pkgdesc='Vulkan-based implementation of D3D8 and D3D9 based on DXVK for Linux / Wine, MingW version'
 arch=('x86_64')
-url="https://github.com/jp7677/dxvk-nvapi"
-license=('MIT')
+url="https://github.com/AlpyneDreams/d8vk"
+license=('zlib/libpng')
 makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'mingw-w64-gcc')
-provides=('dxvk-nvapi-mingw')
-conflicts=('dxvk-nvapi-mingw')
+provides=('d8vk' 'd9vk' "d8vk=$pkgver")
+conflicts=('d8vk' 'd9vk')
 options=(!lto !staticlibs)
 source=(
-    "git+https://github.com/jp7677/dxvk-nvapi.git"
-    "dxvk-nvapi-extraopts.patch"
-    "setup_dxvk_nvapi.sh"
-    "setup_dxvk_nvapi"
+    "git+https://github.com/AlpyneDreams/d8vk.git"
+    "d8vk-extraopts.patch"
+    "setup_d8vk.sh"
+    "setup_d8vk"
 )
 
 pkgver() {
-    cd dxvk-nvapi
+    cd d8vk
     printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g')"
 }
 
 prepare() {
-    cd dxvk-nvapi
+    cd d8vk
 
     # Explicitly set origin URL for submodules using relative paths
-    git remote set-url origin https://github.com/jp7677/dxvk-nvapi.git
+    git remote set-url origin https://github.com/AlpyneDreams/d8vk.git
     git submodule update --init --filter=tree:0 --recursive
 
     # Uncomment to enable extra optimizations
     # Patch crossfiles with extra optimizations from makepkg.conf
-    patch -p1 -i "$srcdir"/dxvk-nvapi-extraopts.patch
+    patch -p1 -i "$srcdir"/d8vk-extraopts.patch
 
     # By default export FLAGS used by proton and ignore makepkg
     # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
     # If you want the "best" possible optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
-    export CFLAGS="-O2 -march=nocona -mtune=core-avx2 -pipe"
-    export CXXFLAGS="-O2 -march=nocona -mtune=core-avx2 -pipe"
+    export CFLAGS="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
+    export CXXFLAGS="-O2 -march=haswell -mtune=haswell -pipe -fno-semantic-interposition"
     export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # These flags are taken from Proton
@@ -80,37 +80,42 @@ prepare() {
 }
 
 build() {
-    meson setup dxvk-nvapi "build/x64" \
-        --cross-file dxvk-nvapi/build-win64.txt \
-        --prefix "/usr/share/dxvk-nvapi/x64" \
+    meson setup d8vk "build/x64" \
+        -Denable_dxgi=false \
+        -Denable_d3d10=false \
+        -Denable_d3d11=false \
+        --cross-file d8vk/build-win64.txt \
+        --prefix "/usr/share/d8vk/x64" \
         --bindir "" --libdir "" \
         --buildtype "plain" \
-        --strip \
-        -Denable_tests=false
+        --strip
     ninja -C "build/x64" -v
 
-    meson setup dxvk-nvapi "build/x32" \
-        --cross-file dxvk-nvapi/build-win32.txt \
-        --prefix "/usr/share/dxvk-nvapi/x32" \
+    meson setup d8vk "build/x32" \
+        -Denable_dxgi=false \
+        -Denable_d3d10=false \
+        -Denable_d3d11=false \
+        --cross-file d8vk/build-win32.txt \
+        --prefix "/usr/share/d8vk/x32" \
         --bindir "" --libdir "" \
         --buildtype "plain" \
-        --strip \
-        -Denable_tests=false
+        --strip
     ninja -C "build/x32" -v
 }
 
 package() {
-    depends=('vulkan-icd-loader' 'lib32-vulkan-icd-loader' 'wine' 'dxvk' 'bash')
+    depends=('vulkan-icd-loader' 'lib32-vulkan-icd-loader' 'wine' 'bash')
 
     DESTDIR="$pkgdir" ninja -C "build/x32" install
     DESTDIR="$pkgdir" ninja -C "build/x64" install
-    install -Dm 755 -t "$pkgdir/usr/share/dxvk-nvapi" setup_dxvk_nvapi.sh
-    install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" dxvk-nvapi/README.md
-    install -Dm 644 -t "$pkgdir/usr/share/licenses/$pkgname" dxvk-nvapi/LICENSE
-    install -Dm 755 -t "$pkgdir/usr/bin" setup_dxvk_nvapi
+    install -Dm 755 -t "$pkgdir/usr/share/d8vk" setup_d8vk.sh
+    install -Dm 644 -t "$pkgdir/usr/share/d8vk" d8vk/dxvk.conf
+    install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" d8vk/README.md
+    install -Dm 644 -t "$pkgdir/usr/share/licenses/$pkgname" d8vk/LICENSE
+    install -Dm 755 -t "$pkgdir/usr/bin" setup_d8vk
 }
 
 sha256sums=('SKIP'
-            'dff5ecd1a35a94a4dc1fa5fd08c10b5c88703797520d6b315207124ff1adeef8'
-            '62a14512ab32ff534d8b07f2cdefae17ee679c73465edeb11bfac1e88f0a7109'
-            '1f4934c5bfcf208e288a0eda2f385f82acc9e78a4b0ac2a77b5af14c64c8e21e')
+            'bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362'
+            '4fc47d60ab45f359edc226d1a77743f6b30c3590d9b99d4ada2df7f056991a8b'
+            'be857d3d8765af0fdb97904af7cfbe98929de642df0dc7515739199d70df1f92')
