@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/share/dxvk/setup_d8vk.sh $@
+/usr/share/d8vk/setup_d8vk.sh $@
