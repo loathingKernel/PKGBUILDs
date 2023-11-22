@@ -19,7 +19,6 @@ source=(
 )
 #Optional patches
 source+=(
-    80-nv_low_latency_dxvk.patch
 )
 
 pkgver() {
@@ -33,9 +32,6 @@ prepare() {
     # Explicitly set origin URL for submodules using relative paths
     git remote set-url origin https://github.com/doitsujin/dxvk.git
     git submodule update --init --filter=tree:0 --recursive
-
-    pushd include/vulkan; git checkout bbe0f575ebd6098369f0ac6c6a43532732ed0ba6; popd
-    patch -p1 -i "$srcdir"/80-nv_low_latency_dxvk.patch
 
     # Uncomment to enable extra optimizations
     # Patch crossfiles with extra optimizations from makepkg.conf
@@ -121,5 +117,4 @@ sha256sums=('SKIP'
             '0f688815530ab5e8cc89b9b45d9b1d66cd8cd5a7770fb8249339af555a30dfe7'
             'c1f6a18b03d1612b60f8081428f00cfac5e66315fe9d42719f01cf5564deeeff')
 sha256sums+=(
-            'SKIP'
 )
