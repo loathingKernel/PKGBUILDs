@@ -24,4 +24,5 @@ jobs:
       pkgdir: public/dxvk-nvapi-mingw-git
       pacman_conf: .github/conf/personal_pacman.conf
       makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD.testing
       release_tag: loathk-personal
