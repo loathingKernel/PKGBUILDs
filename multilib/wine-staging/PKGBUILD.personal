@@ -6,7 +6,7 @@
 
 pkgname=wine-staging
 pkgver=8.20
-pkgrel=3
+pkgrel=4
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -21,7 +21,6 @@ source=(https://dl.winehq.org/wine/source/8.x/wine-$_winever.tar.xz{,.sign}
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
-        83-nv_low_latency_wine.patch
 )
 sha512sums=('86dffc3c9e01506ff2ff75663f48bb3b18a6afaf6381fc3c43c476481cb5c0570129550d2047059f528855e454a629c63e8beb85d5c591d1fdb7a066fbca2623'
             'SKIP'
@@ -32,7 +31,6 @@ sha512sums=('86dffc3c9e01506ff2ff75663f48bb3b18a6afaf6381fc3c43c476481cb5c057012
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 sha512sums+=(
-            'SKIP'
 )
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -132,10 +130,9 @@ prepare() {
   patch -p1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
   #patch -p1 -i "$_tkg_path"/proton/valve_proton_fullscreen_hack/FS_bypass_compositor.patch
 
-  patch -p1 -i "$srcdir"/83-nv_low_latency_wine.patch
   patch -p1 -i "$srcdir"/wine-wmclass.patch
   patch -p1 -i "$srcdir"/wine-isolate_home.patch
-  dlls/winevulkan/make_vulkan -x vk.xml
+  dlls/winevulkan/make_vulkan
   tools/make_requests
   autoreconf -f
 
