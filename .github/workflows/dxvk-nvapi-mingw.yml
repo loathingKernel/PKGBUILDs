@@ -16,3 +16,11 @@ jobs:
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
       release_tag: loathk-public
+  personal:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: public/dxvk-nvapi-mingw
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD.personal
+      release_tag: loathk-personal

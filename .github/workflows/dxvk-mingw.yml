@@ -22,5 +22,5 @@ jobs:
       pkgdir: public/dxvk-mingw
       pacman_conf: .github/conf/personal_pacman.conf
       makepkg_conf: .github/conf/personal_makepkg.conf
-      makepkg_args: -p PKGBUILD.testing
+      makepkg_args: -p PKGBUILD.personal
       release_tag: loathk-personal
