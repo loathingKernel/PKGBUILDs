@@ -1,24 +1,24 @@
-From 168d74b20d205333ac482297d5d9db9fb49d3f02 Mon Sep 17 00:00:00 2001
+From 1d5d75536c53397e334f5ac4284861f992712fb8 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 7 Feb 2023 22:00:48 +0200
-Subject: [PATCH 1/2] AUR Pkgbuild changes
+Subject: [PATCH 1/3] AUR Pkgbuild changes
 
 ---
- Makefile.in                    | 76 +++++++++++++++++++++++++++++-----
+ Makefile.in                    | 74 ++++++++++++++++++++++++++++------
  compatibilitytool.vdf.template |  2 +-
  configure.sh                   |  2 +
  make/rules-autoconf.mk         |  4 +-
  make/rules-cargo.mk            |  4 +-
  make/rules-cmake.mk            |  4 +-
- make/rules-common.mk           | 18 ++++----
+ make/rules-common.mk           | 18 +++++----
  make/rules-configure.mk        |  4 +-
  make/rules-meson.mk            |  3 +-
  make/rules-winemaker.mk        |  2 +-
  proton                         |  6 +--
- 11 files changed, 93 insertions(+), 32 deletions(-)
+ 11 files changed, 90 insertions(+), 33 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 528dcf6f..431cbf56 100644
+index 528dcf6f..8d422321 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -63,7 +63,6 @@ ifeq ($(ENABLE_CCACHE),1)
@@ -38,7 +38,7 @@ index 528dcf6f..431cbf56 100644
  endif
  
  
-@@ -175,13 +174,28 @@ else
+@@ -175,13 +174,23 @@ else
  endif
  
  CROSSLDFLAGS   += -Wl,--file-alignment,4096
@@ -47,29 +47,25 @@ index 528dcf6f..431cbf56 100644
 +OPTIMIZE_FLAGS := $(CFLAGS) -mfpmath=sse
  SANITY_FLAGS   := -fwrapv -fno-strict-aliasing
  DEBUG_FLAGS    := -gdwarf-2 -gstrict-dwarf
- COMMON_FLAGS    = $(DEBUG_FLAGS) $(OPTIMIZE_FLAGS) $(SANITY_FLAGS) -ffile-prefix-map=$(CCACHE_BASEDIR)=.
+-COMMON_FLAGS    = $(DEBUG_FLAGS) $(OPTIMIZE_FLAGS) $(SANITY_FLAGS) -ffile-prefix-map=$(CCACHE_BASEDIR)=.
 -COMMON_FLAGS32 := -mstackrealign
++COMMON_FLAGS    = -s $(OPTIMIZE_FLAGS) $(SANITY_FLAGS) -ffile-prefix-map=$(CCACHE_BASEDIR)=.
 +COMMON_FLAGS32 := -mstackrealign -mno-avx
  CARGO_BUILD_ARG := --release
  
 +ifneq ($(USE_LTO), 1)
-+GST_LTO :=
-+FFMPEG_LTO :=
-+ifneq (,$(findstring -O3,$(CFLAGS)))
-+FFMPEG_LTO_OPTS32 := --disable-inline-asm
++	GST_LTO :=
++	FFMPEG_LTO :=
 +else
-+FFMPEG_LTO_OPTS32 :=
++	GST_LTO := -Db_lto=true
++	FFMPEG_LTO := --enable-lto
 +endif
-+else
-+GST_LTO := -Db_lto=true
-+FFMPEG_LTO := --enable-lto
-+FFMPEG_LTO_OPTS32 := --disable-inline-asm
-+endif
++
 +
  ##
  ## Target configs
  ##
-@@ -372,8 +386,8 @@ ALL_TARGETS += dist
+@@ -372,8 +381,8 @@ ALL_TARGETS += dist
  GOAL_TARGETS += dist
  
  dist_prefix: wine gst_good gst_libav gst_plugins_rs
@@ -80,7 +76,7 @@ index 528dcf6f..431cbf56 100644
  	rm -rf $(abspath $(DIST_PREFIX))
  	python3 $(SRCDIR)/default_pfx.py $(abspath $(DIST_PREFIX)) $(abspath $(DST_DIR)) $(STEAM_RUNTIME_RUNSH)
  
-@@ -443,6 +457,7 @@ $(eval $(call rules-meson,dav1d,64))
+@@ -443,6 +452,7 @@ $(eval $(call rules-meson,dav1d,64))
  ##
  
  GST_ORC_MESON_ARGS := \
@@ -88,7 +84,7 @@ index 528dcf6f..431cbf56 100644
  	-Dorc-test=disabled \
  	-Dexamples=disabled \
  	-Dtests=disabled \
-@@ -458,10 +473,14 @@ $(eval $(call rules-meson,gst_orc,64))
+@@ -458,10 +468,14 @@ $(eval $(call rules-meson,gst_orc,64))
  ##
  
  GSTREAMER_MESON_ARGS := \
@@ -103,7 +99,7 @@ index 528dcf6f..431cbf56 100644
  	-Dexamples=disabled \
  	-Dtests=disabled \
  	-Dintrospection=disabled \
-@@ -482,6 +501,11 @@ $(eval $(call rules-meson,gstreamer,64))
+@@ -482,6 +496,11 @@ $(eval $(call rules-meson,gstreamer,64))
  ## graphene
  ##
  
@@ -115,7 +111,7 @@ index 528dcf6f..431cbf56 100644
  $(eval $(call rules-source,graphene,$(SRCDIR)/graphene))
  $(eval $(call rules-meson,graphene,32))
  $(eval $(call rules-meson,graphene,64))
-@@ -492,6 +516,9 @@ $(eval $(call rules-meson,graphene,64))
+@@ -492,6 +511,9 @@ $(eval $(call rules-meson,graphene,64))
  ##
  
  GST_BASE_MESON_ARGS := \
@@ -125,7 +121,7 @@ index 528dcf6f..431cbf56 100644
  	-Dalsa=disabled \
  	-Daudiomixer=disabled \
  	-Daudiorate=disabled \
-@@ -536,6 +563,8 @@ $(eval $(call rules-meson,gst_base,64))
+@@ -536,6 +558,8 @@ $(eval $(call rules-meson,gst_base,64))
  ##
  
  GST_GOOD_MESON_ARGS := \
@@ -134,7 +130,7 @@ index 528dcf6f..431cbf56 100644
  	-Daalib=disabled \
  	-Dalpha=disabled \
  	-Dapetag=disabled \
-@@ -610,6 +639,7 @@ $(eval $(call rules-meson,gst_good,64))
+@@ -610,6 +634,7 @@ $(eval $(call rules-meson,gst_good,64))
  
  FFMPEG_CONFIGURE_ARGS := \
  	--enable-shared \
@@ -142,17 +138,19 @@ index 528dcf6f..431cbf56 100644
  	--disable-static \
  	--disable-everything \
  	--disable-programs \
-@@ -633,6 +663,9 @@ FFMPEG_CONFIGURE_ARGS := \
+@@ -633,6 +658,11 @@ FFMPEG_CONFIGURE_ARGS := \
  	--enable-decoder=aac \
  	--enable-demuxer=xwma
  
-+FFMPEG_CONFIGURE_ARGS64 = --optflags="$(COMMON_FLAGS) $(COMMON_FLAGS64)"
++FFMPEG_LTO_OPTS64 := --disable-inline-asm
++FFMPEG_LTO_OPTS32 := --disable-inline-asm
++FFMPEG_CONFIGURE_ARGS64 = --optflags="$(COMMON_FLAGS) $(COMMON_FLAGS64)" $(FFMPEG_LTO_OPTS64)
 +FFMPEG_CONFIGURE_ARGS32 = --optflags="$(COMMON_FLAGS) $(COMMON_FLAGS32)" $(FFMPEG_LTO_OPTS32)
 +
  $(eval $(call rules-source,ffmpeg,$(SRCDIR)/FFmpeg))
  $(eval $(call rules-configure,ffmpeg,32))
  $(eval $(call rules-configure,ffmpeg,64))
-@@ -677,6 +710,8 @@ $(OBJ)/.gst_plugins_rs-post-build32:
+@@ -677,6 +707,8 @@ $(OBJ)/.gst_plugins_rs-post-build32:
  ##
  
  GST_BAD_MESON_ARGS := \
@@ -161,7 +159,7 @@ index 528dcf6f..431cbf56 100644
  	-Dfbdev=disabled \
  	-Ddecklink=disabled \
  	-Dcurl=disabled \
-@@ -696,7 +731,12 @@ GST_BAD_MESON_ARGS := \
+@@ -696,7 +728,12 @@ GST_BAD_MESON_ARGS := \
  	-Dvoamrwbenc=disabled \
  	-Dnvcodec=disabled \
  	-Dx265=disabled \
@@ -174,7 +172,7 @@ index 528dcf6f..431cbf56 100644
  	-Dgobject-cast-checks=disabled \
  	-Dglib-asserts=disabled \
  	-Dglib-checks=disabled \
-@@ -714,6 +754,7 @@ $(eval $(call rules-meson,gst_bad,64))
+@@ -714,6 +751,7 @@ $(eval $(call rules-meson,gst_bad,64))
  ##
  
  GST_UGLY_MESON_ARGS := \
@@ -182,7 +180,7 @@ index 528dcf6f..431cbf56 100644
          -Ddoc='disabled' \
  	-Dtests=disabled \
  	-Dgobject-cast-checks=disabled \
-@@ -889,7 +930,11 @@ WINE_SOURCE_ARGS = \
+@@ -889,7 +927,10 @@ WINE_SOURCE_ARGS = \
    --exclude include/config.h.in \
  
  WINE_CONFIGURE_ARGS = \
@@ -190,41 +188,40 @@ index 528dcf6f..431cbf56 100644
 +  --with-gstreamer \
    --with-mingw \
 +  --without-oss \
-+  --disable-win16 \
    --disable-tests
  
  WINE_CONFIGURE_ARGS64 = --enable-win64
-@@ -953,6 +998,9 @@ DXVK_MESON_ARGS32 = --bindir=$(DXVK_DST32)/lib/wine/dxvk
+@@ -953,6 +994,9 @@ DXVK_MESON_ARGS32 = --bindir=$(DXVK_DST32)/lib/wine/dxvk
  DXVK_MESON_ARGS64 = --bindir=$(DXVK_DST64)/lib64/wine/dxvk
  DXVK_DEPENDS = glslang
  
-+DXVK_CPPFLAGS= -msse -msse2
-+DXVK_LDFLAGS= -static -static-libgcc -static-libstdc++
++DXVK_CPPFLAGS = -msse -msse2
++DXVK_LDFLAGS = -static -static-libgcc -static-libstdc++
 +
  $(eval $(call rules-source,dxvk,$(SRCDIR)/dxvk))
  $(eval $(call rules-meson,dxvk,32,CROSS))
  $(eval $(call rules-meson,dxvk,64,CROSS))
-@@ -975,6 +1023,9 @@ $(OBJ)/.dxvk-post-build32:
+@@ -975,6 +1019,9 @@ $(OBJ)/.dxvk-post-build32:
  DXVK_NVAPI_MESON_ARGS32 = --bindir=$(DXVK_NVAPI_DST32)/lib/wine/nvapi
  DXVK_NVAPI_MESON_ARGS64 = --bindir=$(DXVK_NVAPI_DST64)/lib64/wine/nvapi
  
-+DXVK_NVAPI_CPPFLAGS= -msse -msse2
-+DXVK_NVAPI_LDFLAGS= -static -static-libgcc -static-libstdc++
++DXVK_NVAPI_CPPFLAGS = -msse -msse2
++DXVK_NVAPI_LDFLAGS = -static -static-libgcc -static-libstdc++
 +
  $(eval $(call rules-source,dxvk-nvapi,$(SRCDIR)/dxvk-nvapi))
  $(eval $(call rules-meson,dxvk-nvapi,32,CROSS))
  $(eval $(call rules-meson,dxvk-nvapi,64,CROSS))
-@@ -1042,6 +1093,9 @@ VKD3D_PROTON_MESON_ARGS32 = --bindir=$(VKD3D_PROTON_DST32)/lib/wine/vkd3d-proton
+@@ -1042,6 +1089,9 @@ VKD3D_PROTON_MESON_ARGS32 = --bindir=$(VKD3D_PROTON_DST32)/lib/wine/vkd3d-proton
  VKD3D_PROTON_MESON_ARGS64 = --bindir=$(VKD3D_PROTON_DST64)/lib64/wine/vkd3d-proton
  VKD3D_PROTON_DEPENDS = glslang
  
-+VKD3D_PROTON_CPPFLAGS= -msse -msse2
-+VKD3D_PROTON_LDFLAGS= -static -static-libgcc -static-libstdc++
++VKD3D_PROTON_CPPFLAGS = -msse -msse2
++VKD3D_PROTON_LDFLAGS = -static -static-libgcc -static-libstdc++
 +
  $(eval $(call rules-source,vkd3d-proton,$(SRCDIR)/vkd3d-proton))
  $(eval $(call rules-meson,vkd3d-proton,32,CROSS))
  $(eval $(call rules-meson,vkd3d-proton,64,CROSS))
-@@ -1284,14 +1338,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+@@ -1284,14 +1334,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
  	mkdir -p $(FONTS_OBJ)/source-han
  	# Do not immediately create the target file, so that make is interrupted
  	# it will restart again
@@ -242,7 +239,7 @@ index 528dcf6f..431cbf56 100644
  	mv $@.tmp $@
  
  $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
-@@ -1301,10 +1355,10 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -1301,10 +1351,10 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
  	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
  
  $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
@@ -472,5 +469,5 @@ index 3ec0429e..547f10d5 100755
      g_session.init_session(sys.argv[1] != "runinprefix")
  
 -- 
-2.40.0
+2.43.0
 
