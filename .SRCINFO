@@ -1,0 +1,22 @@
+pkgbase = python-pyautogui
+	pkgdesc = A cross-platform GUI automation Python module for human beings
+	pkgver = 0.9.53
+	pkgrel = 1
+	url = https://github.com/asweigart/pyautogui
+	arch = any
+	license = BSD
+	makedepends = python
+	makedepends = python-setuptools
+	depends = python-xlib
+	depends = python-pymsgbox
+	depends = python-pytweening
+	depends = python-pyscreeze
+	depends = python-mouseinfo
+	optdepends = tk: windowing tool kit
+	optdepends = scrot: screenshot tool
+	provides = python-pyautogui
+	conflicts = python-pyautogui-git
+	source = https://files.pythonhosted.org/packages/source/P/PyAutoGUI/PyAutoGUI-0.9.53.tar.gz
+	b2sums = 4aa1463cb4c1ff91f6bc91d3977e426ca531bd575aee0137914f691008729043803b874db9b4ea51463f996ae44f307bbd2e048a50bc976d458405d0ee244def
+
+pkgname = python-pyautogui
