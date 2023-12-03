@@ -66,14 +66,14 @@ jobs:
         echo "    Repo: ${{ steps.makepkg.outputs.repofile2 }}"
         echo "    Repo: ${{ steps.makepkg.outputs.repofile3 }}"
 
-    - uses: svenstaro/upload-release-action@2.5.0
+    - uses: svenstaro/upload-release-action@v2
       name: Upload ${{ steps.makepkg.outputs.pkgfile0 }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.pkgfile0 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@2.5.0
+    - uses: svenstaro/upload-release-action@v2
       name: Upload ${{ steps.makepkg.outputs.pkgfile1 }}
       if: ${{ steps.makepkg.outputs.pkgfile1 != '' }}
       with:
@@ -81,7 +81,7 @@ jobs:
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.pkgfile1 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@2.5.0
+    - uses: svenstaro/upload-release-action@v2
       name: Upload ${{ steps.makepkg.outputs.pkgfile2 }}
       if: ${{ steps.makepkg.outputs.pkgfile2 != '' }}
       with:
@@ -89,7 +89,7 @@ jobs:
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.pkgfile2 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@2.5.0
+    - uses: svenstaro/upload-release-action@v2
       name: Upload ${{ steps.makepkg.outputs.pkgfile3 }}
       if: ${{ steps.makepkg.outputs.pkgfile3 != '' }}
       with:
@@ -98,28 +98,28 @@ jobs:
         file: ${{ steps.makepkg.outputs.pkgfile3 }}
         overwrite: true
 
-    - uses: svenstaro/upload-release-action@2.5.0
+    - uses: svenstaro/upload-release-action@v2
       name: Upload ${{ steps.makepkg.outputs.repofile0 }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.repofile0 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@2.5.0
+    - uses: svenstaro/upload-release-action@v2
       name: Upload ${{ steps.makepkg.outputs.repofile1 }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.repofile1 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@2.5.0
+    - uses: svenstaro/upload-release-action@v2
       name: Upload ${{ steps.makepkg.outputs.repofile2 }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ inputs.release_tag }}
         file: ${{ steps.makepkg.outputs.repofile2 }}
         overwrite: true
-    - uses: svenstaro/upload-release-action@2.5.0
+    - uses: svenstaro/upload-release-action@v2
       name: Upload ${{ steps.makepkg.outputs.repofile3 }}
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
