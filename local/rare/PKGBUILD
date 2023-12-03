@@ -1,11 +1,11 @@
 # Maintainer: 
 
-pkgname=rare-git
-pkgver=1.10.3.r5.g76df1236
-pkgrel=1
+pkgname=rare
+pkgver=1.10.3
+pkgrel=4
 pkgdesc="A GUI for legendary, an open source replacement for Epic Games Launcher"
 arch=('any')
-url="https://github.com/Dummerle/Rare"
+url="https://github.com/RareDevs/Rare"
 license=('GPL3')
 groups=()
 depends=(
@@ -22,28 +22,21 @@ makedepends=(
   python-setuptools
 )
 optdepends=(
-  "wine: Run Windows games"
-  "proton: Run Windows games"
-  "python-pypresence: Use Discord RPC"
-  "python-pywebview: Embeded browser for login"
+  "wine: run Windows games"
+  "proton: run Windows games"
+  "python-pypresence: use Discord RPC"
+  "python-pywebview: embeded browser for login"
 )
-provides=(${pkgname%-git})
-conflicts=(${pkgname%-git})
-source=("${pkgname%-git}::git+https://github.com/Dummerle/Rare.git")
+source=("git+https://github.com/RareDevs/Rare.git#tag=$pkgver")
 sha256sums=("SKIP")
 
-pkgver() {
-  cd "${pkgname%-git}"
-  printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g')"
-}
-
 build() {
-  cd "${pkgname%-git}"
+  cd Rare
   python -m build -wn
 }
 
 package() {
-  cd "${pkgname%-git}"
+  cd Rare
   python -m installer -d "$pkgdir" dist/*.whl
   install -Dm644 "misc/${pkgname%-git}.desktop" "$pkgdir/usr/share/applications/${pkgname%-git}.desktop"
   install -Dm644 "rare/resources/images/Rare.png" "$pkgdir/usr/share/pixmaps/${pkgname%-git}.png"

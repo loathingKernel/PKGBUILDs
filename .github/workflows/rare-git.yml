@@ -1,4 +1,4 @@
-name: rare
+name: rare-git
 
 on:
   workflow_dispatch:
@@ -6,13 +6,13 @@ on:
     branches:
      - master
     paths:
-     - local/rare/.SRCINFO
+     - local/rare-git/.SRCINFO
 
 jobs:
   public:
     uses: ./.github/workflows/workflow.yml
     with:
-      pkgdir: local/rare
+      pkgdir: local/rare-git
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
       release_tag: loathk-public
