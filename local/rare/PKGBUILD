@@ -1,13 +1,12 @@
-# Maintainer: 
+# Maintainer: Dummerle
 
 pkgname=rare
-pkgver=1.10.4
+pkgver=1.10.6
 pkgrel=1
 pkgdesc="A GUI for legendary, an open source replacement for Epic Games Launcher"
 arch=('any')
 url="https://github.com/RareDevs/Rare"
 license=('GPL3')
-groups=()
 depends=(
   python-pyqt5
   qt5-svg
@@ -25,7 +24,7 @@ optdepends=(
   "wine: run Windows games"
   "proton: run Windows games"
   "python-pypresence: Discord RPC integration"
-  "python-pywebview: embeded browser for logging in"
+  "python-pywebview: embedded browser for logging in"
 )
 source=("git+https://github.com/RareDevs/Rare.git#tag=$pkgver")
 sha256sums=("SKIP")
@@ -41,3 +40,4 @@ package() {
   install -Dm644 "misc/${pkgname%-git}.desktop" "$pkgdir/usr/share/applications/${pkgname%-git}.desktop"
   install -Dm644 "rare/resources/images/Rare.png" "$pkgdir/usr/share/pixmaps/${pkgname%-git}.png"
 }
+
