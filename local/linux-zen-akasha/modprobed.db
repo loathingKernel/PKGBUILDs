@@ -32,6 +32,7 @@ crypto_user
 curve25519_x86_64
 deflate
 dm_mod
+drivetemp
 drm
 drm_buddy
 drm_display_helper
@@ -132,6 +133,7 @@ nfnetlink
 nf_reject_ipv4
 nf_tables
 nft_chain_nat
+nft_compat
 nft_ct
 nft_masq
 nft_reject
@@ -149,6 +151,8 @@ rdma_cm
 rfkill
 rng_core
 sg
+sha1_ssse3
+sha256_ssse3
 sha512_ssse3
 snd
 snd_compress
@@ -212,9 +216,11 @@ xor
 xpad
 x_tables
 xt_addrtype
+xt_CHECKSUM
 xt_comment
 xt_conntrack
 xt_MASQUERADE
+xt_nat
 xt_state
 xt_tcpudp
 zram
