@@ -109,10 +109,6 @@ build() {
   export CC=clang
   export CXX=clang++
 
-#  pushd rpcs3/3rdparty/ffmpeg/
-#  ./linux_x86-64.sh
-#  popd
-
   cmake -S rpcs3 -B build \
     -G Ninja \
     -Wno-dev \
@@ -125,6 +121,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
     -DUSE_NATIVE_INSTRUCTIONS=OFF \
+    -DUSE_PRECOMPILED_HEADERS=OFF\
     -DUSE_SYSTEM_FFMPEG=ON \
     -DUSE_SYSTEM_XXHASH=ON \
     -DUSE_SYSTEM_FAUDIO=ON \
