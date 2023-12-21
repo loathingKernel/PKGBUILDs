@@ -2,7 +2,7 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.29.r130.g565a208f20
+pkgver=0.0.29.r415.gb17b6e07ea
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
@@ -28,6 +28,7 @@ depends=(
   qt6-declarative
   qt6-multimedia
   qt6-svg
+  sdl2
   vulkan-icd-loader
   zlib
 # newer system flatbuffers is incompatible with the version RPCS3 depends on
@@ -40,12 +41,16 @@ makedepends=(
   libglvnd
   libpulse
   jack
+  libpipewire
   python
   vulkan-validation-layers
+  # clang is required because audio is broken with latest gcc
+  clang
 )
 optdepends=(
   libpulse
   jack
+  libpipewire
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
@@ -64,6 +69,7 @@ pkgver() {
 
 prepare() {
   cd rpcs3
+  local submodule
   _submodules=(
     3rdparty/llvm/llvm
     3rdparty/hidapi/hidapi
@@ -88,8 +94,8 @@ prepare() {
 #    3rdparty/ffmpeg
   )
   git remote set-url origin https://github.com/RPCS3/rpcs3.git
-  for path in ${_submodules[@]}; do
-    git submodule update --init --filter=tree:0 --recursive "$path"
+  for submodule in ${_submodules[@]}; do
+    git submodule update --init --filter=tree:0 --recursive "$submodule"
   done
 }
 
@@ -98,34 +104,37 @@ build() {
   BAD_FLAG="-Wp,-D_GLIBCXX_ASSERTIONS"
   CXXFLAGS="${CXXFLAGS//$BAD_FLAG/}"
 
-#  pushd rpcs3/3rdparty/ffmpeg/
-#  ./linux_x86-64.sh
-#  popd
+  export CC=clang
+  export CXX=clang++
+
+  pushd rpcs3/3rdparty/ffmpeg/
+  ./linux_x86-64.sh
+  popd
 
   cmake -S rpcs3 -B build \
     -G Ninja \
     -Wno-dev \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER=gcc \
-    -DCMAKE_CXX_COMPILER=g++ \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=gold" \
     -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=gold" \
     -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=gold" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
     -DUSE_NATIVE_INSTRUCTIONS=OFF \
-    -DBUILD_LLVM=ON \
-    -DUSE_SYSTEM_FFMPEG=ON \
-    -DUSE_SYSTEM_WOLFSSL=OFF \
+    -DUSE_SYSTEM_FFMPEG=OFF \
     -DUSE_SYSTEM_XXHASH=OFF \
     -DUSE_SYSTEM_FAUDIO=OFF \
     -DUSE_SYSTEM_LIBUSB=OFF \
-    -DUSE_SYSTEM_SDL=OFF \
+    -DUSE_SYSTEM_SDL=ON \
     -DUSE_SYSTEM_LIBPNG=ON \
     -DUSE_SYSTEM_ZLIB=ON \
     -DUSE_SYSTEM_CURL=OFF \
     -DUSE_SYSTEM_FLATBUFFERS=OFF \
     -DUSE_SYSTEM_PUGIXML=OFF \
+    -DBUILD_LLVM=ON \
+    -DUSE_SYSTEM_WOLFSSL=OFF
 
   ninja -C build -v
 }

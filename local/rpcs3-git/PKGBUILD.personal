@@ -46,12 +46,16 @@ makedepends=(
   libglvnd
   libpulse
   jack
+  libpipewire
   python
   vulkan-validation-layers
+  # clang is required because audio is broken with latest gcc
+  clang
 )
 optdepends=(
   libpulse
   jack
+  libpipewire
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
@@ -92,8 +96,8 @@ prepare() {
 #    3rdparty/ffmpeg
   )
   git remote set-url origin https://github.com/RPCS3/rpcs3.git
-  for path in ${_submodules[@]}; do
-    git submodule update --init --filter=tree:0 --recursive "$path"
+  for submodule in ${_submodules[@]}; do
+    git submodule update --init --filter=tree:0 --recursive "$submodule"
   done
 }
 
@@ -101,6 +105,9 @@ build() {
   # GLIBCXX_ASSERTIONS is know to cause unwanted assertions and crash rpcs3
   BAD_FLAG="-Wp,-D_GLIBCXX_ASSERTIONS"
   CXXFLAGS="${CXXFLAGS//$BAD_FLAG/}"
+
+  export CC=clang
+  export CXX=clang++
 
 #  pushd rpcs3/3rdparty/ffmpeg/
 #  ./linux_x86-64.sh
@@ -110,17 +117,15 @@ build() {
     -G Ninja \
     -Wno-dev \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER=gcc \
-    -DCMAKE_CXX_COMPILER=g++ \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
     -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=gold" \
     -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=gold" \
     -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=gold" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
     -DUSE_NATIVE_INSTRUCTIONS=OFF \
-    -DBUILD_LLVM=ON \
     -DUSE_SYSTEM_FFMPEG=ON \
-    -DUSE_SYSTEM_WOLFSSL=OFF \
     -DUSE_SYSTEM_XXHASH=ON \
     -DUSE_SYSTEM_FAUDIO=ON \
     -DUSE_SYSTEM_LIBUSB=ON \
@@ -130,6 +135,8 @@ build() {
     -DUSE_SYSTEM_CURL=ON \
     -DUSE_SYSTEM_FLATBUFFERS=OFF \
     -DUSE_SYSTEM_PUGIXML=ON \
+    -DBUILD_LLVM=ON \
+    -DUSE_SYSTEM_WOLFSSL=OFF
 
   ninja -C build -v
 }
