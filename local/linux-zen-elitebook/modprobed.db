@@ -1,6 +1,7 @@
 ac97_bus
 aesni_intel
 af_alg
+agpgart
 algif_hash
 algif_skcipher
 at24
@@ -46,9 +47,12 @@ gf128mul
 ghash_clmulni_intel
 hid_logitech_dj
 hid_logitech_hidpp
+hid_rmi
 hp_accel
 hp_wmi
 i2c_algo_bit
+i2c_dev
+i2c_hid
 i2c_i801
 i2c_smbus
 i8042
