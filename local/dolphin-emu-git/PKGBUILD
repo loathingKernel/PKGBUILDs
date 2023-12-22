@@ -7,10 +7,10 @@ pkgname=(
   dolphin-emu-git
   dolphin-emu-tool-git
 )
-pkgver=5.0.r20487.0a62b30cd4
+pkgver=5.0.r20836.b1438c224f
 pkgrel=1
 epoch=1
-pkgdesc='A Gamecube / Wii / Triforce emulator'
+pkgdesc='A Gamecube and Wii emulator'
 arch=(x86_64)
 url=https://dolphin-emu.org
 license=(GPL2)
@@ -40,6 +40,7 @@ depends=(
   libx11
   libxi
   libxrandr
+  #libxxhash.so
   lzo
   mbedtls2
   #minizip-ng
@@ -60,7 +61,7 @@ makedepends=(
 )
 optdepends=('pulseaudio: PulseAudio backend')
 options=(!emptydirs !lto)
-_commit=032c77b462a220016f23c5079e71bb23e0ad2adf
+_commit=dc0814ae4622313d513468bdc377ee9c031de199
 source=(
   dolphin-emu::git+https://github.com/dolphin-emu/dolphin.git
   git+https://github.com/mozilla/cubeb.git
@@ -76,8 +77,10 @@ source=(
   git+https://github.com/fmtlib/fmt.git
   git+https://github.com/lz4/lz4.git
   git+https://github.com/Cyan4973/xxHash.git
+  git+https://github.com/lsalzman/enet.git
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -94,7 +97,7 @@ b2sums=('SKIP'
 
 prepare() {
   cd dolphin-emu
-  for submodule in Externals/{cubeb/cubeb,implot/implot,mGBA/mgba,rcheevos/rcheevos,spirv_cross/SPIRV-Cross,VulkanMemoryAllocator,zlib-ng/zlib-ng,libspng/libspng,curl/curl,fmt/fmt,lz4/lz4,xxhash/xxHash}; do
+  for submodule in Externals/{cubeb/cubeb,implot/implot,mGBA/mgba,rcheevos/rcheevos,spirv_cross/SPIRV-Cross,VulkanMemoryAllocator,zlib-ng/zlib-ng,libspng/libspng,curl/curl,fmt/fmt,lz4/lz4,xxhash/xxHash,enet/enet}; do
     git submodule init ${submodule}
     git config submodule.${submodule}.url ../${submodule##*/}
     git -c protocol.file.allow=always submodule update ${submodule}

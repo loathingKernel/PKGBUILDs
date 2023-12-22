@@ -1,6 +1,6 @@
 pkgbase = dolphin-emu-git
-	pkgdesc = A Gamecube / Wii / Triforce emulator
-	pkgver = 5.0.r20487.0a62b30cd4
+	pkgdesc = A Gamecube and Wii emulator
+	pkgver = 5.0.r20836.b1438c224f
 	pkgrel = 1
 	epoch = 1
 	url = https://dolphin-emu.org
@@ -60,6 +60,8 @@ pkgbase = dolphin-emu-git
 	source = git+https://github.com/fmtlib/fmt.git
 	source = git+https://github.com/lz4/lz4.git
 	source = git+https://github.com/Cyan4973/xxHash.git
+	source = git+https://github.com/lsalzman/enet.git
+	b2sums = SKIP
 	b2sums = SKIP
 	b2sums = SKIP
 	b2sums = SKIP
