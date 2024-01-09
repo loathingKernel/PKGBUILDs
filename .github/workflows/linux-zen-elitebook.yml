@@ -1,4 +1,4 @@
-name: linux-zen-elitebool
+name: linux-zen-elitebook
 
 on:
   workflow_dispatch:
@@ -15,5 +15,5 @@ jobs:
       pkgdir: local/linux-zen-elitebook
       pacman_conf: .github/conf/personal_pacman.conf
       makepkg_conf: .github/conf/personal_makepkg.conf
-      makepkg_args: -p PKGBUILD
+      makepkg_args: -p PKGBUILD --skippgpcheck
       release_tag: loathk-personal
