@@ -1,0 +1,19 @@
+name: linux-zen-elitebool
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - local/linux-zen-elitebook/.SRCINFO
+
+jobs:
+  personal:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: local/linux-zen-elitebook
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD
+      release_tag: loathk-personal
