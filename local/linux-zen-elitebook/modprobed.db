@@ -133,6 +133,7 @@ nft_reject
 nft_reject_inet
 nft_reject_ipv4
 ntfs3
+overlay
 platform_profile
 polyval_clmulni
 polyval_generic
@@ -192,6 +193,7 @@ tpm_infineon
 tpm_tis
 tpm_tis_core
 ttm
+tun
 uas
 uinput
 usbhid
