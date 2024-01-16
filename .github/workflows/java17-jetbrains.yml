@@ -1,0 +1,19 @@
+name: java17-jetbrains
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/java17-jetbrains/.SRCINFO
+
+jobs:
+  personal:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: aur/java17-jetbrains
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD --skippgpcheck
+      release_tag: loathk-personal
