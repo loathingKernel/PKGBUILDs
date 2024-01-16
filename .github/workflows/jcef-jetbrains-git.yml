@@ -1,0 +1,19 @@
+name: jcef-jetbrains-git
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/jcef-jetbrains-git/.SRCINFO
+
+jobs:
+  personal:
+    uses: ./.github/workflows/workflow.yml
+    with:
+      pkgdir: aur/jcef-jetbrains-git
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD --skippgpcheck
+      release_tag: loathk-personal
