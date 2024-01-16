@@ -12,6 +12,7 @@ pkgbase = jcef-jetbrains-git
 	makedepends = python
 	makedepends = ant
 	makedepends = unzip
+	makedepends = zip
 	depends = java-runtime
 	depends = libxcursor
 	depends = at-spi2-atk
