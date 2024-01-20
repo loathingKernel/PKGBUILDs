@@ -95,7 +95,7 @@ prepare() {
     scripts/config --enable  CONFIG_MBROADWELL
     scripts/config --set-val CONFIG_NR_CPUS 8
     scripts/config --disable CONFIG_MICROCODE_AMD
-    scripts/config --disable CONFIG_NUMA
+#    scripts/config --disable CONFIG_NUMA
 #    scripts/config --disable CONFIG_HZ_1000
 #    scripts/config --enable  CONFIG_HZ_300
 #    scripts/config --set-val CONFIG_HZ 300
