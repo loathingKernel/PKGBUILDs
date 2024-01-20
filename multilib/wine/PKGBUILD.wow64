@@ -4,25 +4,29 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=8.21
-pkgrel=2
+pkgver=9.0
+pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
-_tkg_commit=21ea5483910659b6d0df5013a0f7ddeb655d9304
+_tkg_commit=deb8bcadc265316244247cbf1c4121296ffc6618
 
-source=(https://dl.winehq.org/wine/source/8.x/$pkgname-$_pkgbasever.tar.xz{,.sign}
+source=(https://dl.winehq.org/wine/source/9.0/$pkgname-$_pkgbasever.tar.xz{,.sign}
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
         wine-wmclass.patch
         wine-isolate_home.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('4d04d40141d2ea5e548b76aed870ac28d8a03241ffd4e761979c795310baa19136e54a8e518c6ea9bf563c3b23d3c4eb1baefc9906d7eeca469e9942ff99dc40'
+source+=(
+)
+sha512sums=('838daf2c4581f83f8573b988036f517d57b84894b090a2a17433255d6d044dfa880e6724cdb83082a36c333df9d2083ab68ae53927622a620edd59f33462ada4'
             'SKIP'
             'SKIP'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
+sha512sums+=(
+)
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
@@ -98,18 +102,11 @@ makedepends=(${makedepends[@]} ${depends[@]})
 install=wine.install
 
 prepare() {
-  # Allow ccache to work
-  mv $pkgname-$_pkgbasever $pkgname
-
-  # Doesn't compile without remove these flags as of 4.10
-  export CFLAGS="${CFLAGS/-fno-plt/} -ffat-lto-objects"
-  export LDFLAGS="${LDFLAGS/,-z,now/}"
-
   # Get rid of old build dirs
   rm -rf $pkgname-{32,64}-build
   mkdir $pkgname-32-build
 
-  cd $pkgname
+  cd $pkgname-$_pkgbasever
 
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
   patch -p1 -i "$_tkg_path"/proton/esync/esync-unix-mainline.patch
@@ -128,10 +125,12 @@ prepare() {
 }
 
 build() {
-  cd "$srcdir"
+  # Allow ccache to work
+  mv $pkgname-$_pkgbasever $pkgname
 
   # Doesn't compile without remove these flags as of 4.10
-  export CFLAGS="${CFLAGS/-fno-plt/} -ffat-lto-objects"
+  export CFLAGS="$CFLAGS -ffat-lto-objects"
+  export CFLAGS="${CFLAGS/-fno-plt/}"
   export LDFLAGS="${LDFLAGS/,-z,now/}"
   # MingW Wine builds fail with relro
   export LDFLAGS="${LDFLAGS/,-z,relro/}"
@@ -142,17 +141,16 @@ build() {
   # From Proton
   OPTIMIZE_FLAGS="-O2 -march=haswell -mtune=haswell -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
-  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS -s -mno-avx2 -mno-avx"
+  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS -s -mno-avx2"  # -mno-avx"
 
   msg2 "Building Wine-64..."
-
-  mkdir $pkgname-64-build
   export CFLAGS="$COMMON_FLAGS -mcmodel=small"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
   export CROSSCFLAGS="$COMMON_FLAGS"
   export CROSSCXXFLAGS="$COMMON_FLAGS -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
-  cd "$srcdir/$pkgname-64-build"
+  mkdir "$pkgname-64-build"
+  cd "$pkgname-64-build"
   ../$pkgname/configure \
     --prefix=/usr \
     --libdir=/usr/lib \
@@ -177,6 +175,8 @@ package() {
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
     dlldir="$pkgdir/usr/lib/wine" install
+
+  ln -sf /usr/bin/wine "$pkgdir"/usr/bin/wine64
 
   # Font aliasing settings for Win32 applications
   install -d "$pkgdir"/usr/share/fontconfig/conf.{avail,default}

@@ -1,7 +1,7 @@
 pkgbase = wine
 	pkgdesc = A compatibility layer for running Windows programs
-	pkgver = 8.21
-	pkgrel = 2
+	pkgver = 9.0
+	pkgrel = 1
 	url = https://www.winehq.org
 	install = wine.install
 	arch = x86_64
@@ -128,16 +128,16 @@ pkgbase = wine
 	optdepends = wine-mono
 	options = !staticlibs
 	options = !lto
-	source = https://dl.winehq.org/wine/source/8.x/wine-8.21.tar.xz
-	source = https://dl.winehq.org/wine/source/8.x/wine-8.21.tar.xz.sign
-	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=21ea5483910659b6d0df5013a0f7ddeb655d9304
+	source = https://dl.winehq.org/wine/source/9.0/wine-9.0.tar.xz
+	source = https://dl.winehq.org/wine/source/9.0/wine-9.0.tar.xz.sign
+	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=deb8bcadc265316244247cbf1c4121296ffc6618
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = 4d04d40141d2ea5e548b76aed870ac28d8a03241ffd4e761979c795310baa19136e54a8e518c6ea9bf563c3b23d3c4eb1baefc9906d7eeca469e9942ff99dc40
+	sha512sums = 838daf2c4581f83f8573b988036f517d57b84894b090a2a17433255d6d044dfa880e6724cdb83082a36c333df9d2083ab68ae53927622a620edd59f33462ada4
 	sha512sums = SKIP
 	sha512sums = SKIP
 	sha512sums = 30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569
