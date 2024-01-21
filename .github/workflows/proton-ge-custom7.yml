@@ -10,38 +10,33 @@ on:
 
 env:
   path: local/proton-git-custom7
-  repo: false
+  repo: true
 
 
 jobs:
-  public:
+  build:
     if: ${{ env.repo == 'true' }}
+    strategy:
+      matrix:
+        include:
+          - repo: public
+            pkgbuild: PKGBUILD
+          - repo: personal
+            pkgbuild: PKGBUILD.personal
     uses: ./.github/workflows/pkgbuild.yml
     with:
       pkgdir: ${{ env.path }}
-      pacman_conf: .github/conf/public_pacman.conf
-      makepkg_conf: .github/conf/public_makepkg.conf
+      pacman_conf: .github/conf/${{ matrix.repo }}_pacman.conf
+      makepkg_conf: .github/conf/${{ matrix.repo }}_makepkg.conf
+      makepkg_args: -p ${{ matrix.pkgbuild }}
       multilib: true
-      release_tag: loathk-public
-  public_delete:
+      release_tag: loathk-${{ matrix.repo }}
+  delete:
     if: ${{ env.repo == 'false' }}
+    strategy:
+      matrix:
+        repo: [public, personal]
     uses: ./.github/workflows/pkgdelete.yml
     with:
       pkgdir: ${{ env.path }}
-      release_tag: loathk-public
-  personal:
-    if: ${{ env.repo == 'true' }}
-    uses: ./.github/workflows/pkgbuild.yml
-    with:
-      pkgdir: ${{ env.path }}
-      pacman_conf: .github/conf/personal_pacman.conf
-      makepkg_conf: .github/conf/personal_makepkg.conf
-      makepkg_args: -p PKGBUILD.personal
-      multilib: true
-      release_tag: loathk-personal
-  personal_delete:
-    if: ${{ env.repo == 'false' }}
-    uses: ./.github/workflows/pkgdelete.yml
-    with:
-      pkgdir: ${{ env.path }}
-      release_tag: loathk-personal
+      release_tag: loathk-${{ matrix.repo }}
