@@ -9,7 +9,7 @@ on:
      - local/proton-ge-custom7/.SRCINFO
 
 env:
-  path: local/proton-git-custom7
+  path: local/proton-ge-custom7
   repo: true
 
 
