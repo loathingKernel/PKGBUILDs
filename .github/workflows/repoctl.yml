@@ -10,7 +10,7 @@ on:
 
 jobs:
   public:
-    uses: ./.github/workflows/workflow.yml
+    uses: ./.github/workflows/pkgbuild.yml
     with:
       pkgdir: aur/repoctl
       pacman_conf: .github/conf/public_pacman.conf

@@ -15,7 +15,7 @@ if [[ -d "$1" ]]; then
     echo "$1 exists and will be moved to $1.old"
     mv "$1" "$(dirname "$1")/$(basename "$1")".old
     git add -u "$1"
-    git commit -m "[subtree] "$(dirname "$1")/$(basename "$1")""
+    git commit -m "[subtree] $(dirname "$1")/$(basename "$1")"
 fi
 
 repo="$(basename "$1")"

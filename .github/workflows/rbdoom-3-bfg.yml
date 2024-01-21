@@ -12,7 +12,7 @@ on:
 
 jobs:
   public:
-    uses: ./.github/workflows/workflow.yml
+    uses: ./.github/workflows/pkgbuild.yml
     with:
       pkgdir: public/rbdoom-3-bfg
       pacman_conf: .github/conf/public_pacman.conf
@@ -20,7 +20,7 @@ jobs:
       makepkg_args: -p PKGBUILD.live
       release_tag: loathk-public
   personal:
-    uses: ./.github/workflows/workflow.yml
+    uses: ./.github/workflows/pkgbuild.yml
     with:
       pkgdir: public/rbdoom-3-bfg
       pacman_conf: .github/conf/personal_pacman.conf

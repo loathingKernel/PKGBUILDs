@@ -3,11 +3,13 @@ set -euo pipefail
 
 FILE="$(basename "$0")"
 
-# Enable the multilib repository
-cat << EOM >> /etc/pacman.conf
+if [ "${INPUT_MULTILIB:-false}" == true ]; then
+	# Enable the multilib repository
+	cat << EOM >> /etc/pacman.conf
 [multilib]
 Include = /etc/pacman.d/mirrorlist
 EOM
+fi
 
 if [ -n "${INPUT_AURDEPS:-}" ]; then
 	# Add alerque repository for paru
@@ -28,6 +30,9 @@ if [ -n "${INPUT_MAKEPKGCONF:-}" ]; then
 	echo "Using ${INPUT_MAKEPKGCONF:-} as makepkg.conf"
 	cp "${INPUT_MAKEPKGCONF:-}" /etc/makepkg.conf
 fi
+
+# Update before continuing
+pacman -Syu --noconfirm
 
 pacman -Syu --noconfirm --needed base base-devel
 pacman -Syu --noconfirm --needed ccache

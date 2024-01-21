@@ -1,4 +1,4 @@
-name: package
+name: pkgbuild
 
 on:
   workflow_call:
@@ -30,7 +30,7 @@ jobs:
         echo "pacman_conf=.github/conf/public_pacman.conf" >> $GITHUB_OUTPUT
         echo "makepkg_conf=.github/conf/public_makepkg.conf" >> $GITHUB_OUTPUT
         echo "release_tag=loathk-public" >> $GITHUB_OUTPUT
-    
+
     - name: Configure personal
       if: ${{ inputs.repo == 'personal' }}
       id: configure
@@ -47,8 +47,8 @@ jobs:
         restore-keys: |
           ${{ github.workflow }}-${{ steps.configure.outputs.release_tag }}
 
-    - name: Makepkg Build and Check
-      id: makepkg
+    - name: Run 'pkgbuild' action
+      id: pkgbuild
       uses: ./.github/actions/pkgbuild
       with:
         pkgdir: ${{ inputs.pkgdir }}
@@ -61,31 +61,31 @@ jobs:
     - name: Print Package Files
       run: |
         echo "* Successfully created the following package archives"
-        echo "    New Package: ${{ steps.makepkg.outputs.pkgfile0 }}"
-        echo "    New Package: ${{ steps.makepkg.outputs.pkgfile1 }}"
-        echo "    New Package: ${{ steps.makepkg.outputs.pkgfile2 }}"
-        echo "    New Package: ${{ steps.makepkg.outputs.pkgfile3 }}"
+        echo "    New Package: ${{ steps.pkgbuild.outputs.pkgfile0 }}"
+        echo "    New Package: ${{ steps.pkgbuild.outputs.pkgfile1 }}"
+        echo "    New Package: ${{ steps.pkgbuild.outputs.pkgfile2 }}"
+        echo "    New Package: ${{ steps.pkgbuild.outputs.pkgfile3 }}"
         echo "* Replacing these archives in the repository"
-        echo "    Old Package: ${{ steps.makepkg.outputs.remfile0 }}"
-        echo "    Old Package: ${{ steps.makepkg.outputs.remfile1 }}"
-        echo "    Old Package: ${{ steps.makepkg.outputs.remfile2 }}"
-        echo "    Old Package: ${{ steps.makepkg.outputs.remfile3 }}"
+        echo "    Old Package: ${{ steps.pkgbuild.outputs.oldfile0 }}"
+        echo "    Old Package: ${{ steps.pkgbuild.outputs.oldfile1 }}"
+        echo "    Old Package: ${{ steps.pkgbuild.outputs.oldfile2 }}"
+        echo "    Old Package: ${{ steps.pkgbuild.outputs.oldfile3 }}"
         echo "* Repository database files"
-        echo "    Repo: ${{ steps.makepkg.outputs.repofile0 }}"
-        echo "    Repo: ${{ steps.makepkg.outputs.repofile1 }}"
-        echo "    Repo: ${{ steps.makepkg.outputs.repofile2 }}"
-        echo "    Repo: ${{ steps.makepkg.outputs.repofile3 }}"
+        echo "    Repo: ${{ steps.pkgbuild.outputs.repofile0 }}"
+        echo "    Repo: ${{ steps.pkgbuild.outputs.repofile1 }}"
+        echo "    Repo: ${{ steps.pkgbuild.outputs.repofile2 }}"
+        echo "    Repo: ${{ steps.pkgbuild.outputs.repofile3 }}"
 
     - name: Publish to Repository
       uses: ./.github/actions/publish
       with:
         release_tag: ${{ inputs.release_tag }}
-        files: '[ "${{ steps.makepkg.outputs.pkgfile0 }}", "${{ steps.makepkg.outputs.pkgfile1 }}", "${{ steps.makepkg.outputs.pkgfile2 }}", "${{ steps.makepkg.outputs.pkgfile3 }}"]'
+        files: '[ "${{ steps.pkgbuild.outputs.pkgfile0 }}", "${{ steps.pkgbuild.outputs.pkgfile1 }}", "${{ steps.pkgbuild.outputs.pkgfile2 }}", "${{ steps.pkgbuild.outputs.pkgfile3 }}"]'
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish Repository Database
       uses: ./.github/actions/publish
       with:
         release_tag: ${{ inputs.release_tag }}
-        files: '[ "${{ steps.makepkg.outputs.repofile0 }}", "${{ steps.makepkg.outputs.repofile1 }}", "${{ steps.makepkg.outputs.repofile2 }}", "${{ steps.makepkg.outputs.repofile3 }}"]'
+        files: '[ "${{ steps.pkgbuild.outputs.repofile0 }}", "${{ steps.pkgbuild.outputs.repofile1 }}", "${{ steps.pkgbuild.outputs.repofile2 }}", "${{ steps.pkgbuild.outputs.repofile3 }}"]'
         token: ${{ secrets.GITHUB_TOKEN }}
