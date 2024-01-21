@@ -16,6 +16,8 @@ env:
 jobs:
   jenv:
     runs-on: ubuntu-latest
+    steps:
+      - run: echo "null"
     outputs:
       path: ${{ env.path }}
       repo: ${{ env.repo }}
