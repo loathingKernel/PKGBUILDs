@@ -8,11 +8,42 @@ on:
     paths:
      - aur/nvm/.SRCINFO
 
+env:
+  path: local/proton-ge-custom7
+  repo: false
+
+
 jobs:
-  public:
+  jenv:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "null"
+    outputs:
+      path: ${{ env.path }}
+      repo: ${{ env.repo }}
+  build:
+    needs: jenv
+    if: ${{ needs.jenv.outputs.repo == 'true' }}
+    strategy:
+      matrix:
+        include:
+          - repo: public
+            pkgbuild: PKGBUILD
     uses: ./.github/workflows/pkgbuild.yml
     with:
-      pkgdir: aur/nvm
-      pacman_conf: .github/conf/public_pacman.conf
-      makepkg_conf: .github/conf/public_makepkg.conf
-      release_tag: loathk-public
+      pkgdir: ${{ needs.jenv.outputs.path }}
+      pacman_conf: .github/conf/${{ matrix.repo }}_pacman.conf
+      makepkg_conf: .github/conf/${{ matrix.repo }}_makepkg.conf
+      makepkg_args: -p ${{ matrix.pkgbuild }}
+      multilib: true
+      release_tag: loathk-${{ matrix.repo }}
+  delete:
+    needs: jenv
+    if: ${{ needs.jenv.outputs.repo == 'false' }}
+    strategy:
+      matrix:
+        repo: [public]
+    uses: ./.github/workflows/pkgdelete.yml
+    with:
+      pkgdir: ${{ needs.jenv.outputs.path }}
+      release_tag: loathk-${{ matrix.repo }}
