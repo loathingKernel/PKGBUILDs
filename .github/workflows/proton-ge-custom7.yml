@@ -14,8 +14,14 @@ env:
 
 
 jobs:
+  jenv:
+    runs-on: ubuntu-latest
+    outputs:
+      path: ${{ env.path }}
+      repo: ${{ env.repo }}
   build:
-    if: ${{ env.repo == 'true' }}
+    needs: jenv
+    if: ${{ needs.jenv.outputs.repo == 'true' }}
     strategy:
       matrix:
         include:
@@ -25,18 +31,19 @@ jobs:
             pkgbuild: PKGBUILD.personal
     uses: ./.github/workflows/pkgbuild.yml
     with:
-      pkgdir: ${{ env.path }}
+      pkgdir: ${{ needs.jenv.outputs.path }}
       pacman_conf: .github/conf/${{ matrix.repo }}_pacman.conf
       makepkg_conf: .github/conf/${{ matrix.repo }}_makepkg.conf
       makepkg_args: -p ${{ matrix.pkgbuild }}
       multilib: true
       release_tag: loathk-${{ matrix.repo }}
   delete:
-    if: ${{ env.repo == 'false' }}
+    needs: jenv
+    if: ${{ needs.jenv.outputs.repo == 'false' }}
     strategy:
       matrix:
         repo: [public, personal]
     uses: ./.github/workflows/pkgdelete.yml
     with:
-      pkgdir: ${{ env.path }}
+      pkgdir: ${{ needs.jenv.outputs.path }}
       release_tag: loathk-${{ matrix.repo }}
