@@ -9,7 +9,7 @@ on:
      - aur/nvm/.SRCINFO
 
 env:
-  path: local/proton-ge-custom7
+  path: aur/nvm
   repo: false
 
 
