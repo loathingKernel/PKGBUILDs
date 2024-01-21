@@ -8,21 +8,40 @@ on:
     paths:
      - local/proton-ge-custom7/.SRCINFO
 
+env:
+  path: local/proton-git-custom7
+  repo: false
+
+
 jobs:
   public:
+    if: ${{ env.repo == 'true' }}
     uses: ./.github/workflows/pkgbuild.yml
     with:
-      pkgdir: local/proton-ge-custom7
+      pkgdir: ${{ env.path }}
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
       multilib: true
       release_tag: loathk-public
+  public_delete:
+    if: ${{ env.repo == 'false' }}
+    uses: ./.github/workflows/pkgdelete.yml
+    with:
+      pkgdir: ${{ env.path }}
+      release_tag: loathk-public
   personal:
+    if: ${{ env.repo == 'true' }}
     uses: ./.github/workflows/pkgbuild.yml
     with:
-      pkgdir: local/proton-ge-custom7
+      pkgdir: ${{ env.path }}
       pacman_conf: .github/conf/personal_pacman.conf
       makepkg_conf: .github/conf/personal_makepkg.conf
       makepkg_args: -p PKGBUILD.personal
       multilib: true
+      release_tag: loathk-personal
+  personal_delete:
+    if: ${{ env.repo == 'false' }}
+    uses: ./.github/workflows/pkgdelete.yml
+    with:
+      pkgdir: ${{ env.path }}
       release_tag: loathk-personal
