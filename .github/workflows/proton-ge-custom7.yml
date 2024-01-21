@@ -10,7 +10,7 @@ on:
 
 env:
   path: local/proton-ge-custom7
-  repo: true
+  repo: false
 
 
 jobs:
