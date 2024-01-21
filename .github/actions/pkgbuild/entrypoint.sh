@@ -9,13 +9,15 @@ cat << EOM >> /etc/pacman.conf
 Include = /etc/pacman.d/mirrorlist
 EOM
 
-# Add alerque repository for paru
-cat << EOM >> /etc/pacman.conf
+if [ -n "${INPUT_AURDEPS:-}" ]; then
+	# Add alerque repository for paru
+	cat << EOM >> /etc/pacman.conf
 [alerque]
 SigLevel = Optional TrustAll
 Server = https://arch.alerque.com/\$arch
 EOM
-pacman-key --recv-keys 63CC496475267693
+	pacman-key --recv-keys 63CC496475267693
+fi
 
 if [ -n "${INPUT_PACMANCONF:-}" ]; then
 	echo "Using ${INPUT_PACMANCONF:-} as pacman.conf"
@@ -29,7 +31,6 @@ fi
 
 pacman -Syu --noconfirm --needed base base-devel
 pacman -Syu --noconfirm --needed ccache
-pacman -Syu --noconfirm --needed ccache-ext
 
 if [ "${INPUT_MULTILIB:-false}" == true ]; then
 	pacman -Syu --noconfirm --needed multilib-devel
