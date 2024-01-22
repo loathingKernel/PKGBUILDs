@@ -1,0 +1,38 @@
+name: job_pkgrepo
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        required: true
+        type: string
+      repository:
+        required: true
+        type: string
+      pkgbuild:
+        required: false
+        type: string
+        default: "PKGBUILD"
+      action:
+        required: false
+        type: string
+        default: "build"
+
+
+jobs:
+  build:
+    if: ${{ inputs.action == 'build' }}
+    uses: ./.github/workflows/job_pkgbuild.yml
+    with:
+      pkgdir: ${{ inputs.path }}
+      pacman_conf: .github/conf/${{ inputs.repository }}_pacman.conf
+      makepkg_conf: .github/conf/${{ inputs.repository }}_makepkg.conf
+      makepkg_args: -p ${{ inputs.pkgbuild }} --skippgpcheck
+      multilib: true
+      release_tag: loathk-${{ inputs.repository }}
+  delete:
+    if: ${{ inputs.action == 'remove' }}
+    uses: ./.github/workflows/job_pkgremove.yml
+    with:
+      pkgdir: ${{ inputs.path }}
+      release_tag: loathk-${{ inputs.repository }}

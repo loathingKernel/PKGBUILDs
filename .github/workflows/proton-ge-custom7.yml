@@ -8,44 +8,17 @@ on:
     paths:
      - local/proton-ge-custom7/.SRCINFO
 
-env:
-  path: local/proton-ge-custom7
-  repo: false
-
-
 jobs:
-  jenv:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "null"
-    outputs:
-      path: ${{ env.path }}
-      repo: ${{ env.repo }}
-  build:
-    needs: jenv
-    if: ${{ needs.jenv.outputs.repo == 'true' }}
+  repository:
     strategy:
       matrix:
         include:
-          - repo: public
-            pkgbuild: PKGBUILD
-          - repo: personal
+          - repository: public
+          - repository: personal
             pkgbuild: PKGBUILD.personal
-    uses: ./.github/workflows/job_pkgbuild.yml
+    uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      pkgdir: ${{ needs.jenv.outputs.path }}
-      pacman_conf: .github/conf/${{ matrix.repo }}_pacman.conf
-      makepkg_conf: .github/conf/${{ matrix.repo }}_makepkg.conf
-      makepkg_args: -p ${{ matrix.pkgbuild }}
-      multilib: true
-      release_tag: loathk-${{ matrix.repo }}
-  delete:
-    needs: jenv
-    if: ${{ needs.jenv.outputs.repo == 'false' }}
-    strategy:
-      matrix:
-        repo: [public, personal]
-    uses: ./.github/workflows/job_pkgdelete.yml
-    with:
-      pkgdir: ${{ needs.jenv.outputs.path }}
-      release_tag: loathk-${{ matrix.repo }}
+      path: local/proton-ge-custom7
+      repository: ${{ matrix.repository }}
+      pkgbuild: ${{ matrix.pkgbuild }}
+      action: build

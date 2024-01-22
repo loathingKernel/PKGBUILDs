@@ -17,9 +17,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Run 'pkgdelete' action
+    - name: Run 'pkgremove' action
       id: pkgbuild
-      uses: ./.github/actions/pkgdelete
+      uses: ./.github/actions/pkgremove
       with:
         pkgdir: ${{ inputs.pkgdir }}
         repoReleaseTag: ${{ inputs.release_tag }}
