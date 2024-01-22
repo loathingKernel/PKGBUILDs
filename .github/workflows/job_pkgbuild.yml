@@ -17,7 +17,7 @@ on:
         type: string
       multilib:
         required: false
-        type: boolean
+        type: string
       release_tag:
         required: true
         type: string
@@ -45,7 +45,7 @@ jobs:
         pacmanConf: ${{ inputs.pacman_conf }}
         makepkgConf: ${{ inputs.makepkg_conf }}
         makepkgArgs: ${{ inputs.makepkg_args }}
-        multilib: ${{ inputs.multilib == 'true' }}
+        multilib: ${{ inputs.multilib }}
         repoReleaseTag: ${{ inputs.release_tag }}
 
     - name: Print Package Files
