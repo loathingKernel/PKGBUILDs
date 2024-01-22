@@ -40,7 +40,7 @@ inputs:
   multilib:
     description: "Install 'multilib-devel' to build lib32 packages."
     required: false
-    default: ""
+    default: false
   repoReleaseTag:
     description: "Tag to use as repository name."
     required: false
