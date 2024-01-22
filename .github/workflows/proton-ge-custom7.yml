@@ -20,7 +20,7 @@ jobs:
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: local/proton-ge-custom7
-      multilib: true
       repository: ${{ matrix.repository }}
       pkgbuild: ${{ matrix.pkgbuild }}
+      multilib: true
       action: skip
