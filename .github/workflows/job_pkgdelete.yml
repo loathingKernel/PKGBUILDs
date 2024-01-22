@@ -1,4 +1,4 @@
-name: pkgdelete
+name: job_pkgdelete
 
 on:
   workflow_call:

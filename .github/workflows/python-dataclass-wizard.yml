@@ -10,7 +10,7 @@ on:
 
 jobs:
   public:
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: aur/python-dataclass-wizard
       pacman_conf: .github/conf/public_pacman.conf

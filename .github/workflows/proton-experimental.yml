@@ -10,7 +10,7 @@ on:
 
 jobs:
   public:
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: public/proton-experimental
       pacman_conf: .github/conf/public_pacman.conf
@@ -18,7 +18,7 @@ jobs:
       multilib: true
       release_tag: loathk-public
   personal:
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: public/proton-experimental
       pacman_conf: .github/conf/personal_pacman.conf

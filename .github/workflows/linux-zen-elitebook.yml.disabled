@@ -10,7 +10,7 @@ on:
 
 jobs:
   personal:
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/_job_pkgbuild.yml
     with:
       pkgdir: local/linux-zen-elitebook
       pacman_conf: .github/conf/personal_pacman.conf

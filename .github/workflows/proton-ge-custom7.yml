@@ -31,7 +31,7 @@ jobs:
             pkgbuild: PKGBUILD
           - repo: personal
             pkgbuild: PKGBUILD.personal
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: ${{ needs.jenv.outputs.path }}
       pacman_conf: .github/conf/${{ matrix.repo }}_pacman.conf
@@ -45,7 +45,7 @@ jobs:
     strategy:
       matrix:
         repo: [public, personal]
-    uses: ./.github/workflows/pkgdelete.yml
+    uses: ./.github/workflows/job_pkgdelete.yml
     with:
       pkgdir: ${{ needs.jenv.outputs.path }}
       release_tag: loathk-${{ matrix.repo }}

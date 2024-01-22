@@ -10,14 +10,14 @@ on:
 
 jobs:
   public:
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: public/vkd3d-proton-mingw
       pacman_conf: .github/conf/public_pacman.conf
       makepkg_conf: .github/conf/public_makepkg.conf
       release_tag: loathk-public
   personal:
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: public/vkd3d-proton-mingw
       pacman_conf: .github/conf/personal_pacman.conf

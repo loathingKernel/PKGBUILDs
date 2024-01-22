@@ -10,7 +10,7 @@ on:
 
 jobs:
   public:
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: aur/python-vdf
       pacman_conf: .github/conf/public_pacman.conf

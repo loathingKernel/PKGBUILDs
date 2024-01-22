@@ -10,7 +10,7 @@ on:
 
 jobs:
   personal:
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: aur/java17-jetbrains
       pacman_conf: .github/conf/personal_pacman.conf

@@ -12,7 +12,7 @@ on:
 
 jobs:
   public:
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: local/dolphin-emu-git
       pacman_conf: .github/conf/public_pacman.conf
@@ -20,7 +20,7 @@ jobs:
       makepkg_args: -p PKGBUILD
       release_tag: loathk-public
   personal:
-    uses: ./.github/workflows/pkgbuild.yml
+    uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: local/dolphin-emu-git
       pacman_conf: .github/conf/personal_pacman.conf
