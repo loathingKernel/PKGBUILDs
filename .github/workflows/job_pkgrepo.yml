@@ -28,7 +28,7 @@ jobs:
       pacman_conf: .github/conf/${{ inputs.repository }}_pacman.conf
       makepkg_conf: .github/conf/${{ inputs.repository }}_makepkg.conf
       makepkg_args: -p ${{ inputs.pkgbuild }} --skippgpcheck
-      multilib: true
+      multilib: "true"
       release_tag: loathk-${{ inputs.repository }}
   delete:
     if: ${{ inputs.action == 'remove' }}

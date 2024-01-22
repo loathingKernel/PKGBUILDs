@@ -188,6 +188,8 @@ package() {
     libdir="$pkgdir/usr/lib" \
     dlldir="$pkgdir/usr/lib/wine" install
 
+  ln -sf /usr/bin/wine "$pkgdir"/usr/bin/wine64
+
   # Font aliasing settings for Win32 applications
   install -d "$pkgdir"/usr/share/fontconfig/conf.{avail,default}
   install -m644 "$srcdir/30-win32-aliases.conf" "$pkgdir/usr/share/fontconfig/conf.avail"

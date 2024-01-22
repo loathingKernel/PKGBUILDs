@@ -157,6 +157,7 @@ build() {
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
+    --with-wayland \
     --without-oss \
     --disable-winemenubuilder \
     --disable-tests \
