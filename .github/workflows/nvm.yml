@@ -19,4 +19,4 @@ jobs:
     with:
       pkgdir: aur/nvm
       repository: ${{ matrix.repository }}
-      action: remove
+      action: skip

@@ -1,6 +1,17 @@
 #!/bin/bash
 set -euo pipefail
 
+echo "pkdir: ${INPUT_PKGDIR:-.}"
+echo "aurdeops: ${INPUT_AURDEPS:-}"
+echo "multilib: ${INPUT_MULTILIB:-false}"
+echo "pacman_conf:  ${INPUT_PACMANCONF:-}"
+echo "makepkg_conf: ${INPUT_MAKEPKGCONF:-}"
+echo "makepkg_args: ${INPUT_MAKEPKGARGS:-}"
+echo "release_repo: ${INPUT_REPORELEASETAG:-}"
+echo "namcap_disable: ${INPUT_NAMCAPDISABLE:-}"
+echo "namcap_relues:  ${INPUT_NAMCAPRULES:-}"
+echo "namcap_exclude: ${INPUT_NAMCAPEXCLUDERULES:-}"
+
 FILE="$(basename "$0")"
 
 if [ "${INPUT_MULTILIB:-false}" == true ]; then

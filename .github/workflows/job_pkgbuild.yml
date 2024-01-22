@@ -17,7 +17,8 @@ on:
         type: string
       multilib:
         required: false
-        type: string
+        type: boolean
+        default: false
       release_tag:
         required: true
         type: string

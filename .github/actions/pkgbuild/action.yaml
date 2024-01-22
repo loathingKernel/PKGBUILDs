@@ -12,7 +12,7 @@ inputs:
   pacmanConf:
     description: "Relative path to alternative configuration file for pacman."
     required: false
-    default: "/etc/pacman.conf"
+    default: ""
   aurDeps:
     description: "Support AUR dependencies if nonempty."
     required: false
@@ -36,7 +36,7 @@ inputs:
   makepkgConf:
     description: "Relative path to alternative configuration file for makepkg."
     required: false
-    default: "/etc/makepkg.conf"
+    default: ""
   multilib:
     description: "Install 'multilib-devel' to build lib32 packages."
     required: false

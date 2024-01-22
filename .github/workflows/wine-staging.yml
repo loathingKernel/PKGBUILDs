@@ -20,5 +20,6 @@ jobs:
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: multilib/wine-staging
+      multilib: true
       repository: ${{ matrix.repository }}
       pkgbuild: ${{ matrix.pkgbuild }}
