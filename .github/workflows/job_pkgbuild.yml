@@ -24,7 +24,7 @@ on:
         type: string
 
 jobs:
-  package:
+  pkgbuild:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -51,21 +51,21 @@ jobs:
 
     - name: Print Package Files
       run: |
-        echo "* Successfully created the following package archives"
-        echo "    New Package: ${{ steps.pkgbuild.outputs.pkgfile0 }}"
-        echo "    New Package: ${{ steps.pkgbuild.outputs.pkgfile1 }}"
-        echo "    New Package: ${{ steps.pkgbuild.outputs.pkgfile2 }}"
-        echo "    New Package: ${{ steps.pkgbuild.outputs.pkgfile3 }}"
-        echo "* Replacing these archives in the repository"
-        echo "    Old Package: ${{ steps.pkgbuild.outputs.oldfile0 }}"
-        echo "    Old Package: ${{ steps.pkgbuild.outputs.oldfile1 }}"
-        echo "    Old Package: ${{ steps.pkgbuild.outputs.oldfile2 }}"
-        echo "    Old Package: ${{ steps.pkgbuild.outputs.oldfile3 }}"
+        echo "* Successfully built package archives"
+        echo "    ${{ steps.pkgbuild.outputs.pkgfile0 }}"
+        echo "    ${{ steps.pkgbuild.outputs.pkgfile1 }}"
+        echo "    ${{ steps.pkgbuild.outputs.pkgfile2 }}"
+        echo "    ${{ steps.pkgbuild.outputs.pkgfile3 }}"
+        echo "* Replacing package archives"
+        echo "    ${{ steps.pkgbuild.outputs.oldfile0 }}"
+        echo "    ${{ steps.pkgbuild.outputs.oldfile1 }}"
+        echo "    ${{ steps.pkgbuild.outputs.oldfile2 }}"
+        echo "    ${{ steps.pkgbuild.outputs.oldfile3 }}"
         echo "* Repository database files"
-        echo "    Repo: ${{ steps.pkgbuild.outputs.repofile0 }}"
-        echo "    Repo: ${{ steps.pkgbuild.outputs.repofile1 }}"
-        echo "    Repo: ${{ steps.pkgbuild.outputs.repofile2 }}"
-        echo "    Repo: ${{ steps.pkgbuild.outputs.repofile3 }}"
+        echo "    ${{ steps.pkgbuild.outputs.repofile0 }}"
+        echo "    ${{ steps.pkgbuild.outputs.repofile1 }}"
+        echo "    ${{ steps.pkgbuild.outputs.repofile2 }}"
+        echo "    ${{ steps.pkgbuild.outputs.repofile3 }}"
 
     - uses: svenstaro/upload-release-action@v2
       name: Upload ${{ steps.pkgbuild.outputs.pkgfile0 }}

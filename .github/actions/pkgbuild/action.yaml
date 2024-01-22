@@ -47,7 +47,7 @@ inputs:
     default: ""
 outputs:
   pkgfile0:
-    description: "Filename of the first generated package archive. Usually only one."
+    description: "Filename of the 1st generated package archive. Usually only one."
   pkgfile1:
     description: "Filename of the 2nd generated package archive."
   pkgfile2:
@@ -55,7 +55,7 @@ outputs:
   pkgfile3:
     description: "Filename of the 4th generated package archive. etc."
   oldfile0:
-    description: "Filename of the first removed package archive. Usually only one."
+    description: "Filename of the 1st removed package archive. Usually only one."
   oldfile1:
     description: "Filename of the 2nd removed package archive."
   oldfile2:
