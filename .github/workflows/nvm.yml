@@ -17,7 +17,6 @@ jobs:
           - repository: personal
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      path: aur/nvm
+      pkgdir: aur/nvm
       repository: ${{ matrix.repository }}
-      pkgbuild: ${{ matrix.pkgbuild }}
       action: build

@@ -14,11 +14,12 @@ jobs:
       matrix:
         include:
           - repository: public
+            pkgbuild: PKGBUILD
           - repository: personal
             pkgbuild: PKGBUILD.personal
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      path: local/proton-ge-custom7
+      pkgdir: local/proton-ge-custom7
       repository: ${{ matrix.repository }}
       pkgbuild: ${{ matrix.pkgbuild }}
       action: build
