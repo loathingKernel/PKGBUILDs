@@ -119,7 +119,6 @@ build() {
     -D rust_std=2021
     -D shared-glapi=enabled
     -D valgrind=disabled
-    -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc
     -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio
     -D vulkan-layers=device-select,intel-nullhw,overlay
   )
