@@ -132,11 +132,11 @@ prepare() {
   diff -u ../config .config || :
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage1-native"
   echo "-> Running nconfig..."
-  #make LLVM=1 LLVM_IAS=1 nconfig
+  make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage2-nconfig"
   echo "-> Running localmodconfig..."
   make LLVM=1 LLVM_IAS=1 LSMOD="${startdir}/modprobed.db" localmodconfig
-  #make LLVM=1 LLVM_IAS=1 nconfig
+  make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage3-localmod"
   fi
 
