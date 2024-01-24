@@ -68,6 +68,9 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   v4l-utils             lib32-v4l-utils
   vulkan-headers
   vulkan-icd-loader     lib32-vulkan-icd-loader
+  # with-wayland
+  libxkbcommon          lib32-libxkbcommon
+  wayland
 )
 optdepends=(
   alsa-lib              lib32-alsa-lib
@@ -93,6 +96,9 @@ optdepends=(
   v4l-utils             lib32-v4l-utils
   wine-gecko
   wine-mono
+  # with-wayland
+  libxkbcommon          lib32-libxkbcommon
+  wayland
 )
 makedepends=(${makedepends[@]} ${depends[@]})
 install=wine.install
@@ -151,6 +157,7 @@ build() {
     --libdir=/usr/lib \
     --with-x \
     --with-gstreamer \
+    --with-wayland \
     --with-mingw \
     --with-alsa \
     --without-oss \
@@ -183,6 +190,7 @@ build() {
     --prefix=/usr \
     --with-x \
     --with-gstreamer \
+    --with-wayland \
     --with-mingw \
     --with-alsa \
     --without-oss \

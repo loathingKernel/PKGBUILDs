@@ -17,6 +17,7 @@ source=(https://dl.winehq.org/wine/source/9.0/$pkgname-$_pkgbasever.tar.xz{,.sig
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
+        wine-ntsync.patch
 )
 sha512sums=('838daf2c4581f83f8573b988036f517d57b84894b090a2a17433255d6d044dfa880e6724cdb83082a36c333df9d2083ab68ae53927622a620edd59f33462ada4'
             'SKIP'
@@ -26,6 +27,7 @@ sha512sums=('838daf2c4581f83f8573b988036f517d57b84894b090a2a17433255d6d044dfa880
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 sha512sums+=(
+            'SKIP'
 )
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -72,6 +74,9 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   v4l-utils             lib32-v4l-utils
   vulkan-headers
   vulkan-icd-loader     lib32-vulkan-icd-loader
+  # with-wayland
+  libxkbcommon          lib32-libxkbcommon
+  wayland
 )
 optdepends=(
   alsa-lib              lib32-alsa-lib
@@ -97,6 +102,9 @@ optdepends=(
   v4l-utils             lib32-v4l-utils
   wine-gecko
   wine-mono
+  # with-wayland
+  libxkbcommon          lib32-libxkbcommon
+  wayland
 )
 makedepends=(${makedepends[@]} ${depends[@]})
 install=wine.install
@@ -107,10 +115,12 @@ prepare() {
 
   cd $pkgname-$_pkgbasever
 
+  patch -p1 -i "$srcdir"/wine-ntsync.patch
+
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
-  patch -p1 -i "$_tkg_path"/proton/esync/esync-unix-mainline.patch
-  patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-mainline.patch
-  patch -p1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
+  #patch -p1 -i "$_tkg_path"/proton/esync/esync-unix-mainline.patch
+  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-mainline.patch
+  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
   patch -p1 -i "$_tkg_path"/proton/LAA/LAA-unix.patch
   patch -p1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
   patch -p1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
@@ -155,6 +165,7 @@ build() {
     --libdir=/usr/lib \
     --with-x \
     --with-gstreamer \
+    --with-wayland \
     --with-mingw \
     --with-alsa \
     --without-oss \
@@ -187,6 +198,7 @@ build() {
     --prefix=/usr \
     --with-x \
     --with-gstreamer \
+    --with-wayland \
     --with-mingw \
     --with-alsa \
     --without-oss \
