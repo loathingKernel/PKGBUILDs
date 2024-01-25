@@ -7,19 +7,15 @@ on:
      - master
     paths:
      - public/proton-ge-custom/.SRCINFO
+     - .github/workflows/proton-ge-custom.yml
 
 jobs:
   repository:
     strategy:
       matrix:
-        include:
-          - repository: public
-            pkgbuild: PKGBUILD
-          - repository: personal
-            pkgbuild: PKGBUILD.personal
+        repository: [public, personal]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: public/proton-ge-custom
       repository: ${{ matrix.repository }}
-      pkgbuild: ${{ matrix.pkgbuild }}
       multilib: true
