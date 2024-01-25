@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 # default directories
-dxvk_lib32=${dxvk_lib32:-"x32"}
-dxvk_lib64=${dxvk_lib64:-"x64"}
+vkd3d_lib32=${vkd3d_lib32:-"x86"}
+vkd3d_lib64=${vkd3d_lib64:-"x64"}
 
 # figure out where we are
 basedir="$(dirname "$(readlink -f "$0")")"
@@ -17,21 +17,17 @@ uninstall)
   ;;
 *)
   echo "Unrecognized action: $action"
-  echo "Usage: $0 [install|uninstall] [--without-dxgi] [--symlink]"
+  echo "Usage: $0 [install|uninstall] [--symlink]"
   exit 1
 esac
 
 # process arguments
 shift
 
-with_dxgi=true
 file_cmd="cp -v --reflink=auto"
 
 while (($# > 0)); do
   case "$1" in
-  "--without-dxgi")
-    with_dxgi=false
-    ;;
   "--symlink")
     file_cmd="ln -s -v"
     ;;
@@ -110,7 +106,7 @@ restoreDll() {
   fi
 }
 
-# copy or link dxvk dll, back up original file
+# copy or link vkd3d dll, back up original file
 installFile() {
   dstfile="${1}/${3}.dll"
   srcfile="${basedir}/${2}/${3}.dll"
@@ -135,7 +131,7 @@ installFile() {
   return 0
 }
 
-# remove dxvk dll, restore original file
+# remove vkd3d dll, restore original file
 uninstallFile() {
   dstfile="${1}/${3}.dll"
   srcfile="${basedir}/${2}/${3}.dll"
@@ -164,41 +160,34 @@ uninstallFile() {
 }
 
 install() {
-  installFile "$win64_sys_path" "$dxvk_lib64" "$1"
+  installFile "$win64_sys_path" "$vkd3d_lib64" "$1"
   inst64_ret="$?"
 
   inst32_ret=-1
   if $wow64; then
-    installFile "$win32_sys_path" "$dxvk_lib32" "$1"
+    installFile "$win32_sys_path" "$vkd3d_lib32" "$1"
     inst32_ret="$?"
   fi
 
-  if (( ($inst32_ret == 0) || ($inst64_ret == 0) )); then
+  if (( (inst32_ret == 0) || (inst64_ret == 0) )); then
     overrideDll "$1"
   fi
 }
 
 uninstall() {
-  uninstallFile "$win64_sys_path" "$dxvk_lib64" "$1"
+  uninstallFile "$win64_sys_path" "$vkd3d_lib64" "$1"
   uninst64_ret="$?"
 
   uninst32_ret=-1
   if $wow64; then
-    uninstallFile "$win32_sys_path" "$dxvk_lib32" "$1"
+    uninstallFile "$win32_sys_path" "$vkd3d_lib32" "$1"
     uninst32_ret="$?"
   fi
 
-  if (( ($uninst32_ret == 0) || ($uninst64_ret == 0) )); then
+  if (( (uninst32_ret == 0) || (uninst64_ret == 0) )); then
     restoreDll "$1"
   fi
 }
 
-# skip dxgi during install if not explicitly
-# enabled, but always try to uninstall it
-if $with_dxgi || [ "$action" == "uninstall" ]; then
-  $action dxgi
-fi
-
-$action d3d9
-$action d3d10core
-$action d3d11
+$action d3d12
+$action d3d12core

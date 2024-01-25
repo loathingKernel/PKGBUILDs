@@ -21,7 +21,7 @@ pkgbase = d8vk-mingw-git
 	source = setup_d8vk
 	sha256sums = SKIP
 	sha256sums = bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362
-	sha256sums = 4fc47d60ab45f359edc226d1a77743f6b30c3590d9b99d4ada2df7f056991a8b
+	sha256sums = e3558e2369b6d7bcf532b4ca2c734c847517b57adc26426c4b56b9f280a5f8a0
 	sha256sums = bea0149c3ed77c00134edab272f6876c3090ab289dc365c2d95a6e74af96422c
 
 pkgname = d8vk-mingw-git

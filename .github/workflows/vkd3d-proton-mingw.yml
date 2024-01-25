@@ -9,18 +9,16 @@ on:
      - public/vkd3d-proton-mingw/.SRCINFO
 
 jobs:
-  public:
-    uses: ./.github/workflows/job_pkgbuild.yml
+  repository:
+    strategy:
+      matrix:
+        include:
+          - repository: public
+            pkgbuild: PKGBUILD
+          - repository: personal
+            pkgbuild: PKGBUILD.personal
+    uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: public/vkd3d-proton-mingw
-      pacman_conf: .github/conf/public_pacman.conf
-      makepkg_conf: .github/conf/public_makepkg.conf
-      release_tag: loathk-public
-  personal:
-    uses: ./.github/workflows/job_pkgbuild.yml
-    with:
-      pkgdir: public/vkd3d-proton-mingw
-      pacman_conf: .github/conf/personal_pacman.conf
-      makepkg_conf: .github/conf/personal_makepkg.conf
-      makepkg_args: -p PKGBUILD.personal
-      release_tag: loathk-personal
+      repository: ${{ matrix.repository }}
+      pkgbuild: ${{ matrix.pkgbuild }}
