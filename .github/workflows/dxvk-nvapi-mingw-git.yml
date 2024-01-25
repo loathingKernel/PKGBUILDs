@@ -15,13 +15,8 @@ jobs:
   repository:
     strategy:
       matrix:
-        include:
-          - repository: public
-            action: build
-          - repository: personal
-            action: remove
+        repository: [public]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: public/dxvk-nvapi-mingw-git
       repository: ${{ matrix.repository }}
-      action: ${{ matrix.action }}
