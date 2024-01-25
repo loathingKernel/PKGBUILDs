@@ -15,11 +15,13 @@ jobs:
         include:
           - repository: public
             pkgbuild: PKGBUILD
+            multilib: true
           - repository: personal
             pkgbuild: PKGBUILD.wow64
+            multilib: false
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: multilib/wine
-      multilib: true
+      multilib: ${{ matrix.multilib }}
       repository: ${{ matrix.repository }}
       pkgbuild: ${{ matrix.pkgbuild }}
