@@ -1,4 +1,4 @@
-name: ccache-ext
+name: linux-zen-elitebook
 
 on:
   workflow_dispatch:
@@ -6,16 +6,16 @@ on:
     branches:
      - master
     paths:
-     - aur/ccache-ext/.SRCINFO
+     - local/linux-zen-elitebook/.SRCINFO
 
 jobs:
   repository:
     strategy:
       matrix:
         include:
-          - repository: public
+          - repository: personal
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      pkgdir: aur/ccache-ext
+      pkgdir: local/linux-zen-elitebook
       repository: ${{ matrix.repository }}
-      action: build
+      action: skip

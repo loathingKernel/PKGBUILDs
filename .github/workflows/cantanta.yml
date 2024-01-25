@@ -1,4 +1,4 @@
-name: ccache-ext
+name: cantata
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - aur/ccache-ext/.SRCINFO
+     - aur/cantata/.SRCINFO
 
 jobs:
   repository:
@@ -16,6 +16,5 @@ jobs:
           - repository: public
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      pkgdir: aur/ccache-ext
+      pkgdir: aur/cantata
       repository: ${{ matrix.repository }}
-      action: build
