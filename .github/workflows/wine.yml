@@ -23,6 +23,6 @@ jobs:
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: multilib/wine
-      multilib: ${{ matrix.multilib }}
       repository: ${{ matrix.repository }}
       pkgbuild: ${{ matrix.pkgbuild }}
+      multilib: ${{ matrix.multilib }}
