@@ -9,18 +9,14 @@ on:
      - master
     paths:
      - local/dxvk-mingw-git/.SRCINFO
+     - .github/workflows/dxvk-mingw-git.yml
 
 jobs:
   repository:
     strategy:
       matrix:
-        include:
-          - repository: public
-            pkgbuild: PKGBUILD
-          - repository: personal
-            pkgbuild: PKGBUILD.personal
+        repository: [public, personal]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: local/dxvk-mingw-git
       repository: ${{ matrix.repository }}
-      pkgbuild: ${{ matrix.pkgbuild }}

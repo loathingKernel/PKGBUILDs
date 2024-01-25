@@ -9,18 +9,14 @@ on:
      - master
     paths:
      - public/vkd3d-proton-mingw-git/.SRCINFO
+     - .github/workflows/vkd3d-proton-mingw-git.yml
 
 jobs:
   repository:
     strategy:
       matrix:
-        include:
-          - repository: public
-            pkgbuild: PKGBUILD
-          - repository: personal
-            pkgbuild: PKGBUILD.personal
+        repository: [public, personal]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: public/vkd3d-proton-mingw-git
       repository: ${{ matrix.repository }}
-      pkgbuild: ${{ matrix.pkgbuild }}

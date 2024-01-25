@@ -17,14 +17,11 @@ jobs:
       matrix:
         include:
           - repository: public
-            pkgbuild: PKGBUILD
             action: build
           - repository: personal
-            pkgbuild: PKGBUILD.personal
             action: remove
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: public/dxvk-nvapi-mingw-git
       repository: ${{ matrix.repository }}
-      pkgbuild: ${{ matrix.pkgbuild }}
       action: ${{ matrix.action }}
