@@ -20,6 +20,8 @@ source=(https://dl.winehq.org/wine/source/8.x/wine-$_winever.tar.xz{,.sign}
         wine-isolate_home.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
+source+=(
+)
 sha512sums=('4d04d40141d2ea5e548b76aed870ac28d8a03241ffd4e761979c795310baa19136e54a8e518c6ea9bf563c3b23d3c4eb1baefc9906d7eeca469e9942ff99dc40'
             'SKIP'
             'abba6084f2aefa8507c2a79c688b717f8137375168e5457ee40a0c96bfce31e9dc44370ecb5a8e8a397e90ce2eb8543fd07b447bf48c4b2d4c68aac9b3674214'
@@ -28,6 +30,8 @@ sha512sums=('4d04d40141d2ea5e548b76aed870ac28d8a03241ffd4e761979c795310baa19136e
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
+sha512sums+=(
+)
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
@@ -147,13 +151,19 @@ build() {
   # MingW Wine builds fail with relro
   export LDFLAGS="${LDFLAGS/,-z,relro/}"
 
-  export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-  export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
+  local -a split=($CFLAGS)
+  local -A flags
+  for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
+  local march="${flags["-march"]:-nocona}"
+  local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O2 -march=haswell -mtune=haswell -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS -s -mno-avx2 -mno-avx"
+
+  export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
+  export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
 
   msg2 "Building Wine-64..."
 
