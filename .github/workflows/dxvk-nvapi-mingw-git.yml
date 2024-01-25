@@ -27,4 +27,4 @@ jobs:
       pkgdir: public/dxvk-nvapi-mingw-git
       repository: ${{ matrix.repository }}
       pkgbuild: ${{ matrix.pkgbuild }}
-      action: $${{ matrix.action }}
+      action: ${{ matrix.action }}
