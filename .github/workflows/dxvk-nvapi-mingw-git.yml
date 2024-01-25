@@ -9,6 +9,7 @@ on:
      - master
     paths:
      - public/dxvk-nvapi-mingw-git/.SRCINFO
+     - .github/workflows/dxvk-nvapi-mingw-git.yml
 
 jobs:
   repository:
@@ -17,10 +18,13 @@ jobs:
         include:
           - repository: public
             pkgbuild: PKGBUILD
+            action: build
           - repository: personal
             pkgbuild: PKGBUILD.personal
+            action: remove
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: public/dxvk-nvapi-mingw-git
       repository: ${{ matrix.repository }}
       pkgbuild: ${{ matrix.pkgbuild }}
+      action: $${{ matrix.action }}
