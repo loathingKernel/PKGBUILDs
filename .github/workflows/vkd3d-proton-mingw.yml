@@ -7,7 +7,6 @@ on:
      - master
     paths:
      - public/vkd3d-proton-mingw/.SRCINFO
-     - .github/workflows/vkd3d-proton-mingw.yml
 
 jobs:
   repository:

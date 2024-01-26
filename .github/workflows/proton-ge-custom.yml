@@ -7,7 +7,6 @@ on:
      - master
     paths:
      - public/proton-ge-custom/.SRCINFO
-     - .github/workflows/proton-ge-custom.yml
 
 jobs:
   repository:

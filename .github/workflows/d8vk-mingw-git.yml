@@ -9,7 +9,6 @@ on:
      - master
     paths:
      - local/d8vk-mingw-git/.SRCINFO
-     - .github/workflows/d8vk-mingw-git.yml
 
 jobs:
   repository:

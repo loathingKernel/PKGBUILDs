@@ -7,7 +7,6 @@ on:
      - master
     paths:
      - public/dxvk-mingw/.SRCINFO
-     - .github/workflows/dxvk-mingw.yml
 
 jobs:
   repository:

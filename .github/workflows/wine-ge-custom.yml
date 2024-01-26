@@ -7,7 +7,6 @@ on:
      - master
     paths:
      - public/wine-ge-custom/.SRCINFO
-     - .github/workflows/wine-ge-custom.yml
 
 jobs:
   repository:

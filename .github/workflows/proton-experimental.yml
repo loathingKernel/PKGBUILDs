@@ -7,7 +7,6 @@ on:
      - master
     paths:
      - public/proton-experimental/.SRCINFO
-     - .github/workflows/proton-experimental.yml
 
 jobs:
   repository:

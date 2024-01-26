@@ -9,7 +9,6 @@ on:
      - master
     paths:
      - public/vkd3d-proton-mingw-git/.SRCINFO
-     - .github/workflows/vkd3d-proton-mingw-git.yml
 
 jobs:
   repository:

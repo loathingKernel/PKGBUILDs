@@ -7,7 +7,6 @@ on:
      - master
     paths:
      - multilib/wine-staging/.SRCINFO
-     - .github/workflows/wine-staging.yml
 
 jobs:
   repository:
