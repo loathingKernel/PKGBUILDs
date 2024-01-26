@@ -5,7 +5,7 @@
 pkgbase=winesync
 pkgname=(winesync-dkms winesync-header winesync-common)
 pkgver=5.16
-pkgrel=5
+pkgrel=6
 pkgdesc="Wine synchronization primitive driver"
 arch=(x86_64)
 url='https://repo.or.cz/linux/zf.git/shortlog/refs/heads/winesync4'
@@ -51,6 +51,9 @@ package_winesync-header() {
 
 package_winesync-common() {
     pkgdesc+=" - common files"
+    provides=(winesync-udev-rule)
+    conflicts=(winesync-udev-rule)
+    replaces=(winesync-udev-rule)
 
     install -Dm644 "$srcdir/winesync.conf" "$pkgdir/usr/lib/modules-load.d/winesync.conf"
     install -Dm644 "$srcdir/99-winesync.rules" "$pkgdir/usr/lib/udev/rules.d/99-winesync.rules"

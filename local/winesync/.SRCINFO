@@ -1,7 +1,7 @@
 pkgbase = winesync
 	pkgdesc = Wine synchronization primitive driver
 	pkgver = 5.16
-	pkgrel = 5
+	pkgrel = 6
 	url = https://repo.or.cz/linux/zf.git/shortlog/refs/heads/winesync4
 	arch = x86_64
 	license = GPL2
@@ -31,3 +31,6 @@ pkgname = winesync-header
 
 pkgname = winesync-common
 	pkgdesc = Wine synchronization primitive driver - common files
+	provides = winesync-udev-rule
+	conflicts = winesync-udev-rule
+	replaces = winesync-udev-rule
