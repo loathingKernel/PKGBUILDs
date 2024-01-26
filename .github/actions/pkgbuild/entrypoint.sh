@@ -1,8 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "pkdir: ${INPUT_PKGDIR:-.}"
-echo "aurdeops: ${INPUT_AURDEPS:-}"
+echo "pkgdir:   ${INPUT_PKGDIR:-.}"
+echo "aurdeps:  ${INPUT_AURDEPS:-}"
 echo "multilib: ${INPUT_MULTILIB:-false}"
 echo "pacman_conf:  ${INPUT_PACMANCONF:-}"
 echo "makepkg_conf: ${INPUT_MAKEPKGCONF:-}"
