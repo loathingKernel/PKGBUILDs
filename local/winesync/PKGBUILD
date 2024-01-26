@@ -5,7 +5,7 @@
 pkgbase=winesync
 pkgname=(winesync-dkms winesync-header winesync-common)
 pkgver=5.16
-pkgrel=4
+pkgrel=5
 pkgdesc="Wine synchronization primitive driver"
 arch=(x86_64)
 url='https://repo.or.cz/linux/zf.git/shortlog/refs/heads/winesync4'
@@ -30,8 +30,10 @@ prepare() {
 
 package_winesync-dkms() {
     pkgdesc+=" - out-of-tree module"
-    depends=(dkms)
-    optdepends=(winesync-header winesync-common)
+    depends=(dkms winesync-common)
+    optdepends=(
+        'winesync-header: Allow wine to be compiled with winesync support'
+    )
     provides=(WINESYNC-MODULE)
     conflicts=(winesync)
 

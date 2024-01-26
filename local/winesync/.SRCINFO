@@ -1,7 +1,7 @@
 pkgbase = winesync
 	pkgdesc = Wine synchronization primitive driver
 	pkgver = 5.16
-	pkgrel = 4
+	pkgrel = 5
 	url = https://repo.or.cz/linux/zf.git/shortlog/refs/heads/winesync4
 	arch = x86_64
 	license = GPL2
@@ -21,8 +21,8 @@ pkgbase = winesync
 pkgname = winesync-dkms
 	pkgdesc = Wine synchronization primitive driver - out-of-tree module
 	depends = dkms
-	optdepends = winesync-header
-	optdepends = winesync-common
+	depends = winesync-common
+	optdepends = winesync-header: Allow wine to be compiled with winesync support
 	provides = WINESYNC-MODULE
 	conflicts = winesync
 
