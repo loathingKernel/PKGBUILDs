@@ -2,7 +2,7 @@
 
 pkgname=dxvk-mingw-git
 pkgver=2.3.r40.gd4c5fc74
-pkgrel=4
+pkgrel=5
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
@@ -45,8 +45,8 @@ prepare() {
     local march="${flags["-march"]:-nocona}"
     local mtune="${flags["-mtune"]:-core-avx2}"
 
-    export CFLAGS="-O2 -march=$march -mtune=$mtune -pipe"
-    export CXXFLAGS="-O2 -march=$march -mtune=$mtune -pipe"
+    export CFLAGS="-O3 -march=$march -mtune=$mtune -pipe -ftree-vectorize"
+    export CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe -ftree-vectorize"
     export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # These flags are taken from Proton
@@ -66,8 +66,8 @@ prepare() {
     # Relevant Wine issues
     # https://bugs.winehq.org/show_bug.cgi?id=45289
     # https://bugs.winehq.org/show_bug.cgi?id=43516
-    CFLAGS+=" -mno-avx2 -mno-avx"
-    CXXFLAGS+=" -mno-avx2 -mno-avx"
+    CFLAGS+=" -mno-avx2"
+    CXXFLAGS+=" -mno-avx2"
 
     local cross_ldflags="$LDFLAGS"
 
