@@ -1,7 +1,7 @@
 pkgbase = d8vk-mingw-git
 	pkgdesc = Vulkan-based implementation of D3D8 and D3D9 based on DXVK for Linux / Wine, MingW version
 	pkgver = 1.7.1.r2367.g1a039a47
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/AlpyneDreams/d8vk
 	arch = x86_64
 	license = zlib/libpng
