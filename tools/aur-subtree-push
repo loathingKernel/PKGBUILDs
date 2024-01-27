@@ -19,6 +19,5 @@ fi
 for arg in "$@"; do
     repo="$(basename "$arg")"
     git subtree push --prefix="$1" ssh://aur@aur.archlinux.org/"$repo".git master
+    git gc --prune=now
 done
-
-git gc --prune=now
