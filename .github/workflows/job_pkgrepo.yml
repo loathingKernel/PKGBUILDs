@@ -23,6 +23,11 @@ on:
         type: string
         default: "build"
 
+
+concurrency:
+  group: ${{ inputs.pkgdir }}-${{ inputs.repository }}
+  cancel-in-progress: true
+
 jobs:
   pkgbuild:
     if: ${{ inputs.action == 'build' }}
