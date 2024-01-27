@@ -1,32 +1,27 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom
-_srctag=GE-Proton7-41
-_commit=
+_srctag=GE-Proton8-27
+_commit=989b502c4aed6efd8b210b785c163e9c6c6e233e
 pkgver=${_srctag//-/.}
 _geckover=2.47.3
-_monover=7.4.0
-pkgrel=1
+_monover=8.1.0
+pkgrel=4
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build"
 url="https://github.com/GloriousEggroll/proton-ge-custom"
 arch=(x86_64 x86_64_v3)
-options=(!staticlibs !lto emptydirs)
+options=(!staticlibs !lto !debug emptydirs)
 license=('custom')
 
 depends=(
   attr             lib32-attr
   fontconfig       lib32-fontconfig
-  lcms2            lib32-lcms2
-  libxml2          lib32-libxml2
   libxcursor       lib32-libxcursor
   libxrandr        lib32-libxrandr
-  libxdamage       lib32-libxdamage
   libxi            lib32-libxi
   gettext          lib32-gettext
   freetype2        lib32-freetype2
-  glu              lib32-glu
-  libsm            lib32-libsm
   gcc-libs         lib32-gcc-libs
   libpcap          lib32-libpcap
   lzo              lib32-lzo
@@ -35,104 +30,71 @@ depends=(
   'sdl2>=2.0.16'   'lib32-sdl2>=2.0.16'
   libsoup          lib32-libsoup
   libgudev         lib32-libgudev
+#  blas             lib32-blas
+#  lapack           lib32-lapack
+  speex            lib32-speex
   desktop-file-utils
   python
   steam-native-runtime
   cabextract
 )
 
-makedepends=(autoconf bison perl fontforge flex mingw-w64-gcc
-  git wget rsync mingw-w64-tools lld nasm meson cmake afdko python-pefile
+makedepends=(autoconf bison perl flex mingw-w64-gcc
+  git wget rsync mingw-w64-tools lld nasm
+  meson cmake fontforge afdko python-pefile
   glslang vulkan-headers
   clang
   giflib                lib32-giflib
-  libpng                lib32-libpng
   gnutls                lib32-gnutls
   libxinerama           lib32-libxinerama
   libxcomposite         lib32-libxcomposite
-  libxmu                lib32-libxmu
   libxxf86vm            lib32-libxxf86vm
-  libldap               lib32-libldap
-  mpg123                lib32-mpg123
-  openal                lib32-openal
   v4l-utils             lib32-v4l-utils
   alsa-lib              lib32-alsa-lib
   libxcomposite         lib32-libxcomposite
   mesa                  lib32-mesa
   mesa-libgl            lib32-mesa-libgl
   opencl-icd-loader     lib32-opencl-icd-loader
-  libxslt               lib32-libxslt
   libpulse              lib32-libpulse
-  libva                 lib32-libva
   gtk3                  lib32-gtk3
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   vulkan-icd-loader     lib32-vulkan-icd-loader
   'sdl2>=2.0.16'        'lib32-sdl2>=2.0.16'
   rust                  lib32-rust-libs
   libgphoto2
-  gsm                   lib32-gsm
   opencl-headers
+  wayland-protocols
 )
 
 optdepends=(
   giflib                lib32-giflib
-  libpng                lib32-libpng
-  libldap               lib32-libldap
   gnutls                lib32-gnutls
-  mpg123                lib32-mpg123
-  openal                lib32-openal
   v4l-utils             lib32-v4l-utils
   libpulse              lib32-libpulse
   alsa-plugins          lib32-alsa-plugins
   alsa-lib              lib32-alsa-lib
-  libjpeg-turbo         lib32-libjpeg-turbo
   libxcomposite         lib32-libxcomposite
   libxinerama           lib32-libxinerama
   opencl-icd-loader     lib32-opencl-icd-loader
-  libxslt               lib32-libxslt
-  libva                 lib32-libva
   gtk3                  lib32-gtk3
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   vulkan-icd-loader     lib32-vulkan-icd-loader
   libgphoto2
-  gsm                   lib32-gsm
-  dosbox
 )
 
 makedepends=(${makedepends[@]} ${depends[@]})
 provides=('proton')
 install=${pkgname}.install
 source=(
-    proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#tag=${_srctag}
-    wine-valve::git+https://github.com/ValveSoftware/wine.git
-    dxvk::git+https://github.com/doitsujin/dxvk.git
-    openvr::git+https://github.com/ValveSoftware/openvr.git
-    liberation-fonts::git+https://github.com/liberationfonts/liberation-fonts.git
-    gstreamer::git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git
-    gst-plugins-base::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-base.git
-    gst-plugins-good::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-good.git
-    gst-orc::git+https://gitlab.freedesktop.org/gstreamer/orc.git
-    vkd3d-proton::git+https://github.com/HansKristian-Work/vkd3d-proton.git
-    OpenXR-SDK::git+https://github.com/KhronosGroup/OpenXR-SDK.git
-    dxvk-nvapi::git+https://github.com/jp7677/dxvk-nvapi.git
-    vkd3d-valve::git+https://github.com/ValveSoftware/vkd3d.git
-    Vulkan-Headers::git+https://github.com/KhronosGroup/Vulkan-Headers.git
-    SPIRV-Headers::git+https://github.com/KhronosGroup/SPIRV-Headers.git
-    Vulkan-Loader::git+https://github.com/KhronosGroup/Vulkan-Loader.git
-    glslang::git+https://github.com/KhronosGroup/glslang.git
-    gst-libav::git+https://gitlab.freedesktop.org/gstreamer/gst-libav.git
-    ffmpeg::git+https://git.ffmpeg.org/ffmpeg.git
-    dav1d::git+https://code.videolan.org/videolan/dav1d.git
-    gst-plugins-rs::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs.git
-    dxil-spirv::git+https://github.com/HansKristian-Work/dxil-spirv.git
-    graphene::git+https://github.com/ebassi/graphene.git
-    wine-staging::git+https://github.com/wine-staging/wine-staging.git
-    protonfixes-gloriouseggroll::git+https://github.com/gloriouseggroll/protonfixes.git
-    gst-plugins-bad::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git
-    gst-plugins-ugly::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly.git
+    proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#commit=${_commit}
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
-    0001-AUR-pkgbuild-changes.patch
+    0001-AUR-Pkgbuild-changes.patch
+    0002-AUR-Do-not-update-cargo-crates.patch
+    0003-AUR-Remove-kaldi-openfst-vosk-api-modules-because-of.patch
+    0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
+    0005-AUR-Strip-binaries-early.patch
+    0006-AUR-Fix-hwnd-redefinition.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -176,79 +138,20 @@ prepare() {
     rm -rf wrappers && mkdir wrappers
     _make_wrappers
 
-    [ ! -d gecko ] && mkdir gecko
-    mv wine-gecko-${_geckover}-x86{,_64}.tar.xz gecko/
-
-    [ ! -d mono ] && mkdir mono
-    mv wine-mono-${_monover}-x86.tar.xz mono/
-
     [ ! -d build ] && mkdir build
+
     cd proton-ge-custom
 
-    _submodules=(
-        wine-valve::wine
-        dxvk
-        openvr
-        liberation-fonts::fonts/liberation-fonts
-        gstreamer
-        gst-plugins-base
-        gst-plugins-good
-        gst-orc
-        vkd3d-proton
-        OpenXR-SDK
-        dxvk-nvapi
-        vkd3d-valve::vkd3d
-        Vulkan-Headers
-        SPIRV-Headers
-        Vulkan-Loader
-        glslang
-        gst-libav
-        ffmpeg::FFmpeg
-        dav1d
-        gst-plugins-rs
-        graphene
-        wine-staging
-        protonfixes-gloriouseggroll::protonfixes
-        gst-plugins-bad
-        gst-plugins-ugly
-    )
+    [ ! -d contrib ] && mkdir -p contrib
+    mv "$srcdir"/wine-gecko-${_geckover}-x86{,_64}.tar.xz contrib/
+    mv "$srcdir"/wine-mono-${_monover}-x86.tar.xz contrib/
 
-    for submodule in "${_submodules[@]}"; do
-        git submodule init "${submodule#*::}"
-        git submodule set-url "${submodule#*::}" "$srcdir"/"${submodule%::*}"
-        git -c protocol.file.allow=always submodule update "${submodule#*::}"
-    done
+    # Explicitly set origin URL for submodules using relative paths
+    git remote set-url origin https://github.com/gloriouseggroll/proton-ge-custom.git
+    git submodule update --init --filter=tree:0 --recursive
 
-    pushd dxvk
-        git submodule init include/{vulkan,spirv}
-        git submodule set-url include/vulkan "$srcdir/Vulkan-Headers"
-        git submodule set-url include/spirv "$srcdir/SPIRV-Headers"
-        git -c protocol.file.allow=always submodule update include/{vulkan,spirv}
-    popd
-
-    pushd vkd3d-proton
-        for submodule in subprojects/{dxil-spirv,Vulkan-Headers,SPIRV-Headers}; do
-            git submodule init "${submodule}"
-            git submodule set-url "${submodule}" "$srcdir"/"${submodule#*/}"
-            git -c protocol.file.allow=always submodule update "${submodule}"
-        done
-        pushd subprojects/dxil-spirv
-            git submodule init third_party/spirv-headers
-            git submodule set-url third_party/spirv-headers "$srcdir"/SPIRV-Headers
-            git -c protocol.file.allow=always submodule update third_party/spirv-headers
-        popd
-    popd
-
-    pushd dxvk-nvapi
-        git submodule init external/Vulkan-Headers
-        git submodule set-url external/Vulkan-Headers "$srcdir"/Vulkan-Headers
-        git -c protocol.file.allow=always submodule update external/Vulkan-Headers
-        # GCC 12 build failure
-        git cherry-pick -n 33bf3c7a6a3dc9e330cd338bf1877b5481c655e3
-    popd
-
-    for submodule in gst-plugins-rs media-converter; do
-    pushd $submodule
+    for rustlib in gst-plugins-rs media-converter; do
+    pushd $rustlib
         export RUSTUP_TOOLCHAIN=stable
         export CARGO_HOME="${SRCDEST}"/proton-cargo
         cargo update
@@ -259,22 +162,12 @@ prepare() {
 
     ./patches/protonprep-valve-staging.sh
 
-    pushd wine
-        # From Arch Wine
-        sed 's|OpenCL/opencl.h|CL/opencl.h|g' -i configure*
-        # Fix openldap 2.5+ detection
-        sed 's/-lldap_r/-lldap/' -i configure
-    popd
-
-    patch -p1 -i "$srcdir"/0001-AUR-pkgbuild-changes.patch
-
-    # Remove repos from srcdir to save space
-    for submodule in "${_submodules[@]}"; do
-        rm -rf "$srcdir"/"${submodule%::*}"
-    done
-    rm -rf "$srcdir"/dxil-spirv
-    rm -rf "$srcdir"/Vulkan-Headers
-    rm -rf "$srcdir"/SPIRV-Headers
+    patch -p1 -i "$srcdir"/0001-AUR-Pkgbuild-changes.patch
+    #patch -p1 -i "$srcdir"/0002-AUR-Do-not-update-cargo-crates.patch
+    patch -p1 -i "$srcdir"/0003-AUR-Remove-kaldi-openfst-vosk-api-modules-because-of.patch
+    patch -p1 -i "$srcdir"/0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
+    patch -p1 -i "$srcdir"/0005-AUR-Strip-binaries-early.patch
+    patch -p1 -i "$srcdir"/0006-AUR-Fix-hwnd-redefinition.patch
 }
 
 build() {
@@ -285,22 +178,22 @@ build() {
     ../proton-ge-custom/configure.sh \
         --container-engine="none" \
         --proton-sdk-image="" \
-        --steam-runtime=native \
-        --no-proton-sdk \
         --build-name="${pkgname}"
 
-    # By default export FLAGS used by proton and ignore makepkg
-    # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
-    # If you want the "best" possible optimizations for your system you can use
-    # `-march=native` and remove the `-mtune=core-avx2` option.
-    export CFLAGS="-O2 -march=nocona -mtune=core-avx2 -pipe"
-    export CXXFLAGS="-O2 -march=nocona -mtune=core-avx2 -pipe"
-    export RUSTFLAGS="-C opt-level=2 -C target-cpu=nocona"
-    export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
+    local -a split=($CFLAGS)
+    local -A flags
+    for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
+    local march="${flags["-march"]:-nocona}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
+
+    CFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
+    CXXFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
+    RUSTFLAGS="-C opt-level=2 -C target-cpu=$march"
+    LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
     # game can cause an Unhandled exception. The cause seems to be the
-    # combination of AVX instructions and tree vectorization (implied by O3),
+    # combination of AVX instructions and tree vectorization (implied by O2),
     # all tested archictures from sandybridge to haswell are affected.
     # Since Wine 5.16 AVX is supported. Testing showed 32bit applications
     # crashing with AVX regardless, but 64bit applications worked just fine.
@@ -308,9 +201,11 @@ build() {
     # https://bugs.winehq.org/show_bug.cgi?id=45289
     # https://bugs.winehq.org/show_bug.cgi?id=43516
     # AVX is "hard" disabled for 32bit in any case.
-    # AVX2 for 64bit is disabled below.
-    export CFLAGS+=" -mno-avx2"
-    export CXXFLAGS+=" -mno-avx2"
+    # AVX2 for both 32bit and 64bit is disabled below.
+    CFLAGS+=" -mno-avx2 -mno-avx"
+    CXXFLAGS+=" -mno-avx2 -mno-avx"
+
+    export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
 
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_HOME="${SRCDEST}"/proton-cargo
@@ -324,9 +219,22 @@ build() {
 package() {
     cd build
 
+    # Delete the intermediate build directories to free space (mostly for my github actions)
+    rm -rf dst-* obj-* src-* pfx-*
+
     local _compatdir="$pkgdir/usr/share/steam/compatibilitytools.d"
-    mkdir -p "$_compatdir"
-    cp -rf --no-dereference --preserve=mode,links dist "$_compatdir/${pkgname}"
+    mkdir -p "$_compatdir/${pkgname}"
+    rsync --delete -arx dist/* "$_compatdir/${pkgname}"
+
+    # For some unknown to me reason, 32bit vkd3d (not vkd3d-proton) always links
+    # to libgcc_s_dw2-1.dll no matter what linker options I tried.
+    # Copy the required dlls into the package, they will be copied later into the prefix
+    # by the patched proton script. Bundling the helps to avoid making mingw-w64-gcc package
+    # a runtime dependency.
+    cp /usr/i686-w64-mingw32/bin/{libgcc_s_dw2-1.dll,libwinpthread-1.dll} \
+        "$_compatdir/${pkgname}"/files/lib/vkd3d/
+    cp /usr/x86_64-w64-mingw32/bin/{libgcc_s_seh-1.dll,libwinpthread-1.dll} \
+        "$_compatdir/${pkgname}"/files/lib64/vkd3d/
 
     mkdir -p "$pkgdir/usr/share/licenses/${pkgname}"
     mv "$_compatdir/${pkgname}"/LICENSE{,.OFL} \
@@ -356,33 +264,13 @@ package() {
 }
 
 sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
-            '9249ece664bcf2fecb1308ea1d2542c72923df9fe3df891986f137b2266a9ba3'
-            'b2cc798fe8a7b8a482db058930d526d30237839eada28cc2262a86270731d2f7')
+            '4e3e8a40729e4c9e3e9e651cebe4f1aed8f9a4d22e991e6cd24608687f0eedd4'
+            '55f8264673b1260a8bd82e154080a3e3ca6b955201bcd2176162e22c15c35527'
+            'fed2fe22d893ccb34fecf7273de8ac24f40c7504f9ff0ab59d4a12055f8ebbe1'
+            'e83188bc2e1939db1ff798bbf646a010ec1eb59fbd070e4c7046358743252265'
+            'f6bfaed85713e330299e06baf2f928caf526503cc9c3eb1139fd037e0c08247a'
+            'ea2113d76b3a2fd1ded63fba46623419606506331be4edda65f59e8197ec3aef'
+            '0e80941a381f91a7d5813b8885a06c30f66a86cf133d89c46f7e05f5f624a804')
+
