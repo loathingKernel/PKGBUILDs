@@ -5,15 +5,15 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=8.21
-pkgrel=2
+pkgver=9.1
+pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
-_tkg_commit=21ea5483910659b6d0df5013a0f7ddeb655d9304
+_tkg_commit=edf80e3ecdcf69555f2359433003dd635b3b5798
 
-source=(https://dl.winehq.org/wine/source/8.x/wine-$_winever.tar.xz{,.sign}
+source=(https://dl.winehq.org/wine/source/9.x/wine-$_winever.tar.xz{,.sign}
         "https://github.com/wine-staging/wine-staging/archive/v$_pkgbasever/wine-staging-v$_pkgbasever.tar.gz"
         30-win32-aliases.conf
         wine-binfmt.conf)
@@ -23,9 +23,9 @@ source+=(
         wine-isolate_home.patch
         wine-ntsync.patch
 )
-sha512sums=('4d04d40141d2ea5e548b76aed870ac28d8a03241ffd4e761979c795310baa19136e54a8e518c6ea9bf563c3b23d3c4eb1baefc9906d7eeca469e9942ff99dc40'
+sha512sums=('12ec508b1e457a94391ab3072ed602ff07da2e5beb4bbe4f76e42d71e87f7fa11f6531f1f1c71e96e884b10a99240a9eaf999867479b8eeadf3576df46e0a73a'
             'SKIP'
-            'abba6084f2aefa8507c2a79c688b717f8137375168e5457ee40a0c96bfce31e9dc44370ecb5a8e8a397e90ce2eb8543fd07b447bf48c4b2d4c68aac9b3674214'
+            '070e09acf8bca60a4f2512874f48f653cc03a7fcfcfef34b4f292731d49e0670a5cf69557c268fc5dc11f0a7a8e0e7347d9665b98e6bb47e0521e3fe164ff118'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 sha512sums+=(
@@ -133,11 +133,12 @@ prepare() {
   # apply wine-staging patchset
   cd $pkgname
   #patch -p1 -i "$srcdir"/wine-ntsync.patch
-  ../wine-staging-$_pkgbasever/staging/patchinstall.py --all
+  ../wine-staging-$_pkgbasever/staging/patchinstall.py --all \
+    -W eventfd_synchronization
 
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
-  patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-staging.patch
-  patch -p1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
+  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-staging.patch
+  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
   patch -p1 -i "$_tkg_path"/proton/LAA/LAA-unix-staging.patch
   patch -p1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
   patch -p1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
@@ -184,6 +185,7 @@ build() {
     --libdir=/usr/lib \
     --with-x \
     --with-gstreamer \
+    --with-wayland \
     --with-mingw \
     --with-alsa \
     --without-oss \
@@ -207,6 +209,7 @@ build() {
     --prefix=/usr \
     --with-x \
     --with-gstreamer \
+    --with-wayland \
     --with-mingw \
     --with-alsa \
     --without-oss \

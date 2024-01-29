@@ -1,7 +1,7 @@
 pkgbase = wine-staging
 	pkgdesc = A compatibility layer for running Windows programs - Staging branch
-	pkgver = 8.21
-	pkgrel = 2
+	pkgver = 9.1
+	pkgrel = 1
 	url = https://www.wine-staging.com
 	install = wine.install
 	arch = x86_64
@@ -117,24 +117,24 @@ pkgbase = wine-staging
 	optdepends = lib32-libxkbcommon
 	optdepends = wayland
 	optdepends = ntsync-dkms
-	provides = wine=8.21
+	provides = wine=9.1
 	conflicts = wine
 	options = !staticlibs
 	options = !lto
-	source = https://dl.winehq.org/wine/source/8.x/wine-8.21.tar.xz
-	source = https://dl.winehq.org/wine/source/8.x/wine-8.21.tar.xz.sign
-	source = https://github.com/wine-staging/wine-staging/archive/v8.21/wine-staging-v8.21.tar.gz
+	source = https://dl.winehq.org/wine/source/9.x/wine-9.1.tar.xz
+	source = https://dl.winehq.org/wine/source/9.x/wine-9.1.tar.xz.sign
+	source = https://github.com/wine-staging/wine-staging/archive/v9.1/wine-staging-v9.1.tar.gz
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
-	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=21ea5483910659b6d0df5013a0f7ddeb655d9304
+	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=edf80e3ecdcf69555f2359433003dd635b3b5798
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
 	source = wine-ntsync.patch
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = 4d04d40141d2ea5e548b76aed870ac28d8a03241ffd4e761979c795310baa19136e54a8e518c6ea9bf563c3b23d3c4eb1baefc9906d7eeca469e9942ff99dc40
+	sha512sums = 12ec508b1e457a94391ab3072ed602ff07da2e5beb4bbe4f76e42d71e87f7fa11f6531f1f1c71e96e884b10a99240a9eaf999867479b8eeadf3576df46e0a73a
 	sha512sums = SKIP
-	sha512sums = abba6084f2aefa8507c2a79c688b717f8137375168e5457ee40a0c96bfce31e9dc44370ecb5a8e8a397e90ce2eb8543fd07b447bf48c4b2d4c68aac9b3674214
+	sha512sums = 070e09acf8bca60a4f2512874f48f653cc03a7fcfcfef34b4f292731d49e0670a5cf69557c268fc5dc11f0a7a8e0e7347d9665b98e6bb47e0521e3fe164ff118
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
 	sha512sums = SKIP
