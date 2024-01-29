@@ -6,7 +6,7 @@
 
 pkgname=wine-staging
 pkgver=9.1
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -132,7 +132,7 @@ prepare() {
 
   # apply wine-staging patchset
   cd $pkgname
-  #patch -p1 -i "$srcdir"/wine-ntsync.patch
+  patch -p1 -i "$srcdir"/wine-ntsync.patch
   ../wine-staging-$_pkgbasever/staging/patchinstall.py --all \
     -W eventfd_synchronization
 
