@@ -6,7 +6,7 @@
 
 pkgname=wine-staging
 pkgver=9.1
-pkgrel=3
+pkgrel=4
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -22,6 +22,7 @@ source+=(
         wine-wmclass.patch
         wine-isolate_home.patch
         wine-ntsync.patch
+        4947.patch 
 )
 sha512sums=('12ec508b1e457a94391ab3072ed602ff07da2e5beb4bbe4f76e42d71e87f7fa11f6531f1f1c71e96e884b10a99240a9eaf999867479b8eeadf3576df46e0a73a'
             'SKIP'
@@ -33,6 +34,7 @@ sha512sums+=(
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             '3d0f7e23812dad104baa2f4dec9f6b268cb273dadd4842033ca717c36ca88a7801db734580664f1ab49c58b87b29bdc63468bcba57f20eca5ec617f5a3cd093b'
+            'SKIP'
 )
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -133,6 +135,7 @@ prepare() {
   # apply wine-staging patchset
   cd $pkgname
   patch -p1 -i "$srcdir"/wine-ntsync.patch
+  patch -p1 -i "$srcdir"/4947.patch
   ../wine-staging-$_pkgbasever/staging/patchinstall.py --all \
     -W eventfd_synchronization \
     -W ntdll-Syscall_Emulation \
