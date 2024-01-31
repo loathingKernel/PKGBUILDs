@@ -57,6 +57,10 @@ depends=(
   libpcap          #lib32-libpcap
   desktop-file-utils
 )
+depends+=(
+  libxkbcommon     #lib32-libxkbcommon
+  wayland          #lib32-wayland
+)
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
   git
@@ -86,8 +90,6 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   opencl-headers
 )
 makedepends+=(
-  libxkbcommon          #lib32-libxkbcommon
-  wayland
   ntsync-header
 )
 
@@ -114,9 +116,6 @@ optdepends=(
   samba           dosbox
 )
 optdepends+=(
-  # with-wayland
-  libxkbcommon          #lib32-libxkbcommon
-  wayland
   ntsync-dkms
 )
 
@@ -190,8 +189,8 @@ build() {
     --prefix=/usr \
     --libdir=/usr/lib \
     --with-x \
-    --with-gstreamer \
     --with-wayland \
+    --with-gstreamer \
     --with-mingw \
     --with-alsa \
     --without-oss \
