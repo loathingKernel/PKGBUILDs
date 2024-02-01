@@ -14,9 +14,7 @@ jobs:
   repository:
     strategy:
       matrix:
-        include:
-          - repository: public
-          - repository: personal
+        repository: [public, personal]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: local/duckstation-git

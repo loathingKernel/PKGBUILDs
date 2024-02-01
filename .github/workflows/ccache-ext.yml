@@ -12,8 +12,7 @@ jobs:
   repository:
     strategy:
       matrix:
-        include:
-          - repository: public
+        repository: [public]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: aur/ccache-ext

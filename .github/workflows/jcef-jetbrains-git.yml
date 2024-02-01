@@ -9,11 +9,11 @@ on:
      - aur/jcef-jetbrains-git/.SRCINFO
 
 jobs:
-  personal:
-    uses: ./.github/workflows/job_pkgbuild.yml
+  repository:
+    strategy:
+      matrix:
+        repository: [public, personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: aur/jcef-jetbrains-git
-      pacman_conf: .github/conf/personal_pacman.conf
-      makepkg_conf: .github/conf/personal_makepkg.conf
-      makepkg_args: -p PKGBUILD --skippgpcheck
-      release_tag: loathk-personal
+      repository: ${{ matrix.repository }}
