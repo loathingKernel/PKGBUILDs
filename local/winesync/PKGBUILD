@@ -58,3 +58,4 @@ package_winesync-common() {
     install -Dm644 "$srcdir/winesync.conf" "$pkgdir/usr/lib/modules-load.d/winesync.conf"
     install -Dm644 "$srcdir/99-winesync.rules" "$pkgdir/usr/lib/udev/rules.d/99-winesync.rules"
 }
+
