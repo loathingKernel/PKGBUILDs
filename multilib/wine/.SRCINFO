@@ -1,7 +1,7 @@
 pkgbase = wine
 	pkgdesc = A compatibility layer for running Windows programs
 	pkgver = 9.1
-	pkgrel = 2
+	pkgrel = 3
 	url = https://www.winehq.org
 	install = wine.install
 	arch = x86_64
@@ -156,7 +156,7 @@ pkgbase = wine
 	sha512sums = SKIP
 	sha512sums = 30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569
 	sha512sums = 3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282
-	sha512sums = 3d0f7e23812dad104baa2f4dec9f6b268cb273dadd4842033ca717c36ca88a7801db734580664f1ab49c58b87b29bdc63468bcba57f20eca5ec617f5a3cd093b
+	sha512sums = 7ba51d34b1e64a3030461489f66fe7de832b58223e805d28d6293c27771a8d19327e471de0542deb5e62b003b322c83589e6b15386b96c86a26df4cf856b36b3
 	sha512sums = SKIP
 
 pkgname = wine
