@@ -34,7 +34,7 @@ makedepends=('java-environment>=20' 'java-environment<=21' 'cpio' 'unzip' 'zip' 
              'libxrender' 'libxtst' 'libxt' 'libxext' 'libxrandr' 'alsa-lib' 'pandoc'
              'graphviz' 'freetype2' 'libjpeg-turbo' 'giflib' 'libpng' 'lcms2'
              'libnet' 'bash' 'harfbuzz' 'gcc-libs' 'glibc' 'jcef-jetbrains' 'git')
-options=(!lto)
+options=(!lto !ccache)
 source=(git+https://github.com/JetBrains/JetBrainsRuntime.git#tag=$_hg_tag
         freedesktop-java.desktop
         freedesktop-jconsole.desktop
