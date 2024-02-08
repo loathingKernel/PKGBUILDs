@@ -28,6 +28,7 @@ pkgbase = duckstation-git
 	depends = libxrandr
 	depends = libglvnd
 	depends = libx11
+	depends = libwebp
 	depends = dbus
 	depends = curl
 	depends = hicolor-icon-theme

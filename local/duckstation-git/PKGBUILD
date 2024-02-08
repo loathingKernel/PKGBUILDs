@@ -16,6 +16,7 @@ depends=(
     libxrandr
     libglvnd
     libx11
+    libwebp
     dbus
     curl
     hicolor-icon-theme)
