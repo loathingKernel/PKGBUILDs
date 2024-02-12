@@ -9,10 +9,11 @@ on:
      - aur/lact/.SRCINFO
 
 jobs:
-  public:
-    uses: ./.github/workflows/workflow.yml
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: aur/lact
-      pacman_conf: .github/conf/public_pacman.conf
-      makepkg_conf: .github/conf/public_makepkg.conf
-      release_tag: loathk-public
+      repository: ${{ matrix.repository }}

@@ -1,13 +1,8 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
-# By default use the same optimizations used by Valve and ignore makepkg,
-# to avoid build failures due to options incompatible with MingW cross-compilation.
-# If you set this switch to 'true', you are on your own.
-: ${_system_cflags:=false}
-
 pkgname=proton-ge-custom
-_srctag=GE-Proton8-25
-_commit=f73e9b592ba6200bcd40d2ffed23cbc426908ed5
+_srctag=GE-Proton8-31
+_commit=6fb8c815f261a2773817e2a470918ae39e86691f
 pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=8.1.0
@@ -32,11 +27,11 @@ depends=(
   lzo              lib32-lzo
   libxkbcommon     lib32-libxkbcommon
   libvpx           lib32-libvpx
-  'sdl2>=2.0.16'   'lib32-sdl2>=2.0.16'
+  sdl2             lib32-sdl2
   libsoup          lib32-libsoup
   libgudev         lib32-libgudev
-  blas             lib32-blas
-  lapack           lib32-lapack
+#  blas             lib32-blas
+#  lapack           lib32-lapack
   speex            lib32-speex
   desktop-file-utils
   python
@@ -64,7 +59,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   gtk3                  lib32-gtk3
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   vulkan-icd-loader     lib32-vulkan-icd-loader
-  'sdl2>=2.0.16'        'lib32-sdl2>=2.0.16'
+  sdl2                  lib32-sdl2
   rust                  lib32-rust-libs
   libgphoto2
   opencl-headers
@@ -87,7 +82,6 @@ optdepends=(
   libgphoto2
 )
 
-makedepends=(${makedepends[@]} ${depends[@]})
 provides=('proton')
 install=${pkgname}.install
 source=(
@@ -100,9 +94,6 @@ source=(
     0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     0005-AUR-Strip-binaries-early.patch
     0006-AUR-Fix-hwnd-redefinition.patch
-)
-# Optional patches
-source+=(
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -188,14 +179,16 @@ build() {
         --proton-sdk-image="" \
         --build-name="${pkgname}"
 
-    if [[ x"${_system_cflags::1}" != "xt" ]] ; then
-      unset CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
-    fi
-    : ${CFLAGS:="-O2 -march=nocona -mtune=core-avx2 -pipe"}
-    : ${CXXFLAGS:="-O2 -march=nocona -mtune=core-avx2 -pipe"}
-    : ${RUSTFLAGS:="-C opt-level=2 -C target-cpu=nocona"}
-    : ${LDFLAGS:="-Wl,-O1,--sort-common,--as-needed"}
-    export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
+    local -a split=($CFLAGS)
+    local -A flags
+    for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
+    local march="${flags["-march"]:-nocona}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
+
+    CFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
+    CXXFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
+    RUSTFLAGS="-C opt-level=2 -C target-cpu=$march"
+    LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
     # game can cause an Unhandled exception. The cause seems to be the
@@ -208,8 +201,10 @@ build() {
     # https://bugs.winehq.org/show_bug.cgi?id=43516
     # AVX is "hard" disabled for 32bit in any case.
     # AVX2 for both 32bit and 64bit is disabled below.
-    export CFLAGS+=" -mno-avx2"
-    export CXXFLAGS+=" -mno-avx2"
+    CFLAGS+=" -mno-avx2 -mno-avx"
+    CXXFLAGS+=" -mno-avx2 -mno-avx"
+
+    export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
 
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_HOME="${SRCDEST}"/proton-cargo
@@ -271,13 +266,10 @@ sha256sums=('SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '4e3e8a40729e4c9e3e9e651cebe4f1aed8f9a4d22e991e6cd24608687f0eedd4'
-            '8a0c714373a0bf84fda71e9e0d69b579fb161df4f2534a2b6228f951cea93c07'
-            '63ca48b6b7c4ae616fa0f1a94a25bfcf5d9785f44e5a706f79487970f61fc6a7'
-            '316937bf50a7acef2cad01ebb4e7e49af5e82e3aa6463c864c483d0dab225f17'
-            '6d6fb0c9e99de0679c6d59fa373be090a5e4a9cac0bcaa16d8de041bfe26f53c'
-            'fe89a9eebdaf0192cfda34af53f9ab8a219c1149bde74dd87ee308ec9b07e57a'
-            'bb98931d82c49b2b348d03d7debd303e06843e27713fad57bb5c10779a5493aa')
-# Optional patches
-sha256sums+=(
-)
+            '68ac2429b5389437023ff4d994464db6452c80a81585fe9a719333d7b9aff8ee'
+            '2fe2fe1bd6bf72a7b0269a963880da4e62420c7cae749e5e610d2c822c3b50c7'
+            'c9f34ccae6e1d6b478dfb36b445c8c501c5314fd13b3394aa28e757b4ec9635f'
+            '3796ce184ee92b48378526b139e2109c535cb0494ad92e7b85229c26d7629b3f'
+            'f33527282a555bf409d8c3362167da6e37e3a07b07abea5dd79bbd676539325c'
+            '68bee9b8a25ef3cd177845a15eebdd1aa8f68818a114c34d345431a01376b926')
 

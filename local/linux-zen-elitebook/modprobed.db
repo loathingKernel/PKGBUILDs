@@ -6,12 +6,14 @@ algif_hash
 algif_skcipher
 at24
 atkbd
+blake2b_generic
 bluetooth
 bnep
 bridge
 btbcm
 btintel
 btmtk
+btrfs
 btrtl
 btusb
 ccm
@@ -131,10 +133,13 @@ nft_reject
 nft_reject_inet
 nft_reject_ipv4
 ntfs3
+ntsync
+overlay
 platform_profile
 polyval_clmulni
 polyval_generic
 psmouse
+raid6_pq
 rapl
 rfcomm
 rfkill
@@ -147,6 +152,8 @@ rtsx_pci_sdmmc
 serio
 serio_raw
 sg
+sha1_ssse3
+sha256_ssse3
 sha512_ssse3
 snd
 snd_compress
@@ -187,6 +194,7 @@ tpm_infineon
 tpm_tis
 tpm_tis_core
 ttm
+tun
 uas
 uinput
 usbhid
@@ -213,6 +221,7 @@ wmi_bmof
 x86_pkg_temp_thermal
 xhci_pci
 xhci_pci_renesas
+xor
 x_tables
 xt_conntrack
 xt_MASQUERADE

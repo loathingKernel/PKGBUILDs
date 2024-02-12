@@ -1,0 +1,36 @@
+pkgbase = ntsync
+	pkgdesc = NT synchronization primitive driver
+	pkgver = 6.8.2
+	pkgrel = 1
+	url = https://repo.or.cz/linux/zf.git/shortlog/refs/heads/ntsync5
+	arch = x86_64
+	license = GPL2
+	source = ntsync.c-e4690b31f999c4317df5955c6ee4a77044e6c4a9::https://repo.or.cz/linux/zf.git/blob_plain/e4690b31f999c4317df5955c6ee4a77044e6c4a9:/drivers/misc/ntsync.c
+	source = ntsync.h-e4690b31f999c4317df5955c6ee4a77044e6c4a9::https://repo.or.cz/linux/zf.git/blob_plain/e4690b31f999c4317df5955c6ee4a77044e6c4a9:/include/uapi/linux/ntsync.h
+	source = ntsync.conf
+	source = 99-ntsync.rules
+	source = Makefile
+	source = dkms.conf
+	sha256sums = acc5c24f2a769e83ccdad55d02b82aa2d21b240c2b1ca630314e07b4ede1c4b2
+	sha256sums = 7b47801aa0bec3395a2509efebe5cea005994fca7868130d4b6fec3bb8738f71
+	sha256sums = c19771ae86e7df179f6b2f4a2837d3f0cbbbba7b32baef41a3c27120c760d78f
+	sha256sums = ce5221146a19206ba043211db8f27143a82f9224c0aff24a0b584b7268fcb994
+	sha256sums = 834a7b4c9a67a44f2cf593bf259918ea12b0c0eeee7862ed4f9fd268076171cf
+	sha256sums = e81694fa952711f1b74f02b6a64ac1e90c229f93c740e4f97df5692f3af99609
+
+pkgname = ntsync-dkms
+	pkgdesc = NT synchronization primitive driver - out-of-tree module
+	depends = dkms
+	depends = ntsync-common
+	optdepends = ntsync-header: Allow wine to be compiled with ntsync support
+	provides = NTSYNC-MODULE
+	conflicts = ntsync
+
+pkgname = ntsync-header
+	pkgdesc = NT synchronization primitive driver - linux api header file
+
+pkgname = ntsync-common
+	pkgdesc = NT synchronization primitive driver - common files
+	provides = ntsync-udev-rule
+	conflicts = ntsync-udev-rule
+	replaces = ntsync-udev-rule

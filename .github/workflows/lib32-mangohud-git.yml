@@ -1,0 +1,22 @@
+name: lib32-mangohud-git
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 6 */3 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - local/lib32-mangohud-git/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/lib32-mangohud-git
+      repository: ${{ matrix.repository }}
+      multilib: true

@@ -1,0 +1,20 @@
+name: ntsync
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - public/ntsync/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        include:
+          - repository: public
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: public/ntsync
+      repository: ${{ matrix.repository }}

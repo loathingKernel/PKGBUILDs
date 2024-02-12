@@ -1,17 +1,12 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
-# By default use the same optimizations used by Valve and ignore makepkg,
-# to avoid build failures due to options incompatible with MingW cross-compilation.
-# If you set this switch to 'true', you are on your own.
-: ${_system_cflags:=false}
-
 pkgname=proton
-_srctag=8.0-5
+_srctag=8.0-5c
 _commit=
-pkgver=8.0.5  # pkgver=${_srctag//-/.}
+pkgver=8.0.5.3  # pkgver=${_srctag//-/.}
 _geckover=2.47.3
 _monover=8.1.0
-pkgrel=1
+pkgrel=4
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -82,7 +77,6 @@ optdepends=(
   libgphoto2
 )
 
-makedepends=(${makedepends[@]} ${depends[@]})
 install=${pkgname}.install
 source=(
     proton::git+https://github.com/ValveSoftware/Proton.git#tag=proton-${_srctag}
@@ -93,9 +87,6 @@ source=(
     0003-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     0004-AUR-Strip-binaries-early.patch
     0005-AUR-Fix-hwnd-redefinition.patch
-)
-# Optional patches
-source+=(
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -178,14 +169,16 @@ build() {
         --proton-sdk-image="" \
         --build-name="${pkgname}"
 
-    if [[ x"${_system_cflags::1}" != "xt" ]] ; then
-      unset CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
-    fi
-    : ${CFLAGS:="-O2 -march=nocona -mtune=core-avx2 -pipe"}
-    : ${CXXFLAGS:="-O2 -march=nocona -mtune=core-avx2 -pipe"}
-    : ${RUSTFLAGS:="-C opt-level=2 -C target-cpu=nocona"}
-    : ${LDFLAGS:="-Wl,-O1,--sort-common,--as-needed"}
-    export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
+    local -a split=($CFLAGS)
+    local -A flags
+    for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
+    local march="${flags["-march"]:-nocona}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
+
+    CFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
+    CXXFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
+    RUSTFLAGS="-C opt-level=2 -C target-cpu=$march"
+    LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # If using -march=native and the CPU supports AVX, launching a d3d9
     # game can cause an Unhandled exception. The cause seems to be the
@@ -198,8 +191,10 @@ build() {
     # https://bugs.winehq.org/show_bug.cgi?id=43516
     # AVX is "hard" disabled for 32bit in any case.
     # AVX2 for both 32bit and 64bit is disabled below.
-    export CFLAGS+=" -mno-avx2"
-    export CXXFLAGS+=" -mno-avx2"
+    CFLAGS+=" -mno-avx2 -mno-avx"
+    CXXFLAGS+=" -mno-avx2 -mno-avx"
+
+    export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
 
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_HOME="${SRCDEST}"/proton-cargo
@@ -262,12 +257,9 @@ sha256sums=('SKIP'
             '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
             '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
             '4e3e8a40729e4c9e3e9e651cebe4f1aed8f9a4d22e991e6cd24608687f0eedd4'
-            '8cfd8b3073f650bba678fbeada7346b68a0d24898c74c52d9ebfca07af95e78c'
-            '5b99978fc45de83346d277368ec0c2f8594a03beb613b36e67f4c7a1d1fee46f'
-            '3c1ff94df33a2b36ebdeed39c7bb6bc5e4eb126ddee7fb7863e3ae1b04aec9be'
-            'f93b87216d3556c678226099e8949cc579a87fcc91967ec11ec664933187281b'
-            '345b3dc7e9dd16d327e112d31157920382f0704d3565bbe451865524ba1a5256')
-# Optional patches
-sha256sums+=(
-)
+            'a5e8405ba1493904218165ee93cb9a05fa38132406b4cb8210a435829a3e3a90'
+            '8ff5a6adf7c048b30477e3b63a42fb65248936ab806dd35c5b95fe5f163ad6f8'
+            '01ce9791c768ca861c0ea5ae34c95b92647886e9ebebd46b89dd459961646d18'
+            '7b054514740f4f042cc68a97b10d32fead2123c2b9756887e59f66d6f703069f'
+            '5ec6cd2229a4a6ca66af1e669fa581667d459da3cc1c826828e4d9d91b2a9fc8')
 

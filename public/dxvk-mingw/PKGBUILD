@@ -2,7 +2,7 @@
 
 pkgname=dxvk-mingw
 pkgver=2.3
-pkgrel=2
+pkgrel=4
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
@@ -33,8 +33,15 @@ prepare() {
     # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
     # If you want the "best" possible optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
-    export CFLAGS="-O2 -march=nocona -mtune=core-avx2 -pipe"
-    export CXXFLAGS="-O2 -march=nocona -mtune=core-avx2 -pipe"
+
+    local -a split=($CFLAGS)
+    local -A flags
+    for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
+    local march="${flags["-march"]:-nocona}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
+
+    export CFLAGS="-O2 -march=$march -mtune=$mtune -pipe"
+    export CXXFLAGS="-O2 -march=$march -mtune=$mtune -pipe"
     export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # These flags are taken from Proton
@@ -42,8 +49,8 @@ prepare() {
     CXXFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing -std=c++17"
     LDFLAGS+=" -Wl,--file-alignment,4096"
 
-    # If using -march=native and the CPU supports AVX, launching a d3d9
-    # game can cause an Unhandled exception. The cause seems to be the
+    # If using -march= with a CPU that supports supports AVX, launching a 32bit
+    # d3d9 game can cause an Unhandled exception. The cause seems to be the
     # combination of AVX instructions and tree vectorization (implied by O3),
     # all tested archictures from sandybridge to haswell are affected.
     # Disabling AVX (and AVX2 as a side-effect).
@@ -54,8 +61,8 @@ prepare() {
     # Relevant Wine issues
     # https://bugs.winehq.org/show_bug.cgi?id=45289
     # https://bugs.winehq.org/show_bug.cgi?id=43516
-    CFLAGS+=" -mno-avx2"
-    CXXFLAGS+=" -mno-avx2"
+    CFLAGS+=" -mno-avx2 -mno-avx"
+    CXXFLAGS+=" -mno-avx2 -mno-avx"
 
     local cross_ldflags="$LDFLAGS"
 
@@ -106,5 +113,5 @@ package() {
 
 sha256sums=('SKIP'
             'bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362'
-            '0f688815530ab5e8cc89b9b45d9b1d66cd8cd5a7770fb8249339af555a30dfe7'
+            'e1d8623ea117be3d2537cc7f7465cae6e45d0309a502a0ed2b3bd9cd41e14e0e'
             'c1f6a18b03d1612b60f8081428f00cfac5e66315fe9d42719f01cf5564deeeff')

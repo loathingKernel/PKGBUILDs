@@ -1,0 +1,21 @@
+name: linux-zen-elitebook
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - local/linux-zen-elitebook/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        include:
+          - repository: personal
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/linux-zen-elitebook
+      repository: ${{ matrix.repository }}
+      action: skip

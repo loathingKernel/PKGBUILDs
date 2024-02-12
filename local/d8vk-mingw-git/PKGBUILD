@@ -2,7 +2,7 @@
 
 pkgname=d8vk-mingw-git
 pkgver=1.7.1.r2367.g1a039a47
-pkgrel=1
+pkgrel=2
 pkgdesc='Vulkan-based implementation of D3D8 and D3D9 based on DXVK for Linux / Wine, MingW version'
 arch=('x86_64')
 url="https://github.com/AlpyneDreams/d8vk"
@@ -38,8 +38,15 @@ prepare() {
     # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
     # If you want the "best" possible optimizations for your system you can use
     # `-march=native` and remove the `-mtune=core-avx2` option.
-    export CFLAGS="-O2 -march=nocona -mtune=core-avx2 -pipe"
-    export CXXFLAGS="-O2 -march=nocona -mtune=core-avx2 -pipe"
+
+    local -a split=($CFLAGS)
+    local -A flags
+    for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
+    local march="${flags["-march"]:-nocona}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
+
+    export CFLAGS="-O2 -march=$march -mtune=$mtune -pipe"
+    export CXXFLAGS="-O2 -march=$march -mtune=$mtune -pipe"
     export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # These flags are taken from Proton
@@ -47,8 +54,8 @@ prepare() {
     CXXFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing -std=c++17"
     LDFLAGS+=" -Wl,--file-alignment,4096"
 
-    # If using -march=native and the CPU supports AVX, launching a d3d9
-    # game can cause an Unhandled exception. The cause seems to be the
+    # If using -march= with a CPU that supports supports AVX, launching a 32bit
+    # d3d9 game can cause an Unhandled exception. The cause seems to be the
     # combination of AVX instructions and tree vectorization (implied by O3),
     # all tested archictures from sandybridge to haswell are affected.
     # Disabling AVX (and AVX2 as a side-effect).
@@ -59,8 +66,8 @@ prepare() {
     # Relevant Wine issues
     # https://bugs.winehq.org/show_bug.cgi?id=45289
     # https://bugs.winehq.org/show_bug.cgi?id=43516
-    CFLAGS+=" -mno-avx2"
-    CXXFLAGS+=" -mno-avx2"
+    CFLAGS+=" -mno-avx2 -mno-avx"
+    CXXFLAGS+=" -mno-avx2 -mno-avx"
 
     local cross_ldflags="$LDFLAGS"
 
@@ -117,5 +124,5 @@ package() {
 
 sha256sums=('SKIP'
             'bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362'
-            '4fc47d60ab45f359edc226d1a77743f6b30c3590d9b99d4ada2df7f056991a8b'
+            'e3558e2369b6d7bcf532b4ca2c734c847517b57adc26426c4b56b9f280a5f8a0'
             'bea0149c3ed77c00134edab272f6876c3090ab289dc365c2d95a6e74af96422c')

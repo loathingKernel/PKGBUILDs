@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=6.6.7.zen1
+pkgver=6.6.10.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Elitebook LLVM LTO'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -31,19 +31,19 @@ source=(
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
-  A2FF3A36AAA56654109064AB19802F8B0D70FC30  # Jan Alexander Steffens (heftig)
+  83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('0ce68ec6019019140043263520955ecd04839e55a1baab2fa9155b42bb6fd841'
+sha256sums=('9ee627e4c109aec7fca3eda5898e81d201af2c7eb2f7d9d7d94c1f0e1205546c'
             'SKIP'
-            'ff019eaabb12a22d387d40586088dd0824cd56ca79965b1cb0c2c3041d1d3d81'
+            '3eb6a95a9c292da598ccbf7ef0599170e1e50fd16d9eac6cba758dbfd84d5fa1'
             'SKIP'
-            '5e0ec3d7a1b87f8a4f1a4171f637483a4cd1760a324938c7921be4c115b7e3d6')
-b2sums=('000c45693d074c79816ea61c8e46b58281eed5532903df92c466d3f062ec6a302e59c2782235b21d309976929659e581ff08c8d5b067bb02e7f0cc4e40593643'
+            '51a51ccec610ee033009c9fdeb9bd2795cf209605e7c67da2855abc0951ed90f')
+b2sums=('c71e651438216e86e436af032cb529c029351b72b460568bd75858f835212360d646bae27caeb3140a4234f4155553aceec3aa94d761e3a634be7c164eee86a4'
         'SKIP'
-        '9d9f35d84d7d69c682aae3ec90596d63343f069cc8a58f082d654d044053029e5bea41c8d8df7537e460b735a771ac4bed8b00ca24c413b45784013f5d65fb93'
+        '499746838133d99ddee53fc807609cf257ff4336427f0a7f70c7bc968e60d3c68d1b23c2100d2c66d86485b0787b913698071c46f8d74aa4cbadc41f6234db81'
         'SKIP'
-        '81fea61f29cbe9c1995f397481dcfff7936f8955558dde952680d2a497da7ee2d4935f09cc3b23dc2a566cccb40874973bb720313e7bc60516334ef45b1f659a')
+        'ca1c5495d27fee6b54f5165ff2e3e30ffdc2a388f9404894fed7b38a3643e84edd550d9fceb1bae91595c289070a9d6b4fd53a24796ce2820f6c842d40a1ce2d')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -98,7 +98,7 @@ prepare() {
     scripts/config --enable  CONFIG_MBROADWELL
     scripts/config --set-val CONFIG_NR_CPUS 8
     scripts/config --disable CONFIG_MICROCODE_AMD
-    scripts/config --disable CONFIG_NUMA
+#    scripts/config --disable CONFIG_NUMA
 #    scripts/config --disable CONFIG_HZ_1000
 #    scripts/config --enable  CONFIG_HZ_300
 #    scripts/config --set-val CONFIG_HZ 300

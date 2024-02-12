@@ -5,29 +5,37 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=8.21
-pkgrel=1
+pkgver=9.1
+pkgrel=5
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
-_tkg_commit=21ea5483910659b6d0df5013a0f7ddeb655d9304
+_tkg_commit=edf80e3ecdcf69555f2359433003dd635b3b5798
 
-source=(https://dl.winehq.org/wine/source/8.x/wine-$_winever.tar.xz{,.sign}
+source=(https://dl.winehq.org/wine/source/9.x/wine-$_winever.tar.xz{,.sign}
         "https://github.com/wine-staging/wine-staging/archive/v$_pkgbasever/wine-staging-v$_pkgbasever.tar.gz"
+        30-win32-aliases.conf
+        wine-binfmt.conf)
+source+=(
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
         wine-wmclass.patch
         wine-isolate_home.patch
-        30-win32-aliases.conf
-        wine-binfmt.conf)
-sha512sums=('4d04d40141d2ea5e548b76aed870ac28d8a03241ffd4e761979c795310baa19136e54a8e518c6ea9bf563c3b23d3c4eb1baefc9906d7eeca469e9942ff99dc40'
+        wine-ntsync.patch
+        4947.patch 
+)
+sha512sums=('12ec508b1e457a94391ab3072ed602ff07da2e5beb4bbe4f76e42d71e87f7fa11f6531f1f1c71e96e884b10a99240a9eaf999867479b8eeadf3576df46e0a73a'
             'SKIP'
-            'abba6084f2aefa8507c2a79c688b717f8137375168e5457ee40a0c96bfce31e9dc44370ecb5a8e8a397e90ce2eb8543fd07b447bf48c4b2d4c68aac9b3674214'
+            '070e09acf8bca60a4f2512874f48f653cc03a7fcfcfef34b4f292731d49e0670a5cf69557c268fc5dc11f0a7a8e0e7347d9665b98e6bb47e0521e3fe164ff118'
+            '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
+            'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
+sha512sums+=(
             'SKIP'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
-            '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
-            'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
+            '7ba51d34b1e64a3030461489f66fe7de832b58223e805d28d6293c27771a8d19327e471de0542deb5e62b003b322c83589e6b15386b96c86a26df4cf856b36b3'
+            'SKIP'
+)
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
@@ -49,6 +57,10 @@ depends=(
   libpcap          lib32-libpcap
   desktop-file-utils
 )
+depends+=(
+  libxkbcommon     lib32-libxkbcommon
+  wayland          lib32-wayland
+)
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
   git
@@ -68,7 +80,6 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   libva                 lib32-libva
   gtk3                  lib32-gtk3
   gst-plugins-base-libs lib32-gst-plugins-base-libs
-  gst-plugins-good      lib32-gst-plugins-good
   vulkan-icd-loader     lib32-vulkan-icd-loader
   sdl2                  lib32-sdl2
   libcups               lib32-libcups
@@ -77,6 +88,9 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   ffmpeg
   samba
   opencl-headers
+)
+makedepends+=(
+  ntsync-header
 )
 
 optdepends=(
@@ -101,6 +115,9 @@ optdepends=(
   cups
   samba           dosbox
 )
+optdepends+=(
+  ntsync-dkms
+)
 
 provides=("wine=$pkgver")
 conflicts=('wine')
@@ -116,11 +133,17 @@ prepare() {
 
   # apply wine-staging patchset
   cd $pkgname
-  ../wine-staging-$_pkgbasever/staging/patchinstall.py --all
+  patch -p1 -i "$srcdir"/wine-ntsync.patch
+  patch -p1 -i "$srcdir"/4947.patch
+  ../wine-staging-$_pkgbasever/staging/patchinstall.py --all \
+    -W eventfd_synchronization \
+    -W ntdll-Syscall_Emulation \
+    -W server-PeekMessage \
+    -W server-Signal_Thread
 
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
-  patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-staging.patch
-  patch -p1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
+  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-staging.patch
+  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
   patch -p1 -i "$_tkg_path"/proton/LAA/LAA-unix-staging.patch
   patch -p1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
   patch -p1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
@@ -131,29 +154,28 @@ prepare() {
   dlls/winevulkan/make_vulkan
   tools/make_requests
   autoreconf -f
-
-  # Doesn't compile without remove these flags as of 4.10
-  export CFLAGS="${CFLAGS/-fno-plt/}"
-  export LDFLAGS="${LDFLAGS/,-z,now/}"
 }
 
 build() {
-  cd "$srcdir"
-
   # Doesn't compile without remove these flags as of 4.10
   export CFLAGS="${CFLAGS/-fno-plt/}"
-  export CXXFLAGS="${CXXFLAGS/-fno-plt/}"
   export LDFLAGS="${LDFLAGS/,-z,now/}"
-  # MingW Wine builds fail with relro
-  export LDFLAGS="${LDFLAGS/,-z,relro/}"
+
+  local -a split=($CFLAGS)
+  local -A flags
+  for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
+  local march="${flags["-march"]:-nocona}"
+  local mtune="${flags["-mtune"]:-core-avx2}"
+
+  # From Proton
+  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
+  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS -s -mno-avx2"
 
   export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
   export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
 
-  # From Proton
-  OPTIMIZE_FLAGS="-O2 -march=nocona -mtune=core-avx2 -mfpmath=sse -pipe"
-  SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
-  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS -s -mno-avx2"
+  cd "$srcdir"
 
   msg2 "Building Wine-64..."
 
@@ -167,6 +189,7 @@ build() {
     --prefix=/usr \
     --libdir=/usr/lib \
     --with-x \
+    --with-wayland \
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
@@ -190,6 +213,7 @@ build() {
   ../$pkgname/configure \
     --prefix=/usr \
     --with-x \
+    --with-wayland \
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
