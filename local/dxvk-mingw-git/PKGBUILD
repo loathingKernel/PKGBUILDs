@@ -92,6 +92,7 @@ build() {
         --prefix "/usr/share/dxvk/x64" \
         --bindir "" --libdir "" \
         --buildtype "plain" \
+        --force-fallback-for=libdisplay-info \
         --strip
     ninja -C "build/x64" -v
 
@@ -100,6 +101,7 @@ build() {
         --prefix "/usr/share/dxvk/x32" \
         --bindir "" --libdir "" \
         --buildtype "plain" \
+        --force-fallback-for=libdisplay-info \
         --strip
     ninja -C "build/x32" -v
 }
