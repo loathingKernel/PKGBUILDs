@@ -78,8 +78,10 @@ source=(
   git+https://github.com/lz4/lz4.git
   git+https://github.com/Cyan4973/xxHash.git
   git+https://github.com/lsalzman/enet.git
+  git+https://github.com/syoyo/tinygltf.git
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -97,7 +99,7 @@ b2sums=('SKIP'
 
 prepare() {
   cd dolphin-emu
-  for submodule in Externals/{cubeb/cubeb,implot/implot,mGBA/mgba,rcheevos/rcheevos,spirv_cross/SPIRV-Cross,VulkanMemoryAllocator,zlib-ng/zlib-ng,libspng/libspng,curl/curl,fmt/fmt,lz4/lz4,xxhash/xxHash,enet/enet}; do
+  for submodule in Externals/{cubeb/cubeb,implot/implot,mGBA/mgba,rcheevos/rcheevos,spirv_cross/SPIRV-Cross,VulkanMemoryAllocator,zlib-ng/zlib-ng,libspng/libspng,curl/curl,fmt/fmt,lz4/lz4,xxhash/xxHash,enet/enet,tinygltf/tinygltf}; do
     git submodule init ${submodule}
     git config submodule.${submodule}.url ../${submodule##*/}
     git -c protocol.file.allow=always submodule update ${submodule}
