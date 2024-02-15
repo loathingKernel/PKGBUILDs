@@ -18,7 +18,7 @@ source+=(
         wine-wmclass.patch
         wine-isolate_home.patch
         wine-ntsync.patch
-        4947.patch 
+        #4947.patch
 )
 sha512sums=('9bffc10e573cc0ee0aaa37b09dda642c64c1456e39518256e39a752dc249e67283dece865cdb3e495b0950553a0dc004d906ecfc032c8fff936f3ef71c2d1a0d'
             'SKIP'
@@ -29,7 +29,7 @@ sha512sums+=(
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             'a38e74badf8738c5d77129cf6b39f2f90d5688af8d013902c636d2c0790592a80eaa6d51809173b8e8966326353c978ca78419f4aa92f25c1edc22ca9bb3522e'
-            'ef8cb6e9806f83f93e775efe12c702327e49dc0bb1140654333936696a521f2c9cbc1149f5b6d03ea6be3dc0639e2fa8e569b468ceae82084c71b1f26ed39cb8'
+            #'ef8cb6e9806f83f93e775efe12c702327e49dc0bb1140654333936696a521f2c9cbc1149f5b6d03ea6be3dc0639e2fa8e569b468ceae82084c71b1f26ed39cb8'
 )
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -120,7 +120,7 @@ prepare() {
   cd $pkgname-$_pkgbasever
 
   patch -p1 -i "$srcdir"/wine-ntsync.patch
-  patch -p1 -i "$srcdir"/4947.patch
+  #patch -p1 -i "$srcdir"/4947.patch
 
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
   #patch -p1 -i "$_tkg_path"/proton/esync/esync-unix-mainline.patch
