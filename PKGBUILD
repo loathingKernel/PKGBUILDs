@@ -5,14 +5,14 @@
 # Contributor: Daniel Maslowski <info@orangecms.org>
 
 pkgname=minio
-pkgver=2024.02.14
-_timever=T21-36-02Z
+pkgver=2024.02.17
+_timever=T01-15-57Z
 _pkgver="${pkgver//./-}${_timever//:/-}"
 pkgrel=1
 pkgdesc='Object storage server compatible with Amazon S3'
 arch=('x86_64')
 url='https://minio.io'
-license=('AGPL3')
+license=('AGPL-3.0-or-later')
 depends=('glibc')
 makedepends=('go' 'git')
 source=(git+https://github.com/minio/minio.git#tag=RELEASE.${_pkgver}
