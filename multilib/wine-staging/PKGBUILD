@@ -5,13 +5,13 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=9.2
+pkgver=9.3
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
-_tkg_commit=b1d7ee352c4f4e1dcbc1cbf738975e51b87d6113
+_tkg_commit=93926a5ca7b175d85f62d0dd37d3ec7e0c53b92a
 
 source=(https://dl.winehq.org/wine/source/9.x/wine-$_winever.tar.xz{,.sign}
         "https://github.com/wine-staging/wine-staging/archive/v$_pkgbasever/wine-staging-v$_pkgbasever.tar.gz"
@@ -24,9 +24,9 @@ source+=(
         wine-ntsync.patch
         #4947.patch
 )
-sha512sums=('9bffc10e573cc0ee0aaa37b09dda642c64c1456e39518256e39a752dc249e67283dece865cdb3e495b0950553a0dc004d906ecfc032c8fff936f3ef71c2d1a0d'
+sha512sums=('3d75a0e1360765aca453d120e1f47fb50716119f3cab2be1176003a19bba31a6affae4a845840ce52665d97e0edd46dc78a13462d6d6a7e861cd970a0a3d4d1d'
             'SKIP'
-            '9b04e1359c1b485fabc7de5b3e685f8e8b8f60951b0168484aaaecce9e524df45813edfdf4a6f3b1b69bffee4e3ba4c5b7eeabcdf260f1409d1d72f0e9a00cd0'
+            '56a92cd8bbc1ba7fda9fea9d998efac44d2a805d4ebb4253a37ecff8edd51852773f848556935f05418f488698e1ec4cc52a79327f7f5d77390af90f95f9bdf6'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 sha512sums+=(
