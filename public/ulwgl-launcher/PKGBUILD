@@ -91,11 +91,7 @@ package() {
   install -Dm 755 build-reaper/reaper "$pkgdir"/usr/share/ULWGL/reaper
 
   install -d "$pkgdir"/usr/bin
-  install -Dm755 /dev/stdin "$pkgdir"/usr/bin/ulwgl-run <<EOF
-#!/usr/bin/env sh
-/usr/share/ULWGL/ulwgl_run.py "\$@"
-EOF
-  #ln -s /usr/share/ULWGL/ulwgl_run.py "$pkgdir"/usr/bin/ulwgl-run
+  ln -s /usr/share/ULWGL/ulwgl_run.py "$pkgdir"/usr/bin/ulwgl-run
 
 }
 
