@@ -1,0 +1,23 @@
+pkgbase = tlpui
+	pkgdesc = A GTK user interface for TLP written in Python
+	pkgver = 1.6.4
+	pkgrel = 2
+	epoch = 2
+	url = https://github.com/d4nj1/TLPUI
+	arch = any
+	license = GPL2
+	makedepends = python-build
+	makedepends = python-installer
+	makedepends = python-setuptools
+	makedepends = python-wheel
+	makedepends = python-poetry
+	depends = tlp
+	depends = python-gobject
+	depends = hicolor-icon-theme
+	depends = python-yaml
+	depends = gtk3
+	depends = python-toml
+	source = https://github.com/d4nj1/TLPUI/archive/refs/tags/tlpui-1.6.4.tar.gz
+	sha256sums = 6ad6fb4bee0a18b1c113f5eb3fb10d09c4249a8df323927af24d54e8d0e1325f
+
+pkgname = tlpui
