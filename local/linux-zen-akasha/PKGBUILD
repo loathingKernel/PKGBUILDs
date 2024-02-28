@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-akasha
-pkgver=6.6.10.zen1
+pkgver=6.7.6.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Akasha'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -33,16 +33,16 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('9ee627e4c109aec7fca3eda5898e81d201af2c7eb2f7d9d7d94c1f0e1205546c'
+sha256sums=('e489ec0e1370d089b446d565aded7a698093d2b7c4122a18f21edb6ef93d37d3'
             'SKIP'
-            '3eb6a95a9c292da598ccbf7ef0599170e1e50fd16d9eac6cba758dbfd84d5fa1'
+            'c6bc98b4ca0839519bc3b497d3094df4094ab346cea90dea5d6189e2439eedb1'
             'SKIP'
-            '51a51ccec610ee033009c9fdeb9bd2795cf209605e7c67da2855abc0951ed90f')
-b2sums=('c71e651438216e86e436af032cb529c029351b72b460568bd75858f835212360d646bae27caeb3140a4234f4155553aceec3aa94d761e3a634be7c164eee86a4'
+            'd78c3994a51057cdc1167ddd111252bb3f2dfa7f7b9872505defb732eabac169')
+b2sums=('51d6e2304e7a9188a0fec5714276589cb46948157c76a2f4ed3f5e0bf634d94a89ea75251229a86e018767a3367328c16b610d631c78d82663dcd1d904b73385'
         'SKIP'
-        '499746838133d99ddee53fc807609cf257ff4336427f0a7f70c7bc968e60d3c68d1b23c2100d2c66d86485b0787b913698071c46f8d74aa4cbadc41f6234db81'
+        '804a6bfbd65c834da19bfc0e763c0c51a5bb56db27afa025f6122ca429cfa63b55ca384c45d70fe0601cd16001daf75981a55be86d71b471b005363229213c3e'
         'SKIP'
-        'ca1c5495d27fee6b54f5165ff2e3e30ffdc2a388f9404894fed7b38a3643e84edd550d9fceb1bae91595c289070a9d6b4fd53a24796ce2820f6c842d40a1ce2d')
+        'c8a837ca6b0bef2b658192db8c3cd5f998cbbd657d5cc596ebbda345d95cdadaaefccfa9f79672589ca61848ad3f761de3ef4b3a713296605bf18e78e21a9f97')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -95,7 +95,7 @@ prepare() {
     scripts/config --enable  CONFIG_MHASWELL
     scripts/config --set-val CONFIG_NR_CPUS 8
     scripts/config --disable CONFIG_MICROCODE_AMD
-#    scripts/config --disable CONFIG_NUMA
+    scripts/config --disable CONFIG_NUMA
 #    scripts/config --disable CONFIG_HZ_1000
 #    scripts/config --enable  CONFIG_HZ_300
 #    scripts/config --set-val CONFIG_HZ 300
@@ -146,6 +146,7 @@ prepare() {
 build() {
   cd $_srcname
   make all
+  make -C tools/bpf/bpftool vmlinux.h feature-clang-bpf-co-re=1
 }
 
 _package() {
@@ -197,7 +198,7 @@ _package-headers() {
 
   echo "Installing build files..."
   install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
-    localversion.* version vmlinux
+    localversion.* version vmlinux tools/bpf/bpftool/vmlinux.h
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
