@@ -51,6 +51,7 @@ ghash_clmulni_intel
 glue_helper
 gspca_main
 gspca_ov534
+hid_generic
 hid_logitech
 hwmon_vid
 i2c_algo_bit
@@ -145,6 +146,8 @@ pktcdvd
 poly1305_x86_64
 polyval_clmulni
 polyval_generic
+pps_core
+ptp
 raid0
 raid6_pq
 rapl
