@@ -84,7 +84,6 @@ prepare() {
         3rdparty/glslang/glslang
         3rdparty/vulkan-headers
         3rdparty/zstd/zstd
-        3rdparty/rcheevos/rcheevos
     )
     git remote set-url origin https://github.com/PCSX2/pcsx2.git
     for submodule in ${_pcsx2_submodules[@]}; do
@@ -110,10 +109,10 @@ build() {
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DX11_API=ON \
     -DWAYLAND_API=ON \
+    -DUSE_VULKAN=ON \
     -DENABLE_SETCAP=OFF \
     -DUSE_SYSTEM_LIBS=OFF \
-    -DDISABLE_ADVANCE_SIMD=ON \
-    -DDISABLE_BUILD_DATE=ON
+    -DDISABLE_ADVANCE_SIMD=ON
     ninja -C build -v
     
     7z a -r patches.zip ./pcsx2_patches/patches/*
@@ -132,4 +131,4 @@ package() {
 
 b2sums=('SKIP'
         'SKIP'
-        '2371e4acf92169c1356f0c92fb4a819e99ac5e7f7381a8f28b5204b77f3ace6c632728021e904da6d0ad0eb0e8f153825cb742019d80891e0405352a827b4615')
+        '5aeb01be2e9e77c26c4039b183ff2751f787350e274b1c1d1cead7491eabced556e3934502eaf4887e9b49581f515382f096b29e9daef6e9e94c443e2bc7e048')
