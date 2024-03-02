@@ -5,8 +5,7 @@
 _pkgname=MangoHud
 pkgname=lib32-mangohud-git
 _pkgver=0.7.1-1
-_tarpkgver="${_pkgver%-*}"
-pkgver=0.7.1.r1.geca65e6
+pkgver="${_pkgver%-*}"
 pkgrel=1
 pkgdesc="32-bit libraries for MangoHud and MangoApp"
 arch=('x86_64')

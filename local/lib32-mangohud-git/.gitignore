@@ -1,8 +1,28 @@
-# Ignore everything
-*
+/pkg
+/src
+/*/
+!/keys/
 
-# But not these files...
-!.gitignore
-!PKGBUILD
-!.SRCINFO
-!*.patch
+/*.log
+/*.tar.*
+/*.tar
+/*.tgz
+/*.zst
+/*.gz
+/*.xz
+/*.bz2
+/*.zip
+/*.xpi
+/*.jar
+/*.whl
+/*.war
+/*.deb
+/*.ttf
+/*.dat
+/*.iso
+/*.asc
+/*.sig
+/*.signature
+/*.sign
+/*.SHA256SUMS
+/*.sha256
