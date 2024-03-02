@@ -36,6 +36,7 @@ prepare() {
 
 build() {
     arch-meson "$_pkgname" build \
+        --wrap-mode=nofallback \
         -Dmangoapp=true \
         -Dmangohudctl=true \
         -Dmangoapp_layer=true
