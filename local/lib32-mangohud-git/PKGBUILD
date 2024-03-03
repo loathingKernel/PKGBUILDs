@@ -5,14 +5,14 @@
 _pkgname=MangoHud
 pkgname=lib32-mangohud-git
 _pkgver=0.7.1-1
-pkgver="${_pkgver%-*}"
+pkgver=0.7.1.r20.g5598fda
 pkgrel=1
 pkgdesc="32-bit libraries for MangoHud and MangoApp"
 arch=('x86_64')
 url="https://github.com/flightlessmango/MangoHud"
 license=('MIT')
-makedepends=('git' 'glfw-x11' 'glslang' 'lib32-cmocka' 'lib32-libglvnd' 'libxnvctrl' 'meson' 'nlohmann-json' 'python-mako' 'vulkan-headers')
-depends=('lib32-dbus' 'lib32-gcc-libs' 'lib32-glew' 'lib32-libx11' 'lib32-vulkan-icd-loader')
+makedepends=('git' 'glfw' 'glslang' 'lib32-cmocka' 'lib32-libglvnd' 'lib32-libxrandr' 'libxnvctrl' 'meson' 'nlohmann-json' 'python-mako' 'vulkan-headers')
+depends=('lib32-dbus' 'lib32-gcc-libs' 'lib32-glew' 'lib32-libx11' 'lib32-libxkbcommon' 'lib32-vulkan-icd-loader')
 provides=("${pkgname//-git}")
 conflicts=("${pkgname//-git}" 'lib32-mangoapp')
 replaces=('lib32-mangoapp')
