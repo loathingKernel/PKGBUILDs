@@ -8,13 +8,14 @@ pkgname=minio
 pkgver=2024.02.26
 _timever=T09-33-48Z
 _pkgver="${pkgver//./-}${_timever//:/-}"
-pkgrel=1
+pkgrel=2
 pkgdesc='Object storage server compatible with Amazon S3'
 arch=('x86_64')
 url='https://minio.io'
 license=('AGPL-3.0-or-later')
 depends=('glibc')
 makedepends=('go' 'git')
+options=(!lto)
 source=(git+https://github.com/minio/minio.git#tag=RELEASE.${_pkgver}
         minio.conf
         minio.service
