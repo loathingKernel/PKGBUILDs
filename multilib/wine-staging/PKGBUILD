@@ -6,7 +6,7 @@
 
 pkgname=wine-staging
 pkgver=9.3
-pkgrel=2
+pkgrel=3
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -133,17 +133,17 @@ prepare() {
 
   # apply wine-staging patchset
   cd $pkgname
-  patch -p1 -i "$srcdir"/wine-ntsync.patch
+  #patch -p1 -i "$srcdir"/wine-ntsync.patch
   #patch -p1 -i "$srcdir"/4947.patch
   ../wine-staging-$_pkgbasever/staging/patchinstall.py --all \
-    -W eventfd_synchronization \
-    -W ntdll-Syscall_Emulation \
-    -W server-PeekMessage \
-    -W server-Signal_Thread
+  #  -W eventfd_synchronization \
+  #  -W ntdll-Syscall_Emulation \
+  #  -W server-PeekMessage \
+  #  -W server-Signal_Thread
 
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
-  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-staging.patch
-  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
+  patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-staging.patch
+  patch -p1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
   patch -p1 -i "$_tkg_path"/proton/LAA/LAA-unix-staging.patch
   patch -p1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
   patch -p1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
