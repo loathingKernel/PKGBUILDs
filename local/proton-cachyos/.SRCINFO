@@ -1,7 +1,7 @@
 pkgbase = proton-cachyos
 	pkgdesc = Compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour
 	pkgver = 9.0
-	pkgrel = 3
+	pkgrel = 4
 	url = https://github.com/ValveSoftware/Proton
 	install = proton-cachyos.install
 	arch = x86_64
