@@ -1,12 +1,12 @@
-# Maintainer: Your Name <youremail@domain.com>
+# Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=ulwgl-launcher
-pkgver=0.1.RC3.r149.551556a
+pkgver=0.1.RC3.r217.697173a
 pkgrel=1
-pkgdesc="This is the unified launcher for windows games on linux, to run Proton outside of Steam"
+pkgdesc="This is the Unified Launcher for Windows Games on Linux, to run Proton with fixes outside of Steam"
 arch=('x86_64')
 url="https://github.com/Open-Wine-Components/ULWGL-launcher"
-license=('GPL')
+license=('GPL-3.0-only')
 depends=(
   # steam
   bash
@@ -32,8 +32,6 @@ depends=(
   libxcrypt
   libxcrypt-compat
   gcc-libs
-  # extra
-  python-requests
 )
 depends_x86_64=(
   lib32-glibc
@@ -52,9 +50,11 @@ depends_x86_64=(
 makedepends=(
   git
   meson
+  ninja
+  scdoc
 )
 install=
-_commit=551556ad0617aabb676b7de0be741a746b406b09
+_commit=697173a2f27f0ca4f22fd09366a476593204c2fe
 _origin="https://github.com/Open-Wine-Components/ULWGL-launcher.git"
 source=(
   "git+$_origin#commit=$_commit"
@@ -73,26 +73,13 @@ prepare() {
 
 build() {
   cd "$srcdir/ULWGL-launcher"
-  meson setup reaper build-reaper
-  ninja -C build-reaper -v
+  ./configure.sh --prefix=/usr
+  make
 }
-
-#check() {
-#	cd "$srcdir/ULWGL-launcher"
-#	make -k check
-#}
 
 package() {
   cd "$srcdir/ULWGL-launcher"
-  install -d "$pkgdir"/usr/share
-  cp -a ULWGL "$pkgdir"/usr/share/ULWGL
-  
-  # Copy locally built reaper into ULWGL
-  install -Dm 755 build-reaper/reaper "$pkgdir"/usr/share/ULWGL/reaper
-
-  install -d "$pkgdir"/usr/bin
-  ln -s /usr/share/ULWGL/ulwgl_run.py "$pkgdir"/usr/bin/ulwgl-run
-
+  make DESTDIR="$pkgdir" install
 }
 
 sha256sums=('SKIP')
