@@ -138,7 +138,9 @@ overlay
 platform_profile
 polyval_clmulni
 polyval_generic
+pps_core
 psmouse
+ptp
 raid6_pq
 rapl
 rfcomm
