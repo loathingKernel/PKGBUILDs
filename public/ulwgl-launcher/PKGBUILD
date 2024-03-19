@@ -54,7 +54,7 @@ makedepends=(
   scdoc
 )
 install=
-_commit=00c2c8f24a9f7ab24d7638367d5f58e8364c7746
+_commit=f9e211476ad97dffd6752bc480f3cd8cd822b514
 _origin="https://github.com/Open-Wine-Components/ULWGL-launcher.git"
 source=(
   "git+$_origin#commit=$_commit"
