@@ -9,10 +9,12 @@ on:
      - aur/gtkcord4/.SRCINFO
 
 jobs:
-  public:
-    uses: ./.github/workflows/job_pkgbuild.yml
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: aur/gtkcord4
-      pacman_conf: .github/conf/public_pacman.conf
-      makepkg_conf: .github/conf/public_makepkg.conf
-      release_tag: loathk-public
+      repository: ${{ matrix.repository }}
+      action: remove
