@@ -1,4 +1,4 @@
-name: ulwgl-launcher
+name: umu-launcher
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - public/ulwgl-launcher/.SRCINFO
+     - public/umu-launcher/.SRCINFO
 
 jobs:
   repository:
@@ -15,6 +15,5 @@ jobs:
         repository: [public]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      pkgdir: public/ulwgl-launcher
+      pkgdir: public/umu-launcher
       repository: ${{ matrix.repository }}
-      action: remove
