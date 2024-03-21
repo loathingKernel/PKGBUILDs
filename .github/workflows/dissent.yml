@@ -1,4 +1,4 @@
-name: gtkcord4
+name: dissent
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - aur/gtkcord4/.SRCINFO
+     - aur/dissent/.SRCINFO
 
 jobs:
   repository:
@@ -15,6 +15,6 @@ jobs:
         repository: [public]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      pkgdir: aur/gtkcord4
+      pkgdir: aur/dissent
       repository: ${{ matrix.repository }}
-      action: remove
+      action: build
