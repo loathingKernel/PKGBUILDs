@@ -1,7 +1,7 @@
 pkgbase = wine-ge-custom
 	pkgdesc = A compatibility layer for running Windows programs - GloriousEggroll branch
-	pkgver = GE.Proton8.26
-	pkgrel = 2
+	pkgver = GE.Proton9.2
+	pkgrel = 1
 	epoch = 1
 	url = https://github.com/GloriousEggroll/wine-ge-custom
 	install = wine.install
@@ -73,6 +73,10 @@ pkgbase = wine-ge-custom
 	depends = libpcap
 	depends = lib32-libpcap
 	depends = desktop-file-utils
+	depends = libxkbcommon
+	depends = lib32-libxkbcommon
+	depends = wayland
+	depends = lib32-wayland
 	optdepends = giflib
 	optdepends = lib32-giflib
 	optdepends = gnutls
@@ -106,12 +110,12 @@ pkgbase = wine-ge-custom
 	optdepends = libgphoto2
 	optdepends = ffmpeg
 	optdepends = dosbox
-	provides = wine=8.0
+	provides = wine=9.0
 	conflicts = wine
 	options = !staticlibs
 	options = !lto
 	options = !debug
-	source = wine-ge-custom::git+https://github.com/GloriousEggroll/wine-ge-custom.git#commit=21f5f463cb761b94bcd00553f924f55516389f5b
+	source = wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#commit=a601105727fba9156d7024974d65b753d6199b38
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
 	source = 30-win32-aliases.conf

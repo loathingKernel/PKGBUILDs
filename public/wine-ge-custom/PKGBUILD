@@ -6,17 +6,17 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-ge-custom
-_srctag=GE-Proton8-26
-_commit=21f5f463cb761b94bcd00553f924f55516389f5b
+_srctag=GE-Proton9-2
+_commit=a601105727fba9156d7024974d65b753d6199b38
 pkgver=${_srctag//-/.}
-pkgrel=2
+pkgrel=1
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
 
-source=(wine-ge-custom::git+https://github.com/GloriousEggroll/wine-ge-custom.git#commit=${_commit}
+source=(wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#commit=${_commit}
         wine-wmclass.patch
         wine-isolate_home.patch
         30-win32-aliases.conf
@@ -46,6 +46,10 @@ depends=(
   gcc-libs         lib32-gcc-libs
   libpcap          lib32-libpcap
   desktop-file-utils
+)
+depends+=(
+  libxkbcommon     lib32-libxkbcommon
+  wayland          lib32-wayland
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
@@ -95,7 +99,7 @@ optdepends=(
   dosbox
 )
 
-provides=("wine=8.0")
+provides=("wine=9.0")
 conflicts=('wine')
 install=wine.install
 
@@ -105,34 +109,27 @@ prepare() {
   mkdir $pkgname-{32,64}-build
 
   pushd $pkgname
-    git remote set-url origin https://github.com/gloriouseggroll/wine-ge-custom.git
-    git submodule update --init --filter=tree:0 --recursive proton-wine
-    pushd proton-wine
+    git remote set-url origin https://github.com/loathingKernel/wine-ge-custom.git
+    git submodule update --init --filter=tree:0 --recursive wine wine-staging
+    ./patches/protonprep-lutris-staging.sh
+    pushd wine
       patch -p1 -i "$srcdir"/wine-wmclass.patch
       patch -p1 -i "$srcdir"/wine-isolate_home.patch
       git config user.email "makepkg@aur.not"
       git config user.name "makepkg aur"
-      git tag wine-ge-8.0 --annotate -m "$pkgver"
-      dlls/winevulkan/make_vulkan
-      tools/make_requests
+      git tag wine-ge-9.0 --annotate -m "$pkgver"
+      ./tools/make_specfiles
+      ./tools/make_requests
+      ./dlls/winevulkan/make_vulkan
       autoreconf -f
     popd
   popd
-
-  # Doesn't compile without remove these flags as of 4.10
-  export CFLAGS="${CFLAGS/-fno-plt/}"
-  export LDFLAGS="${LDFLAGS/,-z,now/}"
 }
 
 build() {
-  cd "$srcdir"
-
   # Doesn't compile without remove these flags as of 4.10
   export CFLAGS="${CFLAGS/-fno-plt/}"
-  export CXXFLAGS="${CXXFLAGS/-fno-plt/}"
   export LDFLAGS="${LDFLAGS/,-z,now/}"
-  # MingW Wine builds fail with relro
-  export LDFLAGS="${LDFLAGS/,-z,relro/}"
 
   local -a split=($CFLAGS)
   local -A flags
@@ -148,6 +145,8 @@ build() {
   export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
   export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
 
+  cd "$srcdir"
+
   msg2 "Building Wine-64..."
 
   export CFLAGS="$COMMON_FLAGS -mcmodel=small"
@@ -156,10 +155,11 @@ build() {
   export CROSSCXXFLAGS="$CXXFLAGS"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-64-build"
-  ../$pkgname/proton-wine/configure \
+  ../$pkgname/wine/configure \
     --prefix=/usr \
     --libdir=/usr/lib \
     --with-x \
+    --with-wayland \
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
@@ -180,9 +180,10 @@ build() {
   export CROSSCXXFLAGS="$CXXFLAGS"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-32-build"
-  ../$pkgname/proton-wine/configure \
+  ../$pkgname/wine/configure \
     --prefix=/usr \
     --with-x \
+    --with-wayland \
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
