@@ -4,11 +4,11 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
+_tkg_commit=d08b8898f33798bce350ade6150fe0ab3fbe71cf
 pkgver=9.5
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
-_tkg_commit=d08b8898f33798bce350ade6150fe0ab3fbe71cf
 
 source=(https://dl.winehq.org/wine/source/9.x/$pkgname-$_pkgbasever.tar.xz{,.sign}
         30-win32-aliases.conf
@@ -133,8 +133,9 @@ prepare() {
 
   patch -p1 -i "$srcdir"/wine-wmclass.patch
   patch -p1 -i "$srcdir"/wine-isolate_home.patch
-  dlls/winevulkan/make_vulkan
+  tools/make_specfiles
   tools/make_requests
+  dlls/winevulkan/make_vulkan
   autoreconf -f
 }
 
