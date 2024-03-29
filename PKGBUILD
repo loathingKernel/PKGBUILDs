@@ -19,6 +19,7 @@ url=https://www.ppsspp.org/
 license=(GPL2)
 makedepends=(
   clang
+  lld
   cmake
   git
   glew
@@ -91,6 +92,11 @@ build() {
 
   cmake -S ppsspp -B build-sdl -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
     -DCMAKE_SKIP_RPATH=ON \
     -DHEADLESS=ON \
     -DOpenGL_GL_PREFERENCE=GLVND \
@@ -104,6 +110,11 @@ build() {
   cmake --build build-sdl -v
   cmake -S ppsspp -B build-qt -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
     -DCMAKE_SKIP_RPATH=ON \
     -DHEADLESS=OFF \
     -DOpenGL_GL_PREFERENCE=GLVND \
