@@ -11,7 +11,7 @@ pkgname=(
   ppsspp-git
   ppsspp-assets-git
 )
-pkgver=1.16.5.r44.aa411c2f09
+pkgver=1.17.1
 pkgrel=1
 pkgdesc='A PSP emulator written in C++'
 arch=(x86_64 aarch64)
@@ -19,12 +19,12 @@ url=https://www.ppsspp.org/
 license=(GPL2)
 makedepends=(
   clang
-  lld
   cmake
   git
   glew
   glu
   libglvnd
+  libpng
   libzip
   ninja
   python
@@ -32,10 +32,10 @@ makedepends=(
   qt5-multimedia
   qt5-tools
   sdl2
+  sdl2_ttf
   snappy
   zlib
 )
-options=(!lto)
 source=(
   git+https://github.com/hrydgard/ppsspp.git
   ppsspp-sdl.desktop
@@ -53,18 +53,17 @@ pkgver() {
 prepare() {
   cd ppsspp
   _ppsspp_submodules=(
-    ffmpeg
-    assets/lang
-    ext/miniupnp
     ext/armips
     ext/cpu_features
     ext/discord-rpc
+    ffmpeg
     ext/glslang
-    ext/rapidjson
-    ext/SPIRV-Cross
-    ext/rcheevos
-    ext/naett
+    assets/lang
     ext/libchdr
+    ext/miniupnp
+    ext/rapidjson
+    ext/rcheevos
+    ext/SPIRV-Cross
   )
   # Explicitly set origin URL for submodules using relative paths
   git remote set-url origin https://github.com/hrydgard/ppsspp.git
@@ -90,7 +89,6 @@ build() {
   popd
 
   cmake -S ppsspp -B build-sdl -G Ninja \
-    -Wno-dev \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
     -DHEADLESS=ON \
@@ -100,10 +98,10 @@ build() {
     -DUSE_SYSTEM_LIBZIP=ON \
     -DUSE_SYSTEM_SNAPPY=ON \
     -DUSE_SYSTEM_ZSTD=ON \
-    -DUSING_QT_UI=OFF
+    -DUSING_QT_UI=OFF \
+    -Wno-dev
   cmake --build build-sdl -v
   cmake -S ppsspp -B build-qt -G Ninja \
-    -Wno-dev \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
     -DHEADLESS=OFF \
@@ -113,21 +111,26 @@ build() {
     -DUSE_SYSTEM_LIBZIP=ON \
     -DUSE_SYSTEM_SNAPPY=ON \
     -DUSE_SYSTEM_ZSTD=ON \
-    -DUSING_QT_UI=ON
+    -DUSING_QT_UI=ON \
+    -Wno-dev
   cmake --build build-qt -v
 }
 
 package_ppsspp-git() {
   depends=(
+    fontconfig
+    gcc-libs
     glew
     glibc
     hicolor-icon-theme
     libgl
+    libpng
     libzip
     ppsspp-assets-git
     qt5-base
     qt5-multimedia
     sdl2
+    sdl2_ttf
     snappy
     zlib
     zstd
