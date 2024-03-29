@@ -11,7 +11,7 @@ pkgname=(
   ppsspp-git
   ppsspp-assets-git
 )
-pkgver=1.17.1
+pkgver=1.17.1.r74.39fdba4f
 pkgrel=1
 pkgdesc='A PSP emulator written in C++'
 arch=(x86_64 aarch64)
@@ -64,6 +64,7 @@ prepare() {
     ext/rapidjson
     ext/rcheevos
     ext/SPIRV-Cross
+    ext/OpenXR-SDK
   )
   # Explicitly set origin URL for submodules using relative paths
   git remote set-url origin https://github.com/hrydgard/ppsspp.git
