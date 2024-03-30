@@ -1,7 +1,7 @@
 pkgbase = pacman-static
 	pkgdesc = Statically-compiled pacman (to fix or install systems without libc)
 	pkgver = 6.1.0
-	pkgrel = 2
+	pkgrel = 3
 	url = https://www.archlinux.org/pacman/
 	arch = i486
 	arch = i686
@@ -65,7 +65,6 @@ pkgbase = pacman-static
 	validpgpkeys = EFC0A467D613CB83C7ED6D30D894E2CE8B3D79F5
 	validpgpkeys = 5ED46A6721D365587791E2AA783FCD8E58BCAFBA
 	validpgpkeys = 3690C240CE51B4670D30AD1C38EE757D69184620
-	validpgpkeys = 22D465F2B4C173803B20C6DE59FCF207FEA7F445
 	validpgpkeys = EC3CFE88F6CA0788774F5C1D1AA44BE649DE760A
 	validpgpkeys = 4EF4AC63455FC9F4545D9B7DEF8FE99528B52FFD
 	validpgpkeys = D8692123C4065DEA5E0F3AB5249B39D24F25E3B6

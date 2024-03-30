@@ -16,7 +16,7 @@ _libarchive_ver=3.7.2
 _gpgerrorver=1.48
 _libassuanver=2.5.6
 _gpgmever=1.23.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -67,8 +67,7 @@ source+=(
 https://src.fedoraproject.org/lookaside/extras/xz/xz-5.4.6.tar.gz/sha512/083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3/xz-5.4.6.tar.gz
 https://src.fedoraproject.org/lookaside/extras/xz/xz-5.4.6.tar.gz.sig/sha512/d5e32b944e7492a32c40f675d918796e077f63490a23c6fce5c4d6d1eebc443f129d27a2e888913c5a36c3ffdac75b9c96c1749402283445e0ba9ff72b965741/xz-5.4.6.tar.gz.sig
 )
-validpgpkeys+=('3690C240CE51B4670D30AD1C38EE757D69184620'  # Lasse Collin <lasse.collin@tukaani.org>
-              '22D465F2B4C173803B20C6DE59FCF207FEA7F445') # Jia Tan <jiat0218@gmail.com>
+validpgpkeys+=('3690C240CE51B4670D30AD1C38EE757D69184620')  # Lasse Collin <lasse.collin@tukaani.org>
 # bzip2
 source+=("https://sourceware.org/pub/bzip2/bzip2-${_bzipver}.tar.gz"{,.sig})
 validpgpkeys+=('EC3CFE88F6CA0788774F5C1D1AA44BE649DE760A') # Mark Wielaard <mark@klomp.org>
