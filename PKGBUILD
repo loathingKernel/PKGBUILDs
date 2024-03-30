@@ -9,14 +9,14 @@ _nghttp2_ver=1.60.0
 _curlver=8.6.0
 _sslver=3.2.1
 _zlibver=1.3.1
-_xzver=5.6.1
+_xzver=5.4.6
 _bzipver=1.0.8
 _zstdver=1.5.5
 _libarchive_ver=3.7.2
 _gpgerrorver=1.48
 _libassuanver=2.5.6
 _gpgmever=1.23.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -62,7 +62,11 @@ validpgpkeys+=('8657ABB260F056B1E5190839D9C4D26D0E604491'  # Matt Caswell <matt@
 source+=("https://zlib.net/zlib-${_zlibver}.tar.gz"{,.asc})
 validpgpkeys+=('5ED46A6721D365587791E2AA783FCD8E58BCAFBA') # Mark Adler <madler@alumni.caltech.edu>
 # xz
-source+=("https://github.com/tukaani-project/xz/releases/download/v${_xzver}/xz-${_xzver}.tar.gz"{,.sig})
+#source+=("https://github.com/tukaani-project/xz/releases/download/v${_xzver}/xz-${_xzver}.tar.gz"{,.sig})
+source+=(
+https://src.fedoraproject.org/lookaside/extras/xz/xz-5.4.6.tar.gz/sha512/083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3/xz-5.4.6.tar.gz
+https://src.fedoraproject.org/lookaside/extras/xz/xz-5.4.6.tar.gz.sig/sha512/d5e32b944e7492a32c40f675d918796e077f63490a23c6fce5c4d6d1eebc443f129d27a2e888913c5a36c3ffdac75b9c96c1749402283445e0ba9ff72b965741/xz-5.4.6.tar.gz.sig
+)
 validpgpkeys+=('3690C240CE51B4670D30AD1C38EE757D69184620'  # Lasse Collin <lasse.collin@tukaani.org>
               '22D465F2B4C173803B20C6DE59FCF207FEA7F445') # Jia Tan <jiat0218@gmail.com>
 # bzip2
@@ -106,7 +110,7 @@ sha512sums=('da5e78506e0505aac47def4b658a8cd6012be90c7ad7f7343da2edca2df5bd01909
             'b5887ea77417fae49b6cb1e9fa782d3021f268d5219701d87a092235964f73fa72a31428b630445517f56f2bb69dcbbb24119ef9dbf8b4e40a753369a9f9a16f'
             '580677aad97093829090d4b605ac81c50327e74a6c2de0b85dd2e8525553f3ddde17556ea46f8f007f89e435493c9a20bc997d1ef1c1c2c23274528e3c46b94f'
             'SKIP'
-            '8af100eb83288f032e4813be2bf8de7d733c8761f77f078776c1391709241ad8fe3192d107664786e2543677915c5eeb3fe7add5c53b48b50c10a9de7c9f4fda'
+            'b08a61d8d478d3b4675cb1ddacdbbd98dc6941a55bcdd81a28679e54e9367d3a595fa123ac97874a17da571c1b712e2a3e901c2737099a9d268616a1ba3de497'
             'SKIP'
             '083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3'
             'SKIP'
