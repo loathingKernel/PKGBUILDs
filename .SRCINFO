@@ -12,7 +12,6 @@ pkgbase = universal-android-debloater
 	depends = android-tools
 	depends = gcc-libs
 	conflicts = universal-android-debloater-opengl
-	replaces = universal-android-debloater-opengl
 	source = universal-android-debloater-1.0.3.tar.gz::https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation/archive/refs/tags/v1.0.3.tar.gz
 	source = uad-ng.desktop
 	sha256sums = 312a428ca277f23af24b5562ab71e806442c90a23df1adca6ab8f934e765cb4a
