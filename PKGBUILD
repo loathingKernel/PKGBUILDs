@@ -19,7 +19,7 @@ pkgname=(
   'lib32-mesa'
 )
 pkgver=24.0.4
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Open-source OpenGL drivers - 32-bit"
 url="https://www.mesa3d.org/"
@@ -138,6 +138,7 @@ build() {
     -D glx=dri
     -D intel-clc=enabled
     -D intel-xe-kmd=enabled
+    -D libunwind=disabled
     -D llvm=enabled
     -D lmsensors=enabled
     -D microsoft-clc=disabled
