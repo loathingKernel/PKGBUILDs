@@ -4,13 +4,13 @@
 # Contributor: Adam Reichold <adam.reichold@t-online.de>
 pkgname=qpdfview
 pkgver=0.5.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A tabbed PDF viewer using the poppler library"
 url="https://launchpad.net/${pkgname}"
 arch=(x86_64)
-license=(GPL2)
-depends=(libcups libsynctex poppler-qt5 qt5-svg)
-makedepends=(qt5-tools libspectre djvulibre)
+license=(GPL-2.0-or-later)
+depends=(libcups libsynctex poppler-qt6 qt6-svg)
+makedepends=(qt6-tools libspectre djvulibre)
 optdepends=('libspectre: for PostScript support'
   'djvulibre: for DjVu support')
 source=(${url}/trunk/${pkgver}/+download/${pkgname}-${pkgver::-2}.tar.gz{,.asc})
@@ -24,8 +24,8 @@ prepare() {
 
 build() {
   cd ${pkgname}-${pkgver::-2}
-  lrelease-qt5 qpdfview.pro
-  qmake-qt5 qpdfview.pro
+  /usr/lib/qt6/bin/lrelease qpdfview.pro
+  qmake6 qpdfview.pro
   make
 }
 
