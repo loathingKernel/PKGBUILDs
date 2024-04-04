@@ -2,7 +2,7 @@
 
 pkgname=dwarfs
 pkgver=0.9.6
-pkgrel=1
+pkgrel=2
 pkgdesc="A fast high compression read-only file system"
 url='https://github.com/mhx/dwarfs'
 arch=('x86_64' 'aarch64')
@@ -56,7 +56,7 @@ check() {
   #TODO: Find a way to either load the `fuse` module for the tests or disable the tests only when `fuse` module is not
   #      loaded
   #      Also wtf with perfmon test??
-  cmake --build build --target test -- ARGS="-E 'dwarfs/tools_test\..*' -E 'dwarfsextract_test\.perfmon'"
+  cmake --build build --target test -- ARGS="-E '(dwarfs/tools_test\..*|dwarfsextract_test\.perfmon)'"
 }
 
 package() {
