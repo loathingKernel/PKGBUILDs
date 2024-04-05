@@ -1,7 +1,7 @@
 pkgbase = python-pytest-runner
 	pkgdesc = Invoke py.test as distutils command with dependency resolution
 	pkgver = 6.0.1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/pytest-dev/pytest-runner
 	arch = any
 	license = MIT
