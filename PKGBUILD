@@ -11,7 +11,7 @@ pkgname=(
   ppsspp-git
   ppsspp-assets-git
 )
-pkgver=1.17.1.r74.39fdba4f
+pkgver=1.17.1.r91.746696ab
 pkgrel=1
 pkgdesc='A PSP emulator written in C++'
 arch=(x86_64 aarch64)
@@ -53,25 +53,8 @@ pkgver() {
 
 prepare() {
   cd ppsspp
-  _ppsspp_submodules=(
-    ext/armips
-    ext/cpu_features
-    ext/discord-rpc
-    ffmpeg
-    ext/glslang
-    assets/lang
-    ext/libchdr
-    ext/miniupnp
-    ext/rapidjson
-    ext/rcheevos
-    ext/SPIRV-Cross
-    ext/OpenXR-SDK
-  )
-  # Explicitly set origin URL for submodules using relative paths
   git remote set-url origin https://github.com/hrydgard/ppsspp.git
-  for path in ${_ppsspp_submodules[@]}; do
-    git submodule update --init --filter=tree:0 --recursive "$path"
-  done
+  git submodule update --init --filter=tree:0 --recursive
 }
 
 build() {
