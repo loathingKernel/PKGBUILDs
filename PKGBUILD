@@ -1,7 +1,7 @@
 # Contributor: NexAdn <git@nexadn.de>
 # Maintainer: javsanpar <javsanpar@riseup.net>
 pkgname=abaddon
-pkgver=0.2.0
+pkgver=0.2.1
 pkgrel=1
 pkgdesc='An alternative Discord client made with C++/gtkmm'
 url='https://github.com/uowuo/abaddon'
