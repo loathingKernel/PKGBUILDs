@@ -5,8 +5,8 @@
 # Contributor: slact
 
 pkgname=tlpui
-pkgver=1.6.4
-pkgrel=3
+pkgver=1.6.5
+pkgrel=1
 epoch=2
 pkgdesc="A GTK user interface for TLP written in Python"
 arch=('any')
@@ -15,7 +15,7 @@ license=('GPL-2.0-or-later')
 depends=('tlp' 'python-gobject' 'hicolor-icon-theme' 'python-yaml' 'gtk3' 'python-toml')
 makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel' 'python-poetry')
 source=("https://github.com/d4nj1/TLPUI/archive/refs/tags/$pkgname-$pkgver.tar.gz")
-sha256sums=('6ad6fb4bee0a18b1c113f5eb3fb10d09c4249a8df323927af24d54e8d0e1325f')
+sha256sums=('7a7405d95b3e26298edb137252e75dfc2f2c76d933ac02d953b1071bdb0d5bec')
 
 build() {
   cd "TLPUI-$pkgname-$pkgver"
