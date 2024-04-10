@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="A web UI and orchestrator for restic backup."
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
 url="https://github.com/garethgeorge/${pkgname}"
-license=("GPL3")
+license=("GPL-3.0-or-later")
 depends=("restic")
 makedepends=("npm" "go" "go.rice")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
@@ -31,7 +31,7 @@ package() {
     install -Dm644 "${pkgname}@.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}@.service"
 
     cd "${pkgname}-${pkgver}"
-    install -Dm755 "${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
-    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-    install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+    install -Dm755 "${pkgname}"          "${pkgdir}/usr/bin/${pkgname}"
+    install -Dm644 LICENSE               "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dm644 README.md             "${pkgdir}/usr/share/doc/${pkgname}/README.md"
 }
