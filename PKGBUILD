@@ -2,7 +2,7 @@
 # Contributor: Daniel M. Capella <polycitizen@gmail.com>
 # Contributor: Bin Jin <bjin@ctrl-d.org>
 
-pkgname=shaderc-non-semantic-debug
+pkgname=shaderc
 pkgver=2024.0
 pkgrel=1
 pkgdesc='Collection of tools, libraries and tests for shader compilation'
