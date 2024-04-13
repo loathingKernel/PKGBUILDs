@@ -17,7 +17,9 @@ source=(
 shaderc-changes.patch)
 sha512sums=('ca80b22a80bf1a222e6deecbe63f99c6eed980c6c31b4f7981b6c8dc5637b7271c861543566e01aaf945df40da095b63a69f2e22f061a41faad2ecca5dc187ae')
 b2sums=('f11f2acad796f41015d4738b964526f119e944b1cfa2103ab3452adcf5790a04adbd10f9d55423b3ce567e87f64eb241067c786c4a7b76bb884aa70c100d0eb8')
-conflicts=(shaderc)
+conflicts=(
+    shaderc-${pkgver}
+shaderc-2023.8-1)
 
 prepare() {
     cd shaderc-${pkgver}
