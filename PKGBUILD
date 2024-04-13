@@ -19,7 +19,7 @@ sha512sums=('ca80b22a80bf1a222e6deecbe63f99c6eed980c6c31b4f7981b6c8dc5637b7271c8
 b2sums=('f11f2acad796f41015d4738b964526f119e944b1cfa2103ab3452adcf5790a04adbd10f9d55423b3ce567e87f64eb241067c786c4a7b76bb884aa70c100d0eb8')
 
 prepare() {
-    cd ${pkgname}-${pkgver}
+    cd "src/${pkgname}-${pkgver}"
     patch -p1 < "../shaderc-changes.patch"
     # de-vendor libs and disable git versioning
     sed '/examples/d;/third_party/d' -i CMakeLists.txt
