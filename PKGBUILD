@@ -2,7 +2,7 @@
 # Contributor: Daniel M. Capella <polycitizen@gmail.com>
 # Contributor: Bin Jin <bjin@ctrl-d.org>
 
-pkgname=shaderc
+pkgname=shaderc-non-semantic-debug
 pkgver=2024.0
 pkgrel=1
 pkgdesc='Collection of tools, libraries and tests for shader compilation'
@@ -19,7 +19,7 @@ sha512sums=('ca80b22a80bf1a222e6deecbe63f99c6eed980c6c31b4f7981b6c8dc5637b7271c8
 b2sums=('f11f2acad796f41015d4738b964526f119e944b1cfa2103ab3452adcf5790a04adbd10f9d55423b3ce567e87f64eb241067c786c4a7b76bb884aa70c100d0eb8')
 
 prepare() {
-    cd "src/${pkgname}-${pkgver}"
+    cd ${pkgname%%-non-semantic-debug}-${pkgver}
     patch -p1 < "../shaderc-changes.patch"
     # de-vendor libs and disable git versioning
     sed '/examples/d;/third_party/d' -i CMakeLists.txt
@@ -32,7 +32,7 @@ EOF
 }
 
 build() {
-    cd ${pkgname}-${pkgver}
+    cd ${pkgname%%-non-semantic-debug}-${pkgver}
     cmake \
     -B build \
     -GNinja \
@@ -49,12 +49,12 @@ build() {
 }
 
 check() {
-    cd ${pkgname}-${pkgver}
+    cd ${pkgname%%-non-semantic-debug}-${pkgver}
     ninja -C build test
 }
 
 package() {
-    cd ${pkgname}-${pkgver}
+    cd ${pkgname%%-non-semantic-debug}-${pkgver}
     DESTDIR="${pkgdir}" ninja -C build install
     install -Dm 644 glslc/glslc.1 -t "${pkgdir}/usr/share/man/man1"
     
