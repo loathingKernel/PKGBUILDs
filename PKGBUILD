@@ -27,10 +27,10 @@ build() {
 }
 
 package() {
-    install -Dm644 "${pkgname}@.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}@.service"
+    install -Dm644 "${pkgname}@.service" -t "${pkgdir}/usr/lib/systemd/system"
 
     cd "${pkgname}-${pkgver}"
-    install -Dm755 "${pkgname}"          "${pkgdir}/usr/bin/${pkgname}"
-    install -Dm644 LICENSE               "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-    install -Dm644 README.md             "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+    install -Dm755 "${pkgname}"          -t "${pkgdir}/usr/bin"
+    install -Dm644 LICENSE               -t "${pkgdir}/usr/share/licenses/${pkgname}"
+    install -Dm644 {README,CHANGELOG}.md -t "${pkgdir}/usr/share/doc/${pkgname}"
 }
