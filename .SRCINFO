@@ -15,6 +15,7 @@ pkgbase = shaderc-non-semantic-debug
 	depends = glslang
 	depends = spirv-tools
 	provides = libshaderc_shared.so
+	provides = shaderc
 	conflicts = shaderc
 	source = https://github.com/google/shaderc/archive/v2024.0/shaderc-2024.0.tar.gz
 	source = shaderc-changes.patch
