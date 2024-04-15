@@ -1,11 +1,12 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-experimental
-_srctag=9.0-20240320
+_srctag=9.0-20240411
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.0.0
+_xaliaver=0.4.1
 pkgrel=1
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch"
@@ -88,6 +89,7 @@ source=(
     proton::git+https://github.com/ValveSoftware/Proton.git#tag=experimental-${_srctag}
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
+    https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
     0001-AUR-Pkgbuild-changes.patch
     0002-AUR-Do-not-update-cargo-crates.patch
     0003-AUR-Remove-kaldi-openfst-vosk-api-modules-because-of.patch
@@ -98,6 +100,7 @@ source=(
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
     wine-mono-${_monover}-x86.tar.xz
+    xalia-${_xaliaver}-net48-mono.zip
 )
 
 _make_wrappers () {
@@ -144,12 +147,13 @@ prepare() {
     [ ! -d contrib ] && mkdir -p contrib
     mv "$srcdir"/wine-gecko-${_geckover}-x86{,_64}.tar.xz contrib/
     mv "$srcdir"/wine-mono-${_monover}-x86.tar.xz contrib/
+    mv "$srcdir"/xalia-${_xaliaver}-net48-mono.zip contrib/
 
     # Explicitly set origin URL for submodules using relative paths
     git remote set-url origin https://github.com/ValveSoftware/Proton.git
     git submodule update --init --filter=tree:0 --recursive
 
-    for rustlib in gst-plugins-rs media-converter; do
+    for rustlib in gst-plugins-rs; do
     pushd $rustlib
         export RUSTUP_TOOLCHAIN=stable
         export CARGO_HOME="${SRCDEST}"/proton-cargo
@@ -253,13 +257,14 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('39eb6a474ccda025e12c6f2a98508cf2d1676f2fc300c330ab944dbe7e858fd0'
+sha256sums=('15daf1f0e847ab05b6945b5c2c6104ae59d584f6d508ac36af37ca468ba5d2dd'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             'd73d440c08ebd67c93fbd6534f4f1b4e98aa07342f9c7d98c8aaeb74755eb9cf'
-            'cb1b1d00b4d2d06a2d897faabd791d1e899eb97ad56b17f15a95e50a678bc149'
-            '0fe09acabf88aedd9e4c5dbf54ed17cb082d5721c470fe0349b50ffc1f524dde'
-            '4d6193ff0e8d9235b48ea96a419ace219a3c08eaabf5177ae94732841b906342'
-            'b4c695330b5a7d8fc7643f77db806d5e448994acc589ebdbad45c6d11b6ca3ef'
-            'efb778b2fb54c87a6a76b50232ba10bda6cf5848707322fca3fc51b2298bc019'
-            'd53330006cf77c8fbff6b11897e23ad1853ed96276c63e0e4adb591f39ce8cfa')
+            'a652c3289fb444efb2fbd8b5757484e21ffe6a537b3a3f9a0fbb04a9a10afcba'
+            '60a55b54a9e6bd6f31e9850c5d7b64596e8a11db2222fa5bdb4868c46d94e06e'
+            '8b9cea08ebe45002fd3e81b17332fccf48c3eb42bcc80cafc38cd58ebae5ffe4'
+            'd4aff4eaf001dc329b91d706d7ae5389528a482689b62afd03798f54365c55f1'
+            'cd276b4f4014361de97afafa73e5c252de6fcde8bf5370523fd29ee30d9e0624'
+            '1aab55361a77af5fe766fb3dbf88b167d55be5fffb0b7f2633fcab1b807480a3'
+            'd985a675fc137347afa4f864758efe7c5e34196367f2fa6e48df1a4e56ed0139')
