@@ -1,11 +1,12 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom
-_srctag=GE-Proton9-2
-_commit=920d980b0c7c5ed1eee669e7717fff2467834011
+_srctag=GE-Proton9-3
+_commit=c3bef29305af40b75514929e15ba55fa50f7f820
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.0.0
+_xaliaver=0.4.1
 pkgrel=1
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build"
@@ -88,6 +89,7 @@ source=(
     proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#commit=${_commit}
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
+    https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
     0001-AUR-Pkgbuild-changes.patch
     0002-AUR-Do-not-update-cargo-crates.patch
     0003-AUR-Remove-kaldi-openfst-vosk-api-modules-because-of.patch
@@ -98,6 +100,7 @@ source=(
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
     wine-mono-${_monover}-x86.tar.xz
+    xalia-${_xaliaver}-net48-mono.zip
 )
 
 _make_wrappers () {
@@ -144,12 +147,13 @@ prepare() {
     [ ! -d contrib ] && mkdir -p contrib
     mv "$srcdir"/wine-gecko-${_geckover}-x86{,_64}.tar.xz contrib/
     mv "$srcdir"/wine-mono-${_monover}-x86.tar.xz contrib/
+    mv "$srcdir"/xalia-${_xaliaver}-net48-mono.zip contrib/
 
     # Explicitly set origin URL for submodules using relative paths
     git remote set-url origin https://github.com/gloriouseggroll/proton-ge-custom.git
     git submodule update --init --filter=tree:0 --recursive
 
-    for rustlib in gst-plugins-rs media-converter; do
+    for rustlib in gst-plugins-rs; do
     pushd $rustlib
         export RUSTUP_TOOLCHAIN=stable
         export CARGO_HOME="${SRCDEST}"/proton-cargo
@@ -255,13 +259,14 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('b97347ba3da0dd61392c155dbc459f700d8f2a3b33597c693f7fad37863eb796'
+sha256sums=('075afeff760e2a5faad5a6d620e27530677906c0fc58a5577e13df99ec7062b6'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             'd73d440c08ebd67c93fbd6534f4f1b4e98aa07342f9c7d98c8aaeb74755eb9cf'
-            '916544ff84ff7e954ac5a4698696f9a7c9c77b382372a23d2c7e456437658605'
-            'e94580843ded95c10b1f39cf11b0777e1ff356bb4992822b55116957a14805e3'
-            '9afea8a585e41b9c84c06863ba550e2c447c08e6a154a6a7da0e74db85cb4778'
-            'c94902f3c6fef6fc7ffaa92f59efcf6f2416a0a2d703bbdf68bbf6d3acb489b6'
-            'a4faffa9065e6e93f21d1e53527a3e96efda2c82aa6b6f9cb94407abe3dd74a1'
-            '469f971c25856988e0ee6c0b654b95fb1c2ba344e29850a27c7b90911468257a')
+            'a652c3289fb444efb2fbd8b5757484e21ffe6a537b3a3f9a0fbb04a9a10afcba'
+            '1f7267cb9efcbd61b41c1e6fdf5741202f34b5efd7e61ee6dff782e148969d31'
+            '07329babba794ce1428fd3f9910040d12afc478985ec0b5d4e31b24f9d1262b5'
+            '54fabb6cb5ab1c93a9d012340a4eb6b614f89fb849838f133210bfd823838739'
+            'ded35383985eb53a9a03692e62c17cf83461929c781a1973c9b769e7fdf5489b'
+            'b57e5a9d575d38367f1e91fd658282f787f9434007b60fffc79f5360eebeceee'
+            '3607adae993ed293702c15f27fb768f39128171caba1f9dbf27af3ce84d41f17')
