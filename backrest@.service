@@ -8,6 +8,7 @@ Type=simple
 User=%i
 Restart=on-failure
 Environment=BACKREST_RESTIC_COMMAND=/usr/bin/restic
+Environment=BACKREST_PORT=127.0.0.1:9898
 ExecStart=/usr/bin/backrest
 
 [Install]
