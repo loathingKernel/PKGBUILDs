@@ -1,7 +1,7 @@
 # Maintainer: Ilya Zlobintsev <ilya.zl@protonmail.com>
 pkgname=('lact' 'lact-libadwaita')
 pkgbase=lact
-pkgver=0.5.3
+pkgver=0.5.4
 pkgrel=1
 pkgdesc="AMDGPU Controller application"
 arch=('x86_64' 'aarch64')
