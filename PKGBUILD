@@ -2,7 +2,7 @@
 pkgname=('lact' 'lact-libadwaita')
 pkgbase=lact
 pkgver=0.5.4
-pkgrel=1
+pkgrel=2
 pkgdesc="AMDGPU Controller application"
 arch=('x86_64' 'aarch64')
 url="https://github.com/ilya-zlobintsev/LACT"
@@ -39,7 +39,7 @@ check() {
   cd "LACT"
   export CARGO_HOME="$srcdir/cargo-home"
   export RUSTUP_TOOLCHAIN=stable
-  cargo test --frozen --no-default-features
+  cargo test --frozen --no-default-features -p lact
 }
 
 package_lact() {
