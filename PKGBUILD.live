@@ -3,7 +3,7 @@
 # Contributor: archlinux.info:tdy
 
 pkgname=vitables
-pkgver=3.0.2.r14.g08709d4
+pkgver=3.0.3.r10.g3df4cf2
 pkgrel=1
 pkgdesc="A GUI browser and editor for PyTables/HDF5 files"
 arch=(any)
