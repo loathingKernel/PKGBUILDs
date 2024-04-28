@@ -19,7 +19,7 @@ pkgname=(
   'lib32-mesa'
 )
 pkgver=24.0.6
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Open-source OpenGL drivers - 32-bit"
 url="https://www.mesa3d.org/"
@@ -64,6 +64,7 @@ makedepends=(
   'libclc'
   'meson'
   'python-mako'
+  'python-packaging'
   'python-ply'
   'rust-bindgen'
   'wayland-protocols'
