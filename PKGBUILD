@@ -2,7 +2,7 @@
 
 pkgname=python-pandarallel
 pkgver=1.6.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple and efficient tool to parallelize Pandas operations on all available CPUs"
 arch=('x86_64')
 url="https://github.com/nalepae/pandarallel"

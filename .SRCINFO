@@ -1,7 +1,7 @@
 pkgbase = python-pandarallel
 	pkgdesc = A simple and efficient tool to parallelize Pandas operations on all available CPUs
 	pkgver = 1.6.5
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/nalepae/pandarallel
 	arch = x86_64
 	license = BSD
