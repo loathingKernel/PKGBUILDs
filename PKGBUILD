@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <username ta gmail tod com>
 
 pkgname=python-pandasvault-git
-pkgver=0.r74.53e7077
+pkgver=0.r84.4e962f2
 pkgrel=1
 pkgdesc="Advanced Pandas Vault — Utilities, Functions and Snippets."
 arch=('x86_64')
