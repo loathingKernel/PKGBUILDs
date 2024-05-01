@@ -1,6 +1,6 @@
 pkgbase = minio
 	pkgdesc = Object storage server compatible with Amazon S3
-	pkgver = 2024.04.28
+	pkgver = 2024.05.01
 	pkgrel = 1
 	url = https://minio.io
 	arch = x86_64
@@ -10,11 +10,11 @@ pkgbase = minio
 	depends = glibc
 	options = !lto
 	backup = etc/minio/minio.conf
-	source = git+https://github.com/minio/minio.git#tag=RELEASE.2024-04-28T17-53-50Z
+	source = git+https://github.com/minio/minio.git#tag=RELEASE.2024-05-01T01-11-10Z
 	source = minio.conf
 	source = minio.service
 	source = minio.sysusers
-	sha512sums = 99af66d1a9946f6bd87bef38600ac02c33ab77cb78eb567fe7f7317f039de9830ab88e776151e844dbd96633d3eb69c433574238ccb990c5e6da66437fd3c1d5
+	sha512sums = 7227ce691b957889b5b999b4c922d3e92e546f91825dd8ea2679035a13ca479cfcabc10e25b239b1c51e144b35e47475e9e56d092694a2cc8465d6616cbf61d9
 	sha512sums = 9fb09d19af9d7a00e4680cd92d208ddd44ce52328f6efee68d7ee47f591cbe77ee88ce139a677bcf8836de0643de18c6c7c4005d50b0056f9b861c3d595e5233
 	sha512sums = f4df8e50618712b6e5f62e2674eca4430ef17ef003426bd83ea6b427da4e0fb519589cc14547b08db4b4a0de114488920071295a680b0c1cb5fd508d31576190
 	sha512sums = 7e4617aed266cf48a2ff9b0e80e31641d998537c78d2c56ce97b828cfc77d96dbf64728d4235dac7382d6e5b201388bef6722959302de5e2298d93f4ec1e0e63
