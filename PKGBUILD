@@ -2,7 +2,7 @@
 
 pkgname=dwarfs
 pkgver=0.9.9
-pkgrel=1
+pkgrel=2
 pkgdesc="A fast high compression read-only file system"
 url='https://github.com/mhx/dwarfs'
 arch=('x86_64' 'aarch64')
@@ -39,6 +39,7 @@ build() {
   export CFLAGS="$CFLAGS -DNDEBUG"
   export CXXFLAGS="$CXXFLAGS -DNDEBUG"
 
+  # Disable ccache here since makepkg already handly this
   cmake -B build -S "$pkgname-$pkgver" \
     -W no-dev \
     -D CMAKE_INSTALL_PREFIX=/usr \
@@ -47,7 +48,9 @@ build() {
     -D PREFER_SYSTEM_ZSTD=ON \
     -D PREFER_SYSTEM_XXHASH=ON \
     -D PREFER_SYSTEM_LIBFMT=ON \
-    -D PREFER_SYSTEM_GTEST=ON
+    -D PREFER_SYSTEM_GTEST=ON \
+    -D DISABLE_CCACHE=ON \
+    -D DISABLE_MOLD=ON
 
   cmake --build build
 }
