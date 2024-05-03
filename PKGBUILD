@@ -6,22 +6,22 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-ge-custom-opt
-_srctag=GE-Proton8-26
-_commit=21f5f463cb761b94bcd00553f924f55516389f5b
+_srctag=GE-Proton9-4
+_commit=e664ad5c3bdb4b6bc20882232cc88eb00784295f
 pkgver=${_srctag//-/.}
-pkgrel=2
+pkgrel=1
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
 
-source=(wine-ge-custom::git+https://github.com/GloriousEggroll/wine-ge-custom.git#commit=${_commit}
+source=(wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#commit=${_commit}
         wine-wmclass.patch
         wine-isolate_home.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('SKIP'
+sha512sums=('1ddc28026d4b54f585e1fb953f0a223fa6433ed7115ea16b50d29a5c6ba5b69da5d25c29ccc6036fb831dfff98f47b2eeb903869f740b702b0eb7aac6a658d31'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
@@ -46,6 +46,10 @@ depends=(
   gcc-libs         lib32-gcc-libs
   libpcap          lib32-libpcap
   desktop-file-utils
+)
+depends+=(
+  libxkbcommon     lib32-libxkbcommon
+  wayland          lib32-wayland
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
@@ -107,34 +111,27 @@ prepare() {
   mkdir ${pkgname//-opt}-{32,64}-build
 
   pushd ${pkgname//-opt}
-    git remote set-url origin https://github.com/gloriouseggroll/wine-ge-custom.git
-    git submodule update --init --filter=tree:0 --recursive proton-wine
-    pushd proton-wine
+    git remote set-url origin https://github.com/loathingKernel/wine-ge-custom.git
+    git submodule update --init --filter=tree:0 --recursive wine wine-staging
+    ./patches/protonprep-lutris-staging.sh
+    pushd wine
       patch -p1 -i "$srcdir"/wine-wmclass.patch
       patch -p1 -i "$srcdir"/wine-isolate_home.patch
       git config user.email "makepkg@aur.not"
       git config user.name "makepkg aur"
-      git tag wine-ge-8.0 --annotate -m "$pkgver"
-      dlls/winevulkan/make_vulkan
-      tools/make_requests
+      git tag wine-ge-9.0 --annotate -m "$pkgver"
+      ./tools/make_specfiles
+      ./tools/make_requests
+      ./dlls/winevulkan/make_vulkan
       autoreconf -f
     popd
   popd
-
-  # Doesn't compile without remove these flags as of 4.10
-  export CFLAGS="${CFLAGS/-fno-plt/}"
-  export LDFLAGS="${LDFLAGS/,-z,now/}"
 }
 
 build() {
-  cd "$srcdir"
-
   # Doesn't compile without remove these flags as of 4.10
   export CFLAGS="${CFLAGS/-fno-plt/}"
-  export CXXFLAGS="${CXXFLAGS/-fno-plt/}"
   export LDFLAGS="${LDFLAGS/,-z,now/}"
-  # MingW Wine builds fail with relro
-  export LDFLAGS="${LDFLAGS/,-z,relro/}"
 
   local -a split=($CFLAGS)
   local -A flags
@@ -150,6 +147,8 @@ build() {
   export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
   export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
 
+  cd "$srcdir"
+
   msg2 "Building Wine-64..."
 
   export CFLAGS="$COMMON_FLAGS -mcmodel=small"
@@ -158,10 +157,11 @@ build() {
   export CROSSCXXFLAGS="$CXXFLAGS"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/${pkgname//-opt}-64-build"
-  ../${pkgname//-opt}/proton-wine/configure \
+  ../${pkgname//-opt}/wine/configure \
     --prefix=/opt/"${pkgname//-opt}" \
     --libdir=/opt/"${pkgname//-opt}"/lib \
     --with-x \
+    --with-wayland \
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
@@ -182,9 +182,10 @@ build() {
   export CROSSCXXFLAGS="$CXXFLAGS"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/${pkgname//-opt}-32-build"
-  ../${pkgname//-opt}/proton-wine/configure \
+  ../${pkgname//-opt}/wine/configure \
     --prefix=/opt/"${pkgname//-opt}" \
     --with-x \
+    --with-wayland \
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
