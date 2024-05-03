@@ -1,0 +1,27 @@
+pkgbase = sdl-jstest
+	pkgdesc = Simple SDL joystick test application for the console
+	pkgver = 0.2.2.r12.e41cb80
+	pkgrel = 1
+	url = https://gitlab.com/sdl-jstest/sdl-jstest.git
+	arch = x86_64
+	license = GPLv3
+	makedepends = sdl
+	makedepends = sdl2
+	makedepends = git
+	makedepends = cmake
+	makedepends = docbook2x
+	depends = ncurses
+	source = git+https://gitlab.com/sdl-jstest/sdl-jstest.git#commit=e41cb8081789b54244bb589fff08adc916cf7d64
+	source = git+https://github.com/grumbel/tinycmmc.git
+	source = git+https://github.com/gabomdq/SDL_GameControllerDB.git
+	sha256sums = SKIP
+	sha256sums = SKIP
+	sha256sums = SKIP
+
+pkgname = sdl-jstest
+	depends = ncurses
+	depends = sdl
+
+pkgname = sdl2-jstest
+	depends = ncurses
+	depends = sdl2
