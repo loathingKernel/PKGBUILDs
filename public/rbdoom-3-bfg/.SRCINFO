@@ -1,12 +1,13 @@
 pkgbase = rbdoom-3-bfg
 	pkgdesc = Doom 3 BFG Edition with modern engine features like PBR, Baked Global Illumination, Soft Shadows
 	pkgver = 1.5.1
-	pkgrel = 9
+	pkgrel = 10
 	url = https://github.com/RobertBeckebans/RBDOOM-3-BFG
 	install = rbdoom-3-bfg.install
 	arch = x86_64
 	license = GPL3
 	makedepends = git
+	makedepends = clang
 	makedepends = cmake
 	makedepends = glu
 	makedepends = vulkan-headers

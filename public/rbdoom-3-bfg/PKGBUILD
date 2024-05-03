@@ -5,7 +5,7 @@
 pkgname=rbdoom-3-bfg
 _srctag=1.5.1
 pkgver=${_srctag//-/.}
-pkgrel=9
+pkgrel=10
 pkgdesc="Doom 3 BFG Edition with modern engine features like PBR, Baked Global Illumination, Soft Shadows"
 arch=('x86_64')
 url="https://github.com/RobertBeckebans/RBDOOM-3-BFG"
@@ -17,6 +17,7 @@ depends=(
 )
 makedepends=(
   git
+  clang
   cmake
   glu
   vulkan-headers
@@ -47,10 +48,12 @@ prepare() {
 }
 
 build() {
+  export CC=clang
+  export CXX=clang++
   cmake \
     -S RBDOOM-3-BFG/neo \
     -B build \
-    -DCMAKE_BUILD_TYPE="Release" \
+    -DCMAKE_BUILD_TYPE="None" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DWINDOWS10=OFF \
     -DUSE_DX12=OFF \

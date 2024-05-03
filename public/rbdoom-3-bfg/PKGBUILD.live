@@ -16,6 +16,7 @@ depends=(
 )
 makedepends=(
   git
+  clang
   cmake
   glu
   vulkan-headers
@@ -50,10 +51,12 @@ prepare() {
 }
 
 build() {
+  export CC=clang
+  export CXX=clang++
   cmake \
     -S RBDOOM-3-BFG/neo \
     -B build \
-    -DCMAKE_BUILD_TYPE="Release" \
+    -DCMAKE_BUILD_TYPE="None" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DWINDOWS10=OFF \
     -DUSE_DX12=OFF \
