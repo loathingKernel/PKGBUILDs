@@ -1,0 +1,20 @@
+name: coolercontrol
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/coolercontrol/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        include:
+          - repository: public
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: aur/coolercontrol
+      repository: ${{ matrix.repository }}

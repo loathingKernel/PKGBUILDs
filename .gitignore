@@ -1,0 +1,17 @@
+*.tar
+*.tar.*
+*.jar
+*.exe
+*.msi
+*.zip
+*.tgz
+*.log
+*.log.*
+*.sig
+
+.git_old/
+configs/
+pkg/
+src/
+SRCDEST/
+PKGDEST/

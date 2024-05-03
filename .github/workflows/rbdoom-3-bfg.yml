@@ -1,0 +1,22 @@
+name: rbdoom-3-bfg
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 7 */7 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - public/rbdoom-3-bfg/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public, personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: public/rbdoom-3-bfg
+      repository: ${{ matrix.repository }}
+      pkgbuild: PKGBUILD.live

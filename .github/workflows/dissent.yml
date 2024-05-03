@@ -1,0 +1,20 @@
+name: dissent
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/dissent/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: aur/dissent
+      repository: ${{ matrix.repository }}
+      action: build

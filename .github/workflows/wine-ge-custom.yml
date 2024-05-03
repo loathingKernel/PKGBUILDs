@@ -1,0 +1,20 @@
+name: wine-ge-custom
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - public/wine-ge-custom/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public, personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: public/wine-ge-custom
+      repository: ${{ matrix.repository }}
+      multilib: true

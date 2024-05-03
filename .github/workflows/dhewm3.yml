@@ -1,0 +1,22 @@
+name: dhewm3
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 8 */7 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - local/dhewm3/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public, personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/dhewm3
+      repository: ${{ matrix.repository }}
+      pkgbuild: PKGBUILD.live

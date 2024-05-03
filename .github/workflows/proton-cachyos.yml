@@ -1,0 +1,21 @@
+name: proton-cachyos
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - local/proton-cachyos/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/proton-cachyos
+      repository: ${{ matrix.repository }}
+      multilib: true
+      action: skip

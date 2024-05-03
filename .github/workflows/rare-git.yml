@@ -1,0 +1,19 @@
+name: rare-git
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - local/rare-git/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/rare-git
+      repository: ${{ matrix.repository }}

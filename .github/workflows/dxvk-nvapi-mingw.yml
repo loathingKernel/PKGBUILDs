@@ -1,0 +1,19 @@
+name: dxvk-nvapi-mingw
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - public/dxvk-nvapi-mingw/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: public/dxvk-nvapi-mingw
+      repository: ${{ matrix.repository }}

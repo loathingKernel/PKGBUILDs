@@ -1,0 +1,21 @@
+name: dxvk-nvapi-mingw-git
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 3 */3 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - public/dxvk-nvapi-mingw-git/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: public/dxvk-nvapi-mingw-git
+      repository: ${{ matrix.repository }}

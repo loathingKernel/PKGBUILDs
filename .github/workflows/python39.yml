@@ -1,0 +1,19 @@
+name: python39
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - local/python39/.SRCINFO
+
+jobs:
+  public:
+    uses: ./.github/workflows/job_pkgbuild.yml
+    with:
+      pkgdir: local/python39
+      pacman_conf: .github/conf/public_pacman.conf
+      makepkg_conf: .github/conf/public_makepkg.conf
+      makepkg_args: --skippgpcheck
+      release_tag: loathk-public

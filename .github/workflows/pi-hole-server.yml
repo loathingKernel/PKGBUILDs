@@ -1,0 +1,18 @@
+name: pi-hole-server
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/pi-hole-server/.SRCINFO
+
+jobs:
+  public:
+    uses: ./.github/workflows/job_pkgbuild.yml
+    with:
+      pkgdir: aur/pi-hole-server
+      pacman_conf: .github/conf/public_pacman.conf
+      makepkg_conf: .github/conf/public_makepkg.conf
+      release_tag: loathk-public

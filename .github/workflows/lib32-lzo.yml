@@ -1,0 +1,19 @@
+name: lib32-lzo
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/lib32-lzo/.SRCINFO
+
+jobs:
+  public:
+    uses: ./.github/workflows/job_pkgbuild.yml
+    with:
+      pkgdir: aur/lib32-lzo
+      pacman_conf: .github/conf/public_pacman.conf
+      makepkg_conf: .github/conf/public_makepkg.conf
+      multilib: true
+      release_tag: loathk-public

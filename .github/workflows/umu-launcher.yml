@@ -1,0 +1,19 @@
+name: umu-launcher
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - public/umu-launcher/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: public/umu-launcher
+      repository: ${{ matrix.repository }}

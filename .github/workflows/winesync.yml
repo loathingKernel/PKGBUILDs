@@ -1,0 +1,20 @@
+name: winesync
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - local/winesync/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        include:
+          - repository: public
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/winesync
+      repository: ${{ matrix.repository }}

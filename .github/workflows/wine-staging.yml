@@ -1,0 +1,27 @@
+name: wine-staging
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - multilib/wine-staging/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        include:
+          - repository: public
+            pkgbuild: PKGBUILD
+            multilib: true
+          - repository: personal
+            pkgbuild: PKGBUILD
+            multilib: true
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: multilib/wine-staging
+      repository: ${{ matrix.repository }}
+      pkgbuild: ${{ matrix.pkgbuild }}
+      multilib: ${{ matrix.multilib }}

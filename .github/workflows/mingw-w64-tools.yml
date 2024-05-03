@@ -1,0 +1,19 @@
+name: mingw-w64-tools
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/mingw-w64-tools/.SRCINFO
+
+jobs:
+  public:
+    uses: ./.github/workflows/job_pkgbuild.yml
+    with:
+      pkgdir: aur/mingw-w64-tools
+      pacman_conf: .github/conf/public_pacman.conf
+      makepkg_conf: .github/conf/public_makepkg.conf
+      makepkg_args: --skippgpcheck
+      release_tag: loathk-public

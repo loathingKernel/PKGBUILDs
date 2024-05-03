@@ -1,0 +1,20 @@
+name: arenatracker-git
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - public/arenatracker-git/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        include:
+          - repository: public
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: public/arenatracker-git
+      repository: ${{ matrix.repository }}

@@ -1,0 +1,22 @@
+name: lgogdownloader
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 7 */8 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - aur/lgogdownloader/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: aur/lgogdownloader
+      repository: ${{ matrix.repository }}
+      pkgbuild: PKGBUILD.live

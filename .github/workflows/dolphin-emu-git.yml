@@ -1,0 +1,29 @@
+name: dolphin-emu-git
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 */7 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - local/dolphin-emu-git/.SRCINFO
+
+jobs:
+  public:
+    uses: ./.github/workflows/job_pkgbuild.yml
+    with:
+      pkgdir: local/dolphin-emu-git
+      pacman_conf: .github/conf/public_pacman.conf
+      makepkg_conf: .github/conf/public_makepkg.conf
+      makepkg_args: -p PKGBUILD
+      release_tag: loathk-public
+  personal:
+    uses: ./.github/workflows/job_pkgbuild.yml
+    with:
+      pkgdir: local/dolphin-emu-git
+      pacman_conf: .github/conf/personal_pacman.conf
+      makepkg_conf: .github/conf/personal_makepkg.conf
+      makepkg_args: -p PKGBUILD
+      release_tag: loathk-personal

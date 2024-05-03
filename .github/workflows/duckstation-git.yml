@@ -1,0 +1,21 @@
+name: duckstation-git
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 */7 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - local/duckstation-git/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public, personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/duckstation-git
+      repository: ${{ matrix.repository }}

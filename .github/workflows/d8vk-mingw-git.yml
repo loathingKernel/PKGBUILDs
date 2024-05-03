@@ -1,0 +1,21 @@
+name: d8vk-mingw-git
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 */3 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - local/d8vk-mingw-git/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public, personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/d8vk-mingw-git
+      repository: ${{ matrix.repository }}
