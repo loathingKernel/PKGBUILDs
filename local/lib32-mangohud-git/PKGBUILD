@@ -1,0 +1,57 @@
+# Maintainer: Campbell Jones <arch at serebit dot com>
+# Co-Maintainer: George Rawlinson <george@rawlinson.net.nz>
+# Contributor: Mark Wagie <mark dot wagie at proton dot me>
+# Contributor: Ranieri Althoff <ranisalt+aur at gmail dot com>
+_pkgname=MangoHud
+pkgname=lib32-mangohud-git
+_pkgver=0.7.1-1
+pkgver=0.7.1.r20.g5598fda
+pkgrel=1
+pkgdesc="32-bit libraries for MangoHud and MangoApp"
+arch=('x86_64')
+url="https://github.com/flightlessmango/MangoHud"
+license=('MIT')
+makedepends=('git' 'glfw' 'glslang' 'lib32-cmocka' 'lib32-libglvnd' 'lib32-libxrandr' 'libxnvctrl' 'meson' 'nlohmann-json' 'python-mako' 'vulkan-headers')
+depends=('lib32-dbus' 'lib32-gcc-libs' 'lib32-glew' 'lib32-libx11' 'lib32-libxkbcommon' 'lib32-vulkan-icd-loader')
+provides=("${pkgname//-git}")
+conflicts=("${pkgname//-git}" 'lib32-mangoapp')
+replaces=('lib32-mangoapp')
+source=("git+https://github.com/flightlessmango/MangoHud.git")
+b2sums=('SKIP')
+
+pkgver() {
+    cd "$_pkgname"
+    git describe --long --tags | sed -r 's/^v//;s/([^-]*-g)/r\1/;s/-/./g'
+}
+
+prepare() {
+    cd "$_pkgname"
+
+    # Use system cmocka instead of subproject
+    sed -i "s/  cmocka = subproject('cmocka')//g" meson.build
+    sed -i "s/cmocka_dep = cmocka.get_variable('cmocka_dep')/cmocka_dep = dependency('cmocka')/g" meson.build
+}
+
+build() {
+    export CC="gcc -m32"
+    export CXX="g++ -m32"
+    export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
+    export LLVM_CONFIG="/usr/bin/llvm-config32"
+
+    arch-meson "$_pkgname" build \
+        --wrap-mode=nofallback \
+        -Dmangoapp_layer=true \
+        -Dinclude_doc=false \
+        --libdir lib32
+
+    meson compile -C build
+}
+
+package() {
+    meson install -C build --tags runtime,mangoapp --destdir "$pkgdir"
+
+    # mangoplot is provided by mangohud, no option to disable in the build
+    rm -rf "$pkgdir/usr/bin"
+
+    install -Dm 0644 "$srcdir/$_pkgname/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
