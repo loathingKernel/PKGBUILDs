@@ -1,0 +1,128 @@
+# Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
+
+pkgname=d8vk-mingw-git
+pkgver=1.7.1.r2367.g1a039a47
+pkgrel=2
+pkgdesc='Vulkan-based implementation of D3D8 and D3D9 based on DXVK for Linux / Wine, MingW version'
+arch=('x86_64')
+url="https://github.com/AlpyneDreams/d8vk"
+license=('zlib/libpng')
+makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'mingw-w64-gcc')
+provides=('d8vk' "d8vk=$pkgver")
+conflicts=('d8vk')
+options=(!lto !staticlibs)
+source=(
+    "git+https://github.com/AlpyneDreams/d8vk.git"
+    "d8vk-extraopts.patch"
+    "setup_d8vk.sh"
+    "setup_d8vk"
+)
+
+pkgver() {
+    cd d8vk
+    printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g')"
+}
+
+prepare() {
+    cd d8vk
+
+    # Explicitly set origin URL for submodules using relative paths
+    git remote set-url origin https://github.com/AlpyneDreams/d8vk.git
+    git submodule update --init --filter=tree:0 --recursive
+
+    # Uncomment to enable extra optimizations
+    # Patch crossfiles with extra optimizations from makepkg.conf
+    patch -p1 -i "$srcdir"/d8vk-extraopts.patch
+
+    # By default export FLAGS used by proton and ignore makepkg
+    # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
+    # If you want the "best" possible optimizations for your system you can use
+    # `-march=native` and remove the `-mtune=core-avx2` option.
+
+    local -a split=($CFLAGS)
+    local -A flags
+    for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
+    local march="${flags["-march"]:-nocona}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
+
+    export CFLAGS="-O2 -march=$march -mtune=$mtune -pipe"
+    export CXXFLAGS="-O2 -march=$march -mtune=$mtune -pipe"
+    export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
+
+    # These flags are taken from Proton
+    CFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing"
+    CXXFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing -std=c++17"
+    LDFLAGS+=" -Wl,--file-alignment,4096"
+
+    # If using -march= with a CPU that supports supports AVX, launching a 32bit
+    # d3d9 game can cause an Unhandled exception. The cause seems to be the
+    # combination of AVX instructions and tree vectorization (implied by O3),
+    # all tested archictures from sandybridge to haswell are affected.
+    # Disabling AVX (and AVX2 as a side-effect).
+    # Since Wine 5.16 AVX is supported. Testing showed 32bit applications
+    # crashing with AVX regardless, but 64bit applications worked just fine.
+    # So disable AVX only for the 32bit binaries and AVX2 for the 64bit.
+    # AVX2 seems to degrade performance. So disregard the above.
+    # Relevant Wine issues
+    # https://bugs.winehq.org/show_bug.cgi?id=45289
+    # https://bugs.winehq.org/show_bug.cgi?id=43516
+    CFLAGS+=" -mno-avx2 -mno-avx"
+    CXXFLAGS+=" -mno-avx2 -mno-avx"
+
+    local cross_ldflags="$LDFLAGS"
+
+    local cross_cflags="$CFLAGS -mcmodel=small"
+    local cross_cxxflags="$CXXFLAGS -mcmodel=small"
+    sed -i build-win64.txt \
+        -e "s|@CARGS@|\'${cross_cflags// /\',\'}\'|g" \
+        -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
+        -e "s|@LDARGS@|\'${cross_ldflags// /\',\'}\'|g"
+
+    local cross_cflags="$CFLAGS -mstackrealign -mno-avx"
+    local cross_cxxflags="$CXXFLAGS -mstackrealign -mno-avx"
+    sed -i build-win32.txt \
+        -e "s|@CARGS@|\'${cross_cflags// /\',\'}\'|g" \
+        -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
+        -e "s|@LDARGS@|\'${cross_ldflags// /\',\'}\'|g"
+}
+
+build() {
+    meson setup d8vk "build/x64" \
+        -Denable_dxgi=false \
+        -Denable_d3d10=false \
+        -Denable_d3d11=false \
+        --cross-file d8vk/build-win64.txt \
+        --prefix "/usr/share/d8vk/x64" \
+        --bindir "" --libdir "" \
+        --buildtype "plain" \
+        --strip
+    ninja -C "build/x64" -v
+
+    meson setup d8vk "build/x32" \
+        -Denable_dxgi=false \
+        -Denable_d3d10=false \
+        -Denable_d3d11=false \
+        --cross-file d8vk/build-win32.txt \
+        --prefix "/usr/share/d8vk/x32" \
+        --bindir "" --libdir "" \
+        --buildtype "plain" \
+        --strip
+    ninja -C "build/x32" -v
+}
+
+package() {
+    depends=('vulkan-icd-loader' 'lib32-vulkan-icd-loader' 'wine' 'bash')
+
+    DESTDIR="$pkgdir" ninja -C "build/x32" install
+    DESTDIR="$pkgdir" ninja -C "build/x64" install
+    install -Dm 755 -t "$pkgdir/usr/share/d8vk" setup_d8vk.sh
+    install -Dm 644 -t "$pkgdir/usr/share/d8vk" d8vk/dxvk.conf
+    install -Dm 644 -t "$pkgdir/usr/share/doc/$pkgname" d8vk/README.md
+    install -Dm 644 -t "$pkgdir/usr/share/licenses/$pkgname" d8vk/LICENSE
+    install -Dm 755 -t "$pkgdir/usr/bin" setup_d8vk
+}
+
+sha256sums=('SKIP'
+            'bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362'
+            '1ae0d2b061be4923fcc0276e2351ac74e65fd6f54853f2f7f3d389cd572459c6'
+            'bea0149c3ed77c00134edab272f6876c3090ab289dc365c2d95a6e74af96422c')
