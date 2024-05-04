@@ -1,12 +1,12 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton
-_srctag=8.0-5c
+_srctag=9.0-1
 _commit=
-pkgver=8.0.5.3  # pkgver=${_srctag//-/.}
-_geckover=2.47.3
+pkgver=${_srctag//-/.}
+_geckover=2.47.4
 _monover=8.1.0
-pkgrel=7
+pkgrel=1
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -207,7 +207,6 @@ package() {
     local _compatdir="$pkgdir/usr/share/steam/compatibilitytools.d"
     mkdir -p "$_compatdir/${pkgname}"
     rsync --delete -arx dist/* "$_compatdir/${pkgname}"
-    cp -f dist/version "$_compatdir/${pkgname}/dist"
 
     # For some unknown to me reason, 32bit vkd3d (not vkd3d-proton) always links
     # to libgcc_s_dw2-1.dll no matter what linker options I tried.
@@ -215,15 +214,15 @@ package() {
     # by the patched proton script. Bundling the helps to avoid making mingw-w64-gcc package
     # a runtime dependency.
     cp /usr/i686-w64-mingw32/bin/{libgcc_s_dw2-1.dll,libwinpthread-1.dll} \
-        "$_compatdir/${pkgname}"/dist/lib/vkd3d/
+        "$_compatdir/${pkgname}"/files/lib/vkd3d/
     cp /usr/x86_64-w64-mingw32/bin/{libgcc_s_seh-1.dll,libwinpthread-1.dll} \
-        "$_compatdir/${pkgname}"/dist/lib64/vkd3d/
+        "$_compatdir/${pkgname}"/files/lib64/vkd3d/
 
     mkdir -p "$pkgdir/usr/share/licenses/${pkgname}"
     mv "$_compatdir/${pkgname}"/LICENSE{,.OFL} \
         "$pkgdir/usr/share/licenses/${pkgname}"
 
-    cd "$_compatdir/${pkgname}/dist"
+    cd "$_compatdir/${pkgname}/files"
     i686-w64-mingw32-strip --strip-unneeded \
         $(find lib/wine \( -iname fakedlls -or -iname i386-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
     x86_64-w64-mingw32-strip --strip-unneeded \
@@ -246,13 +245,13 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('SKIP'
-            '08d318f3dd6440a8a777cf044ccab039b0d9c8809991d2180eb3c9f903135db3'
-            '0beac419c20ee2e68a1227b6e3fa8d59fec0274ed5e82d0da38613184716ef75'
+sha256sums=('ced1b467da5f7b4ff0cbc2082d4591346163c9f15a396d879447e5782b4a0e59'
+            '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
+            'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '4e3e8a40729e4c9e3e9e651cebe4f1aed8f9a4d22e991e6cd24608687f0eedd4'
-            'a5e8405ba1493904218165ee93cb9a05fa38132406b4cb8210a435829a3e3a90'
-            '8ff5a6adf7c048b30477e3b63a42fb65248936ab806dd35c5b95fe5f163ad6f8'
-            '01ce9791c768ca861c0ea5ae34c95b92647886e9ebebd46b89dd459961646d18'
-            '7b054514740f4f042cc68a97b10d32fead2123c2b9756887e59f66d6f703069f'
-            '5ec6cd2229a4a6ca66af1e669fa581667d459da3cc1c826828e4d9d91b2a9fc8')
+            'f0c3b2490a6d037b72e49f88369aea78ffa6959d3607cbbc77167545c530a1fd'
+            'df84850beefb14e161e5f3c5b6c3ac0557c9b942d56c742c03f25a8ed7efaf0f'
+            'faebb4a50d6a135843b3737b7edfc3eb0d996c61066a146269f5019c5080bbed'
+            '3b3d593083e03d2aa01b71418a0a14301401a3d4847713982a882cb0905f6e7b'
+            'acf16bd37b7004a31e3c1c640cf314c4e0e861d9512413d5b095a935540b412d')
 
