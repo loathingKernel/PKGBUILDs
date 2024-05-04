@@ -1,0 +1,58 @@
+# Maintainer: Campbell Jones <arch at serebit dot com>
+# Co-Maintainer: George Rawlinson <george@rawlinson.net.nz>
+# Contributor: Ranieri Althoff <ranisalt+aur at gmail dot com>
+# Contributor: Mark Wagie <mark dot wagie at proton dot me>
+_pkgname=MangoHud
+pkgname=mangohud-git
+_pkgver=0.7.1-1
+pkgver=0.7.1.r20.g5598fda
+pkgrel=1
+pkgdesc="A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load and more."
+arch=('x86_64')
+url="https://github.com/flightlessmango/MangoHud"
+license=('MIT')
+makedepends=('appstream' 'cmocka' 'git' 'glfw' 'glslang' 'libxnvctrl' 'libxrandr' 'meson' 'nlohmann-json' 'python-mako' 'vulkan-headers')
+depends=('dbus' 'fmt' 'gcc-libs' 'glew' 'hicolor-icon-theme' 'libglvnd' 'libx11' 'python' 'python-matplotlib' 'python-numpy' 'vulkan-icd-loader')
+optdepends=('libxnvctrl: NVIDIA GPU stats by XNVCtrl'
+            'glfw: Required for MangoApp'
+            'gamescope: Use MangoApp as an overlay within gamescope')
+provides=("${pkgname//-git}")
+conflicts=("${pkgname//-git}")
+source=("git+https://github.com/flightlessmango/MangoHud.git")
+b2sums=('SKIP')
+
+pkgver() {
+    cd "$_pkgname"
+    git describe --long --tags | sed -r 's/^v//;s/([^-]*-g)/r\1/;s/-/./g'
+}
+
+prepare() {
+    cd "$_pkgname"
+
+    # Use system cmocka instead of subproject
+    sed -i "s/  cmocka = subproject('cmocka')//g" meson.build
+    sed -i "s/cmocka_dep = cmocka.get_variable('cmocka_dep')/cmocka_dep = dependency('cmocka')/g" meson.build
+}
+
+build() {
+    arch-meson "$_pkgname" build \
+        --wrap-mode=nofallback \
+        -Dmangoapp=true \
+        -Dmangohudctl=true \
+        -Dmangoapp_layer=true
+
+    meson compile -C build
+}
+
+package() {
+    depends+=(
+        vulkan-icd-loader libvulkan.so
+    )
+    meson install -C build --destdir "$pkgdir"
+
+    install -Dm 0644 "$srcdir/$_pkgname/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
+
+check() {
+    meson test -C build --print-errorlogs || :
+}
