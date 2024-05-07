@@ -9,16 +9,16 @@ license=('GPL-3.0-or-later')
 depends=( 'dbus-python' 'dconf' 'fuse2' 'gdk-pixbuf2' 'glibc' 'glib2' 'gtk4' 'hicolor-icon-theme' 'libadwaita' 'p7zip' 'pango' 'python' 'python-gobject' 'python-pyxdg' 'zlib' )
 makedepends=( 'meson' 'gettext' )
 checkdepends=( 'desktop-file-utils' 'appstream' )
-options=(!strip)
+options=( '!strip' '!debug' )
 source=(
-	"${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/1.5.2.tar.gz"
+	"${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz"
 	"correct-icon-names.patch"
 )
 sha256sums=(
 	'f5c50f57de300917ea8d313563fab443c1a50206e5db5c3d1ccb5e81459acc82'
 	'8d9bf423855188001e4f28e7cdb367878deaf552e49b3a2ff037dba7fccd44b7'
 )
-_uneededicons=(
+_unneededicons=(
 	"earth-symbolic.svg"
 	"globe-symbolic.svg"
 	"software-update-available-symbolic.svg"
@@ -32,8 +32,8 @@ _uneededicons=(
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	# Remove uneeded icons for improved compatibility.
-	for icon in "${_uneededicons[@]}"; do
+	# Remove unneeded icons for improved compatibility.
+	for icon in "${_unneededicons[@]}"; do
 		rm -v "data/icons/hicolor/scalable/actions/$icon"
 	done
 	
