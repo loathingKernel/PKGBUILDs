@@ -1,6 +1,6 @@
 # Maintainer: Damjan Georgievski <gdamjan@gmail.com>
 pkgname=go2tv
-pkgver=1.15.0
+pkgver=1.16.0
 pkgrel=1
 pkgdesc='cast your videos to UPnP/DLNA MediaRenderer'
 arch=('x86_64')
@@ -27,4 +27,4 @@ package() {
   install -Dm644 $pkgname-$pkgver/LICENSE    "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
 
-sha256sums=('e2b42462f6c5a2f446faf1fe54983018ae8eaeff86f7df8c8076c15486ded851')
+sha256sums=('be2e37fdff5c26e25f729b8df344392a466f2ed381697ff320cbc444439590da')
