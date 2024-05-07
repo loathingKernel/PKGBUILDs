@@ -25,6 +25,7 @@ pkgbase = gearlever
 	depends = python-pyxdg
 	depends = zlib
 	options = !strip
+	options = !debug
 	source = gearlever-1.5.2.tar.gz::https://github.com/mijorus/gearlever/archive/refs/tags/1.5.2.tar.gz
 	source = correct-icon-names.patch
 	sha256sums = f5c50f57de300917ea8d313563fab443c1a50206e5db5c3d1ccb5e81459acc82
