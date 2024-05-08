@@ -1,26 +1,26 @@
-From f263ffe75e8def27e97e11ddbb9dfe14a0d2106b Mon Sep 17 00:00:00 2001
+From 789e431a31dcdd7fb79a874baf4bc017ea35d202 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 26 Apr 2023 14:22:23 +0300
 Subject: [PATCH 1/6] AUR Pkgbuild changes
 
 ---
- Makefile.in                    | 74 ++++++++++++++++++++++++++--------
+ Makefile.in                    | 76 ++++++++++++++++++++++++++--------
  compatibilitytool.vdf.template |  2 +-
  configure.sh                   |  2 +
  make/rules-autoconf.mk         |  4 +-
  make/rules-cargo.mk            |  4 +-
  make/rules-cmake.mk            |  4 +-
- make/rules-common.mk           | 18 +++++----
+ make/rules-common.mk           | 18 ++++----
  make/rules-configure.mk        |  4 +-
  make/rules-makedep.mk          |  4 +-
  make/rules-meson.mk            |  3 +-
  make/rules-winemaker.mk        |  2 +-
  proton                         |  6 +--
  toolmanifest_runtime.vdf       |  3 --
- 13 files changed, 87 insertions(+), 43 deletions(-)
+ 13 files changed, 88 insertions(+), 44 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 8c687aed..11890078 100644
+index 8c687aed..b8306e1d 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -54,11 +54,12 @@ else
@@ -189,6 +189,18 @@ index 8c687aed..11890078 100644
  $(eval $(call rules-source,dxvk-nvapi,$(SRCDIR)/dxvk-nvapi))
  $(eval $(call rules-meson,dxvk-nvapi,32,CROSS))
  $(eval $(call rules-meson,dxvk-nvapi,64,CROSS))
+@@ -608,10 +649,10 @@ VKD3D_CONFIGURE_ARGS = \
+   --disable-tests \
+   --disable-demos \
+   --without-ncurses \
++  SONAME_LIBVULKAN=vulkan-1 \
+ 
+ VKD3D_LDFLAGS = -static-libgcc $(CROSSLDFLAGS)
+ VKD3D_DEPENDS = vulkan-loader vulkan-headers spirv-headers
+-VKD3D_CONFIGURE_ARGS = SONAME_LIBVULKAN=vulkan-1
+ 
+ $(eval $(call rules-source,vkd3d,$(SRCDIR)/vkd3d))
+ $(eval $(call rules-autoconf,vkd3d,32,CROSS))
 @@ -649,6 +690,9 @@ ifneq ($(UNSTRIPPED_BUILD),)
  	VKD3D_PROTON_MESON_ARGS = -Denable_trace=true
  endif
