@@ -1,4 +1,4 @@
-From 256e1d6c0fa13bd1723e001d6abc30e628ddcc17 Mon Sep 17 00:00:00 2001
+From 228fe37d392087aacb1e40e81ac65918e728c05b Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Thu, 28 Sep 2023 14:16:04 +0300
 Subject: [PATCH 6/6] AUR: Fix hwnd redefinition
@@ -44,5 +44,5 @@ index 7d6b4f66..c5533d79 100644
  #undef min
  #undef max
 -- 
-2.44.0
+2.45.0
 
