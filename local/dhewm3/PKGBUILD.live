@@ -1,0 +1,76 @@
+# Maintainer: robertfoster
+# Contributor: Mike Swanson <mikeonthecomputer@gmail.com>
+# Contributor:
+
+pkgname=dhewm3
+pkgver=1.5.2.r40.ba986a2
+pkgrel=1
+pkgdesc="Doom 3 engine with native 64-bit support, SDL, and OpenAL"
+arch=('i686' 'x86_64')
+url="https://github.com/dhewm/dhewm3"
+license=('GPL3')
+depends=(
+  curl
+  libjpeg
+  libvorbis
+  openal
+  sdl2
+)
+makedepends=(
+  git
+  cmake
+  ninja
+)
+optdepends=(
+  'doom3-data: packaged game data files'
+  'pyside6: for the included launcher script'
+  'python-pyxdg: for the included launcher script'
+  'mergerfs: required by the included launcher script to setup the correct file structure'
+)
+install=$pkgname.install
+options=(!lto)
+source=(
+  git+https://github.com/dhewm/dhewm3.git
+  dhewm3-launcher
+)
+
+pkgver() {
+  cd dhewm3
+  printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-\)g/r\1/;s/-/./g;s/^v//g')"
+}
+
+build() {
+  cmake \
+    -S dhewm3/neo \
+    -B build \
+    -DCMAKE_BUILD_TYPE="Release" \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DREPRODUCIBLE_BUILD=1 \
+    -DD3XP=1 \
+    -DDEDICATED=1 \
+    -GNinja \
+    -Wno-dev
+  cmake --build build --verbose
+}
+
+package() {
+  DESTDIR="${pkgdir}" cmake --install build
+  install -dm755 "$pkgdir"/usr/share/games/doom3
+  cp -r dhewm3/base "$pkgdir"/usr/share/games/doom3/
+  cp -r dhewm3/dist/linux/share "$pkgdir"/usr/
+
+  install -Dm755 -t "$pkgdir"/usr/bin/ dhewm3-launcher
+  cd "$pkgdir"/usr/share/applications
+  sed \
+    -e '/^Name=/ s/$/ Launcher/' \
+    -e 's/Exec=dhewm3/Exec=dhewm3-launcher/g' \
+    org.dhewm3.Dhewm3.desktop > org.dhewm3.Dhewm3.launcher.desktop
+  sed \
+    -e '/^Name=/ s/$/ Launcher/' \
+    -e 's/Exec=dhewm3/Exec=dhewm3-launcher/g' \
+    org.dhewm3.Dhewm3.d3xp.desktop > org.dhewm3.Dhewm3.d3xp.launcher.desktop
+}
+
+sha256sums=('SKIP'
+            'be258d88d43dff6b2e1bb2955597d7af6d5ac128d7c99f7106919dbc12c5a747')
