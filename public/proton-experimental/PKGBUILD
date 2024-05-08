@@ -1,13 +1,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-experimental
-_srctag=9.0-20240411
+_srctag=9.0-20240503b
 _commit=
-pkgver=${_srctag//-/.}
+pkgver=9.0.20240503.2 #${_srctag//-/.}
 _geckover=2.47.4
-_monover=9.0.0
+_monover=9.1.0
 _xaliaver=0.4.1
-pkgrel=2
+pkgrel=1
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch"
 url="https://github.com/ValveSoftware/Proton"
@@ -257,14 +257,14 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('15daf1f0e847ab05b6945b5c2c6104ae59d584f6d508ac36af37ca468ba5d2dd'
+sha256sums=('07a21f546d0ecfe28b409ea0aa402732a8d440ede2f49870059daf38989e46a8'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
-            'd73d440c08ebd67c93fbd6534f4f1b4e98aa07342f9c7d98c8aaeb74755eb9cf'
+            '601169d0203b291fbfd946b356a9538855e01de22abd470ded73baf312c88767'
             'a652c3289fb444efb2fbd8b5757484e21ffe6a537b3a3f9a0fbb04a9a10afcba'
-            '60a55b54a9e6bd6f31e9850c5d7b64596e8a11db2222fa5bdb4868c46d94e06e'
-            '8b9cea08ebe45002fd3e81b17332fccf48c3eb42bcc80cafc38cd58ebae5ffe4'
-            'd4aff4eaf001dc329b91d706d7ae5389528a482689b62afd03798f54365c55f1'
-            'cd276b4f4014361de97afafa73e5c252de6fcde8bf5370523fd29ee30d9e0624'
-            '1aab55361a77af5fe766fb3dbf88b167d55be5fffb0b7f2633fcab1b807480a3'
-            'd985a675fc137347afa4f864758efe7c5e34196367f2fa6e48df1a4e56ed0139')
+            '1c541c59b96d1b8e82fd17fa2b1d4bc929dce903e8b02abb9a45d69e415e9e43'
+            '2405158b694487c37e0ca7c4e02788c8c4fad47b6de4ea9999565ead124019c2'
+            'f1c48a7d19800f9e46568c6ba2e3600a7f21885cc8251a655e83f7cd38e0b48b'
+            '0fc622d47817dd0959e38e037d698fa843b515307511944b3021a9ff19e3cd3f'
+            'f6425db2bd252f7de452903a29f89183241bc317ee3140193b7d8343adb2f565'
+            'de138e48f6a4662c4877a7f76db9eaf42241b6784ea91a2583707a9842cde78b')
