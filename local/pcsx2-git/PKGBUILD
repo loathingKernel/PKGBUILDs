@@ -1,0 +1,120 @@
+# Maintainer: rafaelff <rafaelff@gnome.org>, WeirdBeard <obarrtimothy@gmail.com>
+# Contributor: éclairevoyant
+# Contributor: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: Themaister <maister@archlinux.us>
+
+pkgname=pcsx2-git
+pkgver=1.7.5688.r0.gb1f4f671
+pkgrel=1
+pkgdesc='A Sony PlayStation 2 emulator'
+arch=(x86_64)
+url=https://www.pcsx2.net
+license=(
+    GPL2
+    GPL3
+    LGPL2.1
+    LGPL3
+)
+
+depends=(
+    libaio
+#    libjpeg-turbo
+    libpcap
+    libglvnd
+    libxrandr
+#    libxrender # For Steam Deck
+#    linux-api-headers # For Steam Deck
+    alsa-lib
+    ffmpeg
+#    portaudio
+#    libsamplerate
+    sdl2
+    lld
+    qt6-base
+    qt6-svg
+    soundtouch
+    wayland
+    libpng
+    hicolor-icon-theme
+    xcb-util-cursor
+)
+makedepends=(
+    cmake
+    extra-cmake-modules
+    clang
+    lld
+    llvm
+    git
+    ninja
+    libpulse
+    jack
+    sndio
+    libpipewire
+    p7zip
+    qt6-wayland
+    qt6-tools
+)
+optdepends=(
+    'qt6-wayland: Wayland support'
+    'libpulse: Pulseaudio support'
+    'jack: Jack2 support'
+    'sndio: sndio support'
+    'libpipewire: Pipewire support'
+)
+provides=(${pkgname%-git})
+conflicts=(${pkgname%-git})
+options=(!lto)
+source=(
+    git+https://github.com/PCSX2/pcsx2.git
+    git+https://github.com/PCSX2/pcsx2_patches.git
+    pcsx2-qt.sh
+)
+install=pcsx2-git.install
+
+prepare() {
+    cd pcsx2
+    git remote set-url origin https://github.com/PCSX2/pcsx2.git
+    git submodule update --init --filter=tree:0 --recursive
+}
+
+pkgver() {
+    cd pcsx2
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
+}
+
+build() {
+    cmake -S pcsx2 -B build \
+    -G Ninja \
+    -Wno-dev \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DX11_API=ON \
+    -DWAYLAND_API=ON \
+    -DUSE_VULKAN=ON \
+    -DENABLE_SETCAP=OFF \
+    -DUSE_SYSTEM_LIBS=OFF \
+    -DDISABLE_ADVANCE_SIMD=ON
+    ninja -C build -v
+    
+    7z a -r patches.zip ./pcsx2_patches/patches/*
+}
+
+package() {
+    install -dm755  "${pkgdir}"/opt/
+    cp -r build/bin "${pkgdir}"/opt/"${pkgname%-git}"
+    install -Dm755 pcsx2-qt.sh "$pkgdir"/usr/bin/pcsx2-qt
+    install -Dm644 pcsx2/.github/workflows/scripts/linux/pcsx2-qt.desktop \
+        "${pkgdir}"/usr/share/applications/PCSX2.desktop
+    install -Dm644 pcsx2/bin/resources/icons/AppIconLarge.png \
+        "${pkgdir}"/usr/share/icons/hicolor/512x512/apps/PCSX2.png
+    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/resources/ patches.zip
+}
+
+b2sums=('SKIP'
+        'SKIP'
+        '5aeb01be2e9e77c26c4039b183ff2751f787350e274b1c1d1cead7491eabced556e3934502eaf4887e9b49581f515382f096b29e9daef6e9e94c443e2bc7e048')
