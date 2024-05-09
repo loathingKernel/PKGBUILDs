@@ -33,6 +33,7 @@ pkgbase = java21-jetbrains
 	makedepends = jcef-jetbrains
 	makedepends = git
 	options = !lto
+	options = !ccache
 	source = git+https://github.com/JetBrains/JetBrainsRuntime.git#tag=jb21.0.2-b375.1
 	source = freedesktop-java.desktop
 	source = freedesktop-jconsole.desktop
