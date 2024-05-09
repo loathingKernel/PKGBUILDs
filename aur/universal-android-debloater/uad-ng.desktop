@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Icon=uad-ng
+Name=Universal Android Debloater
+Exec=uad-ng
+Terminal=false
+Hidden=false
+Categories=Development; Utility
+Comment=Remove pre-installed apps on your Android device
+Keywords=UAD
