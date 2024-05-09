@@ -1,0 +1,19 @@
+name: thunar-shares-plugin
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/thunar-shares-plugin/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: aur/thunar-shares-plugin
+      repository: ${{ matrix.repository }}
