@@ -14,7 +14,7 @@ jobs:
   repository:
     strategy:
       matrix:
-        repository: [public, personal]
+        repository: [public]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: aur/lgogdownloader-qt5-git
