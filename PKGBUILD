@@ -19,7 +19,7 @@ pkgname=(
   'lib32-mesa'
 )
 pkgver=24.0.7
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Open-source OpenGL drivers - 32-bit"
 url="https://www.mesa3d.org/"
@@ -70,9 +70,12 @@ makedepends=(
   'wayland-protocols'
   'xorgproto'
 )
+options=(
+  # GCC 14 LTO causes segfault in LLVM under si_llvm_optimize_module
+  !lto
+)
 source=(
   https://mesa.freedesktop.org/archive/mesa-${pkgver}.tar.xz{,.sig}
-  lib32-clang
 )
 validpgpkeys=(
   '8703B6700E7EE06D7A39B8D6EDAE37B02CEB490D'  # Emil Velikov <emil.l.velikov@gmail.com>
@@ -97,14 +100,12 @@ done
 
 sha256sums=('7454425f1ed4a6f1b5b107e1672b30c88b22ea0efea000ae2c7d96db93f6c26a'
             'SKIP'
-            'c476c909e3d0773685882068db1ed2d34d9da755d392b23e87425f1aff850697'
             '39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b'
             '3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b'
             '5267fca4496028628a95160fc423a33e8b2e6af8a5302579e322e4b520293cae'
             '23e78b90f2fcf45d3e842032ce32e3f2d1545ba6636271dcbf24fa306d87be7a')
 b2sums=('d9438e533b471445b2403e01e1fd593d83c0013b0991585f718122f1cadc6ac6bb1fb913f0fb257354ae21ddd9fe1f970ad9ac46f05d756c223ed56a11b9c9ce'
         'SKIP'
-        '2b860354deb7af7f96ba5f441e71ab92fd4b5d81f44c27702b4d60c714050a048bd2ee89b83e96a7c08eaea45b530e18822e14580938f178b89cd228ffa5586f'
         'fff0dec06b21e391783cc136790238acb783780eaedcf14875a350e7ceb46fdc100c8b9e3f09fb7f4c2196c25d4c6b61e574c0dad762d94533b628faab68cf5c'
         '4cede03c08758ccd6bf53a0d0057d7542dfdd0c93d342e89f3b90460be85518a9fd24958d8b1da2b5a09b5ddbee8a4263982194158e171c2bba3e394d88d6dac'
         '77c4b166f1200e1ee2ab94a5014acd334c1fe4b7d72851d73768d491c56c6779a0882a304c1f30c88732a6168351f0f786b10516ae537cff993892a749175848'
@@ -121,7 +122,7 @@ prepare() {
 
 build() {
   local meson_options=(
-    --cross-file "$srcdir/lib32-clang"
+    --cross-file lib32
     -D android-libbacktrace=disabled
     -D b_ndebug=true
     -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,swrast,i915,iris,crocus,zink
@@ -147,12 +148,6 @@ build() {
   # Build only minimal debug info to reduce size
   CFLAGS+=' -g1'
   CXXFLAGS+=' -g1'
-
-  # GCC 14 causes segfault in LLVM under si_llvm_optimize_module
-  export CC=clang CXX=clang++
-
-  # LTO needs more open files
-  ulimit -n 4096
 
   # Inject subproject packages
   export MESON_PACKAGE_CACHE_DIR="$srcdir"
