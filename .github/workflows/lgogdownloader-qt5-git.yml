@@ -1,19 +1,21 @@
-name: lgogdownloader-qt5
+name: lgogdownloader-qt5-git
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron:  '0 7 */8 * *'
   push:
     branches:
      - master
     paths:
-     - aur/lgogdownloader-qt5/.SRCINFO
+     - aur/lgogdownloader-qt5-git/.SRCINFO
 
 jobs:
   repository:
     strategy:
       matrix:
-        repository: [public]
+        repository: [public, personal]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      pkgdir: aur/lgogdownloader-qt5
+      pkgdir: aur/lgogdownloader-qt5-git
       repository: ${{ matrix.repository }}
