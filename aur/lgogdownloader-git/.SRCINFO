@@ -16,6 +16,7 @@ pkgbase = lgogdownloader-git
 	depends = tinyxml2
 	depends = rhash
 	depends = htmlcxx
+	depends = tidy
 	provides = lgogdownloader
 	conflicts = lgogdownloader
 	source = git+https://github.com/Sude-/lgogdownloader.git
