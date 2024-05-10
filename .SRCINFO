@@ -16,6 +16,7 @@ pkgbase = lgogdownloader-qt5-git
 	depends = tinyxml2
 	depends = rhash
 	depends = htmlcxx
+	depends = tidy
 	depends = qt5-webengine
 	provides = lgogdownloader
 	conflicts = lgogdownloader
