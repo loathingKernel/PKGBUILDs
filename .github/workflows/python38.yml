@@ -9,11 +9,11 @@ on:
      - local/python38/.SRCINFO
 
 jobs:
-  public:
-    uses: ./.github/workflows/job_pkgbuild.yml
+  repository:
+    strategy:
+      matrix:
+        repository: [public, personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: local/python38
-      pacman_conf: .github/conf/public_pacman.conf
-      makepkg_conf: .github/conf/public_makepkg.conf
-      makepkg_args: --skippgpcheck
-      release_tag: loathk-public
+      repository: ${{ matrix.repository }}
