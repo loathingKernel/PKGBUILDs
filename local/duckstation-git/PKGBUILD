@@ -1,7 +1,7 @@
 # Contributor: katt <magunasu.b97@gmail.com>
 
 pkgname=duckstation-git
-pkgver=0.1.r6582.gbe342ff
+pkgver=0.1.r6759.gc015039
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
 pkgrel=1
 arch=(x86_64 aarch64)
@@ -12,18 +12,22 @@ depends=(
     glibc
     gcc-libs
     sdl2
-    shaderc
     qt6-base
-    libxrandr
-    libglvnd
-    libx11
     libwebp
+    libjpeg-turbo
+    libpng
+    libxrandr
+    libx11
+    freetype2
     zstd
     zlib
     dbus
     curl
     systemd-libs
-    hicolor-icon-theme)
+    hicolor-icon-theme
+    libglvnd
+    shaderc-non-semantic-debug
+)
 makedepends=(
     git
     cmake
@@ -38,7 +42,8 @@ makedepends=(
     alsa-lib
     sndio
     ninja
-    jack)
+    jack
+)
 optdepends=(
     'libdrm'
     'qt6-wayland: Wayland support'
@@ -65,6 +70,7 @@ pkgver() {
 
 build() {
     cmake -B build -S duckstation \
+        -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_C_COMPILER=clang \
         -DCMAKE_CXX_COMPILER=clang++ \
@@ -81,7 +87,6 @@ build() {
         -DUSE_SDL2=ON \
         -DUSE_WAYLAND=ON \
         -DUSE_X11=ON \
-        -G Ninja \
         -Wno-dev
     ninja -C build -v
 }
