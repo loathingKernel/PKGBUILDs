@@ -4,7 +4,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.5688.r0.gb1f4f671
+pkgver=1.7.5794.r0.g052951fb
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
@@ -18,18 +18,14 @@ license=(
 
 depends=(
     libaio
-#    libjpeg-turbo
     libpcap
     libglvnd
     libxrandr
-#    libxrender # For Steam Deck
-#    linux-api-headers # For Steam Deck
     alsa-lib
     ffmpeg
-#    portaudio
-#    libsamplerate
     sdl2
     lld
+    shaderc-non-semantic-debug
     qt6-base
     qt6-svg
     soundtouch
@@ -93,10 +89,10 @@ build() {
     -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
     -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
-    -DX11_API=ON \
-    -DWAYLAND_API=ON \
     -DUSE_VULKAN=ON \
     -DENABLE_SETCAP=OFF \
+    -DX11_API=ON \
+    -DWAYLAND_API=ON \
     -DUSE_SYSTEM_LIBS=OFF \
     -DDISABLE_ADVANCE_SIMD=ON
     ninja -C build -v
