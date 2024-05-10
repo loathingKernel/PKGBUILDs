@@ -7,7 +7,7 @@
 pkgname=wine-staging
 _tkg_commit=90d5458bc3f1cd85c421bfb0835aa0b67eceed58
 pkgver=9.8
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -167,7 +167,8 @@ build() {
   # From Proton
   OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
-  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS -s"
+  TEMPORARY_FLAGS="-Wno-incompatible-pointer-types"
+  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $TEMPORARY_FLAGS -s"
 
   export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
   export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
