@@ -1,12 +1,12 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom
-_srctag=GE-Proton9-4
-_commit=8c7bddc24ad8aead1033a7ad8dd9486520b12e1e
+_srctag=GE-Proton9-5
+_commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
-_monover=9.0.0
-_xaliaver=0.4.1
+_monover=9.1.0
+_xaliaver=0.4.2
 pkgrel=1
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build"
@@ -86,7 +86,7 @@ optdepends=(
 provides=('proton')
 install=${pkgname}.install
 source=(
-    proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#commit=${_commit}
+    proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#tag=${_srctag}
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
@@ -225,8 +225,7 @@ package() {
     # For some unknown to me reason, 32bit vkd3d (not vkd3d-proton) always links
     # to libgcc_s_dw2-1.dll no matter what linker options I tried.
     # Copy the required dlls into the package, they will be copied later into the prefix
-    # by the patched proton script. Bundling the helps to avoid making mingw-w64-gcc package
-    # a runtime dependency.
+    # by the patched proton script. Bundle them to not depend on mingw-w64-gcc being installed.
     cp /usr/i686-w64-mingw32/bin/{libgcc_s_dw2-1.dll,libwinpthread-1.dll} \
         "$_compatdir/${pkgname}"/files/lib/vkd3d/
     cp /usr/x86_64-w64-mingw32/bin/{libgcc_s_seh-1.dll,libwinpthread-1.dll} \
@@ -259,14 +258,14 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('a39b5d4a2be1c39336401c7c79c4e3d9110c2b14fa43e46fc06d0efd18d0a7fa'
+sha256sums=('324f0ca2cafe55893af0ce6f9b86c9db8ff1ffbf507da77a2d60ceb113d08c99'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
-            'd73d440c08ebd67c93fbd6534f4f1b4e98aa07342f9c7d98c8aaeb74755eb9cf'
-            'a652c3289fb444efb2fbd8b5757484e21ffe6a537b3a3f9a0fbb04a9a10afcba'
-            '1f7267cb9efcbd61b41c1e6fdf5741202f34b5efd7e61ee6dff782e148969d31'
-            '07329babba794ce1428fd3f9910040d12afc478985ec0b5d4e31b24f9d1262b5'
-            '54fabb6cb5ab1c93a9d012340a4eb6b614f89fb849838f133210bfd823838739'
-            'ded35383985eb53a9a03692e62c17cf83461929c781a1973c9b769e7fdf5489b'
-            'b57e5a9d575d38367f1e91fd658282f787f9434007b60fffc79f5360eebeceee'
-            '3607adae993ed293702c15f27fb768f39128171caba1f9dbf27af3ce84d41f17')
+            '601169d0203b291fbfd946b356a9538855e01de22abd470ded73baf312c88767'
+            '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
+            '6a08420d44740c14cc22e029ec38e0b80011caa99e1e399d442c250104b7b9e0'
+            '981c46b5bfe403ab5b834cde0544192a6af797942a5e4633e5cd6327a475b3da'
+            '622d189e03180eaaf5ed03a20265e4486a65480cf2ed63793393b121731ababa'
+            '9062e5e8fef9f1ce86f7e37d4de8af11e9f66afd466a5939587b16278206cc0a'
+            '92a0f078362aab6d37ceb1690409f468c6d0c0630d29653bedcf49e9d33cda2a'
+            'af6cf93eebfbd0ba63ee54d9d4d69c1790090edfcb6a8a1dee7d01662da3a4ac')
