@@ -1,13 +1,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-experimental
-_srctag=9.0-20240503b
+_srctag=9.0-20240509
 _commit=
-pkgver=9.0.20240503.2 #${_srctag//-/.}
+pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.1.0
-_xaliaver=0.4.1
-pkgrel=2
+_xaliaver=0.4.2
+pkgrel=1
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch"
 url="https://github.com/ValveSoftware/Proton"
@@ -223,8 +223,7 @@ package() {
     # For some unknown to me reason, 32bit vkd3d (not vkd3d-proton) always links
     # to libgcc_s_dw2-1.dll no matter what linker options I tried.
     # Copy the required dlls into the package, they will be copied later into the prefix
-    # by the patched proton script. Bundling the helps to avoid making mingw-w64-gcc package
-    # a runtime dependency.
+    # by the patched proton script. Bundle them to not depend on mingw-w64-gcc being installed.
     cp /usr/i686-w64-mingw32/bin/{libgcc_s_dw2-1.dll,libwinpthread-1.dll} \
         "$_compatdir/${pkgname}"/files/lib/vkd3d/
     cp /usr/x86_64-w64-mingw32/bin/{libgcc_s_seh-1.dll,libwinpthread-1.dll} \
@@ -257,14 +256,14 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('07a21f546d0ecfe28b409ea0aa402732a8d440ede2f49870059daf38989e46a8'
+sha256sums=('0c506e232b8c8c035ecb6c5c4a59bd4dc0086c918837acd6f926fe4c036610ef'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '601169d0203b291fbfd946b356a9538855e01de22abd470ded73baf312c88767'
-            'a652c3289fb444efb2fbd8b5757484e21ffe6a537b3a3f9a0fbb04a9a10afcba'
-            '722e1c7652235f5ec8cc7a01c8dd5cb3c990f3837b1c1ec0b91a8a0869af248b'
-            'c612b7c5838a4b13ecba55686b85e895666e6d5ea26439b91b6782af6a317348'
-            '8f3be38254ee8a5177f225b6bf78f88b0b9ebcea7ba607bae53dabaa07080a9e'
-            'bdd466b9c41cb9ab1337a4f6f9aca87d47499b42e6b291164f6da4258f9a6d26'
-            '0521aca754e25583cdb25318422642661e32e9fd6bd5bd53792f14df64b7613f'
-            '4bf4a18b283ab0e50f78691681635085400e5fc7e2fbf64af2e19acf49b8483e')
+            '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
+            '17bb21c160b79fbc97dc5d386e736b6eda1dcb19d4883cc1556312687343c1ac'
+            'ef7d7515628e4d1370502a7dc88c52edc6981eabcc02286c1218e3ebc6ca2d7b'
+            'a90792db3ac5cfff8bc595a0b9d7c07c272a8ae713d3e07374e475d818f1fcba'
+            '813e43442ab0266536017e8920937a0d09a8b29297821f9d6bd40f701ac48ef7'
+            '20aca547e37c007a6362bbb72f0522a0e681c9acdfac0c202b01a24cf3f8cc1b'
+            'b576abb091bbdb056e5f2b5e322afbac6ea9473eee0176e0d773f1c80562bcad')
