@@ -1,4 +1,4 @@
-From 10aa3d86a67beb2a1fa2f93aec9cac483b3abe07 Mon Sep 17 00:00:00 2001
+From ac8cb7143e72649078f5a042568259a7f07e1643 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 12 Jul 2023 03:16:34 +0300
 Subject: [PATCH 4/6] AUR Copy DLL dependencies of 32bit libvkd3d dlls into the
@@ -20,7 +20,7 @@ a runtime dependency.
  1 file changed, 9 insertions(+)
 
 diff --git a/proton b/proton
-index 99d1af3d..70a33c8e 100755
+index e79c5cae..ffbf0b04 100755
 --- a/proton
 +++ b/proton
 @@ -1022,6 +1022,15 @@ class CompatData:
@@ -40,5 +40,5 @@ index 99d1af3d..70a33c8e 100755
                  enable_d8vk = "enabled8vk" in g_session.compat_config
  
 -- 
-2.44.0
+2.45.0
 
