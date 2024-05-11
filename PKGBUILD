@@ -6,17 +6,16 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-ge-custom
-_srctag=GE-Proton9-4
-_commit=e664ad5c3bdb4b6bc20882232cc88eb00784295f
+_srctag=GE-Proton9-5
 pkgver=${_srctag//-/.}
-pkgrel=2
+pkgrel=1
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
 
-source=(wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#commit=${_commit}
+source=(wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#tag=${_srctag}
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
