@@ -96,6 +96,7 @@ source=(
     0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     0005-AUR-Strip-binaries-early.patch
     0006-AUR-Fix-hwnd-redefinition.patch
+    0007-AUR-Disable-incompatible-pointer-types-in-Wine-GCC-1.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -171,6 +172,7 @@ prepare() {
     patch -p1 -i "$srcdir"/0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     patch -p1 -i "$srcdir"/0005-AUR-Strip-binaries-early.patch
     patch -p1 -i "$srcdir"/0006-AUR-Fix-hwnd-redefinition.patch
+    patch -p1 -i "$srcdir"/0007-AUR-Disable-incompatible-pointer-types-in-Wine-GCC-1.patch
 }
 
 build() {
@@ -263,9 +265,10 @@ sha256sums=('324f0ca2cafe55893af0ce6f9b86c9db8ff1ffbf507da77a2d60ceb113d08c99'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '601169d0203b291fbfd946b356a9538855e01de22abd470ded73baf312c88767'
             '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            '6a08420d44740c14cc22e029ec38e0b80011caa99e1e399d442c250104b7b9e0'
-            '981c46b5bfe403ab5b834cde0544192a6af797942a5e4633e5cd6327a475b3da'
-            '622d189e03180eaaf5ed03a20265e4486a65480cf2ed63793393b121731ababa'
-            '9062e5e8fef9f1ce86f7e37d4de8af11e9f66afd466a5939587b16278206cc0a'
-            '92a0f078362aab6d37ceb1690409f468c6d0c0630d29653bedcf49e9d33cda2a'
-            'af6cf93eebfbd0ba63ee54d9d4d69c1790090edfcb6a8a1dee7d01662da3a4ac')
+            '00a1e8cc92e83e613c6007bd056e85727d92d73f357e4d38b30c5fb42d547e32'
+            'c10cb410eea86ffe5e82498599fda712b5a287f75329bbe8c19360468bfd7a02'
+            '0ed6267f6c865a3dd3fb9afed47d7b4401c992fc0ada9c09e789b3ebb77a8648'
+            'b4afa84e38be6a501ff8c75561f18d14539b1d1b1178adb8b906cd42e7204a6e'
+            'c480259a891e6b1cc1504a7b11501b550e998c515172ab10ccb5bc0327dacc24'
+            '3bf176a07063c16c76f8fa7daad1888ab5004cad8c0879e327eed9b1a5b04710'
+            '61fed547b22fd24f5fcd3b08709c3745d147669a32a16888133cbd08091b7874')
