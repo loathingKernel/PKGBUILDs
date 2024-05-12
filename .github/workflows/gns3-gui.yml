@@ -1,0 +1,19 @@
+name: gns3-gui
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/gns3-gui/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: aur/gns3-gui
+      repository: ${{ matrix.repository }}
