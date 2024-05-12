@@ -1,0 +1,19 @@
+name: python-aiohttp-cors
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - aur/python-aiohttp-cors/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: aur/python-aiohttp-cors
+      repository: ${{ matrix.repository }}
