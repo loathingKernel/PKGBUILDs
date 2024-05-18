@@ -5,7 +5,7 @@
 _pkgname=MangoHud
 pkgname=mangohud-git
 _pkgver=0.7.1-1
-pkgver=0.7.1.r20.g5598fda
+pkgver=0.7.2.rc3.r18.g0caded8
 pkgrel=1
 pkgdesc="A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load and more."
 arch=('x86_64')
@@ -36,7 +36,7 @@ prepare() {
 
 build() {
     arch-meson "$_pkgname" build \
-        --wrap-mode=nofallback \
+        --wrap-mode=default \
         -Dmangoapp=true \
         -Dmangohudctl=true \
         -Dmangoapp_layer=true
