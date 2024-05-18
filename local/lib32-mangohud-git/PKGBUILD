@@ -5,7 +5,7 @@
 _pkgname=MangoHud
 pkgname=lib32-mangohud-git
 _pkgver=0.7.1-1
-pkgver=0.7.1.r20.g5598fda
+pkgver=0.7.2.rc3.r18.g0caded8
 pkgrel=1
 pkgdesc="32-bit libraries for MangoHud and MangoApp"
 arch=('x86_64')
@@ -39,7 +39,7 @@ build() {
     export LLVM_CONFIG="/usr/bin/llvm-config32"
 
     arch-meson "$_pkgname" build \
-        --wrap-mode=nofallback \
+        --wrap-mode=default \
         -Dmangoapp_layer=true \
         -Dinclude_doc=false \
         --libdir lib32
