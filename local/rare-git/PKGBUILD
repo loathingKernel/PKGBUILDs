@@ -1,0 +1,51 @@
+# Maintainer: Dummerle
+
+pkgname=rare-git
+pkgver=1.10.11.146.r26.g5b6df91b
+pkgrel=1
+pkgdesc="A GUI for legendary, an open source replacement for Epic Games Launcher"
+arch=('any')
+url="https://github.com/RareDevs/Rare"
+license=('GPL3')
+depends=(
+  python-pyqt5
+  qt5-svg
+  python-qtawesome
+  python-requests
+  python-orjson
+  python-vdf
+  legendary
+)
+makedepends=(
+  git
+  python-{build,installer,wheel}
+  python-setuptools
+)
+optdepends=(
+  "wine: run Windows games"
+  "proton: run Windows games"
+  "python-pypresence: Discord RPC integration"
+  "python-pywebview: embedded browser for logging in"
+)
+provides=(${pkgname%-git})
+conflicts=(${pkgname%-git})
+source=("git+https://github.com/RareDevs/Rare.git")
+sha256sums=("SKIP")
+
+pkgver() {
+  cd Rare
+  printf "%s" "$(git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g')"
+}
+
+build() {
+  cd Rare
+  python -m build -wn
+}
+
+package() {
+  cd Rare
+  python -m installer -d "$pkgdir" dist/*.whl
+  install -Dm644 "misc/${pkgname%-git}.desktop" "$pkgdir/usr/share/applications/${pkgname%-git}.desktop"
+  install -Dm644 "rare/resources/images/Rare.png" "$pkgdir/usr/share/pixmaps/${pkgname%-git}.png"
+}
+
