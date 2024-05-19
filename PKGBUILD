@@ -1,7 +1,7 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
-pkgver=1.5.2
-pkgrel=2
+pkgver=1.5.4
+pkgrel=1
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
 url="https://mijorus.it/projects/gearlever/"
@@ -15,7 +15,7 @@ source=(
 	"correct-icon-names.patch"
 )
 sha256sums=(
-	'f5c50f57de300917ea8d313563fab443c1a50206e5db5c3d1ccb5e81459acc82'
+	'79aaedc79f9e43e6cd5e056d01993815bdbd6ae83f0c225c2d8006cc799c043b'
 	'8d9bf423855188001e4f28e7cdb367878deaf552e49b3a2ff037dba7fccd44b7'
 )
 _unneededicons=(
@@ -26,7 +26,6 @@ _unneededicons=(
 	"window-pop-out-symbolic.svg"
 	"document-edit-symbolic.svg"
 	"drag-drop-symbolic.svg"
-	"info-symbolic.svg"
 	"file-manager-symbolic.svg"
 )
 
