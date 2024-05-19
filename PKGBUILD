@@ -37,7 +37,7 @@ prepare() {
 	done
 	
 	# Rename icons to fit a unique gearlever naming scheme.
-	for icon in "data/icons/hicolor/scalable/actions"/*; do
+	for icon in data/icons/hicolor/scalable/actions/*; do
 		iconname=$(basename "$icon")
 		# Skip renaming meson's build file and those beginning with gl- or gearlever-.
 		if [[ ! "$iconname" =~ ^(gl-|gearlever-) ]] && [ ! "$iconname" = "meson.build" ]; then
