@@ -12,9 +12,16 @@ jobs:
   repository:
     strategy:
       matrix:
-        repository: [public, personal]
+        include:
+          - repository: public
+            pkgbuild: PKGBUILD
+            multilib: true
+          - repository: personal
+            pkgbuild: PKGBUILD
+            multilib: true
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: public/wine-ge-custom
       repository: ${{ matrix.repository }}
-      multilib: true
+      pkgbuild: ${{ matrix.pkgbuild }}
+      multilib: ${{ matrix.multilib }}
