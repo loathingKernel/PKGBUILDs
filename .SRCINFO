@@ -18,8 +18,14 @@ pkgbase = shaderc-non-semantic-debug
 	provides = shaderc
 	conflicts = shaderc
 	source = https://github.com/google/shaderc/archive/v2024.1/shaderc-2024.1.tar.gz
+	source = https://github.com/KhronosGroup/glslang/archive/142052fa30f9eca191aa9dcf65359fcaed09eeec.tar.gz
+	source = https://github.com/KhronosGroup/SPIRV-Headers/archive/5e3ad389ee56fca27c9705d093ae5387ce404df4.tar.gz
+	source = https://github.com/KhronosGroup/SPIRV-Tools/archive/dd4b663e13c07fea4fbb3f70c1c91c86731099f7.tar.gz
 	source = shaderc-changes.patch
-	sha256sums = eb3b5f0c16313d34f208d90c2fa1e588a23283eed63b101edd5422be6165d528
+	sha256sums = SKIP
+	sha256sums = SKIP
+	sha256sums = SKIP
+	sha256sums = SKIP
 	sha256sums = 216575bd302a48a083a9864b21bb569be89c00921188fa8f6f2fac8c30189b75
 
 pkgname = shaderc-non-semantic-debug

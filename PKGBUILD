@@ -14,12 +14,24 @@ makedepends=('asciidoctor' 'cmake' 'ninja' 'python' 'spirv-headers')
 provides=('libshaderc_shared.so' 'shaderc')
 source=(
     https://github.com/google/shaderc/archive/v${pkgver}/shaderc-${pkgver}.tar.gz
+    https://github.com/KhronosGroup/glslang/archive/142052fa30f9eca191aa9dcf65359fcaed09eeec.tar.gz
+    https://github.com/KhronosGroup/SPIRV-Headers/archive/5e3ad389ee56fca27c9705d093ae5387ce404df4.tar.gz
+    https://github.com/KhronosGroup/SPIRV-Tools/archive/dd4b663e13c07fea4fbb3f70c1c91c86731099f7.tar.gz
 shaderc-changes.patch)
 conflicts=(shaderc)
 
 prepare() {
     cd shaderc-${pkgver}
-    patch -p1 < "../shaderc-changes.patch"
+    cd third_party
+    ls ${srcdir}
+    tar xf "${srcdir}/142052fa30f9eca191aa9dcf65359fcaed09eeec.tar.gz"
+    mv "glslang-142052fa30f9eca191aa9dcf65359fcaed09eeec" "glslang"
+    tar xf "${srcdir}/5e3ad389ee56fca27c9705d093ae5387ce404df4.tar.gz"
+    mv "SPIRV-Headers-5e3ad389ee56fca27c9705d093ae5387ce404df4" "spirv-headers"
+    tar xf "${srcdir}/dd4b663e13c07fea4fbb3f70c1c91c86731099f7.tar.gz"
+    mv "SPIRV-Tools-dd4b663e13c07fea4fbb3f70c1c91c86731099f7" "spirv-tools"
+    cd ..
+    patch -p1 < "${srcdir}/shaderc-changes.patch"
     # de-vendor libs and disable git versioning
     sed '/examples/d;/third_party/d' -i CMakeLists.txt
     sed '/build-version/d' -i glslc/CMakeLists.txt
@@ -60,5 +72,9 @@ package() {
     # Remove unused shaderc_static.pc
     #rm "${pkgdir}/usr/lib/pkgconfig/shaderc_static.pc"
 }
-sha256sums=('eb3b5f0c16313d34f208d90c2fa1e588a23283eed63b101edd5422be6165d528'
+sha256sums=(
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
 '216575bd302a48a083a9864b21bb569be89c00921188fa8f6f2fac8c30189b75')
