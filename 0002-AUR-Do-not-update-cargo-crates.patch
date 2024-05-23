@@ -1,4 +1,4 @@
-From 1dfe774b1164a186d8848ab3627db6c3d2bc0238 Mon Sep 17 00:00:00 2001
+From 0da7337fa1f9c0c1d584d47980a7877668c6648d Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sun, 19 Mar 2023 10:56:59 +0200
 Subject: [PATCH 2/6] AUR Do not update cargo crates
