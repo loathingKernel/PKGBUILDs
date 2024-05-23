@@ -1,12 +1,12 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-akasha
-pkgver=6.7.6.zen1
+pkgver=6.9.1.zen1
 pkgrel=2
 pkgdesc='Linux ZEN Akasha LLVM LTO'
 url='https://github.com/zen-kernel/zen-kernel'
 arch=(x86_64)
-license=(GPL2)
+license=(GPL-2.0-only)
 makedepends=(
   bc
   cpio
@@ -20,7 +20,10 @@ makedepends=(
 
   clang llvm lld
 )
-options=('!strip')
+options=(
+  !debug
+  !strip
+)
 _srcname=linux-${pkgver%.*}
 _srctag=v${pkgver%.*}-${pkgver##*.}
 source=(
@@ -34,16 +37,16 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('e489ec0e1370d089b446d565aded7a698093d2b7c4122a18f21edb6ef93d37d3'
+sha256sums=('01b414ba98fd189ecd544435caf3860ae2a790e3ec48f5aa70fdf42dc4c5c04a'
             'SKIP'
-            'c6bc98b4ca0839519bc3b497d3094df4094ab346cea90dea5d6189e2439eedb1'
+            '81aac88a48aa565bf16b9e5eb41fed263b940fa8aa246607f97f7b7db56098a4'
             'SKIP'
-            'd78c3994a51057cdc1167ddd111252bb3f2dfa7f7b9872505defb732eabac169')
-b2sums=('51d6e2304e7a9188a0fec5714276589cb46948157c76a2f4ed3f5e0bf634d94a89ea75251229a86e018767a3367328c16b610d631c78d82663dcd1d904b73385'
+            '1226a05308fd7d7c54afa2026cea36735f5284e08840cdac03a91a212a4e15c3')
+b2sums=('388af1d13e78a424f72a961697f4b0b6a234e54ce1e4a2532fc73717301e048c6f4a6251b6e3c4541179d1382566c3f411baa6883818a10d178ef27d036b5379'
         'SKIP'
-        '804a6bfbd65c834da19bfc0e763c0c51a5bb56db27afa025f6122ca429cfa63b55ca384c45d70fe0601cd16001daf75981a55be86d71b471b005363229213c3e'
+        '9510ea5661127127953f81a229b2d8a0f6429f2ee56c11bedb41e2dccbdc7dc45c4eab62093beb7649c804fef58427cf235b8058fbff418137346c10e2df74a9'
         'SKIP'
-        'c8a837ca6b0bef2b658192db8c3cd5f998cbbd657d5cc596ebbda345d95cdadaaefccfa9f79672589ca61848ad3f761de3ef4b3a713296605bf18e78e21a9f97')
+        'e43d2cdd55ae13258b8306c6f88bedc6c2adfc86f244479646f527335caa64a700bc86d90c59f34da8e899865883ba3f0cc48b77d0f56de844774aa19ac85f6d')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -70,6 +73,7 @@ prepare() {
   echo "Setting config..."
   cp ../config .config
   if true; then
+  mkdir -p "${startdir}/configs"
   # Enable LTO, it might be the cause of kernel panics
   scripts/config --enable LTO_CLANG_THIN
   echo "-> Native config..."
@@ -121,6 +125,7 @@ prepare() {
     scripts/config --disable CONFIG_PCIE_ECRC
 #    scripts/config --disable CONFIG_PCIEASPM_DEFAULT
 #    scripts/config --enable  CONFIG_PCIEASPM_PERFORMANCE
+    scripts/config --disable CONFIG_NTSYNC
     # Graphics support
     scripts/config --disable CONFIG_AGP
     scripts/config --set-val CONFIG_VGA_ARB_MAX_GPUS 4
@@ -134,11 +139,11 @@ prepare() {
   diff -u ../config .config || :
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage1-native"
   echo "-> Running nconfig..."
-  make LLVM=1 LLVM_IAS=1 nconfig
+  test -t 0 && make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage2-nconfig"
   echo "-> Running localmodconfig..."
-  make LLVM=1 LLVM_IAS=1 LSMOD="${startdir}/modprobed.db" localmodconfig
-  make LLVM=1 LLVM_IAS=1 nconfig
+  yes "" | make LLVM=1 LLVM_IAS=1 LSMOD="${startdir}/modprobed.db" localmodconfig
+  test -t 0 && make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage3-localmod"
   fi
 

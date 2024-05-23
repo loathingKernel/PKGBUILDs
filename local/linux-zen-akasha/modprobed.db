@@ -140,7 +140,6 @@ nft_masq
 nft_reject
 nft_reject_ipv4
 ntfs3
-ntsync
 overlay
 pktcdvd
 poly1305_x86_64
