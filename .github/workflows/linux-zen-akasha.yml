@@ -1,0 +1,22 @@
+name: linux-zen-akasha
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - local/linux-zen-akasha/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        include:
+          - repository: personal
+            pkgbuild: PKGBUILD
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/linux-zen-akasha
+      repository: ${{ matrix.repository }}
+      pkgbuild: ${{ matrix.pkgbuild }}
