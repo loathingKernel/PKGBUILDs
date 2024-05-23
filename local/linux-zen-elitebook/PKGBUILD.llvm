@@ -1,12 +1,12 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=6.7.9.zen1
-pkgrel=1
+pkgver=6.9.1.zen1
+pkgrel=2
 pkgdesc='Linux ZEN Elitebook LLVM'
 url='https://github.com/zen-kernel/zen-kernel'
 arch=(x86_64)
-license=(GPL2)
+license=(GPL-2.0-only)
 makedepends=(
   bc
   cpio
@@ -20,7 +20,10 @@ makedepends=(
 
   clang llvm lld
 )
-options=('!strip')
+options=(
+  !debug
+  !strip
+)
 _srcname=linux-${pkgver%.*}
 _srctag=v${pkgver%.*}-${pkgver##*.}
 source=(
@@ -34,16 +37,16 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('0fd733fc0778f8da1fdf66df1698d394248807de71eef83a4d1218bcb3dfd346'
+sha256sums=('01b414ba98fd189ecd544435caf3860ae2a790e3ec48f5aa70fdf42dc4c5c04a'
             'SKIP'
-            '54a164d213470ee0466cc131e2afad40a84487e4bfd67e40cb838835446e3d61'
+            '81aac88a48aa565bf16b9e5eb41fed263b940fa8aa246607f97f7b7db56098a4'
             'SKIP'
-            '4871710048d7069daee0d5bd1d7a64beb9d7f865a6dd366b0111ccd3dabe9a34')
-b2sums=('2a5990e067439dcb3a6e7647832c85a2ce7faf28c48f414ebcb4d33ea37f870204c4b6bf98fca1faaf61bb59f579d6b597d8b2b29bd8cd2cc3b25afba3fe1fd8'
+            '1226a05308fd7d7c54afa2026cea36735f5284e08840cdac03a91a212a4e15c3')
+b2sums=('388af1d13e78a424f72a961697f4b0b6a234e54ce1e4a2532fc73717301e048c6f4a6251b6e3c4541179d1382566c3f411baa6883818a10d178ef27d036b5379'
         'SKIP'
-        '5d5d317aa2beb72d71e20e64ea91ab03a4e454390b65d4c0a3a50655c8002758380ebee3b13f4351f101dc44053322db687823ae16ebf8eaaa8dc7dc23f6e0c3'
+        '9510ea5661127127953f81a229b2d8a0f6429f2ee56c11bedb41e2dccbdc7dc45c4eab62093beb7649c804fef58427cf235b8058fbff418137346c10e2df74a9'
         'SKIP'
-        'c0276c030303192a11e011f22d02fc54887de4c1555e2521408733206a882c402853d511c96c3d11f36dfcd1811b512ad25097aaa65baba248d5d9dd3c32e565')
+        'e43d2cdd55ae13258b8306c6f88bedc6c2adfc86f244479646f527335caa64a700bc86d90c59f34da8e899865883ba3f0cc48b77d0f56de844774aa19ac85f6d')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -70,6 +73,7 @@ prepare() {
   echo "Setting config..."
   cp ../config .config
   if true; then
+  mkdir -p "${startdir}/configs"
   echo "-> Native config..."
     # General Setup (phoronix says that 03 is not better)
 #    scripts/config --disable CONFIG_ZEN_INTERACTIVE
@@ -119,6 +123,7 @@ prepare() {
     scripts/config --disable CONFIG_PCIE_ECRC
 #    scripts/config --disable CONFIG_PCIEASPM_DEFAULT
 #    scripts/config --enable  CONFIG_PCIEASPM_PERFORMANCE
+    scripts/config --disable CONFIG_NTSYNC
     # Graphics support
     scripts/config --disable CONFIG_AGP
     scripts/config --set-val CONFIG_VGA_ARB_MAX_GPUS 4
@@ -132,11 +137,11 @@ prepare() {
   diff -u ../config .config || :
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage1-native"
   echo "-> Running nconfig..."
-  make LLVM=1 LLVM_IAS=1 nconfig
+  test -t 0 && make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage2-nconfig"
   echo "-> Running localmodconfig..."
-  make LLVM=1 LLVM_IAS=1 LSMOD="${startdir}/modprobed.db" localmodconfig
-  make LLVM=1 LLVM_IAS=1 nconfig
+  yes "" | make LLVM=1 LLVM_IAS=1 LSMOD="${startdir}/modprobed.db" localmodconfig
+  test -t 0 && make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage3-localmod"
   fi
 

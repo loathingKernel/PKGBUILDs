@@ -134,7 +134,6 @@ nft_reject
 nft_reject_inet
 nft_reject_ipv4
 ntfs3
-ntsync
 overlay
 platform_profile
 polyval_clmulni
