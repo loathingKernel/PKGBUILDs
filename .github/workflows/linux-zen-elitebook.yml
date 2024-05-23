@@ -14,8 +14,9 @@ jobs:
       matrix:
         include:
           - repository: personal
+            pkgbuild: PKGBUILD
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: local/linux-zen-elitebook
       repository: ${{ matrix.repository }}
-      action: skip
+      pkgbuild: ${{ matrix.pkgbuild }}
