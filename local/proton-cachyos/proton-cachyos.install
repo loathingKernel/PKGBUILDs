@@ -1,0 +1,23 @@
+#!/bin/sh
+
+post_install() {
+  echo ":: This package, due to the way it is built and packaged is officialy UNSUPPORTED"
+  echo "   by Valve. Please do not bother them if something doesn't run with it."
+  echo "   If something does NOT run with this package, but DOES run with the same official"
+  echo "   version, installed according to upstream instructions, feel free to report it through"
+  echo "   the Issues in our repository https://github.com/CachyOS/proton-cachyos."
+  echo "   "
+  echo "   This version of Proton is meant to be used with \"steam-native\" from the"
+  echo "   \"steam-native-runtime\" package on Arch Linux"
+  echo ""
+  echo "   Proton-CachyOS os built with Wayland suppport, but it is DISABLED as DEFAULT."
+  echo "   If you want to test the wayland driver please set PROTON_ENABLE_WAYLAND=1 ."
+  echo ""
+  echo "   Proton-CachyOS can use NTSync/Fastsync but it is disabled by default and depends on"
+  echo "   winesync-dkms package. To enable fastsync use PROTON_USE_WINESYNC=1 ."
+
+}
+
+post_upgrade() {
+  post_install
+}
