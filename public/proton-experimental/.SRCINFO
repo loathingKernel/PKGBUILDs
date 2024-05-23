@@ -1,6 +1,6 @@
 pkgbase = proton-experimental
 	pkgdesc = Compatibility tool for Steam Play based on Wine and additional components, experimental branch
-	pkgver = 9.0.20240516
+	pkgver = 9.0.20240522
 	pkgrel = 1
 	epoch = 1
 	url = https://github.com/ValveSoftware/Proton
@@ -133,7 +133,7 @@ pkgbase = proton-experimental
 	options = !lto
 	options = !debug
 	options = emptydirs
-	source = proton::git+https://github.com/ValveSoftware/Proton.git#tag=experimental-9.0-20240516
+	source = proton::git+https://github.com/ValveSoftware/Proton.git#tag=experimental-9.0-20240522
 	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86.tar.xz
 	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86_64.tar.xz
 	source = https://github.com/madewokherd/wine-mono/releases/download/wine-mono-9.1.0/wine-mono-9.1.0-x86.tar.xz
@@ -144,16 +144,16 @@ pkgbase = proton-experimental
 	source = 0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
 	source = 0005-AUR-Strip-binaries-early.patch
 	source = 0006-AUR-Fix-hwnd-redefinition.patch
-	sha256sums = dbecb1e5f36da9d9a8b5d6513316b25cad0647ad6530e3fb948fbad0c2407c6c
+	sha256sums = 0b6f758340e9cfa8d5595203dbfb69d0775cb6ac8294730d8aa60fe007957772
 	sha256sums = 2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6
 	sha256sums = fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814
 	sha256sums = 601169d0203b291fbfd946b356a9538855e01de22abd470ded73baf312c88767
 	sha256sums = 50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c
-	sha256sums = 8c644c1d0f9c2103bd6ebb76bdf33a88403205682aef247bc824a9a7976888c4
-	sha256sums = bb798988b45b244132a5aeb9815347e05d195ef2294d9f99dd25535a76abde8e
-	sha256sums = 383ef47ef48c085d49e18375c889bfd6b420fea2f6013eda89c82f432a620007
-	sha256sums = b84cfaed88528f5c0bbd292b128a8d18315f1252b6163504a8c9f136972ff36b
-	sha256sums = 3e9df8114aeb6fee97868667801c08f564900439c17cc69348361062355823aa
-	sha256sums = 2fb52854702044d5f22ed28a6bfd55e538d58a04f3394aff63a6f8b3e84dd704
+	sha256sums = c3cad6dec42b5123b7ab67901fa146bb9461f7bc79fbaf7ace093c2db7ce7069
+	sha256sums = d2f6fbd72ff6a542334cf8dc89c8c36cc9aea06a0a7396c0a1c24c9f32d7ad00
+	sha256sums = 07005979bb430f983ea32aec3603e214a65feef4410285c728495f29d18852ac
+	sha256sums = 96c1c93a7397ecb682b02296914b3a7fc16013809b313ac670960d20cc81df70
+	sha256sums = eea7d4e53e28e99efd6bf6bd77350511a78ce848f39e92730e377333b4c2f872
+	sha256sums = 60013412e8f792f0bc79df32294ab533aa7a085fce041951d3128cdb0b21c60d
 
 pkgname = proton-experimental
