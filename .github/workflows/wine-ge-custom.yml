@@ -6,6 +6,7 @@ on:
     branches:
      - master
     paths:
+     - public/wine-ge-custom/.SRCINFO
      - local/wine-ge-custom/.SRCINFO
 
 jobs:
@@ -14,14 +15,16 @@ jobs:
       matrix:
         include:
           - repository: public
+            pkgdir: public/wine-ge-custom
             pkgbuild: PKGBUILD
             multilib: true
           - repository: personal
+            pkgdir: local/wine-ge-custom
             pkgbuild: PKGBUILD
             multilib: true
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      pkgdir: local/wine-ge-custom
+      pkgdir: ${{ matrix.pkgdir }}
       repository: ${{ matrix.repository }}
       pkgbuild: ${{ matrix.pkgbuild }}
       multilib: ${{ matrix.multilib }}
