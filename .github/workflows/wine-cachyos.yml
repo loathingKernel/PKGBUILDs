@@ -1,0 +1,20 @@
+name: wine-cachyos
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+     - master
+    paths:
+     - local/wine-cachyos/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/wine-cachyos
+      repository: ${{ matrix.repository }}
+      multilib: true
