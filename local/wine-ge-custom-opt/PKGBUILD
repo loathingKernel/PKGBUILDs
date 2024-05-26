@@ -106,7 +106,6 @@ optdepends=(
   cups
   samba           dosbox
 )
-
 optdepends+=(
   wine
 )
@@ -220,6 +219,7 @@ package() {
   make prefix="$pkgdir/opt/${pkgname//-opt}" \
     libdir="$pkgdir/opt/${pkgname//-opt}/lib" \
     dlldir="$pkgdir/opt/${pkgname//-opt}/lib/wine" install
+
 
   i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib32/wine/i386-windows/*.{dll,exe}
   x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib/wine/x86_64-windows/*.{dll,exe}
