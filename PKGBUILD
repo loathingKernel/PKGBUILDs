@@ -6,29 +6,26 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-ge-custom
-_srctag=GE-Proton9-5
+_srctag=GE-Proton8-26
+_commit=21f5f463cb761b94bcd00553f924f55516389f5b
 pkgver=${_srctag//-/.}
-pkgrel=1
+pkgrel=2
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
 
-source=(wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#tag=${_srctag}
-        30-win32-aliases.conf
-        wine-binfmt.conf)
-source+=(
+source=(wine-ge-custom::git+https://github.com/GloriousEggroll/wine-ge-custom.git#commit=${_commit}
         wine-wmclass.patch
         wine-isolate_home.patch
-)
-sha512sums=('efc352176d9c34f87ddebbc754e3e3f91b7c92ce5f24effc00d68d1f7da9e02e9e31be8658f384febc502d4f1b0761070867611a3c476ebe2c6d421da5628ed8'
-            '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
-            'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
-sha512sums+=(
+        30-win32-aliases.conf
+        wine-binfmt.conf)
+sha512sums=('SKIP'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
-)
+            '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
+            'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
@@ -36,7 +33,7 @@ pkgdesc="A compatibility layer for running Windows programs - GloriousEggroll br
 url="https://github.com/GloriousEggroll/wine-ge-custom"
 arch=(x86_64 x86_64_v3)
 options=(!staticlibs !lto !debug)
-license=(LGPL-2.1-or-later)
+license=(LGPL)
 
 depends=(
   attr             lib32-attr
@@ -49,10 +46,6 @@ depends=(
   gcc-libs         lib32-gcc-libs
   libpcap          lib32-libpcap
   desktop-file-utils
-)
-depends+=(
-  libxkbcommon     lib32-libxkbcommon
-  wayland          lib32-wayland
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
@@ -76,11 +69,8 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   gst-plugins-good      lib32-gst-plugins-good
   vulkan-icd-loader     lib32-vulkan-icd-loader
   sdl2                  lib32-sdl2
-  libcups               lib32-libcups
-  sane
   libgphoto2
   ffmpeg
-  samba
   opencl-headers
 )
 
@@ -100,14 +90,12 @@ optdepends=(
   gst-plugins-good      lib32-gst-plugins-good
   vulkan-icd-loader     lib32-vulkan-icd-loader
   sdl2                  lib32-sdl2
-  sane
   libgphoto2
   ffmpeg
-  cups
-  samba           dosbox
+  dosbox
 )
 
-provides=("wine=9.0")
+provides=("wine=8.0")
 conflicts=('wine')
 install=wine.install
 
@@ -117,26 +105,34 @@ prepare() {
   mkdir $pkgname-{32,64}-build
 
   pushd $pkgname
-    git remote set-url origin https://github.com/loathingKernel/wine-ge-custom.git
-    git submodule update --init --filter=tree:0 --recursive wine wine-staging
-    ./patches/protonprep-lutris-staging.sh
-    pushd wine
+    git remote set-url origin https://github.com/gloriouseggroll/wine-ge-custom.git
+    git submodule update --init --filter=tree:0 --recursive proton-wine
+    pushd proton-wine
       patch -p1 -i "$srcdir"/wine-wmclass.patch
       patch -p1 -i "$srcdir"/wine-isolate_home.patch
       git config user.email "makepkg@aur.not"
       git config user.name "makepkg aur"
-      git tag wine-ge-9.0 --annotate -m "$pkgver"
-      ./tools/make_specfiles
-      ./tools/make_requests
-      ./dlls/winevulkan/make_vulkan
+      git tag wine-ge-8.0 --annotate -m "$pkgver"
+      dlls/winevulkan/make_vulkan
+      tools/make_requests
       autoreconf -f
     popd
   popd
+
+  # Doesn't compile without remove these flags as of 4.10
+  export CFLAGS="${CFLAGS/-fno-plt/}"
+  export LDFLAGS="${LDFLAGS/,-z,now/}"
 }
 
 build() {
+  cd "$srcdir"
+
   # Doesn't compile without remove these flags as of 4.10
-  export CFLAGS="$CFLAGS -ffat-lto-objects"
+  export CFLAGS="${CFLAGS/-fno-plt/}"
+  export CXXFLAGS="${CXXFLAGS/-fno-plt/}"
+  export LDFLAGS="${LDFLAGS/,-z,now/}"
+  # MingW Wine builds fail with relro
+  export LDFLAGS="${LDFLAGS/,-z,relro/}"
 
   local -a split=($CFLAGS)
   local -A flags
@@ -147,13 +143,10 @@ build() {
   # From Proton
   OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
-  WARNING_FLAGS="-Wno-incompatible-pointer-types"
-  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
+  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS -s"
 
   export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
   export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
-
-  cd "$srcdir"
 
   msg2 "Building Wine-64..."
 
@@ -163,11 +156,10 @@ build() {
   export CROSSCXXFLAGS="$CXXFLAGS"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-64-build"
-  ../$pkgname/wine/configure \
+  ../$pkgname/proton-wine/configure \
     --prefix=/usr \
     --libdir=/usr/lib \
     --with-x \
-    --with-wayland \
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
@@ -188,10 +180,9 @@ build() {
   export CROSSCXXFLAGS="$CXXFLAGS"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-32-build"
-  ../$pkgname/wine/configure \
+  ../$pkgname/proton-wine/configure \
     --prefix=/usr \
     --with-x \
-    --with-wayland \
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
@@ -228,8 +219,8 @@ package() {
   i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib32/wine/i386-windows/*.{dll,exe}
   x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe}
 
-  find "$pkgdir"/usr/lib{,32}/wine -iname "*.a" -delete
-  find "$pkgdir"/usr/lib{,32}/wine -iname "*.def" -delete
+  #find "$pkgdir"/usr/lib{,32}/wine -iname "*.a" -delete
+  #find "$pkgdir"/usr/lib{,32}/wine -iname "*.def" -delete
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
