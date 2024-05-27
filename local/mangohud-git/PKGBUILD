@@ -4,17 +4,16 @@
 # Contributor: Mark Wagie <mark dot wagie at proton dot me>
 _pkgname=MangoHud
 pkgname=mangohud-git
-_pkgver=0.7.1-1
+_pkgver=0.7.2
 pkgver=0.7.2.rc3.r18.g0caded8
 pkgrel=1
 pkgdesc="A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load and more."
 arch=('x86_64')
 url="https://github.com/flightlessmango/MangoHud"
 license=('MIT')
-makedepends=('appstream' 'cmocka' 'git' 'glfw' 'glslang' 'libxnvctrl' 'libxrandr' 'meson' 'nlohmann-json' 'python-mako' 'vulkan-headers')
-depends=('dbus' 'fmt' 'gcc-libs' 'glew' 'hicolor-icon-theme' 'libglvnd' 'libx11' 'python' 'python-matplotlib' 'python-numpy' 'vulkan-icd-loader')
+makedepends=('appstream' 'cmocka' 'git' 'glslang' 'libxnvctrl' 'libxrandr' 'meson' 'nlohmann-json' 'python-mako' 'vulkan-headers')
+depends=('dbus' 'fmt' 'gcc-libs' 'glew' 'glfw' 'hicolor-icon-theme' 'libglvnd' 'libx11' 'libxkbcommon' 'python' 'python-matplotlib' 'python-numpy' 'vulkan-icd-loader' 'wayland')
 optdepends=('libxnvctrl: NVIDIA GPU stats by XNVCtrl'
-            'glfw: Required for MangoApp'
             'gamescope: Use MangoApp as an overlay within gamescope')
 provides=("${pkgname//-git}")
 conflicts=("${pkgname//-git}")
@@ -45,9 +44,6 @@ build() {
 }
 
 package() {
-    depends+=(
-        vulkan-icd-loader libvulkan.so
-    )
     meson install -C build --destdir "$pkgdir"
 
     install -Dm 0644 "$srcdir/$_pkgname/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
