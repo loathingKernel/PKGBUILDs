@@ -4,17 +4,17 @@
 # Contributor: Ranieri Althoff <ranisalt+aur at gmail dot com>
 _pkgname=MangoHud
 pkgname=lib32-mangohud-git
-_pkgver=0.7.1-1
+_pkgver=0.7.2
 pkgver=0.7.2.rc3.r18.g0caded8
 pkgrel=1
 pkgdesc="32-bit libraries for MangoHud and MangoApp"
 arch=('x86_64')
 url="https://github.com/flightlessmango/MangoHud"
 license=('MIT')
-makedepends=('git' 'glfw' 'glslang' 'lib32-cmocka' 'lib32-libglvnd' 'lib32-libxrandr' 'libxnvctrl' 'meson' 'nlohmann-json' 'python-mako' 'vulkan-headers')
-depends=('lib32-dbus' 'lib32-gcc-libs' 'lib32-glew' 'lib32-libx11' 'lib32-libxkbcommon' 'lib32-vulkan-icd-loader')
+makedepends=('git' 'glfw-x11' 'glslang' 'lib32-cmocka' 'lib32-libglvnd' 'libxnvctrl' 'lib32-libxrandr' 'meson' 'nlohmann-json' 'python-mako' 'vulkan-headers')
+depends=('lib32-dbus' 'lib32-gcc-libs' 'lib32-glew' 'lib32-libx11' 'lib32-libxkbcommon' 'lib32-vulkan-icd-loader' 'lib32-wayland')
 provides=("${pkgname//-git}")
-conflicts=("${pkgname//-git}" 'lib32-mangoapp')
+conflicts=("${pkgname//-git}")
 replaces=('lib32-mangoapp')
 source=("git+https://github.com/flightlessmango/MangoHud.git")
 b2sums=('SKIP')
