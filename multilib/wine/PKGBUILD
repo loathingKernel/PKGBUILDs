@@ -6,7 +6,7 @@
 pkgname=wine
 _tkg_commit=f99f78d4054f07bec9524d0f05ef4c62ccb85aa0
 pkgver=9.9
-pkgrel=0
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 
