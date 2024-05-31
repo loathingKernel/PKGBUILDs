@@ -1,0 +1,21 @@
+name: dxvk-gplasync-mingw-git
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 0 */3 * *'
+  push:
+    branches:
+     - master
+    paths:
+     - local/dxvk-gplasync-mingw-git/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/dxvk-gplasync-mingw-git
+      repository: ${{ matrix.repository }}
