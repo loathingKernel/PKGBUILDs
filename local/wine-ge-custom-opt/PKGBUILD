@@ -21,6 +21,8 @@ source=(wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git
 source+=(
         wine-wmclass.patch
         wine-isolate_home.patch
+        0002-fshack-potentially-fix-image-corruption-on-ANV.patch
+        0003-fshack-mark-mode-struct-arrays-as-const.patch
 )
 sha512sums=('efc352176d9c34f87ddebbc754e3e3f91b7c92ce5f24effc00d68d1f7da9e02e9e31be8658f384febc502d4f1b0761070867611a3c476ebe2c6d421da5628ed8'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
@@ -28,6 +30,8 @@ sha512sums=('efc352176d9c34f87ddebbc754e3e3f91b7c92ce5f24effc00d68d1f7da9e02e9e3
 sha512sums+=(
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
+            'SKIP'
+            'SKIP'
 )
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -124,6 +128,8 @@ prepare() {
     pushd wine
       patch -p1 -i "$srcdir"/wine-wmclass.patch
       patch -p1 -i "$srcdir"/wine-isolate_home.patch
+      patch -p1 -i "$srcdir"/0002-fshack-potentially-fix-image-corruption-on-ANV.patch
+      patch -p1 -i "$srcdir"/0003-fshack-mark-mode-struct-arrays-as-const.patch
       git config user.email "makepkg@aur.not"
       git config user.name "makepkg aur"
       git tag wine-ge-9.0 --annotate -m "$pkgver"
