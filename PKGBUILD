@@ -1,7 +1,7 @@
 # Maintainer: devome <evinedeng@hotmail.com>
 
 pkgname="backrest"
-pkgver=1.0.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="A web UI and orchestrator for restic backup."
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
@@ -11,7 +11,7 @@ depends=("restic")
 makedepends=("npm" "go")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}@.service")
-sha256sums=('51be8ddc725b2779b42700ae85db395248a2c9b06f80bd0bf3b3e539601fa792'
+sha256sums=('7b57ee0f89ec10e089a32946aac963e35c7960cfb0e6e3a3a4a2877248272036'
             '528bfac979b7d0615bf70df9de4e965ad9a25bf0e06a19c7ed359a7ee47de05a')
 
 build() {
@@ -23,7 +23,7 @@ build() {
     npm --prefix webui install
     npm --prefix webui run build
     find webui/dist -name '*.map' -exec rm ./{} \;
-    go build -trimpath -ldflags="$ldflags" -o "${pkgname}" .
+    go build -trimpath -ldflags="$ldflags" -o "${pkgname}" ./cmd/"${pkgname}"
 }
 
 package() {
