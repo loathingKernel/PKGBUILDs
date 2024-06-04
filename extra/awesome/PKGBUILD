@@ -31,6 +31,7 @@ depends=(cairo
          xcb-util-xrm
          xorg-xmessage)
 makedepends=(asciidoctor
+             git
              cmake
              docbook-xsl
              doxygen

@@ -6,6 +6,7 @@ pkgbase = awesome
 	arch = x86_64
 	license = GPL-2.0-or-later
 	makedepends = asciidoctor
+	makedepends = git
 	makedepends = cmake
 	makedepends = docbook-xsl
 	makedepends = doxygen
