@@ -3,16 +3,6 @@ name: vicious
 
 on:
   workflow_dispatch:
-      inputs:
-        action:
-          description: "Operation mode"
-          required: true
-          type: choice
-          default: 'build'
-          options:
-          - 'build'
-          - 'remove'
-          - 'skip'
   push:
     branches:
      - master
@@ -28,4 +18,3 @@ jobs:
     with:
       pkgdir: extra/vicious
       repository: ${{ matrix.repository }}
-      action: ${{ inputs.action }}
