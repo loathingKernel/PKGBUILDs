@@ -1,0 +1,31 @@
+
+name: awesome
+
+on:
+  workflow_dispatch:
+      inputs:
+        action:
+          description: "Operation mode"
+          required: true
+          type: choice
+          default: 'build'
+          options:
+          - 'build'
+          - 'remove'
+          - 'skip'
+  push:
+    branches:
+     - master
+    paths:
+     - extra/awesome/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: extra/awesome
+      repository: ${{ matrix.repository }}
+      action: ${{ inputs.action }}
