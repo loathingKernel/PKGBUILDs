@@ -1,6 +1,6 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
-pkgver=1.5.4
+pkgver=1.6.0
 pkgrel=1
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
@@ -15,7 +15,7 @@ source=(
 	"correct-icon-names.patch"
 )
 sha256sums=(
-	'79aaedc79f9e43e6cd5e056d01993815bdbd6ae83f0c225c2d8006cc799c043b'
+	'ce6b6a54654270d910abead27e07813e8b67d532fd7c702e68387232ea1f7bb4'
 	'8d9bf423855188001e4f28e7cdb367878deaf552e49b3a2ff037dba7fccd44b7'
 )
 _unneededicons=(
