@@ -10,6 +10,7 @@ url="https://github.com/Mic92/$pkgname"
 arch=(any)
 license=(GPL2)
 depends=(lua53)
+makedepends=(git)
 optdepends=('alsa-utils: for the Volume widget type'
             'curl: for widget types accessing network resources'
             'hddtemp: for the HDD Temp widget type'

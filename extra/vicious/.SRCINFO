@@ -5,6 +5,7 @@ pkgbase = vicious
 	url = https://github.com/Mic92/vicious
 	arch = any
 	license = GPL2
+	makedepends = git
 	depends = lua53
 	optdepends = alsa-utils: for the Volume widget type
 	optdepends = curl: for widget types accessing network resources
