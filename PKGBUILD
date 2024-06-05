@@ -5,8 +5,8 @@
 # Contributor: Daniel Maslowski <info@orangecms.org>
 
 pkgname=minio
-pkgver=2024.05.28
-_timever=T17-19-04Z
+pkgver=2024.06.04
+_timever=T19-20-08Z
 _pkgver="${pkgver//./-}${_timever//:/-}"
 pkgrel=1
 pkgdesc='Object storage server compatible with Amazon S3'
@@ -21,7 +21,7 @@ source=(git+https://github.com/minio/minio.git#tag=RELEASE.${_pkgver}
         minio.service
         minio.sysusers)
 backup=('etc/minio/minio.conf')
-sha512sums=('b08d244cddac45fe1d9357db6455fbb463731a071fdc46404b06060b60a98032fb240940ed58fbad9ff50ec624d5bd429e095360470e6b28acf774c51f2a2a4e'
+sha512sums=('66dda2416c0cb0d88af5a75523e9b41a1450071900ed088ec9bb89d4843a09d949dbc9920a0e107a25fde664aa836afca1cc011531855567f79a22e0fad42e34'
             '9fb09d19af9d7a00e4680cd92d208ddd44ce52328f6efee68d7ee47f591cbe77ee88ce139a677bcf8836de0643de18c6c7c4005d50b0056f9b861c3d595e5233'
             'f4df8e50618712b6e5f62e2674eca4430ef17ef003426bd83ea6b427da4e0fb519589cc14547b08db4b4a0de114488920071295a680b0c1cb5fd508d31576190'
             '7e4617aed266cf48a2ff9b0e80e31641d998537c78d2c56ce97b828cfc77d96dbf64728d4235dac7382d6e5b201388bef6722959302de5e2298d93f4ec1e0e63')
