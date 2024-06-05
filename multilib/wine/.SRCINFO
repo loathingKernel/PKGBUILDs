@@ -1,7 +1,7 @@
 pkgbase = wine
 	pkgdesc = A compatibility layer for running Windows programs
-	pkgver = 9.9
-	pkgrel = 2
+	pkgver = 9.10
+	pkgrel = 1
 	url = https://www.winehq.org
 	install = wine.install
 	arch = x86_64
@@ -138,11 +138,11 @@ pkgbase = wine
 	optdepends = ntsync-dkms
 	options = !staticlibs
 	options = !lto
-	source = https://dl.winehq.org/wine/source/9.x/wine-9.9.tar.xz
-	source = https://dl.winehq.org/wine/source/9.x/wine-9.9.tar.xz.sign
+	source = https://dl.winehq.org/wine/source/9.x/wine-9.10.tar.xz
+	source = https://dl.winehq.org/wine/source/9.x/wine-9.10.tar.xz.sign
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
-	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=f99f78d4054f07bec9524d0f05ef4c62ccb85aa0
+	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=1cc41b1d158a791dd893a3283516f0fac5f444b6
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
 	source = wine-ntsync.patch
