@@ -6,7 +6,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-ge-custom
-_srctag=GE-Proton9-5
+_srctag=GE-Proton9-6
 pkgver=${_srctag//-/.}
 pkgrel=1
 epoch=1
@@ -22,7 +22,7 @@ source+=(
         wine-wmclass.patch
         wine-isolate_home.patch
 )
-sha512sums=('efc352176d9c34f87ddebbc754e3e3f91b7c92ce5f24effc00d68d1f7da9e02e9e31be8658f384febc502d4f1b0761070867611a3c476ebe2c6d421da5628ed8'
+sha512sums=('c0111dc5761d8b0e418c7167291385b27d17b6ea167a63346fa6b2555885250c739862655245aaa6e508edd2a059b049a50b01e5e9075b69409b31a2adeb6eed'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 sha512sums+=(
