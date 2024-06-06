@@ -6,7 +6,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-ge-custom-opt
-_srctag=GE-Proton9-6
+_srctag=GE-Proton9-7
 pkgver=${_srctag//-/.}
 pkgrel=1
 epoch=1
@@ -21,17 +21,13 @@ source=(wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git
 source+=(
         wine-wmclass.patch
         wine-isolate_home.patch
-        0002-fshack-potentially-fix-image-corruption-on-ANV.patch
-        0003-fshack-mark-mode-struct-arrays-as-const.patch
 )
-sha512sums=('a34b0f73415632c585a283007261dfc4a8a91d02e057ffb9fefd66ace88c5939eea0f8d5ca2bdb3d95aa8fe6207c86d98feca3b759a702914c80e13766d4696e'
+sha512sums=('04cf09e8edad7ca664f15603134a37367012932c4b8cde834e6ecc205609ada8171d08b266c9536a7088f54a6a75244de4ad09ea22f544e58bbefb4e0ebb71a4'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 sha512sums+=(
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
-            'SKIP'
-            'SKIP'
 )
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -128,8 +124,6 @@ prepare() {
     pushd wine
       patch -p1 -i "$srcdir"/wine-wmclass.patch
       patch -p1 -i "$srcdir"/wine-isolate_home.patch
-      patch -p1 -i "$srcdir"/0002-fshack-potentially-fix-image-corruption-on-ANV.patch
-      patch -p1 -i "$srcdir"/0003-fshack-mark-mode-struct-arrays-as-const.patch
       git config user.email "makepkg@aur.not"
       git config user.name "makepkg aur"
       git tag wine-ge-9.0 --annotate -m "$pkgver"
