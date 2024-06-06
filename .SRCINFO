@@ -1,7 +1,7 @@
 pkgbase = proton-ge-custom
 	pkgdesc = Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build
 	pkgver = GE.Proton9.7
-	pkgrel = 1
+	pkgrel = 2
 	epoch = 2
 	url = https://github.com/GloriousEggroll/proton-ge-custom
 	install = proton-ge-custom.install
@@ -147,6 +147,7 @@ pkgbase = proton-ge-custom
 	source = 0005-AUR-Strip-binaries-early.patch
 	source = 0006-AUR-Fix-hwnd-redefinition.patch
 	source = 0007-AUR-Disable-incompatible-pointer-types-in-Wine-GCC-1.patch
+	source = 0001-AUR-Fix-calling-make-requests-where-it-shouldn-t-be-.patch
 	sha256sums = ffbd3d6c4523debb13638d484a209077caecd7ced319d9a209297b4934d3ae2a
 	sha256sums = 2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6
 	sha256sums = fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814
@@ -159,5 +160,6 @@ pkgbase = proton-ge-custom
 	sha256sums = e055494eec0ab314d98e5806fff9f427501db822932b138a2fa3e80854614656
 	sha256sums = c6def40007f76adc9acb1ae4788f3b18e48bd11c68e58b68ea1d363bc5e0cff0
 	sha256sums = 02ee1933800f87f80e123328c3b7b33f3faf96a71e52fe252ab582eb49ab57ae
+	sha256sums = 4c3278e09c5b29d927dce1051d9a6d67b1d9ebc5425a1c31cb063e886308289d
 
 pkgname = proton-ge-custom
