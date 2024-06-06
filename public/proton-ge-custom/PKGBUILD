@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom
-_srctag=GE-Proton9-5
+_srctag=GE-Proton9-7
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
@@ -260,15 +260,15 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('324f0ca2cafe55893af0ce6f9b86c9db8ff1ffbf507da77a2d60ceb113d08c99'
+sha256sums=('ffbd3d6c4523debb13638d484a209077caecd7ced319d9a209297b4934d3ae2a'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '601169d0203b291fbfd946b356a9538855e01de22abd470ded73baf312c88767'
             '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            '00a1e8cc92e83e613c6007bd056e85727d92d73f357e4d38b30c5fb42d547e32'
-            'c10cb410eea86ffe5e82498599fda712b5a287f75329bbe8c19360468bfd7a02'
-            '0ed6267f6c865a3dd3fb9afed47d7b4401c992fc0ada9c09e789b3ebb77a8648'
-            'b4afa84e38be6a501ff8c75561f18d14539b1d1b1178adb8b906cd42e7204a6e'
-            'c480259a891e6b1cc1504a7b11501b550e998c515172ab10ccb5bc0327dacc24'
-            '3bf176a07063c16c76f8fa7daad1888ab5004cad8c0879e327eed9b1a5b04710'
-            '61fed547b22fd24f5fcd3b08709c3745d147669a32a16888133cbd08091b7874')
+            '2a6ad2bceaa713899a5bdb5ec49fad1495c21b8221f0d983d1cc1e9869b571dd'
+            'a93f12cb249320bba66448561efdbd8c133b1682e3c4ccbd0e5d16126cbfe7dd'
+            '815a4c06f73b9cb125959d9eb817cd5d9320e5465971710ea14cbff1c275e2d7'
+            'cdd33869fab0448fb4bc0d30d7e4502cdae541f862c443155b264e4d8c1ea1ce'
+            'e055494eec0ab314d98e5806fff9f427501db822932b138a2fa3e80854614656'
+            'c6def40007f76adc9acb1ae4788f3b18e48bd11c68e58b68ea1d363bc5e0cff0'
+            '02ee1933800f87f80e123328c3b7b33f3faf96a71e52fe252ab582eb49ab57ae')
