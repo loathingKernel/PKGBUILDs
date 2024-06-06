@@ -7,7 +7,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.1.0
 _xaliaver=0.4.2
-pkgrel=2
+pkgrel=3
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build"
 url="https://github.com/GloriousEggroll/proton-ge-custom"
@@ -97,6 +97,7 @@ source=(
     0005-AUR-Strip-binaries-early.patch
     0006-AUR-Fix-hwnd-redefinition.patch
     0007-AUR-Disable-incompatible-pointer-types-in-Wine-GCC-1.patch
+    0001-AUR-run-make_requests-before-configure.patch
     0001-AUR-Fix-calling-make-requests-where-it-shouldn-t-be-.patch
 )
 noextract=(
@@ -174,6 +175,7 @@ prepare() {
     patch -p1 -i "$srcdir"/0005-AUR-Strip-binaries-early.patch
     patch -p1 -i "$srcdir"/0006-AUR-Fix-hwnd-redefinition.patch
     patch -p1 -i "$srcdir"/0007-AUR-Disable-incompatible-pointer-types-in-Wine-GCC-1.patch
+    patch -p1 -i "$srcdir"/0001-AUR-run-make_requests-before-configure.patch
     patch -p1 -i "$srcdir"/0001-AUR-Fix-calling-make-requests-where-it-shouldn-t-be-.patch
 }
 
@@ -274,4 +276,5 @@ sha256sums=('ffbd3d6c4523debb13638d484a209077caecd7ced319d9a209297b4934d3ae2a'
             'e055494eec0ab314d98e5806fff9f427501db822932b138a2fa3e80854614656'
             'c6def40007f76adc9acb1ae4788f3b18e48bd11c68e58b68ea1d363bc5e0cff0'
             '02ee1933800f87f80e123328c3b7b33f3faf96a71e52fe252ab582eb49ab57ae'
+            '10448919c5cb6990a1f4a355d06a3cb4833e382edc6dfec6b8cc0af3bbaebb49'
             '4c3278e09c5b29d927dce1051d9a6d67b1d9ebc5425a1c31cb063e886308289d')
