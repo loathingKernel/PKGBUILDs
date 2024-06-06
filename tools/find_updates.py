@@ -537,3 +537,6 @@ if __name__ == "__main__":
         local_non_aur_packages = [lp for lp in local_packages if lp.name not in [ap.name for ap in aur_packages]]
         for lnap in local_non_aur_packages:
             print("{:16s} {}".format(f"NON - {ldb.name}", lnap.name))
+
+        print("")
+
