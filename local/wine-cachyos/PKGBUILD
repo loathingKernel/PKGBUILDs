@@ -8,7 +8,7 @@
 pkgname=wine-cachyos
 _srctag=9.0-20240524
 pkgver=${_srctag//-/.}
-pkgrel=1
+pkgrel=2
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -114,10 +114,10 @@ prepare() {
     git config user.email "wine@cachyos.org"
     git config user.name "wine cachyos"
     git tag wine-cachyos-9.0 --annotate -m "$pkgver"
+    ./dlls/winevulkan/make_vulkan -x vk.xml
     ./tools/make_specfiles
     ./tools/make_requests
-    ./dlls/winevulkan/make_vulkan
-    autoreconf -f
+    autoreconf -fiv
   popd
 }
 
