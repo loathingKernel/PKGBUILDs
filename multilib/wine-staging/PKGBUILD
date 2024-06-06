@@ -7,7 +7,7 @@
 pkgname=wine-staging
 _tkg_commit=1cc41b1d158a791dd893a3283516f0fac5f444b6
 pkgver=9.10
-pkgrel=2
+pkgrel=3
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -148,7 +148,7 @@ prepare() {
 
   patch -p1 -i "$srcdir"/wine-wmclass.patch
   patch -p1 -i "$srcdir"/wine-isolate_home.patch
-  ./dlls/winevulkan/make_vulkan -x vk.xml
+  ./dlls/winevulkan/make_vulkan
   ./tools/make_specfiles
   ./tools/make_requests
   autoreconf -fiv
