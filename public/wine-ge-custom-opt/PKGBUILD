@@ -9,7 +9,7 @@ pkgname=wine-ge-custom-opt
 _srctag=GE-Proton8-26
 _commit=21f5f463cb761b94bcd00553f924f55516389f5b
 pkgver=${_srctag//-/.}
-pkgrel=4
+pkgrel=5
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -129,10 +129,10 @@ prepare() {
       git config user.email "makepkg@aur.not"
       git config user.name "makepkg aur"
       git tag wine-ge-8.0 --annotate -m "$pkgver"
+      ./dlls/winevulkan/make_vulkan -x vk.xml
       ./tools/make_specfiles
       ./tools/make_requests
-      ./dlls/winevulkan/make_vulkan
-      autoreconf -f
+      autoreconf -fiv
     popd
   popd
 }
