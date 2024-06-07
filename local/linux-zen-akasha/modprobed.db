@@ -140,6 +140,7 @@ nft_masq
 nft_reject
 nft_reject_ipv4
 ntfs3
+ntsync
 overlay
 pktcdvd
 poly1305_x86_64
@@ -165,6 +166,7 @@ snd_hda_codec_hdmi
 snd_hda_codec_realtek
 snd_hda_core
 snd_hda_intel
+snd_hda_scodec_component
 snd_hrtimer
 snd_hwdep
 snd_intel_dspcfg

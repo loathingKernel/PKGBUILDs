@@ -1,8 +1,8 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-akasha
-pkgver=6.9.1.zen1
-pkgrel=2
+pkgver=6.9.3.zen1
+pkgrel=1
 pkgdesc='Linux ZEN Akasha LLVM'
 url='https://github.com/zen-kernel/zen-kernel'
 arch=(x86_64)
@@ -37,16 +37,16 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('01b414ba98fd189ecd544435caf3860ae2a790e3ec48f5aa70fdf42dc4c5c04a'
+sha256sums=('c321c46401368774fc236f57095b205a5da57415f9a6008018902f9fd5eddfae'
             'SKIP'
-            '81aac88a48aa565bf16b9e5eb41fed263b940fa8aa246607f97f7b7db56098a4'
+            '38afdba4d39f0dc0e2cdab2e2639ffd7bdc77d3eae26dfafd358e30eb79820b5'
             'SKIP'
-            '1226a05308fd7d7c54afa2026cea36735f5284e08840cdac03a91a212a4e15c3')
-b2sums=('388af1d13e78a424f72a961697f4b0b6a234e54ce1e4a2532fc73717301e048c6f4a6251b6e3c4541179d1382566c3f411baa6883818a10d178ef27d036b5379'
+            '5ad33285fcfc62082af7bb0cf23f277878dfe5c037203c0b23a1401f7a695863')
+b2sums=('8d8fe931d304458bcaa8c8b9572a5354ad272d88d1e0642e76b37247ce13bf70c49c8de6d8843fbb3037ee074ebc6cc94f0cc2b5b7e7187385a9dd0b0e2e250d'
         'SKIP'
-        '9510ea5661127127953f81a229b2d8a0f6429f2ee56c11bedb41e2dccbdc7dc45c4eab62093beb7649c804fef58427cf235b8058fbff418137346c10e2df74a9'
+        '2f254b795c4f309c3b5007958ca0d7698e9c3c26eb867509fc95fc442a24793934204053147195b6ac0d7e554699ac2e131a44f7bece0032dcabb588c73e7020'
         'SKIP'
-        'e43d2cdd55ae13258b8306c6f88bedc6c2adfc86f244479646f527335caa64a700bc86d90c59f34da8e899865883ba3f0cc48b77d0f56de844774aa19ac85f6d')
+        'bb3cbd1e2018711d8b6dfc3885248be775bb2786aaeefd6408665a7ef605aa93fa3620ad0af3ab1c093ddcf88dcf4bca05eb2772608df4397838175d36877e06')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
