@@ -25,7 +25,6 @@ depends=(
     alsa-lib
     ffmpeg
     sdl2
-    lld
     qt6-base
     qt6-svg
     soundtouch
@@ -47,7 +46,6 @@ makedepends=(
     sndio
     libpipewire
     p7zip
-    # See .github/workflows/scripts/linux/build-dependencies-qt.sh
     libjpeg-turbo
     qt6-tools
     qt6-wayland
@@ -68,7 +66,6 @@ SHADERC=2024.1
 SHADERC_GLSLANG=142052fa30f9eca191aa9dcf65359fcaed09eeec
 SHADERC_SPIRVHEADERS=5e3ad389ee56fca27c9705d093ae5387ce404df4
 SHADERC_SPIRVTOOLS=dd4b663e13c07fea4fbb3f70c1c91c86731099f7
-# See .github/workflows/scripts/linux/build-dependencies-qt.sh
 
 source=(
     git+https://github.com/PCSX2/pcsx2.git

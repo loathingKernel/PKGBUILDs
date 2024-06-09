@@ -31,7 +31,6 @@ pkgbase = pcsx2-git
 	depends = alsa-lib
 	depends = ffmpeg
 	depends = sdl2
-	depends = lld
 	depends = qt6-base
 	depends = qt6-svg
 	depends = soundtouch
