@@ -5,7 +5,7 @@ pkgrel=1
 arch=('x86_64')
 url="https://github.com/JetBrains/jcef"
 license=('BSD')
-depends=('java-runtime' 'libxcursor' 'at-spi2-atk' 'libxkbcommon' 'libxcomposite' 'mesa' 'libcups' 'pango' 'libxrandr' 'alsa-lib' 'nss')
+depends=('java-runtime' 'libxcursor' 'at-spi2-atk' 'libxkbcommon' 'libxcomposite' 'libxdamage' 'mesa' 'libcups' 'pango' 'libxrandr' 'alsa-lib' 'nss')
 makedepends=('jdk21-openjdk' 'cmake' 'git' 'ninja' 'python' 'ant' 'unzip' 'zip')
 source=("git+$url.git#branch=dev")
 sha256sums=('SKIP')

@@ -18,6 +18,7 @@ pkgbase = jcef-jetbrains-git
 	depends = at-spi2-atk
 	depends = libxkbcommon
 	depends = libxcomposite
+	depends = libxdamage
 	depends = mesa
 	depends = libcups
 	depends = pango
