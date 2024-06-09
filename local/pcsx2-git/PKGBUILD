@@ -84,12 +84,11 @@ install=pcsx2-git.install
 
 prepare() {
 
-    pushd "shaderc/third_party"
-    mv -n ../../glslang . 
-    mv -n ../../SPIRV-Headers spirv-headers
-    mv -n ../../SPIRV-Tools spirv-tools
-    cd ..
-    patch -p1 < "${srcdir}/pcsx2/.github/workflows/scripts/common/shaderc-changes.patch"
+    pushd shaderc
+    mv -n "${srcdir}"/glslang third_party/glslang
+    mv -n "${srcdir}"/SPIRV-Headers third_party/spirv-headers
+    mv -n "${srcdir}"/SPIRV-Tools third_party/spirv-tools
+    patch -p1 -i "$srcdir/pcsx2/.github/workflows/scripts/common/shaderc-changes.patch"
     popd
 
     cd pcsx2
@@ -106,43 +105,50 @@ build() {
 
     echo "Building libbacktrace..."
     pushd libbacktrace
-    ./configure --prefix="${srcdir}/deps-build"
+    ./configure --prefix="/opt/${pkgname%-git}"
     make
-    make install
+    DESTDIR="$srcdir/deps" make install
     popd
 
     echo "Building shaderc..."
-    pushd shaderc
-    cmake -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_PREFIX_PATH="${srcdir}/deps-build" \
-        -DCMAKE_INSTALL_PREFIX="${srcdir}/deps-build" \
+    cmake -B build-shaderc -S shaderc \
+        -G Ninja \
+        -Wno-dev \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_PREFIX_PATH="${srcdir}/deps/opt/${pkgname%-git}" \
+        -DCMAKE_INSTALL_PREFIX="/opt/${pkgname%-git}" \
         -DSHADERC_SKIP_TESTS=ON \
         -DSHADERC_SKIP_EXAMPLES=ON \
-        -DSHADERC_SKIP_COPYRIGHT_CHECK=ON \
-        -B build -G Ninja
-    cmake --build build --parallel
-    ninja -C build install
-    popd
+        -DSHADERC_SKIP_COPYRIGHT_CHECK=ON
+    ninja -C build-shaderc
+    DESTDIR="$srcdir/deps" ninja -C build-shaderc install
 
-    # See .github/workflows/scripts/linux/generate-cmake-qt.sh
+    echo "Building ${pkgname%-git}..."
     cmake -S pcsx2 -B build \
-    -G Ninja \
-    -Wno-dev \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-    -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-    -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-    -DCMAKE_PREFIX_PATH="${srcdir}/deps-build" \
-    -DCMAKE_BUILD_RPATH="/opt/pcsx2/lib" \
-    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
-    -DUSE_VULKAN=ON \
-    -DENABLE_SETCAP=OFF \
-    -DX11_API=ON \
-    -DWAYLAND_API=ON \
-    -DUSE_SYSTEM_LIBS=OFF \
-    -DDISABLE_ADVANCE_SIMD=ON
+        -G Ninja \
+        -Wno-dev \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_C_FLAGS="$CFLAGS -Wno-error=format-security" \
+        -DCMAKE_CXX_FLAGS="$CXXFLAGS -Wno-error=format-security" \
+        -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+        -DCMAKE_PREFIX_PATH="${srcdir}/deps/opt/${pkgname%-git}" \
+        -DCMAKE_BUILD_RPATH="/opt/${pkgname%-git}/lib" \
+        -DUSE_VULKAN=ON \
+        -DENABLE_SETCAP=OFF \
+        -DX11_API=ON \
+        -DWAYLAND_API=ON \
+        -DUSE_SYSTEM_LIBS=OFF \
+        -DDISABLE_ADVANCE_SIMD=ON
     ninja -C build -v
     
     7z a -r patches.zip ./pcsx2_patches/patches/*
@@ -157,7 +163,7 @@ package() {
     install -Dm644 pcsx2/bin/resources/icons/AppIconLarge.png \
         "${pkgdir}"/usr/share/icons/hicolor/512x512/apps/PCSX2.png
     install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/resources/ patches.zip
-    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/lib ${srcdir}/deps-build/lib/libshaderc_shared.so.1
+    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/lib ${srcdir}/deps/opt/"${pkgname%-git}"/lib/libshaderc_shared.so.1
 }
 
 b2sums=('SKIP'
