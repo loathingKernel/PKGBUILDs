@@ -157,6 +157,7 @@ package() {
     install -Dvm644 "${srcdir}/duckstation-qt.desktop" "${pkgdir}/usr/share/applications/duckstation-qt.desktop"
     install -Dvm644 "${pkgname%-git}/data/resources/images/duck.png" "${pkgdir}/usr/share/icons/hicolor/64x64/apps/duckstation-qt.png"
 }
+
 sha256sums=('SKIP'
             '6463c6d54b99dddaa0f3da7a84926eb543672a4414dc2835bf35bb9eada9339f'
             'f1dbf3270fc21bf6871ae8693ddfb467ce142009d3371fd407512b956c25ace0'
