@@ -1,12 +1,12 @@
 pkgname=jcef-jetbrains-git
 pkgdesc="A simple framework for embedding Chromium-based browsers into Java-based applications. (Used for JetBrainsRuntime)"
-pkgver=122.1.8.api1.16.r5.f8bb25b
+pkgver=122.1.9.api1.17.r2.b459d85
 pkgrel=1
 arch=('x86_64')
 url="https://github.com/JetBrains/jcef"
 license=('BSD')
 depends=('java-runtime' 'libxcursor' 'at-spi2-atk' 'libxkbcommon' 'libxcomposite' 'mesa' 'libcups' 'pango' 'libxrandr' 'alsa-lib' 'nss')
-makedepends=('java-environment' 'cmake' 'git' 'ninja' 'python' 'ant' 'unzip' 'zip')
+makedepends=('jdk21-openjdk' 'cmake' 'git' 'ninja' 'python' 'ant' 'unzip' 'zip')
 source=("git+$url.git#branch=dev")
 sha256sums=('SKIP')
 provides=('jcef-jetbrains')
@@ -21,8 +21,10 @@ pkgver() {
 
 build() {
     cd $srcdir/jcef
+    export CFLAGS=${CFLAGS/-Wp,-D_FORTIFY_SOURCE=3/}
+    export CXXFLAGS=${CXXFLAGS/-Wp,-D_FORTIFY_SOURCE=3/}
     sed -i "s/make -j4/make/g" ./jb/tools/linux/build_native.sh
-    JAVA_HOME=/usr/lib/jvm/default ./jb/tools/linux/build.sh all
+    JAVA_HOME=/usr/lib/jvm/java-21-openjdk ./jb/tools/linux/build.sh all
 }
 
 package() {
