@@ -17,3 +17,4 @@ jobs:
     with:
       pkgdir: aur/shaderc-non-semantic-debug
       repository: ${{ matrix.repository }}
+      action: remove
