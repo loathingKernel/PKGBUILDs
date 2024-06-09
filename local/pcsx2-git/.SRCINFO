@@ -21,8 +21,9 @@ pkgbase = pcsx2-git
 	makedepends = sndio
 	makedepends = libpipewire
 	makedepends = p7zip
-	makedepends = qt6-wayland
+	makedepends = libjpeg-turbo
 	makedepends = qt6-tools
+	makedepends = qt6-wayland
 	depends = libaio
 	depends = libpcap
 	depends = libglvnd
@@ -31,7 +32,6 @@ pkgbase = pcsx2-git
 	depends = ffmpeg
 	depends = sdl2
 	depends = lld
-	depends = shaderc-non-semantic-debug
 	depends = qt6-base
 	depends = qt6-svg
 	depends = soundtouch
@@ -49,9 +49,19 @@ pkgbase = pcsx2-git
 	options = !lto
 	source = git+https://github.com/PCSX2/pcsx2.git
 	source = git+https://github.com/PCSX2/pcsx2_patches.git
+	source = git+https://github.com/ianlancetaylor/libbacktrace.git#commit=ad106d5fdd5d960bd33fae1c48a351af567fd075
+	source = git+https://github.com/google/shaderc.git#tag=v2024.1
+	source = git+https://github.com/KhronosGroup/glslang.git#commit=142052fa30f9eca191aa9dcf65359fcaed09eeec
+	source = git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=5e3ad389ee56fca27c9705d093ae5387ce404df4
+	source = git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit=dd4b663e13c07fea4fbb3f70c1c91c86731099f7
 	source = pcsx2-qt.sh
 	b2sums = SKIP
 	b2sums = SKIP
+	b2sums = 1e8bcec29693e6402fd8d64619c3c1c283ca49b337a9a1b8944900f02c2a3ca625648a32ef2a74a1edc4b8d8c26fa6b0cbc01e3899e441cdb3368e53c48528d8
+	b2sums = 2bf06418786c2e2dd9c4bddd387231d61818f2b857829e6f7c8d739687c957c6345c4fd57f0f809e6b0ca51686dced45b2cd8f84c2907b5901eb0d0c1b6d8b35
+	b2sums = 88ec1732fbd39ae9a4fd70baee9dead4186ce80b07f171325b37a12cda28e933bf9440c4a82efbf0814e71787ca3e1724eacdb7d8008ae5d774d62c008fe4461
+	b2sums = 982335b9c326d4d5feeff531090fb9878a967667d5d73b1fc233f7c0c25b842ba94e0a88af29e2f284fa8f5ad2f1760d16e7b4270604982a634941a1e47ad549
+	b2sums = 26b319c497a41c3dc575ca38b1b3222928e98e632f8fc2c5fc4d3aa49fad746b1e6bda84806264b857c4d4612202ea038566c2b76c3d9c2ac163c60c4b3bc9fa
 	b2sums = 5aeb01be2e9e77c26c4039b183ff2751f787350e274b1c1d1cead7491eabced556e3934502eaf4887e9b49581f515382f096b29e9daef6e9e94c443e2bc7e048
 
 pkgname = pcsx2-git

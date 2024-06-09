@@ -1,4 +1,5 @@
-# Maintainer: rafaelff <rafaelff@gnome.org>, WeirdBeard <obarrtimothy@gmail.com>
+# Maintainer: WeirdBeard <obarrtimothy@gmail.com>
+# Contributor: rafaelff <rafaelff@gnome.org>,
 # Contributor: éclairevoyant
 # Contributor: Maxime Gauduin <alucryd@archlinux.org>
 # Contributor: Themaister <maister@archlinux.us>
@@ -25,7 +26,6 @@ depends=(
     ffmpeg
     sdl2
     lld
-    shaderc-non-semantic-debug
     qt6-base
     qt6-svg
     soundtouch
@@ -47,8 +47,10 @@ makedepends=(
     sndio
     libpipewire
     p7zip
-    qt6-wayland
+    # See .github/workflows/scripts/linux/build-dependencies-qt.sh
+    libjpeg-turbo
     qt6-tools
+    qt6-wayland
 )
 optdepends=(
     'qt6-wayland: Wayland support'
@@ -60,14 +62,36 @@ optdepends=(
 provides=(${pkgname%-git})
 conflicts=(${pkgname%-git})
 options=(!lto)
+
+LIBBACKTRACE=ad106d5fdd5d960bd33fae1c48a351af567fd075
+SHADERC=2024.1
+SHADERC_GLSLANG=142052fa30f9eca191aa9dcf65359fcaed09eeec
+SHADERC_SPIRVHEADERS=5e3ad389ee56fca27c9705d093ae5387ce404df4
+SHADERC_SPIRVTOOLS=dd4b663e13c07fea4fbb3f70c1c91c86731099f7
+# See .github/workflows/scripts/linux/build-dependencies-qt.sh
+
 source=(
     git+https://github.com/PCSX2/pcsx2.git
     git+https://github.com/PCSX2/pcsx2_patches.git
+    git+https://github.com/ianlancetaylor/libbacktrace.git#commit=$LIBBACKTRACE
+    git+https://github.com/google/shaderc.git#tag=v$SHADERC
+    git+https://github.com/KhronosGroup/glslang.git#commit=$SHADERC_GLSLANG
+    git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=$SHADERC_SPIRVHEADERS
+    git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit=$SHADERC_SPIRVTOOLS
     pcsx2-qt.sh
 )
 install=pcsx2-git.install
 
 prepare() {
+
+    pushd "shaderc/third_party"
+    mv -n ../../glslang . 
+    mv -n ../../SPIRV-Headers spirv-headers
+    mv -n ../../SPIRV-Tools spirv-tools
+    cd ..
+    patch -p1 < "${srcdir}/pcsx2/.github/workflows/scripts/common/shaderc-changes.patch"
+    popd
+
     cd pcsx2
     git remote set-url origin https://github.com/PCSX2/pcsx2.git
     git submodule update --init --filter=tree:0 --recursive
@@ -79,6 +103,28 @@ pkgver() {
 }
 
 build() {
+
+    echo "Building libbacktrace..."
+    pushd libbacktrace
+    ./configure --prefix="${srcdir}/deps-build"
+    make
+    make install
+    popd
+
+    echo "Building shaderc..."
+    pushd shaderc
+    cmake -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_PREFIX_PATH="${srcdir}/deps-build" \
+        -DCMAKE_INSTALL_PREFIX="${srcdir}/deps-build" \
+        -DSHADERC_SKIP_TESTS=ON \
+        -DSHADERC_SKIP_EXAMPLES=ON \
+        -DSHADERC_SKIP_COPYRIGHT_CHECK=ON \
+        -B build -G Ninja
+    cmake --build build --parallel
+    ninja -C build install
+    popd
+
+    # See .github/workflows/scripts/linux/generate-cmake-qt.sh
     cmake -S pcsx2 -B build \
     -G Ninja \
     -Wno-dev \
@@ -88,6 +134,8 @@ build() {
     -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
     -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
     -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_PREFIX_PATH="${srcdir}/deps-build" \
+    -DCMAKE_BUILD_RPATH="/opt/pcsx2/lib" \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DUSE_VULKAN=ON \
     -DENABLE_SETCAP=OFF \
@@ -109,8 +157,14 @@ package() {
     install -Dm644 pcsx2/bin/resources/icons/AppIconLarge.png \
         "${pkgdir}"/usr/share/icons/hicolor/512x512/apps/PCSX2.png
     install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/resources/ patches.zip
+    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/lib ${srcdir}/deps-build/lib/libshaderc_shared.so.1
 }
 
 b2sums=('SKIP'
         'SKIP'
+        '1e8bcec29693e6402fd8d64619c3c1c283ca49b337a9a1b8944900f02c2a3ca625648a32ef2a74a1edc4b8d8c26fa6b0cbc01e3899e441cdb3368e53c48528d8'
+        '2bf06418786c2e2dd9c4bddd387231d61818f2b857829e6f7c8d739687c957c6345c4fd57f0f809e6b0ca51686dced45b2cd8f84c2907b5901eb0d0c1b6d8b35'
+        '88ec1732fbd39ae9a4fd70baee9dead4186ce80b07f171325b37a12cda28e933bf9440c4a82efbf0814e71787ca3e1724eacdb7d8008ae5d774d62c008fe4461'
+        '982335b9c326d4d5feeff531090fb9878a967667d5d73b1fc233f7c0c25b842ba94e0a88af29e2f284fa8f5ad2f1760d16e7b4270604982a634941a1e47ad549'
+        '26b319c497a41c3dc575ca38b1b3222928e98e632f8fc2c5fc4d3aa49fad746b1e6bda84806264b857c4d4612202ea038566c2b76c3d9c2ac163c60c4b3bc9fa'
         '5aeb01be2e9e77c26c4039b183ff2751f787350e274b1c1d1cead7491eabced556e3934502eaf4887e9b49581f515382f096b29e9daef6e9e94c443e2bc7e048')
