@@ -1,19 +1,20 @@
---- src/libXNVCtrl/Makefile
-+++ src/libXNVCtrl/Makefile
-@@ -49,9 +49,9 @@ LDFLAGS += $(XNVCTRL_LDFLAGS)
- ##############################################################################
+diff --git a/src/Makefile b/src/Makefile
+index 68eb140..6d0aab8 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -345,7 +345,7 @@ endif
  
- .PHONY: all
--all: $(LIBXNVCTRL)
-+all: $(LIBXNVCTRL) $(LIBXNVCTRL_SHARED)
- 
- .PHONY: clean
- clean:
--	rm -rf $(LIBXNVCTRL) *~ \
-+	rm -rf $(LIBXNVCTRL) $(LIBXNVCTRL_SHARED)* *~ \
- 		$(OUTPUTDIR)/*.o $(OUTPUTDIR)/*.d
---- src/libXNVCtrl/xnvctrl.mk
-+++ src/libXNVCtrl/xnvctrl.mk
+ ifdef BUILD_GTK3LIB
+ $(eval $(call DEBUG_INFO_RULES, $(GTK3LIB)))
+-$(GTK3LIB).unstripped: $(LIBXNVCTRL) $(GTK3_OBJS) $(XCP_OBJS) $(IMAGE_OBJS) $(VERSION_MK)
++$(GTK3LIB).unstripped: $(LIBXNVCTRL) $(LIBXNVCTRL_SHARED) $(GTK3_OBJS) $(XCP_OBJS) $(IMAGE_OBJS) $(VERSION_MK)
+ 	$(call quiet_cmd,LINK) -shared $(CFLAGS) $(LDFLAGS)  $(BIN_LDFLAGS) \
+ 	    $(LIBXNVCTRL) $(LIBS) $(GTK3_LIBS) \
+ 	    -Wl,--unresolved-symbols=ignore-all -o $@ \
+diff --git a/src/libXNVCtrl/xnvctrl.mk b/src/libXNVCtrl/xnvctrl.mk
+index e6be2ef..c0921c4 100644
+--- a/src/libXNVCtrl/xnvctrl.mk
++++ b/src/libXNVCtrl/xnvctrl.mk
 @@ -39,6 +39,11 @@ XNVCTRL_CFLAGS ?=
  
  LIBXNVCTRL = $(OUTPUTDIR)/libXNVCtrl.a
