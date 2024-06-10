@@ -1,7 +1,7 @@
 pkgbase = readline7
 	pkgdesc = GNU readline library. Provides libreadline.so.7
 	pkgver = 7.0.005
-	pkgrel = 1
+	pkgrel = 2
 	url = http://tiswww.case.edu/php/chet/readline/rltop.html
 	arch = x86_64
 	license = GPL
