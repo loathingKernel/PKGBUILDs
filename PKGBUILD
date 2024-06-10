@@ -35,8 +35,8 @@ prepare() {
 build() {
   cd "${pkgname/%-git/}"/build
 
-  export CC="clang -flto"
-  export CXX="clang++ -flto"
+  export CC="clang -flto -ffat-lto-objects"
+  export CXX="clang++ -flto -ffat-lto-objects"
   cmake .. \
     -DCMAKE_BUILD_TYPE='Release' \
     -DCMAKE_INSTALL_PREFIX='/usr' \
