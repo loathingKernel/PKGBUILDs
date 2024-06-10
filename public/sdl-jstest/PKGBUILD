@@ -2,21 +2,21 @@
 
 pkgbase=sdl-jstest
 pkgname=('sdl-jstest' 'sdl2-jstest')
-pkgver=0.2.2.r12.e41cb80
-_commit=e41cb8081789b54244bb589fff08adc916cf7d64
+pkgver=0.2.2.r24.60f6e62
+_commit=60f6e62109e100b6ef363841b71c2e37ed714d01
 pkgrel=1
 pkgdesc="Simple SDL joystick test application for the console"
-url="https://gitlab.com/sdl-jstest/sdl-jstest.git"
+url="https://github.com/Grumbel/sdl-jstest"
 arch=('x86_64')
 license=('GPLv3')
 depends=('ncurses')
 makedepends=('sdl' 'sdl2' 'git' 'cmake' 'docbook2x')
 
-source=(git+https://gitlab.com/sdl-jstest/sdl-jstest.git#commit=${_commit}
+source=(git+https://github.com/Grumbel/sdl-jstest#commit=${_commit}
         git+https://github.com/grumbel/tinycmmc.git
         git+https://github.com/gabomdq/SDL_GameControllerDB.git
 )
-sha256sums=('SKIP'
+sha256sums=('303f6fcd5eb5e10b6cfe4d6e5c091effbeece0ac761f35cb6b889d9ed897b20c'
             'SKIP'
             'SKIP'
 )
