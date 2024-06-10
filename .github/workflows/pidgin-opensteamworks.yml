@@ -1,0 +1,31 @@
+
+name: pidgin-opensteamworks
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+        - 'build'
+        - 'remove'
+        - 'skip'
+  push:
+    branches:
+     - master
+    paths:
+     - local/pidgin-opensteamworks/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: local/pidgin-opensteamworks
+      repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
