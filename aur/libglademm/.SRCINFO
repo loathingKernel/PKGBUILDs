@@ -12,4 +12,3 @@ pkgbase = libglademm
 	sha256sums = 38543c15acf727434341cc08c2b003d24f36abc22380937707fc2c5c687a2bc3
 
 pkgname = libglademm
-
