@@ -7,7 +7,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.1.0
 _xaliaver=0.4.2
-pkgrel=3
+pkgrel=4
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build"
 url="https://github.com/GloriousEggroll/proton-ge-custom"
@@ -42,7 +42,7 @@ depends=(
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
   git wget rsync unzip mingw-w64-tools lld nasm
-  meson cmake fontforge afdko python-pefile
+  meson cmake fontforge afdko python-pefile glib2-devel
   glslang vulkan-headers
   clang
   giflib                lib32-giflib
