@@ -1,7 +1,7 @@
 pkgbase = proton-ge-custom
 	pkgdesc = Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build
 	pkgver = GE.Proton9.7
-	pkgrel = 3
+	pkgrel = 4
 	epoch = 2
 	url = https://github.com/GloriousEggroll/proton-ge-custom
 	install = proton-ge-custom.install
@@ -25,6 +25,7 @@ pkgbase = proton-ge-custom
 	makedepends = fontforge
 	makedepends = afdko
 	makedepends = python-pefile
+	makedepends = glib2-devel
 	makedepends = glslang
 	makedepends = vulkan-headers
 	makedepends = clang
