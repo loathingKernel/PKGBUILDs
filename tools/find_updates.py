@@ -9,6 +9,10 @@ import pyalpm
 import requests
 from pycman import config
 
+from colorama import init as colorama_init
+from colorama import Fore
+from colorama import Style
+
 
 @attr.s(auto_attribs=True)
 class PackageBasic:
@@ -496,7 +500,18 @@ def info_multiple(names: List[str]):
     return InfoResult.from_dict(json.loads(response.content))
 
 
+def print_package_update(remote_db, local_db, package_name, remote_version, local_version):
+    print("{:20s} {:28s} {} -> {}".format(
+        f"{remote_db} - {local_db}",
+        package_name,
+        Fore.RED+local_version+Fore.RESET,
+        Fore.GREEN+remote_version+Fore.RESET,
+    ))
+
+
 if __name__ == "__main__":
+    colorama_init()
+
     handle = config.init_with_config("/etc/pacman.conf")
     arch_dbs = list(filter(
         lambda r: r.name in arch_repos,
@@ -519,8 +534,7 @@ if __name__ == "__main__":
                     # vercmp: left < right = -1
                     outdated = pyalpm.vercmp(lp.version, ap.version)
                     if outdated < 0:
-                        print("{:16s} {} {}".format(adb.name, lp.name, lp.version))
-                        print("{:16s} Newer version in {}: {}".format("", adb.name, ap.version))
+                        print_package_update(adb.name, ldb.name, lp.name, ap.version, lp.version)
                     local_packages.remove(lp)
 
         local_packages = sorted(local_packages, key=lambda p: p.name)
@@ -531,12 +545,11 @@ if __name__ == "__main__":
             if ap.name == lp.name:
                 outdated = pyalpm.vercmp(lp.version, ap.version)
                 if outdated < 0:
-                    print("{:16s} {} {}".format(f"AUR - {ldb.name}", lp.name, lp.version))
-                    print("{:16s} Newer version in {}: {}".format("", "AUR", ap.version))
+                    print_package_update("aur", ldb.name, lp.name, ap.version, lp.version)
 
         local_non_aur_packages = [lp for lp in local_packages if lp.name not in [ap.name for ap in aur_packages]]
         for lnap in local_non_aur_packages:
-            print("{:16s} {}".format(f"NON - {ldb.name}", lnap.name))
+            print("{:20s} {}".format(f"non - {ldb.name}", lnap.name))
 
         print("")
 
