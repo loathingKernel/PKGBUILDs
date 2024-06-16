@@ -2,6 +2,7 @@
 
 pkgname=dxvk-gplasync-mingw-git
 pkgver=2.3.r67.g6b3b9344
+_gplasync_sha=main
 pkgrel=1
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
 arch=('x86_64')
@@ -13,7 +14,7 @@ conflicts=('dxvk' 'd9vk')
 options=(!lto !staticlibs)
 source=(
     "git+https://github.com/doitsujin/dxvk.git"
-    "https://gitlab.com/Ph42oN/dxvk-gplasync/-/raw/557c021b63adf0d073169886e82d8557db8d2f71/patches/dxvk-gplasync-master.patch"
+    "https://gitlab.com/Ph42oN/dxvk-gplasync/-/raw/$_gplasync_sha/patches/dxvk-gplasync-master.patch"
     "dxvk-extraopts.patch"
     "setup_dxvk.sh"
     "setup_dxvk"
