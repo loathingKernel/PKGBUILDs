@@ -1,7 +1,7 @@
 pkgbase = wine
 	pkgdesc = A compatibility layer for running Windows programs
-	pkgver = 9.10
-	pkgrel = 3
+	pkgver = 9.11
+	pkgrel = 1
 	url = https://www.winehq.org
 	install = wine.install
 	arch = x86_64
@@ -138,23 +138,23 @@ pkgbase = wine
 	optdepends = ntsync-dkms
 	options = !staticlibs
 	options = !lto
-	source = https://dl.winehq.org/wine/source/9.x/wine-9.10.tar.xz
-	source = https://dl.winehq.org/wine/source/9.x/wine-9.10.tar.xz.sign
+	source = https://dl.winehq.org/wine/source/9.x/wine-9.11.tar.xz
+	source = https://dl.winehq.org/wine/source/9.x/wine-9.11.tar.xz.sign
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
-	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=1cc41b1d158a791dd893a3283516f0fac5f444b6
+	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=f5cefabbb9e5cb6c9107a7909e0575c95e136d4d
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
 	source = wine-ntsync.patch
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = f76e62b40e72af241c6f88dbcdb767720c36496b9deb9cc1246cea967573bbafd46b7000117d3c64f499d175ac1c7299ebba3f476574bf9b18f6d9744ba7a3e2
+	sha512sums = 695170140372f169e78e90a66d938839c70f9647531ae8d782c58fb0450460174f2958f7656f8d516447a22ef6e792a8c89f2f18c25fac847adf46bc51184999
 	sha512sums = SKIP
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
 	sha512sums = SKIP
 	sha512sums = 30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569
 	sha512sums = 3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282
-	sha512sums = 3b59b79938eacc57b2e9e325c2d53aa76496f747b936baaf7707914d98665c450ba27b237503ab0a8c580be3d91c7fa30c16f690c4f5560e9d14545b96bc1881
+	sha512sums = ec00f7757beb400477f6ae80110b497da3276c9dbea06ab1b4f57cc96032dab517154512275fe6e671a58f4d0a6b124ffcb534f4290873a2b52c0c4cec97fb25
 
 pkgname = wine
