@@ -1,52 +1,25 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
-pkgver=1.6.0
+pkgver=1.6.1
 pkgrel=1
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
 url="https://mijorus.it/projects/gearlever/"
 license=('GPL-3.0-or-later')
 depends=( 'dbus-python' 'dconf' 'fuse2' 'gdk-pixbuf2' 'glibc' 'glib2' 'gtk4' 'hicolor-icon-theme' 'libadwaita' 'p7zip' 'pango' 'python' 'python-gobject' 'python-pyxdg' 'zlib' )
-makedepends=( 'meson' 'gettext' )
-checkdepends=( 'desktop-file-utils' 'appstream' )
+makedepends=( 'gettext' 'meson' )
+checkdepends=( 'appstream' 'desktop-file-utils' )
 options=( '!strip' '!debug' )
 source=(
 	"${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz"
-	"correct-icon-names.patch"
 )
 sha256sums=(
-	'ce6b6a54654270d910abead27e07813e8b67d532fd7c702e68387232ea1f7bb4'
-	'8d9bf423855188001e4f28e7cdb367878deaf552e49b3a2ff037dba7fccd44b7'
-)
-_unneededicons=(
-	"earth-symbolic.svg"
-	"globe-symbolic.svg"
-	"software-update-available-symbolic.svg"
-	"web-browser-symbolic.svg"
-	"window-pop-out-symbolic.svg"
-	"document-edit-symbolic.svg"
-	"drag-drop-symbolic.svg"
-	"file-manager-symbolic.svg"
+	'fee29af7b696b86fd126565874e381b1bafbb72b6495f64d3a23c14dd3446673'
 )
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	# Remove unneeded icons for improved compatibility.
-	for icon in "${_unneededicons[@]}"; do
-		rm -v "data/icons/hicolor/scalable/actions/$icon"
-	done
-	
-	# Rename icons to fit a unique gearlever naming scheme.
-	for icon in data/icons/hicolor/scalable/actions/*; do
-		iconname=$(basename "$icon")
-		# Skip renaming meson's build file and those beginning with gl- or gearlever-.
-		if [[ ! "$iconname" =~ ^(gl-|gearlever-) ]] && [ ! "$iconname" = "meson.build" ]; then
-			mv -v "$icon" "data/icons/hicolor/scalable/actions/gl-$iconname"
-		fi
-	done
-	
-	# Make sure to fix their names in any scripts that call on them, change flatpak-spawn to instead execute the command natively and rename a file-manager to use the gl-file-manager instead.
-	patch -Np1 -i ../correct-icon-names.patch
+	sed -i 's/cmd = \['\''flatpak-spawn'\'', '\''--host'\'', \*command\]/cmd = \[\*command\]/g' src/lib/terminal.py
 }
 
 build() {
