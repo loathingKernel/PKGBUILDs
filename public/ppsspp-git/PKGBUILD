@@ -11,7 +11,7 @@ pkgname=(
   ppsspp-git
   ppsspp-assets-git
 )
-pkgver=1.17.1.r91.746696ab
+pkgver=1.17.1.r785.cbdb2a37eb
 pkgrel=1
 pkgdesc='A PSP emulator written in C++'
 arch=(x86_64 aarch64)
@@ -28,9 +28,6 @@ makedepends=(
   libzip
   ninja
   python
-  qt5-base
-  qt5-multimedia
-  qt5-tools
   sdl2
   sdl2_ttf
   snappy
@@ -40,11 +37,9 @@ options=(!lto)
 source=(
   git+https://github.com/hrydgard/ppsspp.git
   ppsspp-sdl.desktop
-  ppsspp-qt.desktop
 )
 b2sums=('SKIP'
-        'c6bcdfedee866dfdcc82a8c333c31ff73ed0beec65b63acec8bc8186383c0bc9f0912f21bb9715b665e8dc1793b1a85599761f9037856fa54ad8aa3bfdbfd468'
-        '328e2ba47b78d242b0ec6ba6bfa039c77a36d1ef7246e5c2c2432d8e976e9360baf505eb05f48408ede1a30545cbbb7f875bf5ebd0252cef35523d449b8254a0')
+        'c6bcdfedee866dfdcc82a8c333c31ff73ed0beec65b63acec8bc8186383c0bc9f0912f21bb9715b665e8dc1793b1a85599761f9037856fa54ad8aa3bfdbfd468')
 
 pkgver() {
   cd ppsspp
@@ -74,7 +69,7 @@ build() {
   popd
 
   cmake -S ppsspp -B build-sdl -G Ninja \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_SKIP_RPATH=ON \
     -DHEADLESS=ON \
     -DOpenGL_GL_PREFERENCE=GLVND \
@@ -85,20 +80,7 @@ build() {
     -DUSE_SYSTEM_ZSTD=ON \
     -DUSING_QT_UI=OFF \
     -Wno-dev
-  cmake --build build-sdl -v
-  cmake -S ppsspp -B build-qt -G Ninja \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON \
-    -DHEADLESS=OFF \
-    -DOpenGL_GL_PREFERENCE=GLVND \
-    -DUSE_SYSTEM_FFMPEG=OFF \
-    -DUSE_SYSTEM_MINIUPNPC=OFF \
-    -DUSE_SYSTEM_LIBZIP=ON \
-    -DUSE_SYSTEM_SNAPPY=ON \
-    -DUSE_SYSTEM_ZSTD=ON \
-    -DUSING_QT_UI=ON \
-    -Wno-dev
-  cmake --build build-qt -v
+  cmake --build build-sdl
 }
 
 package_ppsspp-git() {
@@ -124,12 +106,10 @@ package_ppsspp-git() {
   conflicts=(ppsspp)
   install -Dm 755 build-sdl/PPSSPPSDL -t "${pkgdir}"/usr/bin/
   install -Dm 755 build-sdl/PPSSPPHeadless -t "${pkgdir}"/usr/bin/
-  install -Dm 755 build-qt/PPSSPPQt -t "${pkgdir}"/usr/bin/
   install -dm 755 "${pkgdir}"/usr/share/icons
   cp -dr --no-preserve=ownership ppsspp/icons/hicolor "${pkgdir}"/usr/share/icons/
   install -Dm 644 ppsspp/icons/icon-512.svg "${pkgdir}"/usr/share/pixmaps/ppsspp.svg
   install -Dm 644 ppsspp-sdl.desktop -t "${pkgdir}"/usr/share/applications/
-  install -Dm 644 ppsspp-qt.desktop -t "${pkgdir}"/usr/share/applications/
 }
 
 package_ppsspp-assets-git() {
