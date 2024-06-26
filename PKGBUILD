@@ -3,7 +3,7 @@
 
 pkgname=simplescreenrecorder
 pkgver=0.4.4
-pkgrel=2
+pkgrel=3
 pkgdesc="A feature-rich screen recorder that supports X11 and OpenGL."
 arch=("x86_64")
 url="https://www.maartenbaert.be/simplescreenrecorder/"
@@ -15,9 +15,9 @@ depends=("qt5-base" "qt5-x11extras"
 optdepends=("lib32-simplescreenrecorder: OpenGL recording of 32-bit applications")
 makedepends=("git" "cmake" "qt5-tools")
 source=("git+https://github.com/MaartenBaert/ssr.git#tag=$pkgver"
-         ffmpeg5.patch::https://patch-diff.githubusercontent.com/raw/MaartenBaert/ssr/pull/934.patch)
-sha256sums=('SKIP'
-            '4b01938615a34127236a21ee0ffa20bbb179c8bfcc5ecef872fc5a246727d2e1')
+         ffmpeg7.patch::https://patch-diff.githubusercontent.com/raw/MaartenBaert/ssr/pull/1036.patch)
+sha256sums=('9c7c3a9984800671bfb280ccbbc91e98d4993ea4465ab8f8c73b9ac65bd4c69c'
+            'a1d4a2c1d5cfcf6a327cc98e47e6cd76dd2fd03b33ca9e7fcaba971570fae914')
 
 install=simplescreenrecorder.install
 
@@ -25,7 +25,7 @@ prepare() {
   cd ssr
   mkdir -p build
 
-  patch -p1 -i ../ffmpeg5.patch # Fix build with ffmpeg 5
+  patch -p1 -i ../ffmpeg7.patch # Fix build with ffmpeg 7
 }
 
 build() {
