@@ -1,7 +1,7 @@
 pkgbase = minio
 	pkgdesc = Object storage server compatible with Amazon S3
 	pkgver = 2024.06.26
-	pkgrel = 2
+	pkgrel = 3
 	url = https://minio.io
 	arch = x86_64
 	license = AGPL-3.0-or-later
