@@ -1,0 +1,32 @@
+
+name: lib32-simplescreenrecorder
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+        - 'build'
+        - 'remove'
+        - 'skip'
+  push:
+    branches:
+     - master
+    paths:
+     - aur/lib32-simplescreenrecorder/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public, personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: aur/lib32-simplescreenrecorder
+      repository: ${{ matrix.repository }}
+      multilib: true
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
