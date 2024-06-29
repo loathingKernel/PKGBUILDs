@@ -42,6 +42,8 @@ pkgbase = gamescope
 	depends = xcb-util-wm
 	depends = xorg-server-xwayland
 	source = git+https://github.com/ValveSoftware/gamescope.git#tag=3b69847e15c84c0a4f93e82c2eb16b623f9765b9
+	source = 01e2fdaef957d82c57ec57e56c3b419954270834.patch
 	b2sums = 5f2fd5a052da71a8daf8518e306d0bfc49802f7e246cc3d9f454dce6a482eadc2c43db5c5458bd9ad4074c18bcd4ccad91da14a92f2df17671667c47da7b55c2
+	b2sums = 68647788e563c06736a045df8820cfd3db58b6d83f749bc3b547c723475b211b0be1c88ee37ea8c54230fbcd5f43aa2b320ff421d594f35c7e249763e296b1c6
 
 pkgname = gamescope
