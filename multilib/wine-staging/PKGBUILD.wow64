@@ -22,6 +22,7 @@ source+=(
         wine-wmclass.patch
         wine-isolate_home.patch
         wine-ntsync.patch
+        0001-winewayland-Avoid-crashing-when-the-dummy-window-sur.patch
 )
 sha512sums=('695170140372f169e78e90a66d938839c70f9647531ae8d782c58fb0450460174f2958f7656f8d516447a22ef6e792a8c89f2f18c25fac847adf46bc51184999'
             'SKIP'
@@ -33,6 +34,7 @@ sha512sums+=(
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             'ec00f7757beb400477f6ae80110b497da3276c9dbea06ab1b4f57cc96032dab517154512275fe6e671a58f4d0a6b124ffcb534f4290873a2b52c0c4cec97fb25'
+            '0ba8f08a2b5102208ec0711bd82d6aa417df52b2e75ce9e65e26bfe2bb5f8e100450e50ec77186a10de3e282d1290b847140af7a8e0ea9f071bb708acb1e1e2e'
 )
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -148,6 +150,7 @@ prepare() {
 
   patch -p1 -i "$srcdir"/wine-wmclass.patch
   patch -p1 -i "$srcdir"/wine-isolate_home.patch
+  patch -p1 -i "$srcdir"/0001-winewayland-Avoid-crashing-when-the-dummy-window-sur.patch
   ./dlls/winevulkan/make_vulkan
   ./tools/make_specfiles
   ./tools/make_requests
