@@ -2,25 +2,26 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.31.r136.g412db758
+pkgver=0.0.32.r16618.bceaf46e2f
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
 url=https://github.com/RPCS3/rpcs3
-license=(GPL2)
+license=(GPL-2.0-only)
 depends=(
   alsa-lib
   glew
   glu
-  libavcodec.so
-  libavutil.so
+  # Use bundled FFMPEG for now since we use FFMPEG 6.0
+  #libavcodec.so
+  #libavutil.so
+  #libswscale.so
   libevdev
   libgl
   libice
   libncursesw.so
   libpng
   libsm
-  libswscale.so
   libx11
   libxext
   openal
@@ -89,7 +90,7 @@ build() {
     -DCMAKE_SKIP_RPATH=ON \
     -DUSE_NATIVE_INSTRUCTIONS=OFF \
     -DUSE_PRECOMPILED_HEADERS=OFF\
-    -DUSE_SYSTEM_FFMPEG=ON \
+    -DUSE_SYSTEM_FFMPEG=OFF \
     -DUSE_SYSTEM_XXHASH=OFF \
     -DUSE_SYSTEM_FAUDIO=OFF \
     -DUSE_SYSTEM_LIBUSB=OFF \
