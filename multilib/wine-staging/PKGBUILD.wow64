@@ -6,7 +6,7 @@
 
 pkgname=wine-staging
 pkgver=9.12
-pkgrel=3
+pkgrel=4
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -133,7 +133,6 @@ prepare() {
   patch -p1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
   #patch -p1 -i "$_tkg_path"/proton/valve_proton_fullscreen_hack/FS_bypass_compositor.patch
 
-  patch -p1 -i "$srcdir"/0001-loader-Set-default-regkey-for-NVIDIA-NGX-FullPath.patch
   patch -p1 -i "$srcdir"/wine-wmclass.patch
   patch -p1 -i "$srcdir"/wine-isolate_home.patch
   ./dlls/winevulkan/make_vulkan
@@ -216,7 +215,6 @@ package() {
 _tkg_commit=310c473365a448a16abe2e161885cd853e082d60
 source+=(
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
-        0001-loader-Set-default-regkey-for-NVIDIA-NGX-FullPath.patch
         wine-wmclass.patch
         wine-isolate_home.patch
         wine-ntsync.patch
@@ -227,7 +225,6 @@ sha512sums=('00c25cb11feed3625ebd8dc76fa35930d07d51182be4537c488ac4e713d6f9c61b9
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
             '61e4f81d27b860b9f3bac042f5b382754fb71c420b76715ac7c36b6ba5d82c4fc141306a9b7823c7d5f1d9c89e3ba3370695dfe4d6f5f4a5a7bf9d47f571dbac'
-            '6aafc2f9dda0896ae56db30bff709393aec3279b0585b11bfb5b8c25fdc0bb8efacd4d881f886b4daa994f32030d4b16ccc01e55dcc6b8ad2da1b75a3ea16a6b'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             '3c03da6abe4bc687e93d2954c3880d0a44f984a4e745598ca958fbd8076c6100d3c9b9213c3df6b0bfc76a5d5d5326ba85438b2793d57df241fadccad0dbbea0')
