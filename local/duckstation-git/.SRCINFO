@@ -67,6 +67,7 @@ pkgbase = duckstation-git
 	source = git+https://github.com/KhronosGroup/glslang.git#commit=142052fa30f9eca191aa9dcf65359fcaed09eeec
 	source = git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=5e3ad389ee56fca27c9705d093ae5387ce404df4
 	source = git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit=dd4b663e13c07fea4fbb3f70c1c91c86731099f7
+	source = git+https://github.com/KhronosGroup/SPIRV-Cross.git#tag=vulkan-sdk-1.3.283.0
 	source = duckstation-qt.desktop
 	source = duckstation-qt.sh
 	sha256sums = SKIP
@@ -75,6 +76,7 @@ pkgbase = duckstation-git
 	sha256sums = be4a2494f139c3e04024d3bc5313a37a23ef901fb4d4dffa3a2ff9a5f2324709
 	sha256sums = 852d1290d874546c9159fd349d42b4d314939f0ee4cb8601d26f7bf3910e9602
 	sha256sums = eb945dda13bb15066447845308275c0261f901430ed9d0b32e86059c0ca4790a
+	sha256sums = 9c2a148a1e4c7ca16ab54991980ed6393c1c21794081083f2779d880b3dbf1d4
 	sha256sums = 51094e60b84873325cfe630fd7092d0db73e1c4ee94ccfc0806f742252a4009a
 	sha256sums = 7b0a99c4e1463743cc9b9619472badd172d999081a92b3977486c5eaf458201e
 

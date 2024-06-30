@@ -61,22 +61,26 @@ options=(!lto)
 
 LIBBACKTRACE=ad106d5fdd5d960bd33fae1c48a351af567fd075
 SHADERC=2024.1
-SHADERC_GLSLANG=142052fa30f9eca191aa9dcf65359fcaed09eeec
-SHADERC_SPIRVHEADERS=5e3ad389ee56fca27c9705d093ae5387ce404df4
-SHADERC_SPIRVTOOLS=dd4b663e13c07fea4fbb3f70c1c91c86731099f7
+GLSLANG=142052fa30f9eca191aa9dcf65359fcaed09eeec
+SPIRV_HEADERS=5e3ad389ee56fca27c9705d093ae5387ce404df4
+SPIRV_TOOLS=dd4b663e13c07fea4fbb3f70c1c91c86731099f7
+SPIRV_CROSS=vulkan-sdk-1.3.283.0
 
 source=(
     git+https://github.com/stenzek/duckstation.git
     git+https://github.com/ianlancetaylor/libbacktrace.git#commit=$LIBBACKTRACE
     git+https://github.com/google/shaderc.git#tag=v$SHADERC
-    git+https://github.com/KhronosGroup/glslang.git#commit=$SHADERC_GLSLANG
-    git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=$SHADERC_SPIRVHEADERS
-    git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit=$SHADERC_SPIRVTOOLS
+    git+https://github.com/KhronosGroup/glslang.git#commit=$GLSLANG
+    git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=$SPIRV_HEADERS
+    git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit=$SPIRV_TOOLS
+    git+https://github.com/KhronosGroup/SPIRV-Cross.git#tag=$SPIRV_CROSS
     duckstation-qt.desktop
     duckstation-qt.sh)
 sha256sums=('SKIP'
-            '51094e60b84873325cfe630fd7092d0db73e1c4ee94ccfc0806f742252a4009a'
-            '7b0a99c4e1463743cc9b9619472badd172d999081a92b3977486c5eaf458201e')
+            'f1dbf3270fc21bf6871ae8693ddfb467ce142009d3371fd407512b956c25ace0'
+            '9c2a148a1e4c7ca16ab54991980ed6393c1c21794081083f2779d880b3dbf1d4'
+            'ec2d7358f81598390a8ceca2d1974be3e5f7c45602b550c89a1e9323ab45474b'
+            '4e1c4ff072f0bf7df589b5c7160b0a4add5de326abd7570a2d1a4657f09e47a6')
 
 pkgver() {
     cd "${srcdir}/${pkgname%-git}"
@@ -119,6 +123,32 @@ build() {
         -DSHADERC_SKIP_COPYRIGHT_CHECK=ON
     ninja -C build-shaderc
     DESTDIR="$srcdir/deps" ninja -C build-shaderc install
+
+    echo "Building SPIRV-Cross..."
+
+    cmake -B build-SPIRV-Cross -S SPIRV-Cross \
+        -G Ninja \
+        -DCMAKE_BUILD_TYPE=None \
+        -DCMAKE_C_COMPILER=clang \
+        -DCMAKE_CXX_COMPILER=clang++ \
+        -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+        -DCMAKE_PREFIX_PATH="${srcdir}/deps/opt/${pkgname%-git}" \
+        -DCMAKE_INSTALL_PREFIX="/opt/${pkgname%-git}" \
+        -DSPIRV_CROSS_SHARED=ON \
+        -DSPIRV_CROSS_STATIC=OFF \
+        -DSPIRV_CROSS_CLI=OFF \
+        -DSPIRV_CROSS_ENABLE_TESTS=OFF \
+        -DSPIRV_CROSS_ENABLE_GLSL=ON \
+        -DSPIRV_CROSS_ENABLE_HLSL=OFF \
+        -DSPIRV_CROSS_ENABLE_MSL=OFF \
+        -DSPIRV_CROSS_ENABLE_CPP=OFF \
+        -DSPIRV_CROSS_ENABLE_REFLECT=OFF \
+        -DSPIRV_CROSS_ENABLE_C_API=ON \
+        -DSPIRV_CROSS_ENABLE_UTIL=ON
+    ninja -C build-SPIRV-Cross
+    DESTDIR="$srcdir/deps" ninja -C build-SPIRV-Cross install
 
     echo "Building ${pkgname%-git}..."
     cmake -B build -S duckstation \
@@ -164,5 +194,6 @@ sha256sums=('SKIP'
             'be4a2494f139c3e04024d3bc5313a37a23ef901fb4d4dffa3a2ff9a5f2324709'
             '852d1290d874546c9159fd349d42b4d314939f0ee4cb8601d26f7bf3910e9602'
             'eb945dda13bb15066447845308275c0261f901430ed9d0b32e86059c0ca4790a'
+            '9c2a148a1e4c7ca16ab54991980ed6393c1c21794081083f2779d880b3dbf1d4'
             '51094e60b84873325cfe630fd7092d0db73e1c4ee94ccfc0806f742252a4009a'
             '7b0a99c4e1463743cc9b9619472badd172d999081a92b3977486c5eaf458201e')
