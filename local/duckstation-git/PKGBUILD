@@ -1,7 +1,7 @@
 # Contributor: katt <magunasu.b97@gmail.com>
 
 pkgname=duckstation-git
-pkgver=0.1.r6759.gc015039
+pkgver=0.1.r7016.g4221029
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
 pkgrel=1
 arch=(x86_64 aarch64)
@@ -13,16 +13,16 @@ depends=(
     gcc-libs
     sdl2
     qt6-base
-    libwebp libwebp.so
-    libjpeg-turbo libjpeg.so
-    libpng libpng16.so
+    libwebp.so
+    libjpeg.so
+    libpng16.so
     libxrandr
     libx11
     freetype2 libfreetype.so
-    zstd libzstd.so
-    zlib libz.so
-    dbus libdbus-1.so
-    curl libcurl.so
+    libzstd.so
+    libz.so
+    libdbus-1.so
+    libcurl.so
     systemd-libs libudev.so
     hicolor-icon-theme
     libglvnd
@@ -121,7 +121,7 @@ build() {
         -DSHADERC_SKIP_TESTS=ON \
         -DSHADERC_SKIP_EXAMPLES=ON \
         -DSHADERC_SKIP_COPYRIGHT_CHECK=ON
-    ninja -C build-shaderc
+    ninja -C build-shaderc -v
     DESTDIR="$srcdir/deps" ninja -C build-shaderc install
 
     echo "Building SPIRV-Cross..."
@@ -147,7 +147,7 @@ build() {
         -DSPIRV_CROSS_ENABLE_REFLECT=OFF \
         -DSPIRV_CROSS_ENABLE_C_API=ON \
         -DSPIRV_CROSS_ENABLE_UTIL=ON
-    ninja -C build-SPIRV-Cross
+    ninja -C build-SPIRV-Cross -v
     DESTDIR="$srcdir/deps" ninja -C build-SPIRV-Cross install
 
     echo "Building ${pkgname%-git}..."
@@ -181,7 +181,9 @@ package() {
     cp -rv build/bin "${pkgdir}/opt/${pkgname%-git}"
 
     # Install bundled shaderc
-    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/lib ${srcdir}/deps/opt/"${pkgname%-git}"/lib/libshaderc_shared.so.1
+    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/lib \
+        ${srcdir}/deps/opt/"${pkgname%-git}"/lib/libshaderc_shared.so \
+        ${srcdir}/deps/opt/"${pkgname%-git}"/lib/libspirv-cross-c-shared.so
 
     install -Dvm755 "${srcdir}/duckstation-qt.sh" "${pkgdir}/usr/bin/duckstation-qt"
     install -Dvm644 "${srcdir}/duckstation-qt.desktop" "${pkgdir}/usr/share/applications/duckstation-qt.desktop"
