@@ -6,7 +6,7 @@
 
 pkgname=wine-staging
 pkgver=9.12
-pkgrel=2
+pkgrel=3
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -133,9 +133,9 @@ prepare() {
   patch -p1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
   #patch -p1 -i "$_tkg_path"/proton/valve_proton_fullscreen_hack/FS_bypass_compositor.patch
 
+  patch -p1 -i "$srcdir"/0001-loader-Set-default-regkey-for-NVIDIA-NGX-FullPath.patch
   patch -p1 -i "$srcdir"/wine-wmclass.patch
   patch -p1 -i "$srcdir"/wine-isolate_home.patch
-  patch -p1 -i "$srcdir"/0001-winewayland-Avoid-crashing-when-the-dummy-window-sur.patch
   ./dlls/winevulkan/make_vulkan
   ./tools/make_specfiles
   ./tools/make_requests
