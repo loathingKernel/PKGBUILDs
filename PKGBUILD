@@ -1,10 +1,10 @@
 # Contributor: Jan de Groot <jgc@archlinux.org>
 # Contributor: Kritoke <typeolinux@yahoo.com>
-# Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
+# Maintainer: kj_sh604 <406hs_jk@proton.me>
 
 pkgname=libglademm
 pkgver=2.6.7
-pkgrel=5
+pkgrel=6
 pkgdesc="A C++ wrapper for libglade."
 arch=('x86_64')
 url="http://gtkmm.sourceforge.net/"
