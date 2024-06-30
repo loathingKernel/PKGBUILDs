@@ -1,7 +1,7 @@
 pkgbase = libglademm
 	pkgdesc = A C++ wrapper for libglade.
 	pkgver = 2.6.7
-	pkgrel = 5
+	pkgrel = 6
 	url = http://gtkmm.sourceforge.net/
 	arch = x86_64
 	license = LGPL
