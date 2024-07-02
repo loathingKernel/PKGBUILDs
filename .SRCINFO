@@ -1,6 +1,6 @@
 pkgbase = backrest
 	pkgdesc = A web UI and orchestrator for restic backup.
-	pkgver = 1.2.0
+	pkgver = 1.2.1
 	pkgrel = 1
 	url = https://github.com/garethgeorge/backrest
 	arch = i686
@@ -15,9 +15,9 @@ pkgbase = backrest
 	makedepends = npm
 	makedepends = go
 	depends = restic
-	source = backrest-1.2.0.tar.gz::https://github.com/garethgeorge/backrest/archive/refs/tags/v1.2.0.tar.gz
+	source = backrest-1.2.1.tar.gz::https://github.com/garethgeorge/backrest/archive/refs/tags/v1.2.1.tar.gz
 	source = backrest@.service
-	sha256sums = d954d98d2bf260a5b8f1120fbf3adb4278f67682a32d614dbcc2eb213f888b97
+	sha256sums = ee88c353afc7f31354d21d328c6b285efe21fefefdcc156741c504e114e15d7f
 	sha256sums = 528bfac979b7d0615bf70df9de4e965ad9a25bf0e06a19c7ed359a7ee47de05a
 
 pkgname = backrest
