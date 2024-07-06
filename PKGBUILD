@@ -1,12 +1,12 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
-pkgver=1.6.3
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
 url="https://mijorus.it/projects/gearlever/"
 license=('GPL-3.0-or-later')
-depends=( 'dconf' 'fuse2' 'gdk-pixbuf2' 'glibc' 'glib2' 'gtk4' 'hicolor-icon-theme' 'libadwaita' 'p7zip' 'pango' 'python' 'python-dbus' 'python-gobject' 'python-pyxdg' 'zlib' )
+depends=( 'binutils' 'dconf' 'fuse2' 'gdk-pixbuf2' 'glibc' 'glib2' 'gtk4' 'hicolor-icon-theme' 'libadwaita' 'p7zip' 'pango' 'python' 'python-dbus' 'python-gobject' 'python-pyxdg' 'python-requests' 'zlib' )
 makedepends=( 'gettext' 'meson' )
 checkdepends=( 'appstream' 'desktop-file-utils' )
 options=( '!strip' '!debug' )
@@ -14,13 +14,8 @@ source=(
 	"${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz"
 )
 sha256sums=(
-	'857a87994bd0d6e55c35ec5a185775dffa0fdab3b924332be4a964048c9915b0'
+	'1ccb3134439a166c3cfc52fddddd85b20282d44f34e231c46d8d094f78b95555'
 )
-
-prepare() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	sed -i 's/cmd = \['\''flatpak-spawn'\'', '\''--host'\'', \*command\]/cmd = \[\*command\]/g' src/lib/terminal.py
-}
 
 build() {
 	arch-meson "${srcdir}/${pkgname}-${pkgver}" build
