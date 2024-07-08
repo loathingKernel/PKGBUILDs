@@ -1,7 +1,7 @@
 pkgbase = gearlever
 	pkgdesc = Manage AppImages with ease
-	pkgver = 2.0.0
-	pkgrel = 2
+	pkgver = 2.0.1
+	pkgrel = 1
 	url = https://mijorus.it/projects/gearlever/
 	arch = x86_64
 	license = GPL-3.0-or-later
@@ -28,7 +28,7 @@ pkgbase = gearlever
 	depends = zlib
 	options = !strip
 	options = !debug
-	source = gearlever-2.0.0.tar.gz::https://github.com/mijorus/gearlever/archive/refs/tags/2.0.0.tar.gz
-	sha256sums = 1ccb3134439a166c3cfc52fddddd85b20282d44f34e231c46d8d094f78b95555
+	source = gearlever-2.0.1.tar.gz::https://github.com/mijorus/gearlever/archive/refs/tags/2.0.1.tar.gz
+	sha256sums = bd7b2d22b858e940c816fd4a94d253850f31ae51e0fb1f3e31deb9b507014279
 
 pkgname = gearlever
