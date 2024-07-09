@@ -1,12 +1,14 @@
 pkgbase = umu-launcher
 	pkgdesc = This is the Unified Launcher for Windows Games on Linux, to run Proton with fixes outside of Steam
 	pkgver = 0.1.RC4.r224.8d81e87
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/Open-Wine-Components/umu-launcher
 	arch = x86_64
 	license = GPL-3.0-only
 	makedepends = git
 	makedepends = scdoc
+	makedepends = python-build
+	makedepends = python-installer
 	makedepends = python-hatchling
 	depends = bash
 	depends = desktop-file-utils
