@@ -45,7 +45,6 @@ fi
 # Update before continuing
 pacman -Syu --noconfirm
 
-pacman-key --refresh-keys
 pacman -Syu --noconfirm --needed base base-devel
 pacman -Syu --noconfirm --needed ccache
 
