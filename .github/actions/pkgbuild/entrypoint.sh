@@ -45,6 +45,10 @@ fi
 # Update before continuing
 pacman -Syu --noconfirm
 
+# Update keyring
+pacman-key --init
+pacman-key --populate archlinux
+
 pacman -Syu --noconfirm --needed base base-devel
 pacman -Syu --noconfirm --needed ccache
 
