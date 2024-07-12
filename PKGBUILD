@@ -3,13 +3,13 @@
 # Contributor: korjjj <korjjj+aur[at]gmail[dot]com>
 
 pkgname=gns3-server
-pkgver=2.2.48
+pkgver=2.2.48.1
 # TODO: jsonschema>=4.22.0 aiohttp>=3.9.5 Jinja2>=3.1.4
 pkgrel=1
 pkgdesc='GNS3 network simulator, Server package'
 arch=('x86_64' 'aarch64')
 url='https://github.com/GNS3/gns3-server'
-license=('GPL3')
+license=('GPL-3.0-only')
 groups=('gns3')
 depends=(
     'busybox'
@@ -39,7 +39,7 @@ install="$pkgname".install
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         "$pkgname@.service"
         "fix_requirements_for_Arch.diff")
-sha256sums=('d47261d2828594d051752559768aa662d88bcc1951a050b675ba4c664e3f9870'
+sha256sums=('0b6cc6fed175f1cf84fbb9818eaf33b3c314164a3a66dc8794f48554045b567a'
             'b43f0ead963a06e613d3303d2c66372b57f46c750b3d6df20eb99c11078de65f'
             '97a6118e3d7c277cdad14018ab8e8ee8ed9a3b6944e795c8038f0141caad8ccd')
 
