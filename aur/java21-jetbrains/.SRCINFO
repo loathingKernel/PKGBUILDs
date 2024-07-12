@@ -4,8 +4,7 @@ pkgbase = java21-jetbrains
 	url = https://confluence.jetbrains.com/display/JBR/JetBrains+Runtime
 	arch = x86_64
 	license = custom
-	makedepends = java-environment>=20
-	makedepends = java-environment<=21
+	makedepends = java-environment=21
 	makedepends = cpio
 	makedepends = unzip
 	makedepends = zip
