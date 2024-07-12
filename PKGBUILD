@@ -20,10 +20,10 @@
 pkgbase=java21-jetbrains
 pkgname=('jre21-jetbrains' 'jdk21-jetbrains')
 _majorver=21
-_ver=21.0.2
-_hgver=21.0.2
-_jbver1=375
-_jbver2=1
+_ver=21.0.3
+_hgver=21.0.3
+_jbver1=509
+_jbver2=4
 pkgrel=1
 pkgver=${_ver}.b${_jbver1}.${_jbver2}
 _hg_tag=jb${_hgver}-b${_jbver1}.${_jbver2}
@@ -34,7 +34,7 @@ makedepends=('java-environment>=20' 'java-environment<=21' 'cpio' 'unzip' 'zip' 
   'libxrender' 'libxtst' 'libxt' 'libxext' 'libxrandr' 'alsa-lib' 'pandoc'
   'graphviz' 'freetype2' 'libjpeg-turbo' 'giflib' 'libpng' 'lcms2'
   'libnet' 'bash' 'harfbuzz' 'gcc-libs' 'glibc' 'jcef-jetbrains' 'git')
-options=(!lto)
+options=(!lto !ccache)
 source=(git+https://github.com/JetBrains/JetBrainsRuntime.git#tag=$_hg_tag
   freedesktop-java.desktop
   freedesktop-jconsole.desktop
