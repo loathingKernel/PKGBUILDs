@@ -1,21 +1,21 @@
---- a/gns3-server-2.2.47/requirements.txt	2024-05-15 07:14:48.000000000 +0200
-+++ b/gns3-server-2.2.47/requirements.txt	2024-06-05 18:29:33.170723059 +0200
+--- a/gns3-server-2.2.48/requirements.txt	2024-07-08 18:44:09.000000000 +0200
++++ b/gns3-server-2.2.48/requirements.txt	2024-07-12 11:26:57.391447768 +0200
 @@ -1,13 +1,12 @@
 -jsonschema>=4.22.0,<4.23
 -aiohttp>=3.9.5,<3.10
 -aiohttp-cors>=0.7.0,<0.8
--aiofiles>=23.2.1,<23.3
+-aiofiles>=24.1.0,<25.0
 -Jinja2>=3.1.4,<3.2
--sentry-sdk==2.1.1,<2.2
--psutil==5.9.8
+-sentry-sdk==2.7.1,<2.8
+-psutil==6.0.0
 -async-timeout>=4.0.3,<4.1
-+jsonschema>=4.21.1
++jsonschema>=4.22.0
 +aiohttp>=3.9.5
 +aiohttp-cors>=0.7.0
 +aiofiles>=23.2.1
 +Jinja2>=3.1.4
-+sentry-sdk>=2.1.1
-+psutil>=5.9.8
++sentry-sdk>=2.7.1
++psutil>=6.0.0
 +async-timeout>=4.0.3
  distro>=1.9.0
 -py-cpuinfo>=9.0.0,<10.0
