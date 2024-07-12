@@ -20,10 +20,10 @@
 pkgbase=java21-jetbrains
 pkgname=('jre21-jetbrains' 'jdk21-jetbrains')
 _majorver=21
-_ver=21.0.2
-_hgver=21.0.2
-_jbver1=375
-_jbver2=1
+_ver=21.0.3
+_hgver=21.0.3
+_jbver1=509
+_jbver2=4
 pkgrel=1
 pkgver=${_ver}.b${_jbver1}.${_jbver2}
 _hg_tag=jb${_hgver}-b${_jbver1}.${_jbver2}
@@ -31,22 +31,22 @@ arch=('x86_64')
 url='https://confluence.jetbrains.com/display/JBR/JetBrains+Runtime'
 license=('custom')
 makedepends=('java-environment>=20' 'java-environment<=21' 'cpio' 'unzip' 'zip' 'libelf' 'libcups' 'libx11'
-             'libxrender' 'libxtst' 'libxt' 'libxext' 'libxrandr' 'alsa-lib' 'pandoc'
-             'graphviz' 'freetype2' 'libjpeg-turbo' 'giflib' 'libpng' 'lcms2'
-             'libnet' 'bash' 'harfbuzz' 'gcc-libs' 'glibc' 'jcef-jetbrains' 'git')
-options=(!lto)
+  'libxrender' 'libxtst' 'libxt' 'libxext' 'libxrandr' 'alsa-lib' 'pandoc'
+  'graphviz' 'freetype2' 'libjpeg-turbo' 'giflib' 'libpng' 'lcms2'
+  'libnet' 'bash' 'harfbuzz' 'gcc-libs' 'glibc' 'jcef-jetbrains' 'git')
+options=(!lto !ccache)
 source=(git+https://github.com/JetBrains/JetBrainsRuntime.git#tag=$_hg_tag
-        freedesktop-java.desktop
-        freedesktop-jconsole.desktop
-        freedesktop-jshell.desktop)
+  freedesktop-java.desktop
+  freedesktop-jconsole.desktop
+  freedesktop-jshell.desktop)
 sha256sums=('SKIP'
-            'b1007ce4c8cbe6b1cc3e6ce78b3c7bc1a26d76145c7c759baf7a04d8bc1bbfe3'
-            '113abd0cbb73a34cc7268a97056453f3394632d5fe05d9d1e9f1d8895f8d279d'
-            '51dbaaa20b382c5220d560f4068896ba4a5643d3b7ce63c72cb42ba142689475')
+  'b1007ce4c8cbe6b1cc3e6ce78b3c7bc1a26d76145c7c759baf7a04d8bc1bbfe3'
+  '113abd0cbb73a34cc7268a97056453f3394632d5fe05d9d1e9f1d8895f8d279d'
+  '51dbaaa20b382c5220d560f4068896ba4a5643d3b7ce63c72cb42ba142689475')
 
 case "${CARCH}" in
-  x86_64) _JARCH='x86_64';;
-  i686)   _JARCH='x86';;
+x86_64) _JARCH='x86_64' ;;
+i686) _JARCH='x86' ;;
 esac
 
 _jvmdir=/usr/lib/jvm/java-${_majorver}-jetbrains
@@ -119,13 +119,13 @@ build() {
     --with-jvm-features=zgc \
     --enable-unlimited-crypto \
     --enable-warnings-as-errors=no \
-    ${NUM_PROC_OPT} \
-    #--disable-javac-server
+    ${NUM_PROC_OPT}
+  #--disable-javac-server
 
   make images
 
   # Include jcef
-  git apply -p0 < jb/project/tools/patches/add_jcef_module.patch
+  git apply -p0 <jb/project/tools/patches/add_jcef_module.patch
   cd $srcdir/${_imgdir}
 
   mkdir -p jcef_tmp
@@ -159,7 +159,7 @@ build() {
   ./jdk/bin/jlink \
     --module-path ./jmods --no-man-pages --compress=2 \
     --add-modules "$__modules" --output ./jbr_sdk
-  
+
   mkdir -p ./jbr_sdk/jmods
   echo "${__modules}," | while read -d, mod; do cp ./jmods/$mod.jmod ./jbr_sdk/jmods/; done
 
@@ -171,29 +171,29 @@ build() {
 package_jre21-jetbrains() {
   pkgdesc="JetBrains Java ${_majorver} full runtime environment"
   depends=('java-runtime-common>=3' 'ca-certificates-utils' 'nss' 'libjpeg-turbo' 'libjpeg.so'
-           'lcms2' 'liblcms2.so' 'libnet' 'freetype2' 'libfreetype.so' 'harfbuzz' 'libharfbuzz.so'
-           'glibc' 'gcc-libs' 'giflib' 'libgif.so' 'libpng' 'jcef-jetbrains')
+    'lcms2' 'liblcms2.so' 'libnet' 'freetype2' 'libfreetype.so' 'harfbuzz' 'libharfbuzz.so'
+    'glibc' 'gcc-libs' 'giflib' 'libgif.so' 'libpng' 'jcef-jetbrains')
   optdepends=('java-rhino: for some JavaScript support'
-              'alsa-lib: for basic sound support'
-              'gtk2: for the Gtk+ 2 look and feel - desktop usage'
-              'gtk3: for the Gtk+ 3 look and feel - desktop usage')
+    'alsa-lib: for basic sound support'
+    'gtk2: for the Gtk+ 2 look and feel - desktop usage'
+    'gtk3: for the Gtk+ 3 look and feel - desktop usage')
   provides=("java-runtime=${_majorver}" "java-runtime-jetbrains=${_majorver}")
   conflicts=("jre21-jetbrains")
   _pkgname="jre21-jetbrains"
   backup=(etc/${pkgbase}/logging.properties
-          etc/${pkgbase}/management/jmxremote.access
-          etc/${pkgbase}/management/jmxremote.password.template
-          etc/${pkgbase}/management/management.properties
-          etc/${pkgbase}/net.properties
-          etc/${pkgbase}/security/java.policy
-          etc/${pkgbase}/security/java.security
-          etc/${pkgbase}/security/policy/README.txt
-          etc/${pkgbase}/security/policy/limited/default_US_export.policy
-          etc/${pkgbase}/security/policy/limited/default_local.policy
-          etc/${pkgbase}/security/policy/limited/exempt_local.policy
-          etc/${pkgbase}/security/policy/unlimited/default_US_export.policy
-          etc/${pkgbase}/security/policy/unlimited/default_local.policy
-          etc/${pkgbase}/sound.properties)
+    etc/${pkgbase}/management/jmxremote.access
+    etc/${pkgbase}/management/jmxremote.password.template
+    etc/${pkgbase}/management/management.properties
+    etc/${pkgbase}/net.properties
+    etc/${pkgbase}/security/java.policy
+    etc/${pkgbase}/security/java.security
+    etc/${pkgbase}/security/policy/README.txt
+    etc/${pkgbase}/security/policy/limited/default_US_export.policy
+    etc/${pkgbase}/security/policy/limited/default_local.policy
+    etc/${pkgbase}/security/policy/limited/exempt_local.policy
+    etc/${pkgbase}/security/policy/unlimited/default_US_export.policy
+    etc/${pkgbase}/security/policy/unlimited/default_local.policy
+    etc/${pkgbase}/sound.properties)
   install=install_jre-jetbrains.sh
 
   cd ${_imgdir}/jbr_sdk
@@ -221,13 +221,12 @@ package_jre21-jetbrains() {
 
   # man pages
   local _file
-  for _file in ../jdk/man/man1/{java,jfr,jrunscript,keytool,rmiregistry}.1
-  do
-      __file=${_file%.1}
-      install -D -m644 "$_file" "${pkgdir}/usr/share/${__file#"../jdk/"}-jetbrains${_majorver}.1"
+  for _file in ../jdk/man/man1/{java,jfr,jrunscript,keytool,rmiregistry}.1; do
+    __file=${_file%.1}
+    install -D -m644 "$_file" "${pkgdir}/usr/share/${__file#"../jdk/"}-jetbrains${_majorver}.1"
   done
   ln -s /usr/share/man "${pkgdir}/${_jvmdir}/man"
-  
+
   install -D -m644 release -t "${pkgdir}/${_jvmdir}"
 
   # Link JKS keystore from ca-certificates-utils
@@ -255,9 +254,9 @@ package_jdk21-jetbrains() {
   # bin
   cp -a bin "${pkgdir}/${_jvmdir}"
   rm "${pkgdir}/${_jvmdir}/bin/"{java,jfr,jrunscript,keytool,rmiregistry}
-    
+
   # libs
-  install -D -m644 lib/ct.sym       -t "${pkgdir}/${_jvmdir}/lib"
+  install -D -m644 lib/ct.sym -t "${pkgdir}/${_jvmdir}/lib"
   install -D -m644 lib/libattach.so -t "${pkgdir}/${_jvmdir}/lib"
   install -D -m644 lib/libsaproc.so -t "${pkgdir}/${_jvmdir}/lib"
 
@@ -269,10 +268,9 @@ package_jdk21-jetbrains() {
 
   # man pages
   local _file
-  for _file in ../jdk/man/man1/*.1
-  do
-      __file=${_file%.1}
-      install -D -m644 "$_file" "${pkgdir}/usr/share/${__file#"../jdk/"}-jetbrains${_majorver}.1"
+  for _file in ../jdk/man/man1/*.1; do
+    __file=${_file%.1}
+    install -D -m644 "$_file" "${pkgdir}/usr/share/${__file#"../jdk/"}-jetbrains${_majorver}.1"
   done
   rm "${pkgdir}/usr/share/man/man1/"{java,jfr,jrunscript,keytool,rmiregistry}-jetbrains"${_majorver}".1
 
