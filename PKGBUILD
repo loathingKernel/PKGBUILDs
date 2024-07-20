@@ -3,7 +3,7 @@
 pkgname=coolercontrol
 _app_id="org.$pkgname.CoolerControl"
 pkgver=1.3.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A program to monitor and control your cooling devices"
 arch=('x86_64')
 url="https://gitlab.com/coolercontrol/coolercontrol"
@@ -87,8 +87,9 @@ check() {
   python -m coolercontrol_liqctld --version
   cd "${srcdir}/$pkgname-$pkgver/coolercontrold/target/release"
   ./coolercontrold --version
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri/target/release"
-  ./coolercontrol --version
+  # This UI check will fail in a docker environment without a graphical environment:
+  # cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri/target/release"
+  # ./coolercontrol --version
 }
 
 package() {
