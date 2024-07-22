@@ -4,13 +4,13 @@
 
 pkgbase=ntsync
 pkgname=(ntsync-dkms ntsync-header ntsync-common)
-pkgver=6.9.5
+pkgver=6.10
 pkgrel=1
 pkgdesc="NT synchronization primitive driver"
 arch=(x86_64)
 url='https://lore.kernel.org/lkml/20240519202454.1192826-1-zfigura@codeweavers.com/'
 license=('GPL2')
-_commit=934926534ca77a0963a29f5f6926a3aa350f6de4
+_commit=v"$pkgver"-zen1
 source=("ntsync.c-$_commit::https://raw.githubusercontent.com/zen-kernel/zen-kernel/$_commit/drivers/misc/ntsync.c"
         "ntsync.h-$_commit::https://raw.githubusercontent.com/zen-kernel/zen-kernel/$_commit/include/uapi/linux/ntsync.h"
         'ntsync.conf'
@@ -45,8 +45,10 @@ package_ntsync-dkms() {
 
 package_ntsync-header() {
     pkgdesc+=" - linux api header file"
+    depends=('linux-api-headers>=6.10')
+    install=ntsync-header.install
 
-    install -Dm644 "$srcdir/ntsync.h-$_commit" "$pkgdir/usr/include/linux/ntsync.h"
+    install -Dm644 "$srcdir/ntsync.h-$_commit" "$pkgdir/usr/share/ntsync/ntsync.h"
 }
 
 package_ntsync-common() {
