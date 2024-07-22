@@ -3233,7 +3233,7 @@ index d643e3f436f..a16d514d9f6 100644
 2.45.2
 
 
-From 11431eecb12d8190e86fcdbd59ef9b2b0af2f5ee Mon Sep 17 00:00:00 2001
+From 95ce3820e244efbca3fb51f82aa81ca21321b3b0 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 11:32:25 -0600
 Subject: [PATCH 21/32] server: Introduce fast_select_queue and
@@ -3241,8 +3241,8 @@ Subject: [PATCH 21/32] server: Introduce fast_select_queue and
 
 ---
  server/protocol.def | 13 ++++++++++
- server/queue.c      | 59 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 72 insertions(+)
+ server/queue.c      | 60 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
 
 diff --git a/server/protocol.def b/server/protocol.def
 index a16d514d9f6..f2bd83ed6ee 100644
@@ -3266,7 +3266,7 @@ index a16d514d9f6..f2bd83ed6ee 100644
 +    int          signaled;        /* was the queue signaled? */
 +@END
 diff --git a/server/queue.c b/server/queue.c
-index 60f857c2251..a9c2980daea 100644
+index 60f857c2251..1c8c945493b 100644
 --- a/server/queue.c
 +++ b/server/queue.c
 @@ -136,6 +136,7 @@ struct msg_queue
@@ -3296,7 +3296,7 @@ index 60f857c2251..a9c2980daea 100644
      return 1;
  }
  
-@@ -4184,3 +4190,56 @@ DECL_HANDLER(set_keyboard_repeat)
+@@ -4184,3 +4190,57 @@ DECL_HANDLER(set_keyboard_repeat)
  
      release_object( desktop );
  }
@@ -3316,7 +3316,8 @@ index 60f857c2251..a9c2980daea 100644
 +    }
 +    else
 +    {
-+        if (current->process->idle_event && !(queue->wake_mask & QS_SMRESULT))
++        const queue_shm_t *queue_shm = queue->shared;
++        if (current->process->idle_event && !(queue_shm->wake_mask & QS_SMRESULT))
 +            set_event( current->process->idle_event );
 +
 +        if (queue->fd)
@@ -3357,7 +3358,7 @@ index 60f857c2251..a9c2980daea 100644
 2.45.2
 
 
-From c0be513cf872e4c1b35fd321828f0601505da29b Mon Sep 17 00:00:00 2001
+From aba557efd52b0bafe0a0c23f010adef573832798 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Thu, 21 Apr 2022 16:11:14 -0500
 Subject: [PATCH 22/32] server: Allow creating an event object for client-side
@@ -3466,7 +3467,7 @@ index 7b11a548a78..9bf4b489821 100644
 2.45.2
 
 
-From e3b6b1235cbe4a6339837a506639445eb48a4c97 Mon Sep 17 00:00:00 2001
+From 412f2cc543ec0766ef2002d28e69d333f8a4c81c Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 18:07:23 -0600
 Subject: [PATCH 23/32] ntdll: Introduce a helper to wait on an internal server
@@ -3579,7 +3580,7 @@ index 6cd88a5acc0..7173813547b 100644
 2.45.2
 
 
-From 8ae561a801a34dbff561a56dcf3134a0d1f3a201 Mon Sep 17 00:00:00 2001
+From 6ee16dc0122a3902c7af7519299fc81499307661 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 12:08:29 -0600
 Subject: [PATCH 24/32] ntdll: Add some traces to synchronization methods.
@@ -3812,7 +3813,7 @@ index 21e66f01875..8c024fc7496 100644
 2.45.2
 
 
-From c5cb60b575775b18b73ccfe1e8327d363a51b41e Mon Sep 17 00:00:00 2001
+From 58142080e8fd13a718b8f2953e0a60be4aafa869 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 6 Apr 2021 15:37:02 -0500
 Subject: [PATCH 25/32] ntdll: Use fast synchronization objects.
@@ -4717,7 +4718,7 @@ index 7173813547b..ef4e0ecb7dd 100644
 2.45.2
 
 
-From 58a966fc4b530ed1009911ee44a6991d708cb1af Mon Sep 17 00:00:00 2001
+From e5959c22cb7a1d3b91f49a9591595165e418576c Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 20 Apr 2021 17:55:59 -0500
 Subject: [PATCH 26/32] ntdll: Use server_wait_for_object() when waiting on
@@ -4753,7 +4754,7 @@ index 40d4dc327a7..fa2a8d84c3d 100644
 2.45.2
 
 
-From e0804888dd63f1b29f5dd682c371c8ed8170b4ff Mon Sep 17 00:00:00 2001
+From 312cb7b434b257b6af94949874776adf3efb50ad Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 12 Mar 2021 15:04:17 -0600
 Subject: [PATCH 27/32] ntdll: Cache fast synchronization objects.
@@ -5094,7 +5095,7 @@ index ef4e0ecb7dd..41febee1832 100644
 2.45.2
 
 
-From e1fbc92a373bdb8810813e2f5b1a8991af75e155 Mon Sep 17 00:00:00 2001
+From 8181b9d1ca4e86c56b4e302d69ac36b13441444f Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Sat, 13 Mar 2021 16:20:30 -0600
 Subject: [PATCH 28/32] server: Allow disabling fast synchronization support.
@@ -5124,7 +5125,7 @@ index 12cd8eb3c6e..ce7a564926d 100644
 2.45.2
 
 
-From bbdba1844a6ed4ce29f0ef51d30a3be998cb6ad3 Mon Sep 17 00:00:00 2001
+From 119bfaf2783eee16cc54cacee148e09d3a9f1b9e Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Sun, 14 Mar 2021 11:08:02 -0500
 Subject: [PATCH 29/32] server: Add a message to signal that fast
@@ -5150,7 +5151,7 @@ index ce7a564926d..51fe32ea631 100644
 2.45.2
 
 
-From 1c4dcb619023a6d7870b9a1f17b450f6215a7a76 Mon Sep 17 00:00:00 2001
+From 911049dabbb79a92eef25ad78feade272ba4365f Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 26 Jun 2018 18:44:44 -0500
 Subject: [PATCH 30/32] kernel32/tests: Zigzag test.
@@ -5260,7 +5261,7 @@ index c06ced47298..c5d271335cf 100644
 2.45.2
 
 
-From fcc2372f73b91ea6a623595b7ad18dc7128b0298 Mon Sep 17 00:00:00 2001
+From 503f78b337aef4e8a9c14f042604be9b21a304ff Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 30 Jan 2024 18:11:04 -0600
 Subject: [PATCH 31/32] make_req
@@ -5544,7 +5545,7 @@ index be81af3d55f..945d0678fc0 100644
 2.45.2
 
 
-From 9e8dc6be1727c5a9410a83dba53ee9b110edad1f Mon Sep 17 00:00:00 2001
+From 48fa1d5f400b9b0d1e50ac9c00163f724252d7b0 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 3 May 2024 14:35:50 -0400
 Subject: [PATCH 32/32] extra debugging
