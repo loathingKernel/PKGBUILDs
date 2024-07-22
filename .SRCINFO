@@ -1,7 +1,7 @@
 pkgbase = ntsync
 	pkgdesc = NT synchronization primitive driver
 	pkgver = 6.10
-	pkgrel = 1
+	pkgrel = 2
 	url = https://lore.kernel.org/lkml/20240519202454.1192826-1-zfigura@codeweavers.com/
 	arch = x86_64
 	license = GPL2

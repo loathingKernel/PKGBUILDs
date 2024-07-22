@@ -5,7 +5,7 @@
 pkgbase=ntsync
 pkgname=(ntsync-dkms ntsync-header ntsync-common)
 pkgver=6.10
-pkgrel=1
+pkgrel=2
 pkgdesc="NT synchronization primitive driver"
 arch=(x86_64)
 url='https://lore.kernel.org/lkml/20240519202454.1192826-1-zfigura@codeweavers.com/'
