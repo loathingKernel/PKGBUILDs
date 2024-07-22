@@ -3,6 +3,11 @@ post_install() {
     cp /usr/share/ntsync/ntsync.h /usr/include/linux/ntsync.h
 }
 
+post_upgrade() {
+    rm /usr/include/linux/ntsync.h
+    cp /usr/share/ntsync/ntsync.h /usr/include/linux/ntsync.h
+}
+
 pre_remove() {
     rm /usr/include/linux/ntsync.h
     mv /usr/share/ntsync/ntsync.h_orig /usr/include/linux/ntsync.h
