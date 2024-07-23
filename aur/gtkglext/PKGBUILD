@@ -1,14 +1,15 @@
 # Maintainer: Edmund Lodewijks <e.lodewijks at gmail. com>
+# Contributor: Christian Hesse <mail@eworm.de>
 
 pkgname=gtkglext
 pkgver=1.2.0
-pkgrel=16
+pkgrel=17
 pkgdesc='OpenGL extension for gtk2'
 arch=('x86_64')
 url='https://sourceforge.net/projects/gtkglext/'
 license=('LGPL-2.0-or-later')
-depends=('gtk2' 'glu' 'libxmu' 'glib2-devel' 'libglvnd')
-makedepends=('python')
+depends=('gtk2' 'glu' 'libxmu' 'libglvnd')
+makedepends=('python' 'glib2-devel')
 source=("https://sourceforge.net/projects/${pkgname}/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2"
 	'001-kill-pangox.patch'
 	'002-gtk2.20.patch'
