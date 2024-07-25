@@ -1,6 +1,6 @@
 pkgbase = conky
 	pkgdesc = Light-weight system monitor for X, Wayland, and other things, too
-	pkgver = 1.21.2.r5.g0bc625f
+	pkgver = 1.21.5
 	pkgrel = 1
 	url = https://github.com/brndnmtthws/conky
 	arch = x86_64
