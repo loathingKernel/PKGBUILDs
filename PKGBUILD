@@ -4,8 +4,8 @@
 
 pkgbase=ntsync
 pkgname=(ntsync-dkms ntsync-header ntsync-common)
-pkgver=6.10
-pkgrel=2
+pkgver=6.10.1
+pkgrel=1
 pkgdesc="NT synchronization primitive driver"
 arch=(x86_64)
 url='https://lore.kernel.org/lkml/20240519202454.1192826-1-zfigura@codeweavers.com/'
@@ -36,6 +36,9 @@ package_ntsync-dkms() {
     )
     provides=(NTSYNC-MODULE)
     conflicts=(ntsync)
+
+    # Use included header, the same one used for wine one `ntsync-header` is installed
+    sed 's|<uapi/linux/ntsync.h>|"../../include/uapi/linux/ntsync.h"|g' -i "$srcdir/ntsync.c-$_commit"
 
     install -Dm644 "$srcdir/Makefile" "$pkgdir/usr/src/$pkgbase-$pkgver/Makefile"
     install -Dm644 "$srcdir/ntsync.h-$_commit" "$pkgdir/usr/src/$pkgbase-$pkgver/include/uapi/linux/ntsync.h"
