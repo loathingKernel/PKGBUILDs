@@ -5,7 +5,7 @@
 pkgname=pi-hole-server
 _pkgname=pi-hole
 pkgver=5.18.3
-pkgrel=2
+pkgrel=3
 _wwwpkgname=web
 _wwwpkgver=5.21
 pkgdesc='The Pi-hole is an advertising-aware DNS/Web server. Arch adaptation for lan wide DNS server.'
@@ -27,8 +27,10 @@ backup=('etc/dnsmasq.d/01-pihole.conf' 'etc/pihole/adlists.list' 'etc/dnsmasq.co
 
 source=($pkgname-core-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/archive/refs/tags/v$pkgver.tar.gz
 	    $pkgname-admin-$_wwwpkgver.tar.gz::https://github.com/$_pkgname/$_wwwpkgname/archive/refs/tags/v$_wwwpkgver.tar.gz
-        "https://raw.githubusercontent.com/max72bra/pi-hole-server-archlinux-customization/master/arch-server-core-$pkgver-$pkgrel.patch"
-        "https://raw.githubusercontent.com/max72bra/pi-hole-server-archlinux-customization/master/arch-server-admin-$_wwwpkgver-$pkgrel.patch"
+      #  "https://raw.githubusercontent.com/max72bra/pi-hole-server-archlinux-customization/master/arch-server-core-$pkgver-$pkgrel.patch"
+      #  "https://raw.githubusercontent.com/max72bra/pi-hole-server-archlinux-customization/master/arch-server-admin-$_wwwpkgver-$pkgrel.patch"
+      "https://raw.githubusercontent.com/max72bra/pi-hole-server-archlinux-customization/master/arch-server-core-$pkgver-1.patch"
+      "https://raw.githubusercontent.com/max72bra/pi-hole-server-archlinux-customization/master/arch-server-admin-$_wwwpkgver-1.patch"
 	    dnsmasq.include
 	    lighttpd.pi-hole.conf
 	    nginx.pi-hole.conf
@@ -45,7 +47,7 @@ source=($pkgname-core-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/arc
 sha256sums=('871b47b41813342484df8f10981801eba25f27c9cdbeafd6e71f0edbae6818e5'
             'd8b5f8dd3842dd8b0f3f02a4422182740fd26c3db5ceba1dde9fcd122a36c7f0'
             '8c4ad50db851431455f0937cccb6044b973b2476134f666fcec4c1358c1c1bc7'
-            'b9a27d694fdc65b30caee630af3d716618608adce40e3311591bc27fd7278226'
+            'beeb08d8e7225100e37cc789a48f1bea64cd07111c880d3fb43a9cee7bb15fae'
             'b8aefb2686cc005f7c46b53cb681dfe65e8f11dd3bc5b827b597e19c870bdd24'
             '3a3baa92a635d602824f184d901e947a0e14650c950e89325dda6f7d71b39db9'
             'f5906ed845e030ee18baeb8767295e1a76848a10ffd6fe60d34501ae45e2b6a8'
@@ -60,9 +62,11 @@ sha256sums=('871b47b41813342484df8f10981801eba25f27c9cdbeafd6e71f0edbae6818e5'
 
 prepare() {
   cd "$srcdir"/"$_pkgname"-"$pkgver"
-  patch -Np1 -i "$srcdir"/arch-server-core-$pkgver-$pkgrel.patch
+  #patch -Np1 -i "$srcdir"/arch-server-core-$pkgver-$pkgrel.patch
+  patch -Np1 -i "$srcdir"/arch-server-core-$pkgver-1.patch
   cd "$srcdir"/"$_wwwpkgname"-"$_wwwpkgver"
-  patch -Np1 -i "$srcdir"/arch-server-admin-$_wwwpkgver-$pkgrel.patch
+  #patch -Np1 -i "$srcdir"/arch-server-admin-$_wwwpkgver-$pkgrel.patch
+  patch -Np1 -i "$srcdir"/arch-server-admin-$_wwwpkgver-1.patch
 }
 
 package() {
