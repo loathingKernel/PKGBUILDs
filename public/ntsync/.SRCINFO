@@ -1,12 +1,12 @@
 pkgbase = ntsync
 	pkgdesc = NT synchronization primitive driver
-	pkgver = 6.10
-	pkgrel = 2
+	pkgver = 6.10.1
+	pkgrel = 1
 	url = https://lore.kernel.org/lkml/20240519202454.1192826-1-zfigura@codeweavers.com/
 	arch = x86_64
 	license = GPL2
-	source = ntsync.c-v6.10-zen1::https://raw.githubusercontent.com/zen-kernel/zen-kernel/v6.10-zen1/drivers/misc/ntsync.c
-	source = ntsync.h-v6.10-zen1::https://raw.githubusercontent.com/zen-kernel/zen-kernel/v6.10-zen1/include/uapi/linux/ntsync.h
+	source = ntsync.c-v6.10.1-zen1::https://raw.githubusercontent.com/zen-kernel/zen-kernel/v6.10.1-zen1/drivers/misc/ntsync.c
+	source = ntsync.h-v6.10.1-zen1::https://raw.githubusercontent.com/zen-kernel/zen-kernel/v6.10.1-zen1/include/uapi/linux/ntsync.h
 	source = ntsync.conf
 	source = 99-ntsync.rules
 	source = Makefile
