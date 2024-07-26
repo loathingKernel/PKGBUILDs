@@ -1,6 +1,6 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
-pkgver=2.0.1
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
@@ -14,7 +14,7 @@ source=(
 	"${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz"
 )
 sha256sums=(
-	'bd7b2d22b858e940c816fd4a94d253850f31ae51e0fb1f3e31deb9b507014279'
+	'039a99af5775c894777e8f6fb8026cd201cafbbeffd3f91f941d4d70bfbfbb36'
 )
 
 prepare() {
@@ -32,11 +32,7 @@ build() {
 }
 
 check() {
-	# Only run validation tests on desktop and schema files as the appstream test fails at this time.
-	# https://github.com/mijorus/gearlever/issues/76
-	meson test "Validate desktop file" "Validate schema file" -C build --print-errorlogs
-	# Instead, we can run an alternative to appstream_util with appstreamcli --no-net for validation.
-	appstreamcli validate --no-net "${srcdir}/build/data/it.mijorus.gearlever.appdata.xml"
+	meson test -C build --print-errorlogs
 }
 
 package() {
