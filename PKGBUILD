@@ -16,7 +16,6 @@ sha256sums=('312a428ca277f23af24b5562ab71e806442c90a23df1adca6ab8f934e765cb4a'
 
 prepare() {
   cd "$pkgname-next-generation-$pkgver"
-  export CARGO_HOME="$srcdir/cargo-home"
   export RUSTUP_TOOLCHAIN=stable
   cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
@@ -24,7 +23,6 @@ prepare() {
 build() {
   cd "$pkgname-next-generation-$pkgver"
   CFLAGS+=" -ffat-lto-objects"
-  export CARGO_HOME="$srcdir/cargo-home"
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
   cargo build --release --no-default-features --features wgpu,no-self-update
