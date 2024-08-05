@@ -8,7 +8,6 @@ pkgbase = pavumeter
 	license = GPL
 	makedepends = git
 	makedepends = lynx
-	depends = gnome-icon-theme
 	depends = gtkmm
 	depends = libsigc++
 	depends = pulse-native-provider
