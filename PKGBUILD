@@ -1,6 +1,6 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
-pkgver=2.0.4
+pkgver=2.0.5
 pkgrel=1
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
@@ -14,14 +14,12 @@ source=(
 	"${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz"
 )
 sha256sums=(
-	'fe1a19380f91809af9e9a71639ba5adb14ab3922462f312ae610a297af87198c'
+	'6bd9e7c9b15cc46f287283207b0178cc9c827f3961a02b2fd5c88acc1107d88c'
 )
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	
-	# Run commands outside of flatpak
-	sed -i 's/cmd = \['\''flatpak-spawn'\'', '\''--host'\'', \*command\]/cmd = \[\*command\]/g' src/lib/terminal.py
 	# Arch command doesn't seem to exist on arch linux so instead we can substitute it for 'uname' for now
 	sed -i 's/\['\''arch'\''\]/\['\''uname'\'', '\''-m'\''\]/g' src/AppDetails.py
 }
