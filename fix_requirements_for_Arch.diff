@@ -1,11 +1,11 @@
---- a/gns3-gui-2.2.48/requirements.txt	2024-07-08 18:44:09.000000000 +0200
-+++ b/gns3-gui-2.2.48/requirements.txt	2024-07-12 11:29:17.480980997 +0200
+--- a/gns3-gui-2.2.49/requirements.txt	2024-08-06 12:55:15.000000000 +0200
++++ b/gns3-gui-2.2.49/requirements.txt	2024-08-08 18:44:18.784475734 +0200
 @@ -1,6 +1,5 @@
--jsonschema>=4.22.0,<4.23
--sentry-sdk==2.7.1,<2.8
+-jsonschema>=4.23,<4.24
+-sentry-sdk==2.12,<2.13
 -psutil==6.0.0
-+jsonschema>=4.22.0
-+sentry-sdk>=2.7.1
++jsonschema>=4.23
++sentry-sdk>=2.12
 +psutil>=6.0.0
  distro>=1.9.0
 -truststore>=0.9.1; python_version >= '3.10'

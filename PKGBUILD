@@ -3,7 +3,7 @@
 # Contributor: korjjj <korjjj+aur[at]gmail[dot]com>
 
 pkgname=gns3-gui
-pkgver=2.2.48.1
+pkgver=2.2.49
 pkgrel=1
 pkgdesc='GNS3 network simulator. Graphical user interface package.'
 arch=('any')
@@ -30,9 +30,9 @@ optdepends=(
 source=("$pkgname-$pkgver.tar.gz::https://github.com/GNS3/$pkgname/archive/v$pkgver.tar.gz"
         'gns3.desktop'
         'fix_requirements_for_Arch.diff')
-sha256sums=('279f4a6b9a989fdefb40866918426af313717c46442a178fbc37f017ba5a2a38'
+sha256sums=('360fe0eab33fe4f8b28bcecc77de7c9afa3da304c77cc4c5caf6339b982dd14e'
             '51e6db5b47e6af3d008d85e8c597755369fafb75ddb2af9e79a441f943f4c166'
-            '026b7b52178a4fa412eac2bec78e638a2b6e2311cd55b2ae11c447e01cc14d13')
+            '2ad4fad106b3fbd9e34463d41e096a8fe75ec5feb557f3610cfa5201f30c091c')
 
 prepare() {
     cd "$pkgname-$pkgver"
