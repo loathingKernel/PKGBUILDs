@@ -3,8 +3,7 @@
 # Contributor: korjjj <korjjj+aur[at]gmail[dot]com>
 
 pkgname=gns3-server
-pkgver=2.2.48.1
-# TODO: jsonschema>=4.22.0 aiohttp>=3.9.5 Jinja2>=3.1.4
+pkgver=2.2.49
 pkgrel=1
 pkgdesc='GNS3 network simulator, Server package'
 arch=('x86_64' 'aarch64')
@@ -39,9 +38,9 @@ install="$pkgname".install
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
         "$pkgname@.service"
         "fix_requirements_for_Arch.diff")
-sha256sums=('0b6cc6fed175f1cf84fbb9818eaf33b3c314164a3a66dc8794f48554045b567a'
+sha256sums=('4acd6b80293a2fef7c5c7c017643bf7925e6b2f3861f5f70cd55e2b7441f9762'
             'b43f0ead963a06e613d3303d2c66372b57f46c750b3d6df20eb99c11078de65f'
-            '97a6118e3d7c277cdad14018ab8e8ee8ed9a3b6944e795c8038f0141caad8ccd')
+            '680da366f75c884e3c810d908f702902bb0bfdad6fa2d27aea60625abb2228a3')
 
 prepare() {
     cd "$pkgname-$pkgver"
@@ -55,8 +54,8 @@ build() {
 }
 
 package() {
-  cd "$pkgname-$pkgver"
-  python setup.py install --root="$pkgdir" --optimize=1
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  install -Dm644 "$srcdir/$pkgname@.service" "$pkgdir/usr/lib/systemd/system/$pkgname@.service"
+    cd "$pkgname-$pkgver"
+    python setup.py install --root="$pkgdir" --optimize=1
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 "$srcdir/$pkgname@.service" "$pkgdir/usr/lib/systemd/system/$pkgname@.service"
 }
