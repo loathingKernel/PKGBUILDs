@@ -1,4 +1,5 @@
-# Maintainer: Bernhard Landauer <oberon@manjaro.org>
+# Maintainer: kj_sh604 <406hs_jk@proton.me>
+# Contributor: Bernhard Landauer <oberon@manjaro.org>
 
 pkgname=xfce4-volumed-pulse
 _vmaj=0.2
