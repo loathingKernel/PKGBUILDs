@@ -4,35 +4,45 @@
 # Contributor: PedroHLC <root@pedrohlc.com>
 
 pkgname=gamescope
-pkgver=3.14.24
+pkgver=3.14.29
 pkgrel=1
 pkgdesc='SteamOS session compositing window manager'
 arch=(x86_64)
 url=https://github.com/ValveSoftware/gamescope
-license=(BSD-2-Clause BSD-3-Clause LicenseRef-Reshade)
+license=(
+  BSD-2-Clause
+  BSD-3-Clause
+  LicenseRef-Reshade
+)
 depends=(
   gcc-libs
   glibc
+  lcms2
   libavif
   libcap.so
   libdecor
   libdrm
+  libei
   libinput
   libpipewire-0.3.so
   libx11
   libxcb
   libxcomposite
+  libxcursor
   libxdamage
   libxext
   libxfixes
+  libxi
   libxkbcommon.so
   libxmu
   libxrender
   libxres
   libxtst
   libxxf86vm
+  pixman
   sdl2
   seatd
+  systemd-libs
   vulkan-icd-loader
   wayland
   xcb-util-errors
@@ -49,7 +59,7 @@ makedepends=(
   vulkan-headers
   wayland-protocols
 )
-_tag=cf2497fd7ec83f3d0dd5cb31b69540a2d129edad
+_tag=db245f3963e5ee27ed41acdf4a50c65d6ed38932
 source=(
   git+https://github.com/ValveSoftware/gamescope.git#tag=${_tag}
 )
