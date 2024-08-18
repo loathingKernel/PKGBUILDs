@@ -1,14 +1,15 @@
 post_install() {
-    mv /usr/include/linux/ntsync.h /usr/share/ntsync/ntsync.h_orig
-    cp /usr/share/ntsync/ntsync.h /usr/include/linux/ntsync.h
+    mv -f /usr/include/linux/ntsync.h /usr/share/ntsync/ntsync.h_orig
+    cp -a /usr/share/ntsync/ntsync.h /usr/include/linux
+
+    echo -e "\033[1;33mThe ntsync module needs to be loaded manually the first time!"
+    echo -e "\033[1;34mIt should load automatically after a reboot\033[0m"
 }
 
 post_upgrade() {
-    rm /usr/include/linux/ntsync.h
-    cp /usr/share/ntsync/ntsync.h /usr/include/linux/ntsync.h
+    cp -a /usr/share/ntsync/ntsync.h /usr/include/linux
 }
 
 pre_remove() {
-    rm /usr/include/linux/ntsync.h
-    mv /usr/share/ntsync/ntsync.h_orig /usr/include/linux/ntsync.h
+    mv -f /usr/share/ntsync/ntsync.h_orig /usr/include/linux/ntsync.h
 }
