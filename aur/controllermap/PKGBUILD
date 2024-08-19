@@ -7,6 +7,7 @@ arch=('i686' 'x86_64')
 url="http://www.libsdl.org"
 license=('MIT')
 depends=('sdl2')
+options=(!lto)
 source=("http://www.libsdl.org/release/SDL2-${pkgver}.tar.gz")
 md5sums=('ab12cc1cf58a5dd25e69c924acb93402')
 
