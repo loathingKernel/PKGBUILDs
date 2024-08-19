@@ -5,8 +5,8 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=9.13
-pkgrel=3
+pkgver=9.15
+pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -16,9 +16,9 @@ source=(https://dl.winehq.org/wine/source/9.x/wine-$_winever.tar.xz{,.sign}
         "https://github.com/wine-staging/wine-staging/archive/v$_pkgbasever/wine-staging-v$_pkgbasever.tar.gz"
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('f9c74beae87a02c4ae6176676bbc9de203224651ed4eeafbe6cfc05b8a455a9ce790d3211135fbeb6425719e4c0423e345dfee5ed2cefdb80706784f464f7225'
+sha512sums=('4d19b7c0fbdf6ee5dc90c0aef800df47f5bda7e3506e5a3c065dcd29b33cc62840ae4eeb5c20c48e9400c0d1252b897d8bbc60fd5a58da1ad6e76ba677997cb3'
             'SKIP'
-            'a43e1ac3be6e9563cf14b27bbfeb7b916b10322affacaf4fb1b648444ff6d43f8f15f7b31b01c692add884d45394acd21f0699ed25c52e1a021a821cf47d6168'
+            '37237e4f19319e34341fef1bb656d5c98309d148cdef7f105e7cd4eb10134364766df5287755ba23ebc2a3d28294bd10c7991c9a3acbe076ad33a386ae92b304'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
@@ -240,19 +240,19 @@ package() {
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
-_tkg_commit=f2039da837253205ee6727519570d030ee4a9eb8
+_tkg_commit=4ea3a6d936f5afa62f1dc21a14c460ce1a235b70
 source+=(
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
         wine-wmclass.patch
         wine-isolate_home.patch
         wine-ntsync.patch
 )
-sha512sums=('f9c74beae87a02c4ae6176676bbc9de203224651ed4eeafbe6cfc05b8a455a9ce790d3211135fbeb6425719e4c0423e345dfee5ed2cefdb80706784f464f7225'
+sha512sums=('4d19b7c0fbdf6ee5dc90c0aef800df47f5bda7e3506e5a3c065dcd29b33cc62840ae4eeb5c20c48e9400c0d1252b897d8bbc60fd5a58da1ad6e76ba677997cb3'
             'SKIP'
-            'a43e1ac3be6e9563cf14b27bbfeb7b916b10322affacaf4fb1b648444ff6d43f8f15f7b31b01c692add884d45394acd21f0699ed25c52e1a021a821cf47d6168'
+            '37237e4f19319e34341fef1bb656d5c98309d148cdef7f105e7cd4eb10134364766df5287755ba23ebc2a3d28294bd10c7991c9a3acbe076ad33a386ae92b304'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
-            '4de91d8f91b7ac5d9cb8c96c50c7a55493a2de2b3b058f5ada6ebcfbade70a55d911213f86d4e7ef20ef5a8690a2ac90aacb7d49a8604e343f5c8ac17a6b2aaf'
+            'e9e26f4713127bef24633afb473c7eeb8e63a5fc2632f04c54994897426a50fd8ad500c776a6c94dfd262a87424664a99785a7c1776ab619fdde146101c95392'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
-            '07f548c09286674df6902dce519014b1ae2a8cab8659223d7be8febbd0d91b3a6c0dd2930aa2a9c4d8c859ad720f0f6b6ee77834e5aca247a8da10e669ec0b09')
+            '685257c1a70ff5d465256e9f915ed7823ad179844938d4c2c7a4dfcb76a144b3e59ede471c8c86b19ac4afe93e70eba98ff4ab216fd886d81ba7ec917ce93b23')
