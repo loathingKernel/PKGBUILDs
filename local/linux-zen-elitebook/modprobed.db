@@ -18,6 +18,7 @@ btrtl
 btusb
 ccm
 cdc_ether
+cdrom
 cec
 cfg80211
 cmac
@@ -43,11 +44,13 @@ ecdh_generic
 f2fs
 fat
 fb_sys_fops
+ff_memless
 ftdi_sio
 fuse
 gf128mul
 ghash_clmulni_intel
 hid_generic
+hid_logitech
 hid_logitech_dj
 hid_logitech_hidpp
 hid_rmi
@@ -137,6 +140,7 @@ nft_reject_ipv4
 ntfs3
 ntsync
 overlay
+pktcdvd
 platform_profile
 polyval_clmulni
 polyval_generic
@@ -189,6 +193,7 @@ sparse_keymap
 spi_intel
 spi_intel_platform
 spi_nor
+sr_mod
 stp
 syscopyarea
 sysfillrect
@@ -227,6 +232,7 @@ x86_pkg_temp_thermal
 xhci_pci
 xhci_pci_renesas
 xor
+xpad
 x_tables
 xt_conntrack
 xt_MASQUERADE
