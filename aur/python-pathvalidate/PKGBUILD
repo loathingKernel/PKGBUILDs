@@ -9,7 +9,7 @@ license=('MIT')
 depends=('python' 'python-click')
 makedepends=('python-setuptools-scm')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/thombashi/pathvalidate/releases/download/v${pkgver}/pathvalidate-${pkgver}.tar.gz")
-sha256sums=('c93ce719682d9e2c6f9869e8b52446402e6e880eee397e0aec123a273c015c2f')
+sha256sums=('f5d07b1e2374187040612a1fcd2bcb2919f8db180df254c9581bb90bf903377d')
 
 build() {
   cd "${_pkgname}-${pkgver}"
