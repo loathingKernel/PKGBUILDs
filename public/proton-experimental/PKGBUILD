@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-experimental
-_srctag=9.0-20240705
+_srctag=9.0-20240808
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
@@ -256,14 +256,14 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('12da300fd9f9a6f8424b926807745e108de5f0e24930fb31d42316ecf9c74e02'
+sha256sums=('4f8e69fe326fdef9d55a356f82a3e7404272a8d86c53df5c5493ad47ab1ebdad'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '59b35dfe525f32c581884b6c7865496e13b3cd200c5ed267c43fb4663e0cd757'
             '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            'cbbdee42e79d2b0f6352518baf7a2bf20ce761f58695b4bd82fe5f3d809d3f9f'
-            '0c00a31a5eebc1392a93fdf7254af62531f1238d55eece9e7efc2ce3863c8afa'
-            '25a1ccd32d94e18cc1e76d0ee0337155b35ea288e53d196b6f162674a42befc4'
-            'f4c2071b9b278b676aa861673ab4958b6db18462af4ac5da505dfbbba096ed5c'
-            'd6389a5b314315ea370ead1ae087eea93b69a1f556b7b720817936329476a4f4'
-            'f9702ffd2ea7e7aa56f4362fa69e1b7cdcd152e214ff2e6e64eb8aaf12ab4842')
+            'b48dee9d37b96ca9ceddc7083bf03a50340117996b215fbd3ae28f046b6d461c'
+            'ab1d833cb1f232741dacb435899d05d4beeef09cf9ac08bddaeb3aaa6ef193d4'
+            'f48e213034c0a8a3dd1c06b5623b8b0a05f989a9657e7bc483a1123e5d11257d'
+            'dea588e79be13bcbff1acbbff941fab6caf0683858b5a844b26044d97e91fc1c'
+            '51ece0e62456d74853ec8f365b8e8a51d1c84380917a8fe4cf52f529ba9c128f'
+            '76940d7215bc835de530985d67fc09af67c4eb63e6dc0b0768c5104e40d6b24f')
