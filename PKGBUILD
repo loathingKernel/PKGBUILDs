@@ -2,7 +2,7 @@
 
 pkgname=dissent
 _fqpn=so.libdb.${pkgname}
-pkgver=0.0.28
+pkgver=0.0.29
 pkgrel=1
 pkgdesc='Discord client written in go and gtk4'
 arch=('x86_64' 'aarch64')
@@ -15,7 +15,7 @@ provides=('dissent')
 conflicts=('dissent')
 makedepends=('git' 'go>=1.20.3')
 source=("git+https://github.com/diamondburned/dissent#tag=v${pkgver}")
-sha256sums=('be1af84bfda4b787055694456a0240b1c3c10c63c1f4b6e910e495e0a35f8055')
+sha256sums=('3c980741f080a2a30453cae58c954980b66270fc762150a2ef9b89c9873ffa7f')
 
 prepare() {
     cd "${pkgname}"
