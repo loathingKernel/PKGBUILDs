@@ -28,6 +28,7 @@ crc32c_generic
 crc32c_intel
 crc32_generic
 crc32_pclmul
+crc_itu_t
 crct10dif_pclmul
 cryptd
 crypto_simd
@@ -206,6 +207,7 @@ tpm_tis_core
 ttm
 tun
 uas
+udf
 uinput
 usbhid
 usbip_core

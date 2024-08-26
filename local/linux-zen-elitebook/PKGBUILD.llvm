@@ -2,7 +2,7 @@
 
 pkgbase=linux-zen-elitebook
 pkgver=6.10.6.zen1
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux ZEN Elitebook LLVM'
 url='https://github.com/zen-kernel/zen-kernel'
 arch=(x86_64)
