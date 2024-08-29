@@ -18,7 +18,7 @@ pkgname=(
   lib32-vulkan-swrast
   lib32-vulkan-virtio
 )
-pkgver=24.2.0
+pkgver=24.2.1
 pkgrel=1
 epoch=1
 pkgdesc="Open-source OpenGL drivers - 32-bit"
@@ -81,6 +81,7 @@ options=(
 )
 source=(
   "https://mesa.freedesktop.org/archive/mesa-$pkgver.tar.xz"{,.sig}
+  0001-rusticl-do-not-use-CL-vector-types-in-bindings-and-c.patch
 )
 validpgpkeys=(
   946D09B5E4C9845E63075FF1D961C596A7203456 # Andres Gomez <tanty@igalia.com>
@@ -117,8 +118,9 @@ for _crate in "${!_crates[@]}"; do
   )
 done
 
-b2sums=('dfbd0e5b8de3db475f40a8313ee3013bb513d505541e056efd84aad50d5043414dd2c0b95e6c7336a1b4d29037274dae2fa1fdb9697187bf239a5adb54dd3721'
+b2sums=('f4ef9fd08bbf16551498a8edce1e19e594a0b85ee1f05f8f7c80fcf12ec7ac4cb5947b713791f5202201f8cfc48773507d869dbd239e6fc3dcf2c3a621892327'
         'SKIP'
+        '251a228c47c1d91a2063defbd5dda07deff6d763a2de5ed6c01e514b0f2326f2550b6174e0e98c2161971dbb888f5028243fe9645f9dea4b54308f0ae68e4e17'
         'a6d47c903be6094423d89b8ec3ca899d0a84df6dbd6e76632bb6c9b9f40ad9c216f8fa400310753d392f85072756b43ac3892e0a2c4d55f87ab6463002554823'
         '9c34f1ab14ad5ae124882513e0f14b1d731d06a43203bdc37fa3b202dd3ce93dbe8ebb554d01bab475689fe6ffd3ec0cbc0d5365c9b984cb83fb34ea3e9e732e'
         'fac5cf6339dc3c0a40b100035a5c874cc7b2efeafeb31c51488d25156e392dc9db86a497e76eead351d2126f69d060422faa9c55d73407a0de9f5be18d234123'
@@ -136,8 +138,9 @@ b2sums=('dfbd0e5b8de3db475f40a8313ee3013bb513d505541e056efd84aad50d5043414dd2c0b
         '8bc6f68ed286bea617a2cfaf3949bb699d3a0466faeca735314a51596ce950e4ee57eda88154bd562c1728cfaff4cdb5bc1ba701b9d47a9c50d4c4f011bee975')
 
 # https://docs.mesa3d.org/relnotes.html
-sha256sums=('c02bb72cea290f78b11895a0c95c7c92394f180d7ff66d4a762ec6950a58addf'
+sha256sums=('fc9a495f3a9af906838be89367564e10ef335e058f88965ad49ccc3e9a3b420b'
             'SKIP'
+            '26402e3e1c7efed6dced9d4989d8c79e5a57ad5f802e56b77e18d394b27a8580'
             'ed646292ffc8188ef8ea4d1e0e0150fb15a5c2e12ad9b8fc191ae7a8a7f3c4b9'
             'a941429fea7e08bedec25e4f6785b6ffaacc6b755da98df5ef3e7dcf4a124c4f'
             '168fb715dda47215e360912c096649d23d58bf392ac62f73919e831745e40f26'
@@ -156,6 +159,9 @@ sha256sums=('c02bb72cea290f78b11895a0c95c7c92394f180d7ff66d4a762ec6950a58addf'
 
 prepare() {
   cd mesa-$pkgver
+
+  # Unbreak build with bindgen 0.70.1
+  patch -Np1 -i ../0001-rusticl-do-not-use-CL-vector-types-in-bindings-and-c.patch
 
   # Include package release in version string so Chromium invalidates
   # its GPU cache; otherwise it can cause pages to render incorrectly.
