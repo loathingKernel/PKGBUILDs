@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
 pkgname=dxvk-gplasync-mingw-git
-pkgver=2.3.r67.g6b3b9344
+pkgver=2.4.r37.g38308d4
 _gplasync_sha=main
 pkgrel=1
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
@@ -62,8 +62,8 @@ prepare() {
     # AVX is "hard" disabled for 32bit in any case.
     # AVX/AVX2 for 64bit is disabled below.
     # Seems unnecessery for 64bit if -mtune=generic is used
-    #CFLAGS+=" -mno-avx2 -mno-avx"
-    #CXXFLAGS+=" -mno-avx2 -mno-avx"
+    CFLAGS+=" -mno-avx2" # -mno-avx"
+    CXXFLAGS+=" -mno-avx2" # -mno-avx"
 
     export CFLAGS CXXFLAGS LDFLAGS
 
