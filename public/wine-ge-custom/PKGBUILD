@@ -9,7 +9,7 @@ pkgname=wine-ge-custom
 _srctag=GE-Proton8-26
 _commit=21f5f463cb761b94bcd00553f924f55516389f5b
 pkgver=${_srctag//-/.}
-pkgrel=5
+pkgrel=6
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -147,7 +147,7 @@ build() {
   local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mno-avx2 -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
