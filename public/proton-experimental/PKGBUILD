@@ -8,7 +8,7 @@ _geckover=2.47.4
 _monover=9.2.0
 _xaliaver=0.4.2
 pkgrel=1
-epoch=1
+epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch"
 url="https://github.com/ValveSoftware/Proton"
 arch=(x86_64 x86_64_v3)
@@ -195,8 +195,8 @@ build() {
     # AVX is "hard" disabled for 32bit in any case.
     # AVX/AVX2 for 64bit is disabled below.
     # Seems unnecessery for 64bit if -mtune=generic is used
-    #CFLAGS+=" -mno-avx2 -mno-avx"
-    #CXXFLAGS+=" -mno-avx2 -mno-avx"
+    CFLAGS+=" -mno-avx2" # -mno-avx"
+    CXXFLAGS+=" -mno-avx2" # -mno-avx"
 
     export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
 
