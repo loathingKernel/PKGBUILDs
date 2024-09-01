@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=9.16
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -137,7 +137,7 @@ build() {
   local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mno-avx2 -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
@@ -146,6 +146,7 @@ build() {
   export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
 
   msg2 "Building Wine-64..."
+
   export CFLAGS="$COMMON_FLAGS -mcmodel=small"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
   export CROSSCFLAGS="$COMMON_FLAGS"
