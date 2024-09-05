@@ -29,8 +29,8 @@ pkgrel=1
 pkgver=${_ver}.b${_jbver1}.${_jbver2}
 _hg_tag=jb${_hgver}-b${_jbver1}.${_jbver2}
 arch=('x86_64')
-url='https://confluence.jetbrains.com/display/JBR/JetBrains+Runtime'
-license=('custom')
+url='https://github.com/JetBrains/JetBrainsRuntime'
+license=('GPL-2.0')
 makedepends=('java-environment>=20' 'java-environment<=21' 'cpio' 'unzip' 'zip' 'libelf' 'libcups' 'libx11'
   'libxrender' 'libxtst' 'libxt' 'libxext' 'libxrandr' 'alsa-lib' 'pandoc'
   'graphviz' 'freetype2' 'libjpeg-turbo' 'giflib' 'libpng' 'lcms2'

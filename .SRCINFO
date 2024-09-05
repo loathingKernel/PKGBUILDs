@@ -1,9 +1,9 @@
 pkgbase = java21-jetbrains
 	pkgver = 21.0.3.b509.11
 	pkgrel = 1
-	url = https://confluence.jetbrains.com/display/JBR/JetBrains+Runtime
+	url = https://github.com/JetBrains/JetBrainsRuntime
 	arch = x86_64
-	license = custom
+	license = GPL-2.0
 	makedepends = java-environment>=20
 	makedepends = java-environment<=21
 	makedepends = cpio
