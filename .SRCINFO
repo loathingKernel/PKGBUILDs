@@ -70,7 +70,8 @@ pkgname = jre21-jetbrains
 	optdepends = gtk3: for the Gtk+ 3 look and feel - desktop usage
 	provides = java-runtime=21
 	provides = java-runtime-jetbrains=21
-	conflicts = jre21-jetbrains
+	conflicts = jre21-jetbrains-git
+	conflicts = jdk21-jetbrains-git
 	backup = etc/java21-jetbrains/logging.properties
 	backup = etc/java21-jetbrains/management/jmxremote.access
 	backup = etc/java21-jetbrains/management/jmxremote.password.template
@@ -97,4 +98,5 @@ pkgname = jdk21-jetbrains
 	depends = gcc-libs
 	provides = java-environment=21
 	provides = java-environment-jetbrains=21
-	conflicts = jdk21-jetbrains
+	conflicts = jre21-jetbrains-git
+	conflicts = jdk21-jetbrains-git

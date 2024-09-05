@@ -179,7 +179,7 @@ package_jre21-jetbrains() {
     'gtk2: for the Gtk+ 2 look and feel - desktop usage'
     'gtk3: for the Gtk+ 3 look and feel - desktop usage')
   provides=("java-runtime=${_majorver}" "java-runtime-jetbrains=${_majorver}")
-  conflicts=("jre21-jetbrains")
+  conflicts=("jre21-jetbrains-git" "jdk21-jetbrains-git")
   _pkgname="jre21-jetbrains"
   backup=(etc/${pkgbase}/logging.properties
     etc/${pkgbase}/management/jmxremote.access
@@ -239,7 +239,7 @@ package_jdk21-jetbrains() {
   pkgdesc="JetBrains Java ${_majorver} development kit"
   depends=("jre${_majorver}-jetbrains=${pkgver}-${pkgrel}" 'java-environment-common=3' 'hicolor-icon-theme' 'libelf' 'glibc' 'gcc-libs')
   provides=("java-environment=${_majorver}" "java-environment-jetbrains=${_majorver}")
-  conflicts=("jdk21-jetbrains")
+  conflicts=("jre21-jetbrains-git" "jdk21-jetbrains-git")
   _pkgname="jdk21-jetbrains"
   install=install_jdk-jetbrains.sh
 
