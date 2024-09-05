@@ -3,6 +3,7 @@
 # Contributer: Github user RikudouPatrickstar
 # Contributer: Daniel Bermond <dbermond@archlinux.org>
 # Contributor: Det <nimetonmaili g-mail>
+# Contributor: Fermin Olaiz <ferminolaiz@gmail.com>
 
 # This PKGBUILD is modified from community/java11-openjdk and aur/jdk
 # Methods to build JBR with JCEF support is from https://github.com/RikudouPatrickstar/JetBrainsRuntime-for-Linux-x64/blob/master/.github/workflows/jbr-linux-x64.yml
@@ -24,12 +25,12 @@ _ver=21.0.3
 _hgver=21.0.3
 _jbver1=509
 _jbver2=11
-pkgrel=1
+pkgrel=2
 pkgver=${_ver}.b${_jbver1}.${_jbver2}
 _hg_tag=jb${_hgver}-b${_jbver1}.${_jbver2}
 arch=('x86_64')
-url='https://confluence.jetbrains.com/display/JBR/JetBrains+Runtime'
-license=('custom')
+url='https://github.com/JetBrains/JetBrainsRuntime'
+license=('GPL-2.0')
 makedepends=('java-environment=21' 'cpio' 'unzip' 'zip' 'libelf' 'libcups' 'libx11'
   'libxrender' 'libxtst' 'libxt' 'libxext' 'libxrandr' 'alsa-lib' 'pandoc'
   'graphviz' 'freetype2' 'libjpeg-turbo' 'giflib' 'libpng' 'lcms2'
@@ -178,7 +179,7 @@ package_jre21-jetbrains() {
     'gtk2: for the Gtk+ 2 look and feel - desktop usage'
     'gtk3: for the Gtk+ 3 look and feel - desktop usage')
   provides=("java-runtime=${_majorver}" "java-runtime-jetbrains=${_majorver}")
-  conflicts=("jre21-jetbrains")
+  conflicts=("jre21-jetbrains-git" "jdk21-jetbrains-git")
   _pkgname="jre21-jetbrains"
   backup=(etc/${pkgbase}/logging.properties
     etc/${pkgbase}/management/jmxremote.access
@@ -238,7 +239,7 @@ package_jdk21-jetbrains() {
   pkgdesc="JetBrains Java ${_majorver} development kit"
   depends=("jre${_majorver}-jetbrains=${pkgver}-${pkgrel}" 'java-environment-common=3' 'hicolor-icon-theme' 'libelf' 'glibc' 'gcc-libs')
   provides=("java-environment=${_majorver}" "java-environment-jetbrains=${_majorver}")
-  conflicts=("jdk21-jetbrains")
+  conflicts=("jre21-jetbrains-git" "jdk21-jetbrains-git")
   _pkgname="jdk21-jetbrains"
   install=install_jdk-jetbrains.sh
 

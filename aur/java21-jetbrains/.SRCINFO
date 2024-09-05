@@ -1,9 +1,9 @@
 pkgbase = java21-jetbrains
 	pkgver = 21.0.3.b509.11
-	pkgrel = 1
-	url = https://confluence.jetbrains.com/display/JBR/JetBrains+Runtime
+	pkgrel = 2
+	url = https://github.com/JetBrains/JetBrainsRuntime
 	arch = x86_64
-	license = custom
+	license = GPL-2.0
 	makedepends = java-environment=21
 	makedepends = cpio
 	makedepends = unzip
@@ -69,7 +69,8 @@ pkgname = jre21-jetbrains
 	optdepends = gtk3: for the Gtk+ 3 look and feel - desktop usage
 	provides = java-runtime=21
 	provides = java-runtime-jetbrains=21
-	conflicts = jre21-jetbrains
+	conflicts = jre21-jetbrains-git
+	conflicts = jdk21-jetbrains-git
 	backup = etc/java21-jetbrains/logging.properties
 	backup = etc/java21-jetbrains/management/jmxremote.access
 	backup = etc/java21-jetbrains/management/jmxremote.password.template
@@ -88,7 +89,7 @@ pkgname = jre21-jetbrains
 pkgname = jdk21-jetbrains
 	pkgdesc = JetBrains Java 21 development kit
 	install = install_jdk-jetbrains.sh
-	depends = jre21-jetbrains=21.0.3.b509.11-1
+	depends = jre21-jetbrains=21.0.3.b509.11-2
 	depends = java-environment-common=3
 	depends = hicolor-icon-theme
 	depends = libelf
@@ -96,4 +97,5 @@ pkgname = jdk21-jetbrains
 	depends = gcc-libs
 	provides = java-environment=21
 	provides = java-environment-jetbrains=21
-	conflicts = jdk21-jetbrains
+	conflicts = jre21-jetbrains-git
+	conflicts = jdk21-jetbrains-git
