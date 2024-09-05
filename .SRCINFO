@@ -1,6 +1,6 @@
 pkgbase = java21-jetbrains
 	pkgver = 21.0.3.b509.11
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/JetBrains/JetBrainsRuntime
 	arch = x86_64
 	license = GPL-2.0
@@ -90,7 +90,7 @@ pkgname = jre21-jetbrains
 pkgname = jdk21-jetbrains
 	pkgdesc = JetBrains Java 21 development kit
 	install = install_jdk-jetbrains.sh
-	depends = jre21-jetbrains=21.0.3.b509.11-1
+	depends = jre21-jetbrains=21.0.3.b509.11-2
 	depends = java-environment-common=3
 	depends = hicolor-icon-theme
 	depends = libelf
