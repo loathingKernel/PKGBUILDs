@@ -3,6 +3,7 @@
 # Contributer: Github user RikudouPatrickstar
 # Contributer: Daniel Bermond <dbermond@archlinux.org>
 # Contributor: Det <nimetonmaili g-mail>
+# Contributor: Fermin Olaiz <ferminolaiz@gmail.com>
 
 # This PKGBUILD is modified from community/java11-openjdk and aur/jdk
 # Methods to build JBR with JCEF support is from https://github.com/RikudouPatrickstar/JetBrainsRuntime-for-Linux-x64/blob/master/.github/workflows/jbr-linux-x64.yml
