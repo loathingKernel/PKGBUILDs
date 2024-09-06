@@ -61,7 +61,7 @@ provides=('ulwgl-launcher')
 conflicts=('ulwgl-launcher')
 replaces=('ulwgl-launcher')
 install=
-_commit=0a5beb88c053fb08cb8aa431c700a9d00ba4f0c1
+_commit=2d3c948a51bc1d2880a90bf985947f9afc89e8d1
 _origin="https://github.com/Open-Wine-Components/umu-launcher.git"
 source=(
   "git+$_origin#commit=$_commit"
@@ -87,4 +87,4 @@ package() {
   make DESTDIR="$pkgdir" install
 }
 
-sha256sums=('c37d691e78d2fdde9e532eaa3950924d7f54cb07afddd90fc12d5634160edc21')
+sha256sums=('e6b74333dd113f17e35ebff446850b2687d9e2a135ed7aa25db8b33908966c2a')
