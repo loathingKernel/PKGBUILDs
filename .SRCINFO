@@ -1,0 +1,21 @@
+pkgbase = coolercontrold
+	pkgdesc = A program to monitor and control your cooling devices. This package contains the CoolerControl service daemon.
+	pkgver = 1.4.0
+	pkgrel = 1
+	url = https://gitlab.com/coolercontrol/coolercontrol
+	arch = x86_64
+	license = GPL3
+	makedepends = cargo
+	makedepends = nodejs>=18
+	makedepends = npm
+	depends = gcc-libs
+	depends = glibc
+	depends = coolercontrol-liqctld
+	optdepends = nvidia-utils: NVIDIA GPU support
+	provides = coolercontrold
+	conflicts = coolercontrold
+	options = !lto
+	source = https://gitlab.com/coolercontrol/coolercontrol/-/archive/1.4.0/coolercontrol-1.4.0.tar.gz
+	sha256sums = 6f783f12e44c977cecd7aadd75c1a30e19a36eff6aaa25bb2fb50c45e1b8ae84
+
+pkgname = coolercontrold
