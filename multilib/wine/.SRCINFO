@@ -1,7 +1,7 @@
 pkgbase = wine
 	pkgdesc = A compatibility layer for running Windows programs
-	pkgver = 9.16
-	pkgrel = 2
+	pkgver = 9.17
+	pkgrel = 1
 	url = https://www.winehq.org
 	install = wine.install
 	arch = x86_64
@@ -138,21 +138,21 @@ pkgbase = wine
 	optdepends = ntsync-dkms
 	options = !staticlibs
 	options = !lto
-	source = https://dl.winehq.org/wine/source/9.x/wine-9.16.tar.xz
-	source = https://dl.winehq.org/wine/source/9.x/wine-9.16.tar.xz.sign
+	source = https://dl.winehq.org/wine/source/9.x/wine-9.17.tar.xz
+	source = https://dl.winehq.org/wine/source/9.x/wine-9.17.tar.xz.sign
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
-	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=e5e156ccec589b047723b60dfebcc349a4dd67c7
+	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=c4982f9ee170d505bb81a7654acfd2ca9adedcd6
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
 	source = wine-ntsync.patch
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = 5f2994d20b8c7635125b38b6a4d89db4b71791f096276fa93e36dc6951c47c25b8a3354f0be0931799ac83c54f048e34693b56512cc446b93c74344b1a458187
+	sha512sums = 06ee82fc0f0c8c02f1f646f674e8e3c5d4b9ca9cf64a910b01eb9c6d5dbe0471a6b232875e099c2e5cfd8e1c183ee72850820f24fc026b11523b56872a2efec5
 	sha512sums = SKIP
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
-	sha512sums = 957b38aa14b06994d819e36e4d5bc6235a59814637bb020c0b6d984bac65914647c86819e41893212a5724b32353c44fab54ff0c4cce6ad87d115d3a52aa2be1
+	sha512sums = 0e246f9c7b3360972b610a319937cbd48556ac239e633841f655bb1a609cb42be18cdef9e57abaeb2f342becb800211494a72ea5a83d6f6b921263285a87e4e7
 	sha512sums = 30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569
 	sha512sums = 3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282
 	sha512sums = 685257c1a70ff5d465256e9f915ed7823ad179844938d4c2c7a4dfcb76a144b3e59ede471c8c86b19ac4afe93e70eba98ff4ab216fd886d81ba7ec917ce93b23
