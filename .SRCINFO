@@ -1,11 +1,12 @@
 pkgbase = controllermap
 	pkgdesc = Game controller mapping generator
 	pkgver = 2.30.6
-	pkgrel = 1
+	pkgrel = 2
 	url = http://www.libsdl.org
 	arch = i686
 	arch = x86_64
 	license = MIT
+	makedepends = libunwind
 	depends = sdl2
 	source = http://www.libsdl.org/release/SDL2-2.30.6.tar.gz
 	md5sums = ab12cc1cf58a5dd25e69c924acb93402

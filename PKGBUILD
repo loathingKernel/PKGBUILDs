@@ -1,12 +1,14 @@
 # Maintainer: Jose Riha <jose1711 gmail com>
+
 pkgname=controllermap
 pkgver=2.30.6
-pkgrel=1
+pkgrel=2
 pkgdesc="Game controller mapping generator"
 arch=('i686' 'x86_64')
 url="http://www.libsdl.org"
 license=('MIT')
 depends=('sdl2')
+makedepends=('libunwind')
 source=("http://www.libsdl.org/release/SDL2-${pkgver}.tar.gz")
 md5sums=('ab12cc1cf58a5dd25e69c924acb93402')
 
