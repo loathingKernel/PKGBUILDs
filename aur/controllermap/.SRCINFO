@@ -6,6 +6,7 @@ pkgbase = controllermap
 	arch = i686
 	arch = x86_64
 	license = MIT
+	makedepends = libunwind
 	depends = sdl2
 	options = !lto
 	source = http://www.libsdl.org/release/SDL2-2.30.6.tar.gz
