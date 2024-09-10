@@ -1,7 +1,7 @@
 # Maintainer: devome <evinedeng@hotmail.com>
 
 pkgname="backrest"
-pkgver=1.4.0
+pkgver=1.5.0
 pkgrel=1
 pkgdesc="A web UI and orchestrator for restic backup."
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
@@ -11,7 +11,7 @@ depends=("restic")
 makedepends=("npm" "go")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}@.service")
-sha256sums=('ff0db941e189b634b92d2a4b0f72bee078d18abecba6ae85959b09ee71dbf58b'
+sha256sums=('8d5e6c0f711b1eeb9e56e45b55daccad25ed4df9b1b8af53068f8c99528bd8e1'
             '528bfac979b7d0615bf70df9de4e965ad9a25bf0e06a19c7ed359a7ee47de05a')
 
 build() {
@@ -24,7 +24,7 @@ build() {
     go mod tidy
     npm --prefix webui install
     npm --prefix webui run build
-    find webui/dist -name '*.map' -exec rm ./{} \;
+    find webui/dist -type f -name '*.map' -exec rm {} \;
     go build -trimpath -ldflags="-s -w -extldflags '${LDFLAGS}'" -o "${pkgname}" ./cmd/"${pkgname}"
 }
 
@@ -33,6 +33,5 @@ package() {
 
     cd "${pkgname}-${pkgver}"
     install -Dm755 "${pkgname}"          -t "${pkgdir}/usr/bin"
-    install -Dm644 LICENSE               -t "${pkgdir}/usr/share/licenses/${pkgname}"
     install -Dm644 {README,CHANGELOG}.md -t "${pkgdir}/usr/share/doc/${pkgname}"
 }
