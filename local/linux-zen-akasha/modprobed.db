@@ -57,6 +57,7 @@ hwmon_vid
 i2c_algo_bit
 i2c_dev
 i2c_i801
+i2c_mux
 i2c_smbus
 i915
 ib_cm
