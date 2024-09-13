@@ -1,5 +1,5 @@
 
-name: lib32-gnome-themes-extra
+name: lib32-ncurses5-compat-libs
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ on:
     branches:
      - master
     paths:
-     - public/lib32-gnome-themes-extra/.SRCINFO
+     - aur/lib32-ncurses5-compat-libs/.SRCINFO
 
 jobs:
   repository:
@@ -26,7 +26,7 @@ jobs:
         repository: [public]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      pkgdir: public/lib32-gnome-themes-extra
+      pkgdir: aur/lib32-ncurses5-compat-libs
       repository: ${{ matrix.repository }}
       action: ${{ inputs.action != '' && inputs.action || 'build' }}
       multilib: true
