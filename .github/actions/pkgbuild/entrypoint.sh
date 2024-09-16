@@ -1,13 +1,14 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "pkgdir:   ${INPUT_PKGDIR:-.}"
-echo "aurdeps:  ${INPUT_AURDEPS:-}"
-echo "multilib: ${INPUT_MULTILIB:-false}"
-echo "pacman_conf:  ${INPUT_PACMANCONF:-}"
-echo "makepkg_conf: ${INPUT_MAKEPKGCONF:-}"
-echo "makepkg_args: ${INPUT_MAKEPKGARGS:-}"
-echo "release_repo: ${INPUT_REPORELEASETAG:-}"
+echo "pkgdir:         ${INPUT_PKGDIR:-.}"
+echo "aurdeps:        ${INPUT_AURDEPS:-}"
+echo "multilib:       ${INPUT_MULTILIB:-false}"
+echo "use_ccache_ext: ${INPUT_USECCACHEEXT:-}"
+echo "pacman_conf:    ${INPUT_PACMANCONF:-}"
+echo "makepkg_conf:   ${INPUT_MAKEPKGCONF:-}"
+echo "makepkg_args:   ${INPUT_MAKEPKGARGS:-}"
+echo "release_repo:   ${INPUT_REPORELEASETAG:-}"
 echo "namcap_disable: ${INPUT_NAMCAPDISABLE:-}"
 echo "namcap_relues:  ${INPUT_NAMCAPRULES:-}"
 echo "namcap_exclude: ${INPUT_NAMCAPEXCLUDERULES:-}"
@@ -56,7 +57,9 @@ if [ "${INPUT_MULTILIB:-false}" == true ]; then
 	pacman -Syu --noconfirm --needed multilib-devel
 fi
 
-pacman -Syu --noconfirm --needed ccache-ext
+if [ "x${INPUT_USECCACHEEXT:-false}" == xtrue ]; then
+    pacman -Syu --noconfirm --needed ccache-ext
+fi
 
 # Makepkg does not allow running as root
 # Create a new user `builder`

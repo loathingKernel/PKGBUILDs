@@ -19,6 +19,10 @@ on:
         required: false
         type: boolean
         default: false
+      ccache_ext:
+        required: false
+        type: boolean
+        default: true
       release_tag:
         required: true
         type: string
@@ -47,6 +51,7 @@ jobs:
         makepkgConf: ${{ inputs.makepkg_conf }}
         makepkgArgs: ${{ inputs.makepkg_args }}
         multilib: ${{ inputs.multilib }}
+        useCcacheExt: ${{ inputs.ccache_ext }}
         repoReleaseTag: ${{ inputs.release_tag }}
 
     - name: Print Package Files

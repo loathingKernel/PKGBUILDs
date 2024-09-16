@@ -18,6 +18,10 @@ on:
         required: false
         type: boolean
         default: false
+      ccache_ext:
+        required: false
+        type: boolean
+        default: true
       action:
         required: false
         type: string
@@ -38,6 +42,7 @@ jobs:
       makepkg_conf: .github/conf/${{ inputs.repository }}_makepkg.conf
       makepkg_args: -p ${{ inputs.pkgbuild }} --skippgpcheck
       multilib: ${{ inputs.multilib }}
+      ccache_ext: ${{ inputs.ccache_ext }}
       release_tag: loathk-${{ inputs.repository }}
   pkgremove:
     if: ${{ inputs.action == 'remove' }}

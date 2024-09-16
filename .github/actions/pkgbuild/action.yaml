@@ -45,6 +45,10 @@ inputs:
     description: "Tag to use as repository name."
     required: false
     default: ""
+  useCcacheExt:
+    description: "Install and use ccache-ext"
+    required: false
+    default: ""
 outputs:
   pkgfile0:
     description: "Filename of the 1st generated package archive. Usually only one."
