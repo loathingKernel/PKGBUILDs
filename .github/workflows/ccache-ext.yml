@@ -1,7 +1,18 @@
+
 name: ccache-ext
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+        - 'build'
+        - 'remove'
+        - 'skip'
   push:
     branches:
      - master
@@ -17,4 +28,5 @@ jobs:
     with:
       pkgdir: aur/ccache-ext
       repository: ${{ matrix.repository }}
-      action: build
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
+      ccache_ext: false
