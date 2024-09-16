@@ -3,6 +3,16 @@ name: xiccd
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+        - 'build'
+        - 'remove'
+        - 'skip'
   push:
     branches:
      - master
@@ -18,3 +28,4 @@ jobs:
     with:
       pkgdir: aur/xiccd
       repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
