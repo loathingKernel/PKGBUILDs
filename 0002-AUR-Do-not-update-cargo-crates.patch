@@ -1,4 +1,4 @@
-From f716b93222722ee8afbbb04fc2557675046f023e Mon Sep 17 00:00:00 2001
+From 4868b5c44550b8c6b01cac28ba483d01b31f4759 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sun, 19 Mar 2023 10:56:59 +0200
 Subject: [PATCH 2/6] AUR Do not update cargo crates
@@ -21,5 +21,5 @@ index 00fa99fc..225ab528 100644
  	      -j$$(SUBJOBS) --locked --offline --verbose \
  	      --target "$$(CARGO_TARGET_$(3))" \
 -- 
-2.46.0
+2.46.1
 

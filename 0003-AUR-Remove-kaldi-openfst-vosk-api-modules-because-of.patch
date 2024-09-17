@@ -1,4 +1,4 @@
-From 7b18b2f1abd4838973d020c9fc9dcaa03411770e Mon Sep 17 00:00:00 2001
+From adb08eb83049a53e44440dd707e814d0d71ac47d Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 12 Jul 2023 17:53:47 +0300
 Subject: [PATCH 3/6] AUR Remove kaldi, openfst, vosk-api modules because of
@@ -109,5 +109,5 @@ index cb2d7aa3..097517de 100644
  $(eval $(call rules-source,wine,$(SRCDIR)/wine))
  $(eval $(call rules-autoconf,wine,32))
 -- 
-2.46.0
+2.46.1
 
