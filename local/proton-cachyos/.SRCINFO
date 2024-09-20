@@ -1,7 +1,7 @@
 pkgbase = proton-cachyos
 	pkgdesc = Compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour
 	pkgver = 9.0.20240918
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/cachyos/proton-cachyos
 	install = proton-cachyos.install
 	arch = x86_64
@@ -143,7 +143,7 @@ pkgbase = proton-cachyos
 	source = https://github.com/madewokherd/wine-mono/releases/download/wine-mono-9.3.0/wine-mono-9.3.0-x86.tar.xz
 	source = https://github.com/madewokherd/xalia/releases/download/xalia-0.4.2/xalia-0.4.2-net48-mono.zip
 	source = dxvk-reflex.patch
-	sha256sums = 0161f7872a1843f8758361db08c82c889af3e5acee4c7f27af69e19339071846
+	sha256sums = 64341a7887ead819142b0d739e4ed1a3d4bb16301a566bd9f03188546f572de2
 	sha256sums = 2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6
 	sha256sums = fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814
 	sha256sums = c23deb9e3217a574f242b78d74cb94c4948a37d1f2715941b803a02e535854a6
