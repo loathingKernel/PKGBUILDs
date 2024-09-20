@@ -1,13 +1,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-experimental
-_srctag=9.0-20240905
+_srctag=9.0-20240918
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
-_monover=9.2.0
+_monover=9.3.0
 _xaliaver=0.4.2
-pkgrel=2
+pkgrel=1
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch"
 url="https://github.com/ValveSoftware/Proton"
@@ -256,14 +256,14 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('81de5f2431cc58eb4cd6009bfc0fa6abc80cfa1e2c13cc9ff1bbb85c0b3addf4'
+sha256sums=('2e8849500c5f4a213bea0270b83b224e8e1ed660d65a40e121f3ffc51ec7e600'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
-            '59b35dfe525f32c581884b6c7865496e13b3cd200c5ed267c43fb4663e0cd757'
+            'c23deb9e3217a574f242b78d74cb94c4948a37d1f2715941b803a02e535854a6'
             '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            '933994bd4f5bb606bd1f621bf10a774c91849980525505cb6a429892e69308fc'
-            '4ea467cf63eca526a8aefac0aabc2f6c2af65b6fe09ea734f8ea76590783cb7a'
-            'e201efa84cc910f1422e96ace37d6495cb6fc0182a3598b08a5145ef127ef52b'
-            'abe463578687af9039a3660c9462a8904c3abe40a616c6d2114421b8b1184183'
-            '4268c38bdb2998e28beccd673799408085f725ef8ec940ba0b44dc4b93bc30fc'
-            'cea60988fec829f3d8db1dea29505fd5d1c4be54e154a1635535c432c047f8f7')
+            '583b13ad29783752813ffdaa18116539c2b996533a791831854f3477e1ffa060'
+            '6e82d30ad6526982498e097fc5fe58760aeb024297c78c0e175427dd19844471'
+            'dba843d27f1e14beeb8683a68c56296bf1267488f6fdce8f8f3ed67dad6e0ae7'
+            '5be61d364b19cf81af1611faae34dbb6942a7f7bc12681042e71bdd65f123405'
+            'da04894af7586a3e4f7c519ad142b677222e4d15b5c8508886a61f8a2dd99adb'
+            '6fe70b537369c1a93ecf84d161955fb26cf69f4a403f3c5a0e5f57943d511198')
