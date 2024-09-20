@@ -21,10 +21,10 @@
 pkgbase=java21-jetbrains
 pkgname=('jre21-jetbrains' 'jdk21-jetbrains')
 _majorver=21
-_ver=21.0.3
-_hgver=21.0.3
+_ver=21.0.4
+_hgver=21.0.4
 _jbver1=509
-_jbver2=15
+_jbver2=17
 pkgrel=1
 pkgver=${_ver}.b${_jbver1}.${_jbver2}
 _hg_tag=jb${_hgver}-b${_jbver1}.${_jbver2}
