@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+echo "pkgdir:         ${INPUT_PKGDIR:-.}"
+echo "release_repo:   ${INPUT_REPORELEASETAG:-}"
+
 FILE="$(basename "$0")"
 
 # Makepkg does not allow running as root

@@ -38,8 +38,8 @@ jobs:
     uses: ./.github/workflows/job_pkgbuild.yml
     with:
       pkgdir: ${{ inputs.pkgdir }}
-      pacman_conf: .github/conf/${{ inputs.repository }}_pacman.conf
-      makepkg_conf: .github/conf/${{ inputs.repository }}_makepkg.conf
+      pacman_conf: .github/conf/${{ inputs.repository }}/pacman.conf
+      makepkg_conf: .github/conf/${{ inputs.repository }}/makepkg.conf
       makepkg_args: -p ${{ inputs.pkgbuild }} --skippgpcheck
       multilib: ${{ inputs.multilib }}
       ccache_ext: ${{ inputs.ccache_ext }}

@@ -35,12 +35,18 @@ fi
 
 if [ -n "${INPUT_PACMANCONF:-}" ]; then
 	echo "Using ${INPUT_PACMANCONF:-} as pacman.conf"
-	cp "${INPUT_PACMANCONF:-}" /etc/pacman.conf
+	cp -v "${INPUT_PACMANCONF:-}" /etc/pacman.conf
 fi
 
 if [ -n "${INPUT_MAKEPKGCONF:-}" ]; then
 	echo "Using ${INPUT_MAKEPKGCONF:-} as makepkg.conf"
-	cp "${INPUT_MAKEPKGCONF:-}" /etc/makepkg.conf
+	cp -v "${INPUT_MAKEPKGCONF:-}" /etc/makepkg.conf
+    MAKEPKGCONFD="$(dirname "${INPUT_MAKEPKGCONF:-}")"/makepkg.conf.d
+    if [ -d "$MAKEPKGCONFD" ]; then
+        for file in $(ls "$MAKEPKGCONFD"); do
+            cp -v "$MAKEPKGCONFD"/"$file" /etc/makepkg.conf.d/"$file"
+        done
+    fi
 fi
 
 # Update before continuing
