@@ -1,13 +1,15 @@
+# Maintainer: Eren Simsek <18117384-caferen@users.noreply.gitlab.com>
 # Maintainer: Guy Boldon <gb@guyboldon.com>
 
 pkgname=coolercontrold
-pkgver=1.4.0
+pkgver=1.4.1
 pkgrel=1
 pkgdesc="A program to monitor and control your cooling devices. This package contains the CoolerControl service daemon."
 arch=('x86_64')
 url="https://gitlab.com/coolercontrol/coolercontrol"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=(
+  'libdrm'
   'gcc-libs'
   'glibc'
   'coolercontrol-liqctld'
@@ -34,7 +36,7 @@ source=(
   "https://gitlab.com/coolercontrol/coolercontrol/-/archive/$pkgver/${pkgname%d}-$pkgver.tar.gz"
 )
 sha256sums=(
-  '6f783f12e44c977cecd7aadd75c1a30e19a36eff6aaa25bb2fb50c45e1b8ae84'
+  '378ca7d9bb4ffc5caa5fe08c17e4a2986397a59c7305fb1511140e52b7950098'
 )
 
 build() {
