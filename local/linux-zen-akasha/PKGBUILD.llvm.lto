@@ -2,7 +2,7 @@
 
 pkgbase=linux-zen-akasha
 pkgver=6.10.10.zen1
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux ZEN Akasha LLVM LTO'
 url='https://github.com/zen-kernel/zen-kernel'
 arch=(x86_64)

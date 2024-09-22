@@ -1,7 +1,7 @@
 pkgbase = linux-zen-akasha
 	pkgdesc = Linux ZEN Akasha
 	pkgver = 6.10.10.zen1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/zen-kernel/zen-kernel
 	arch = x86_64
 	license = GPL-2.0-only
