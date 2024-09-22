@@ -5,9 +5,9 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=9.17
+pkgver=9.18
 pkgrel=1
-_tkg_commit=c4982f9ee170d505bb81a7654acfd2ca9adedcd6
+_tkg_commit=033fda90bbfb3afbeacb25747ec3e3ee3b1408af
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -23,13 +23,13 @@ source+=(
         wine-isolate_home.patch
         wine-ntsync.patch
 )
-sha512sums=('06ee82fc0f0c8c02f1f646f674e8e3c5d4b9ca9cf64a910b01eb9c6d5dbe0471a6b232875e099c2e5cfd8e1c183ee72850820f24fc026b11523b56872a2efec5'
+sha512sums=('d6e049374d1e654937a0c767215076e5f12c7ff69aac930881292c075d0eee1a1af4c38937271c515875db12b98adebe8553d356b30e32d78d9ac8b1c7914509'
             'SKIP'
-            'ce21e026870dece09713eb64a046381942085742456057dc147490968724a0f7dc5ef059f0b26f9125f20de50a3e6beaae5cea2aa95ab1fae3e1d92305d92488'
+            '21c7ff8e80f48837cbb268ef932906c65fb3d77cf72dfc4f9118fb72a216906222ed051cef9986aa2fd2339e86bd3a5766c93e9390d95dbb7bc46eebfe55ac66'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 sha512sums+=(
-            '0e246f9c7b3360972b610a319937cbd48556ac239e633841f655bb1a609cb42be18cdef9e57abaeb2f342becb800211494a72ea5a83d6f6b921263285a87e4e7'
+            '950930ec2c673ebbd547b73de23d27d66aa3e3b1d89868ccbe55abef2fc4756db0a544674f03ec670629bf4a7e208c60c025f359c52dab3a4259e0bb3ed2d9f0'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             '685257c1a70ff5d465256e9f915ed7823ad179844938d4c2c7a4dfcb76a144b3e59ede471c8c86b19ac4afe93e70eba98ff4ab216fd886d81ba7ec917ce93b23'
@@ -63,6 +63,7 @@ depends+=(
 makedepends=(autoconf bison perl flex mingw-w64-gcc
   git
   python
+  ffmpeg
   giflib                #lib32-giflib
   gnutls                #lib32-gnutls
   libxinerama           #lib32-libxinerama
@@ -92,6 +93,7 @@ makedepends+=(
 )
 
 optdepends=(
+  ffmpeg
   giflib                #lib32-giflib
   gnutls                #lib32-gnutls
   v4l-utils             #lib32-v4l-utils
