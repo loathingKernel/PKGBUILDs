@@ -7,7 +7,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.0
 _xaliaver=0.4.2
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch"
 url="https://github.com/ValveSoftware/Proton"
@@ -96,6 +96,7 @@ source=(
     0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     0005-AUR-Strip-binaries-early.patch
     0006-AUR-Fix-hwnd-redefinition.patch
+    static.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -169,6 +170,7 @@ prepare() {
     patch -p1 -i "$srcdir"/0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     patch -p1 -i "$srcdir"/0005-AUR-Strip-binaries-early.patch
     patch -p1 -i "$srcdir"/0006-AUR-Fix-hwnd-redefinition.patch
+    patch -p1 -i "$srcdir"/static.patch
 }
 
 build() {
@@ -266,4 +268,5 @@ sha256sums=('2e8849500c5f4a213bea0270b83b224e8e1ed660d65a40e121f3ffc51ec7e600'
             'dba843d27f1e14beeb8683a68c56296bf1267488f6fdce8f8f3ed67dad6e0ae7'
             '5be61d364b19cf81af1611faae34dbb6942a7f7bc12681042e71bdd65f123405'
             'da04894af7586a3e4f7c519ad142b677222e4d15b5c8508886a61f8a2dd99adb'
-            '6fe70b537369c1a93ecf84d161955fb26cf69f4a403f3c5a0e5f57943d511198')
+            '6fe70b537369c1a93ecf84d161955fb26cf69f4a403f3c5a0e5f57943d511198'
+            SKIP)
