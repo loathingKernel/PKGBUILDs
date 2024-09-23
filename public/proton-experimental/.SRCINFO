@@ -1,7 +1,7 @@
 pkgbase = proton-experimental
 	pkgdesc = Compatibility tool for Steam Play based on Wine and additional components, experimental branch
 	pkgver = 9.0.20240918
-	pkgrel = 1
+	pkgrel = 2
 	epoch = 2
 	url = https://github.com/ValveSoftware/Proton
 	install = proton-experimental.install
@@ -145,6 +145,7 @@ pkgbase = proton-experimental
 	source = 0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
 	source = 0005-AUR-Strip-binaries-early.patch
 	source = 0006-AUR-Fix-hwnd-redefinition.patch
+	source = static.patch
 	sha256sums = 2e8849500c5f4a213bea0270b83b224e8e1ed660d65a40e121f3ffc51ec7e600
 	sha256sums = 2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6
 	sha256sums = fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814
@@ -156,5 +157,6 @@ pkgbase = proton-experimental
 	sha256sums = 5be61d364b19cf81af1611faae34dbb6942a7f7bc12681042e71bdd65f123405
 	sha256sums = da04894af7586a3e4f7c519ad142b677222e4d15b5c8508886a61f8a2dd99adb
 	sha256sums = 6fe70b537369c1a93ecf84d161955fb26cf69f4a403f3c5a0e5f57943d511198
+	sha256sums = SKIP
 
 pkgname = proton-experimental
