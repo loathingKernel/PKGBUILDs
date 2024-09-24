@@ -9,6 +9,7 @@ pkgbase = python-hmmlearn
 	makedepends = python-installer
 	makedepends = python-wheel
 	makedepends = python-setuptools-scm
+	makedepends = pybind11
 	depends = python
 	depends = python-scikit-learn
 	source = https://pypi.python.org/packages/source/h/hmmlearn/hmmlearn-0.3.2.tar.gz

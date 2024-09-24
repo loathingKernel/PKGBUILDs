@@ -11,7 +11,9 @@ url="https://hmmlearn.readthedocs.org"
 license=('BSD-3-Clause')
 depends=(python python-scikit-learn)
 makedepends=(python-{build,installer,wheel}
-             python-setuptools-scm)
+             python-setuptools-scm
+             pybind11
+)
 _archive="$_pyname-$pkgver"
 source=("https://pypi.python.org/packages/source/${_pyname:0:1}/$_pyname/$_archive.tar.gz")
 
