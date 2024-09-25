@@ -6,7 +6,7 @@
 
 pkgname=wine-staging
 pkgver=9.18
-pkgrel=1
+pkgrel=2
 _tkg_commit=033fda90bbfb3afbeacb25747ec3e3ee3b1408af
 
 _pkgbasever=${pkgver/rc/-rc}
