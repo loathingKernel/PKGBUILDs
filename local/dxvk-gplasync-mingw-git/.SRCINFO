@@ -1,6 +1,6 @@
 pkgbase = dxvk-gplasync-mingw-git
 	pkgdesc = Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version
-	pkgver = 2.4.r37.g38308d4
+	pkgver = 2.4.1.r0.g0cf05780
 	pkgrel = 1
 	url = https://github.com/doitsujin/dxvk
 	arch = x86_64
@@ -12,7 +12,7 @@ pkgbase = dxvk-gplasync-mingw-git
 	makedepends = mingw-w64-gcc
 	provides = dxvk
 	provides = d9vk
-	provides = dxvk=2.4.r37.g38308d4
+	provides = dxvk=2.4.1.r0.g0cf05780
 	conflicts = dxvk
 	conflicts = d9vk
 	options = !lto
@@ -25,7 +25,7 @@ pkgbase = dxvk-gplasync-mingw-git
 	sha256sums = SKIP
 	sha256sums = SKIP
 	sha256sums = bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362
-	sha256sums = c3daf448a0460f36ac471d2d4982874207888148ac3f03fbc2f003eccc2c2a45
+	sha256sums = 9055513a311ca245e01002f7e7057e0d678a59a216f10bfa11c8b42dd115081e
 	sha256sums = c1f6a18b03d1612b60f8081428f00cfac5e66315fe9d42719f01cf5564deeeff
 
 pkgname = dxvk-gplasync-mingw-git
