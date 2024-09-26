@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
 pkgname=vkd3d-proton-mingw-git
-pkgver=2.13.r103.g7091b2c
+pkgver=2.13.r137.g486dd4bf
 pkgrel=1
 pkgdesc='Fork of VKD3D. Development branches for Protons Direct3D 12 implementation'
 arch=('x86_64')
@@ -57,8 +57,8 @@ prepare() {
     # AVX is "hard" disabled for 32bit in any case.
     # AVX/AVX2 for 64bit is disabled below.
     # Seems unnecessery for 64bit if -mtune=generic is used
-    CFLAGS+=" -mno-avx2" # -mno-avx"
-    CXXFLAGS+=" -mno-avx2" # -mno-avx"
+    #CFLAGS+=" -mno-avx2 -mno-avx"
+    #CXXFLAGS+=" -mno-avx2 -mno-avx"
 
     export CFLAGS CXXFLAGS LDFLAGS
 
