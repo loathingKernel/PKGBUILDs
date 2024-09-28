@@ -190,8 +190,8 @@ build() {
     # AVX is "hard" disabled for 32bit in any case.
     # AVX/AVX2 for 64bit is disabled below.
     # Seems unnecessery for 64bit if -mtune=generic is used
-    CFLAGS+=" -mno-avx2" # -mno-avx"
-    CXXFLAGS+=" -mno-avx2" # -mno-avx"
+    #CFLAGS+=" -mno-avx2 -mno-avx"
+    #CXXFLAGS+=" -mno-avx2 -mno-avx"
 
     export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
 
