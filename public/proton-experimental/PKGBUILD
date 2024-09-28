@@ -1,13 +1,14 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-experimental
-_srctag=9.0-20240918
+_srctag=9.0-20240918b
 _commit=
 pkgver=${_srctag//-/.}
+pkgver=9.0.20240918.2
 _geckover=2.47.4
 _monover=9.3.0
 _xaliaver=0.4.2
-pkgrel=2
+pkgrel=1
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch"
 url="https://github.com/ValveSoftware/Proton"
@@ -96,7 +97,6 @@ source=(
     0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     0005-AUR-Strip-binaries-early.patch
     0006-AUR-Fix-hwnd-redefinition.patch
-    static.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -170,7 +170,6 @@ prepare() {
     patch -p1 -i "$srcdir"/0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     patch -p1 -i "$srcdir"/0005-AUR-Strip-binaries-early.patch
     patch -p1 -i "$srcdir"/0006-AUR-Fix-hwnd-redefinition.patch
-    patch -p1 -i "$srcdir"/static.patch
 }
 
 build() {
@@ -258,7 +257,7 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('2e8849500c5f4a213bea0270b83b224e8e1ed660d65a40e121f3ffc51ec7e600'
+sha256sums=('9b4c535053a7c2a3f977062c7e308f50cbe0dcef2be84b107d30fd08b19870f1'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             'c23deb9e3217a574f242b78d74cb94c4948a37d1f2715941b803a02e535854a6'
@@ -268,5 +267,4 @@ sha256sums=('2e8849500c5f4a213bea0270b83b224e8e1ed660d65a40e121f3ffc51ec7e600'
             'dba843d27f1e14beeb8683a68c56296bf1267488f6fdce8f8f3ed67dad6e0ae7'
             '5be61d364b19cf81af1611faae34dbb6942a7f7bc12681042e71bdd65f123405'
             'da04894af7586a3e4f7c519ad142b677222e4d15b5c8508886a61f8a2dd99adb'
-            '6fe70b537369c1a93ecf84d161955fb26cf69f4a403f3c5a0e5f57943d511198'
-            SKIP)
+            '6fe70b537369c1a93ecf84d161955fb26cf69f4a403f3c5a0e5f57943d511198')
