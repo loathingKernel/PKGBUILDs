@@ -1,13 +1,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-ge-custom
-_srctag=GE-Proton9-13
+_srctag=GE-Proton9-14
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
-_monover=9.2.0
+_monover=9.3.0
 _xaliaver=0.4.2
-pkgrel=2
+pkgrel=1
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build"
 url="https://github.com/GloriousEggroll/proton-ge-custom"
@@ -262,16 +262,16 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('ddc48427bfbe260a6b98b564cff8c7948f4c0d42099115fb76597bc4243c91aa'
+sha256sums=('428ec4cb8282c2fc0342f07a50707dfd71dbb2d936afdcf5b1b8943aba1090a1'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
-            '59b35dfe525f32c581884b6c7865496e13b3cd200c5ed267c43fb4663e0cd757'
+            'c23deb9e3217a574f242b78d74cb94c4948a37d1f2715941b803a02e535854a6'
             '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            '5c72143d6a032b2e46f0551353b854a4286654b1ec2dcce8f60768e0d496654c'
-            '997db92bbe14e7ae81a44ad161db24462fed2cdf33f517d17052d28efbfc8cf6'
-            'bcf015d96773915775e144e2f87b5da707cae4bc820fefcca68b115707385408'
-            'b1d9fbc21633f1a006a8fa08347bed785d6815f85182b3400b8c0f57281c67cf'
-            '743a84886f35cc5736970dfb2a14109d9de81b721f6a5fddb8b3f1fd769213e5'
-            '09eeeff53e078cfd7dbc889ceecffe06c5c77c3f59eb28db6e57ee3c30dd601d'
-            '1bf397513787974138dac097da57782e1f019b7b6e6b1774bffce18e9faa7c0d'
-            '94f1ab5928bb65ddcd202517825db008bc05c373ae8f4ed8739318decbea3e03')
+            'd8ea7794b83d903a94544dc7508219a1e64674c62e42b09bf031207d4b1329e5'
+            'fbdbaf1849271532031d9baba813eba155d8cdd9d8ee50f0d70364d79aa9a1c8'
+            '2c42834da929e53d6a8b404dc39b6a8423c952fa97583d1ea00af3e84b4e8e01'
+            '0c36f13a9d2fd658eb96b1cf9faf47e47115bb6641016419e8fa8e391315b5c8'
+            'a89689f6345d43d7a57722d61714b80a4bdf407caaca90b7fafa8050923d3480'
+            '83e92b15646bcc05096816d040dc70ed747397276e5e1a01861554863012bb7d'
+            'd82fe7a099d19988b85134f83ccff9d7cd8f844f51f30744cb03dfe29edb351e'
+            '3b9667d909f6252e9aaf34fedc342caa31fce75ba9456ea32141dde86b448d93')
