@@ -1,7 +1,7 @@
 pkgbase = proton-experimental
 	pkgdesc = Compatibility tool for Steam Play based on Wine and additional components, experimental branch
-	pkgver = 9.0.20240918
-	pkgrel = 2
+	pkgver = 9.0.20240918.2
+	pkgrel = 1
 	epoch = 2
 	url = https://github.com/ValveSoftware/Proton
 	install = proton-experimental.install
@@ -134,7 +134,7 @@ pkgbase = proton-experimental
 	options = !lto
 	options = !debug
 	options = emptydirs
-	source = proton::git+https://github.com/ValveSoftware/Proton.git#tag=experimental-9.0-20240918
+	source = proton::git+https://github.com/ValveSoftware/Proton.git#tag=experimental-9.0-20240918b
 	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86.tar.xz
 	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86_64.tar.xz
 	source = https://github.com/madewokherd/wine-mono/releases/download/wine-mono-9.3.0/wine-mono-9.3.0-x86.tar.xz
@@ -145,8 +145,7 @@ pkgbase = proton-experimental
 	source = 0004-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
 	source = 0005-AUR-Strip-binaries-early.patch
 	source = 0006-AUR-Fix-hwnd-redefinition.patch
-	source = static.patch
-	sha256sums = 2e8849500c5f4a213bea0270b83b224e8e1ed660d65a40e121f3ffc51ec7e600
+	sha256sums = 9b4c535053a7c2a3f977062c7e308f50cbe0dcef2be84b107d30fd08b19870f1
 	sha256sums = 2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6
 	sha256sums = fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814
 	sha256sums = c23deb9e3217a574f242b78d74cb94c4948a37d1f2715941b803a02e535854a6
@@ -157,6 +156,5 @@ pkgbase = proton-experimental
 	sha256sums = 5be61d364b19cf81af1611faae34dbb6942a7f7bc12681042e71bdd65f123405
 	sha256sums = da04894af7586a3e4f7c519ad142b677222e4d15b5c8508886a61f8a2dd99adb
 	sha256sums = 6fe70b537369c1a93ecf84d161955fb26cf69f4a403f3c5a0e5f57943d511198
-	sha256sums = SKIP
 
 pkgname = proton-experimental
