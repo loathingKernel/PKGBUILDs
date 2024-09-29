@@ -108,7 +108,7 @@ prepare() {
   rm -rf ${pkgname//-opt}-{32,64}-build
   mkdir ${pkgname//-opt}-{32,64}-build
 
-  pushd $pkgname
+  pushd ${pkgname//-opt}
       git config user.email "wine@cachyos.org"
       git config user.name "wine cachyos"
       git tag wine-9.0 --annotate -m "$pkgver" --force
