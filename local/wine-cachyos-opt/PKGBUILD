@@ -151,7 +151,7 @@ build() {
   export CROSSCXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/${pkgname//-opt}-64-build"
-  ../${pkgname//-opt}/wine/configure \
+  ../${pkgname//-opt}/configure \
     --prefix=/opt/"${pkgname//-opt}" \
     --libdir=/opt/"${pkgname//-opt}"/lib \
     --with-x \
@@ -176,7 +176,7 @@ build() {
   export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/${pkgname//-opt}-32-build"
-  ../${pkgname//-opt}/wine/configure \
+  ../${pkgname//-opt}/configure \
     --prefix=/opt/"${pkgname//-opt}" \
     --with-x \
     --with-wayland \
