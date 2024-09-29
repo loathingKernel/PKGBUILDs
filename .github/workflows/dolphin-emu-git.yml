@@ -1,7 +1,18 @@
+
 name: dolphin-emu-git
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+        - 'build'
+        - 'remove'
+        - 'skip'
   schedule:
     - cron:  '0 0 */7 * *'
   push:
@@ -11,19 +22,12 @@ on:
      - local/dolphin-emu-git/.SRCINFO
 
 jobs:
-  public:
-    uses: ./.github/workflows/job_pkgbuild.yml
+  repository:
+    strategy:
+      matrix:
+        repository: [public, personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: local/dolphin-emu-git
-      pacman_conf: .github/conf/public_pacman.conf
-      makepkg_conf: .github/conf/public_makepkg.conf
-      makepkg_args: -p PKGBUILD
-      release_tag: loathk-public
-  personal:
-    uses: ./.github/workflows/job_pkgbuild.yml
-    with:
-      pkgdir: local/dolphin-emu-git
-      pacman_conf: .github/conf/personal_pacman.conf
-      makepkg_conf: .github/conf/personal_makepkg.conf
-      makepkg_args: -p PKGBUILD
-      release_tag: loathk-personal
+      repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
