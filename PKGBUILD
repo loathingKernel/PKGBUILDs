@@ -2,12 +2,12 @@
 # Contributor: Joe Davison <joe@warhaggis.com>
 
 pkgname=lgogdownloader-git
-pkgver=3.13.r4.g1567c2a
-pkgrel=2
+pkgver=3.15.r4.gb37dafb
+pkgrel=1
 pkgdesc="Open source downloader for GOG.com games, uses the GOG.com API"
 url="https://sites.google.com/site/gogdownloader/"
 arch=(x86_64 i686 pentium4)
-license=('custom:WTFPL')
+license=(WTFPL)
 depends=(boost-libs jsoncpp tinyxml2 rhash tidy)
 makedepends=(git help2man cmake boost)
 provides=(lgogdownloader)
