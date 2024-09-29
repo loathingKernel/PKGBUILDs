@@ -4,11 +4,11 @@
 
 pkgname=lgogdownloader
 pkgver=3.15
-pkgrel=1
+pkgrel=2
 pkgdesc="Open source downloader for GOG.com games, uses the GOG.com API"
 url="https://sites.google.com/site/gogdownloader/"
 arch=(x86_64 i686 pentium4)
-license=('custom:WTFPL')
+license=(WTFPL)
 depends=(boost-libs jsoncpp tinyxml2 rhash tidy glibc gcc-libs curl)
 depends+=(libboost_filesystem.so)
 makedepends=(help2man cmake boost)
