@@ -1,6 +1,6 @@
 pkgbase = gamescope
 	pkgdesc = SteamOS session compositing window manager
-	pkgver = 3.15.5
+	pkgver = 3.15.11
 	pkgrel = 1
 	url = https://github.com/ValveSoftware/gamescope
 	arch = x86_64
@@ -48,7 +48,7 @@ pkgbase = gamescope
 	depends = xcb-util-errors
 	depends = xcb-util-wm
 	depends = xorg-server-xwayland
-	source = git+https://github.com/ValveSoftware/gamescope.git#tag=b1886b8bb7c92a4aa045a79c5e3a76c8bf83a55e
-	b2sums = 02d47333a879bd8e6a7c274a3a2fa399c8c379782292db610df3b1daf6768649526242f7a5b51bc0e7af000ea05ee947b24b14a7f6563f29e8d9bda0186c4ed0
+	source = git+https://github.com/ValveSoftware/gamescope.git#tag=9980c217b29943e4731e638f316c27afbdba307d
+	b2sums = fa6aac08e3c5f99e6950abfc02b30cd16cc494fe8deeac4b8a185c0ebef25543a468b66d573e8cc4b90718e438b05229aa7968e245a890af31d14df455711f3b
 
 pkgname = gamescope
