@@ -5,7 +5,7 @@
 
 pkgname=gamescope
 pkgver=3.15.11
-pkgrel=1
+pkgrel=2
 pkgdesc='SteamOS session compositing window manager'
 arch=(x86_64)
 url=https://github.com/ValveSoftware/gamescope
@@ -63,8 +63,10 @@ _tag=9980c217b29943e4731e638f316c27afbdba307d
 source=(
   git+https://github.com/ValveSoftware/gamescope.git#tag=${_tag}
   gamescope-vk-1_2-comp-target.patch
+  gamescope-xrgb-overlay-formats.patch
 )
 b2sums=('fa6aac08e3c5f99e6950abfc02b30cd16cc494fe8deeac4b8a185c0ebef25543a468b66d573e8cc4b90718e438b05229aa7968e245a890af31d14df455711f3b'
+        'SKIP'
         'SKIP'
 )
 
@@ -72,6 +74,7 @@ prepare() {
   cd gamescope
 
   patch -Np1 -i "${srcdir}"/gamescope-vk-1_2-comp-target.patch
+  patch -Np1 -i "${srcdir}"/gamescope-xrgb-overlay-formats.patch
 
   meson subprojects download
 
