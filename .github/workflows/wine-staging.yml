@@ -28,8 +28,8 @@ jobs:
             pkgbuild: PKGBUILD
             multilib: true
           - repository: personal
-            pkgbuild: PKGBUILD.llvm.wow64
-            multilib: false
+            pkgbuild: PKGBUILD.llvm
+            multilib: true
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: multilib/wine-staging
