@@ -60,10 +60,11 @@ depends+=(
   wayland          #lib32-wayland
 )
 
-makedepends=(autoconf bison perl flex clang
+makedepends=(autoconf bison perl flex clang lld
   git
   python
   ffmpeg
+  llvm                  #lib32-llvm
   giflib                #lib32-giflib
   gnutls                #lib32-gnutls
   libxinerama           #lib32-libxinerama
