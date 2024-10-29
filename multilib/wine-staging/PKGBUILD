@@ -133,12 +133,13 @@ prepare() {
 
   # apply wine-staging patchset
   cd $pkgname
-  patch -p1 -i "$srcdir"/wine-ntsync.patch
   ../wine-staging-$_pkgbasever/staging/patchinstall.py --backend=git-apply --all \
     -W eventfd_synchronization \
     -W ntdll-Syscall_Emulation \
     -W server-PeekMessage \
     -W server-Signal_Thread
+
+  patch -p1 -i "$srcdir"/wine-ntsync.patch
 
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
   #patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-staging.patch
