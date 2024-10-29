@@ -125,7 +125,7 @@ install=wine.install
 
 prepare() {
   # Allow ccache to work
-  mv wine-$_winever $pkgname
+  mv wine $pkgname
 
   # Get rid of old build dirs
   rm -rf $pkgname-{32,64}-build
