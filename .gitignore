@@ -15,3 +15,5 @@ pkg/
 src/
 SRCDEST/
 PKGDEST/
+.idea/
+venv/
