@@ -28,7 +28,7 @@ jobs:
             pkgbuild: PKGBUILD
             multilib: true
           - repository: personal
-            pkgbuild: PKGBUILD.llvm
+            pkgbuild: PKGBUILD
             multilib: true
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
