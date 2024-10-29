@@ -1,20 +1,21 @@
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Maintainer: Peter Jung <ptr1337@archlinux.org>
 # Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 # Contributor: Eduardo Romero <eduardo@archlinux.org>
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=9.19
+pkgver=9.20
 pkgrel=1
-_tkg_commit=3091eb2d0a99e1ba32f8ddbafd28a0a2bafceef5
+_tkg_commit=06b4f5f4b806a9e16c90491a17b0a5e034e1c449
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
 
-source=(https://dl.winehq.org/wine/source/9.x/wine-$_winever.tar.xz{,.sign}
-        "https://github.com/wine-staging/wine-staging/archive/v$_pkgbasever/wine-staging-v$_pkgbasever.tar.gz"
+source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$pkgver"
+        "wine-staging-$_pkgbasever::git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v$_pkgbasever"
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -23,13 +24,12 @@ source+=(
         wine-isolate_home.patch
         wine-ntsync.patch
 )
-sha512sums=('530219c6a337f2996eac92d644ab603528b82cc6136cc37c1e6aa736d418f33c6f4b0d54f3537b04bceaf4487d84abcf926a2f5e9536ed4e966c4fe63c5b6ddd'
-            'SKIP'
-            'c2504af047125e2bf29e4c1d9d7bef275a7bc236bc85344977448a8c4a2bd32cdb813db4ebe26de1b91d04371751ffe3498b9d9c96793d3d3d236fe6be9903dd'
+sha512sums=('1a7b129aaa8d43ff69378ffa9f65e7b0f41c81fe53502a71f64c54397b06aaf1183f4893024153482c84cf85eb9af024d0fc7bfe994c27c53c9e9d357da6cdcd'
+            'accbb0422fe8d246fd11f818e6ac9586a93684a81671ec59e265ac642ee3107b2cc90724c2138b00150ea7000d4c7fd165a2202d05556ee0aeb9ef365234af7f'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 sha512sums+=(
-            'e3ffa9c985e0b22ceecb28c05139b0e0de79d4e69283c8210a3463c19022b03a2be92b371a4a634e1369b7f22fff1df3f7cdc750dec3ca3a092b141c722b5c47'
+            'SKIP'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             '685257c1a70ff5d465256e9f915ed7823ad179844938d4c2c7a4dfcb76a144b3e59ede471c8c86b19ac4afe93e70eba98ff4ab216fd886d81ba7ec917ce93b23'
@@ -61,7 +61,6 @@ depends+=(
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
-  git
   python
   ffmpeg
   giflib                lib32-giflib
@@ -87,6 +86,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   ffmpeg
   samba
   opencl-headers
+  git
 )
 makedepends+=(
   ntsync-header
@@ -134,7 +134,7 @@ prepare() {
   # apply wine-staging patchset
   cd $pkgname
   patch -p1 -i "$srcdir"/wine-ntsync.patch
-  ../wine-staging-$_pkgbasever/staging/patchinstall.py --all \
+  ../wine-staging-$_pkgbasever/staging/patchinstall.py --backend=git-apply --all \
     -W eventfd_synchronization \
     -W ntdll-Syscall_Emulation \
     -W server-PeekMessage \

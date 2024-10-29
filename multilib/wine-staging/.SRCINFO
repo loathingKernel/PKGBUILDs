@@ -1,6 +1,6 @@
 pkgbase = wine-staging
 	pkgdesc = A compatibility layer for running Windows programs - Staging branch
-	pkgver = 9.19
+	pkgver = 9.20
 	pkgrel = 1
 	url = https://www.wine-staging.com
 	install = wine.install
@@ -11,7 +11,6 @@ pkgbase = wine-staging
 	makedepends = perl
 	makedepends = flex
 	makedepends = mingw-w64-gcc
-	makedepends = git
 	makedepends = python
 	makedepends = ffmpeg
 	makedepends = giflib
@@ -55,6 +54,7 @@ pkgbase = wine-staging
 	makedepends = ffmpeg
 	makedepends = samba
 	makedepends = opencl-headers
+	makedepends = git
 	makedepends = ntsync-header
 	depends = attr
 	depends = lib32-attr
@@ -117,27 +117,25 @@ pkgbase = wine-staging
 	optdepends = samba
 	optdepends = dosbox
 	optdepends = ntsync-dkms
-	provides = wine=9.19
+	provides = wine=9.20
 	conflicts = wine
 	options = !staticlibs
 	options = !lto
-	source = https://dl.winehq.org/wine/source/9.x/wine-9.19.tar.xz
-	source = https://dl.winehq.org/wine/source/9.x/wine-9.19.tar.xz.sign
-	source = https://github.com/wine-staging/wine-staging/archive/v9.19/wine-staging-v9.19.tar.gz
+	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-9.20
+	source = wine-staging-9.20::git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v9.20
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
-	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=3091eb2d0a99e1ba32f8ddbafd28a0a2bafceef5
+	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=06b4f5f4b806a9e16c90491a17b0a5e034e1c449
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
 	source = wine-ntsync.patch
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = 530219c6a337f2996eac92d644ab603528b82cc6136cc37c1e6aa736d418f33c6f4b0d54f3537b04bceaf4487d84abcf926a2f5e9536ed4e966c4fe63c5b6ddd
-	sha512sums = SKIP
-	sha512sums = c2504af047125e2bf29e4c1d9d7bef275a7bc236bc85344977448a8c4a2bd32cdb813db4ebe26de1b91d04371751ffe3498b9d9c96793d3d3d236fe6be9903dd
+	sha512sums = 1a7b129aaa8d43ff69378ffa9f65e7b0f41c81fe53502a71f64c54397b06aaf1183f4893024153482c84cf85eb9af024d0fc7bfe994c27c53c9e9d357da6cdcd
+	sha512sums = accbb0422fe8d246fd11f818e6ac9586a93684a81671ec59e265ac642ee3107b2cc90724c2138b00150ea7000d4c7fd165a2202d05556ee0aeb9ef365234af7f
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
-	sha512sums = e3ffa9c985e0b22ceecb28c05139b0e0de79d4e69283c8210a3463c19022b03a2be92b371a4a634e1369b7f22fff1df3f7cdc750dec3ca3a092b141c722b5c47
+	sha512sums = SKIP
 	sha512sums = 30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569
 	sha512sums = 3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282
 	sha512sums = 685257c1a70ff5d465256e9f915ed7823ad179844938d4c2c7a4dfcb76a144b3e59ede471c8c86b19ac4afe93e70eba98ff4ab216fd886d81ba7ec917ce93b23
