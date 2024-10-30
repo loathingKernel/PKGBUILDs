@@ -2,7 +2,7 @@
 
 pkgname=jay
 pkgver=1.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A Wayland Compositor'
 arch=('x86_64')
 license=(GPL-3.0-only)
@@ -46,7 +46,7 @@ package() {
 
   install -D -m755 -s target/release/jay $pkgdir/usr/bin/jay
   install -D -m644 etc/jay.portal $pkgdir/usr/share/xdg-desktop-portal/portals/jay.portal
-  install -D -m644 etc/jay-portals.conf $pkgdir/usr/share/xdg-desktop-portal/portals/jay-portals.conf
+  install -D -m644 etc/jay-portals.conf $pkgdir/usr/share/xdg-desktop-portal/jay-portals.conf
 
   mkdir -p $pkgdir/usr/share/zsh/site-functions/
   target/release/jay generate-completion zsh > $pkgdir/usr/share/zsh/site-functions/_jay
