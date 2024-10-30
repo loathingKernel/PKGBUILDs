@@ -1,13 +1,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-experimental
-_srctag=9.0-20240918b
+_srctag=9.0-20241022
 _commit=
 pkgver=${_srctag//-/.}
-pkgver=9.0.20240918.2
+#pkgver=
 _geckover=2.47.4
 _monover=9.3.0
-_xaliaver=0.4.2
+_xaliaver=0.4.4
 pkgrel=1
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch"
@@ -257,14 +257,14 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('9b4c535053a7c2a3f977062c7e308f50cbe0dcef2be84b107d30fd08b19870f1'
+sha256sums=('909980febd48751ec3f8877ac6796c2bb71a6a126ac46e00c23f71340da58b61'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             'c23deb9e3217a574f242b78d74cb94c4948a37d1f2715941b803a02e535854a6'
-            '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            '583b13ad29783752813ffdaa18116539c2b996533a791831854f3477e1ffa060'
-            '6e82d30ad6526982498e097fc5fe58760aeb024297c78c0e175427dd19844471'
-            'dba843d27f1e14beeb8683a68c56296bf1267488f6fdce8f8f3ed67dad6e0ae7'
-            '5be61d364b19cf81af1611faae34dbb6942a7f7bc12681042e71bdd65f123405'
-            'da04894af7586a3e4f7c519ad142b677222e4d15b5c8508886a61f8a2dd99adb'
-            '6fe70b537369c1a93ecf84d161955fb26cf69f4a403f3c5a0e5f57943d511198')
+            'a5cfd3090ebf7fb694bce573ef87b300b86f61204987ecbd068a2fe5079b7e6e'
+            '0be566d4564865aac9b6deb7f1e56552d6d8b94f808a364e1e6ff41416153c29'
+            'c8924a96e68e57574a20b18aa37a77bf50c3cf0952e98ab34e73e0216b44eb69'
+            '501a52f66e77a5ba8a442f746e2257331164a216828b2633fdc0adaea6123200'
+            'f6aae5df1bc11d978eb47e1471771c0e674023daea2fa2b4ab854be3b5f377f4'
+            '8cdf2d7ce45be241e5175f6c6c9b9a30d967248f0022eea0f54506cd8bd02811'
+            '80d1f15033242f04ec33f697df80d378ecd0477d6a5fa17c1ac2be145e084a8d')
