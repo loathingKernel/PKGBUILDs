@@ -5,7 +5,7 @@ pkgbase = jay
 	url = https://github.com/mahkoh/jay
 	arch = x86_64
 	license = GPL-3.0-only
-	makedepends = rust
+	makedepends = rust>=1.84.0
 	makedepends = shaderc
 	depends = cairo
 	depends = libinput

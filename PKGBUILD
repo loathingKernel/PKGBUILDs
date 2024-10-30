@@ -24,7 +24,7 @@ optdepends=(
   'xdg-desktop-portal: portal support'
 )
 makedepends=(
-  rust
+  'rust>=1.84.0'
   shaderc
 )
 options=(!lto)
