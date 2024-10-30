@@ -6,7 +6,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-ge-custom
-_srctag=GE-Proton9-15
+_srctag=GE-Proton9-16
 pkgver=${_srctag//-/.}
 pkgrel=1
 epoch=1
@@ -49,7 +49,6 @@ depends+=(
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
-  git
   python
   giflib                lib32-giflib
   gnutls                lib32-gnutls
@@ -75,6 +74,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   ffmpeg
   samba
   opencl-headers
+  git
 )
 
 optdepends=(
@@ -227,7 +227,7 @@ package() {
 
 # vim:set ts=8 sts=2 sw=2 et:
 
-sha512sums=('8a03a83e10d0ff9ea53629fa15e2b7eec4049c109f5f77b9e90d2f528c141d7246a2065fe9487dc7bde1e6e111b1429ba7435bc860c76d3e1a46ab03fd21008b'
+sha512sums=('c4900a95ae0d3d4a10ac98715dab04854e36bff4ae5b563202f3991133cc0a770665b46939479014c13ae57f65d200638f315591c4c0d65d1e5e6bcc37e20f2d'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
