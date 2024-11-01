@@ -62,7 +62,6 @@ depends+=(
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
   python
-  ffmpeg
   giflib                lib32-giflib
   gnutls                lib32-gnutls
   libxinerama           lib32-libxinerama
@@ -93,7 +92,6 @@ makedepends+=(
 )
 
 optdepends=(
-  ffmpeg
   giflib                lib32-giflib
   gnutls                lib32-gnutls
   v4l-utils             lib32-v4l-utils
