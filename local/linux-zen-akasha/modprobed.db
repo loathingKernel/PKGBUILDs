@@ -37,6 +37,7 @@ drm
 drm_buddy
 drm_display_helper
 drm_kms_helper
+drm_ttm_helper
 e1000e
 ehci_hcd
 ehci_pci
