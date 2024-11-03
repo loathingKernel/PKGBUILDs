@@ -6,7 +6,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-ge-custom
-_srctag=GE-Proton9-16
+_srctag=GE-Proton9-18
 pkgver=${_srctag//-/.}
 pkgrel=1
 epoch=1
@@ -227,7 +227,7 @@ package() {
 
 # vim:set ts=8 sts=2 sw=2 et:
 
-sha512sums=('c4900a95ae0d3d4a10ac98715dab04854e36bff4ae5b563202f3991133cc0a770665b46939479014c13ae57f65d200638f315591c4c0d65d1e5e6bcc37e20f2d'
+sha512sums=('73b1c9534209ba38ce0b39679eb8ed32b7ba7869a0a6ad847733955775a703ac8fe4325457aa47b2a8ddc664fa7371dc37b5f1e1c143934be59956ad5e5e3c0a'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
