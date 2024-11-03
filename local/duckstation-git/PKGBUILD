@@ -6,7 +6,7 @@ pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and 
 pkgrel=1
 arch=(x86_64 aarch64)
 url=https://github.com/stenzek/duckstation
-license=(GPL-3.0-only Apache-2.0)
+license=(CC-BY-NC-ND-4.0)
 depends=(
     sh
     glibc
@@ -19,12 +19,14 @@ depends=(
     libxrandr
     libx11
     freetype2 libfreetype.so
+    libzip.so
     libzstd.so
     libz.so
     libdbus-1.so
     libcurl.so
     systemd-libs libudev.so
     hicolor-icon-theme
+    ffmpeg
     libglvnd
     glslang
     spirv-tools
@@ -59,28 +61,12 @@ provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 options=(!lto)
 
-LIBBACKTRACE=ad106d5fdd5d960bd33fae1c48a351af567fd075
-SHADERC=2024.1
-GLSLANG=142052fa30f9eca191aa9dcf65359fcaed09eeec
-SPIRV_HEADERS=5e3ad389ee56fca27c9705d093ae5387ce404df4
-SPIRV_TOOLS=dd4b663e13c07fea4fbb3f70c1c91c86731099f7
-SPIRV_CROSS=vulkan-sdk-1.3.283.0
-
 source=(
     git+https://github.com/stenzek/duckstation.git
-    git+https://github.com/ianlancetaylor/libbacktrace.git#commit=$LIBBACKTRACE
-    git+https://github.com/google/shaderc.git#tag=v$SHADERC
-    git+https://github.com/KhronosGroup/glslang.git#commit=$GLSLANG
-    git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=$SPIRV_HEADERS
-    git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit=$SPIRV_TOOLS
-    git+https://github.com/KhronosGroup/SPIRV-Cross.git#tag=$SPIRV_CROSS
-    duckstation-qt.desktop
-    duckstation-qt.sh)
-sha256sums=('SKIP'
-            'f1dbf3270fc21bf6871ae8693ddfb467ce142009d3371fd407512b956c25ace0'
-            '9c2a148a1e4c7ca16ab54991980ed6393c1c21794081083f2779d880b3dbf1d4'
-            'ec2d7358f81598390a8ceca2d1974be3e5f7c45602b550c89a1e9323ab45474b'
-            '4e1c4ff072f0bf7df589b5c7160b0a4add5de326abd7570a2d1a4657f09e47a6')
+)
+sha256sums=(
+    'SKIP'
+)
 
 pkgver() {
     cd "${srcdir}/${pkgname%-git}"
@@ -88,114 +74,40 @@ pkgver() {
 }
 
 prepare() {
-
-    pushd shaderc
-    mv -n "${srcdir}"/glslang third_party/glslang
-    mv -n "${srcdir}"/SPIRV-Headers third_party/spirv-headers
-    mv -n "${srcdir}"/SPIRV-Tools third_party/spirv-tools
-    patch -p1 -i "$srcdir/duckstation/scripts/shaderc-changes.patch"
-    popd
+    cd "${srcdir}/${pkgname%-git}"
 }
 
 build() {
 
-    echo "Building libbacktrace..."
-    pushd libbacktrace
-    ./configure --prefix="/opt/${pkgname%-git}"
-    make
-    DESTDIR="$srcdir/deps" make install
-    popd
+    ./duckstation/scripts/deps/build-dependencies-linux.sh \
+      -system-freetype -system-harfbuzz -system-libjpeg \
+      -system-libpng -system-libwebp -system-libzip \
+      -system-zstd -system-qt \
+      "$PWD"/build-deps
 
-    echo "Building shaderc..."
-    cmake -B build-shaderc -S shaderc \
-        -G Ninja \
-        -Wno-dev \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_C_COMPILER=clang \
-        -DCMAKE_CXX_COMPILER=clang++ \
-        -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_PREFIX_PATH="${srcdir}/deps/opt/${pkgname%-git}" \
-        -DCMAKE_INSTALL_PREFIX="/opt/${pkgname%-git}" \
-        -DSHADERC_SKIP_TESTS=ON \
-        -DSHADERC_SKIP_EXAMPLES=ON \
-        -DSHADERC_SKIP_COPYRIGHT_CHECK=ON
-    ninja -C build-shaderc -v
-    DESTDIR="$srcdir/deps" ninja -C build-shaderc install
-
-    echo "Building SPIRV-Cross..."
-
-    cmake -B build-SPIRV-Cross -S SPIRV-Cross \
-        -G Ninja \
-        -DCMAKE_BUILD_TYPE=None \
-        -DCMAKE_C_COMPILER=clang \
-        -DCMAKE_CXX_COMPILER=clang++ \
-        -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_PREFIX_PATH="${srcdir}/deps/opt/${pkgname%-git}" \
-        -DCMAKE_INSTALL_PREFIX="/opt/${pkgname%-git}" \
-        -DSPIRV_CROSS_SHARED=ON \
-        -DSPIRV_CROSS_STATIC=OFF \
-        -DSPIRV_CROSS_CLI=OFF \
-        -DSPIRV_CROSS_ENABLE_TESTS=OFF \
-        -DSPIRV_CROSS_ENABLE_GLSL=ON \
-        -DSPIRV_CROSS_ENABLE_HLSL=OFF \
-        -DSPIRV_CROSS_ENABLE_MSL=OFF \
-        -DSPIRV_CROSS_ENABLE_CPP=OFF \
-        -DSPIRV_CROSS_ENABLE_REFLECT=OFF \
-        -DSPIRV_CROSS_ENABLE_C_API=ON \
-        -DSPIRV_CROSS_ENABLE_UTIL=ON
-    ninja -C build-SPIRV-Cross -v
-    DESTDIR="$srcdir/deps" ninja -C build-SPIRV-Cross install
-
-    echo "Building ${pkgname%-git}..."
     cmake -B build -S duckstation \
         -G Ninja \
         -Wno-dev \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_C_COMPILER=clang \
         -DCMAKE_CXX_COMPILER=clang++ \
-        -DCMAKE_C_FLAGS="$CFLAGS -Wno-error=format-security" \
-        -DCMAKE_CXX_FLAGS="$CXXFLAGS -Wno-error=format-security" \
         -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
         -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
         -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
         -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
-        -DCMAKE_PREFIX_PATH="${srcdir}/deps/opt/${pkgname%-git}" \
-        -DCMAKE_BUILD_RPATH="/opt/${pkgname%-git}/lib" \
-        -DBUILD_NOGUI_FRONTEND=OFF \
-        -DBUILD_QT_FRONTEND=ON \
-        -DUSE_DRMKMS=ON \
-        -DUSE_EGL=ON \
-        -DUSE_SDL2=ON \
-        -DUSE_WAYLAND=ON \
-        -DUSE_X11=ON
+        -DCMAKE_PREFIX_PATH="$PWD"/build-deps \
+        -DALLOW_INSTALL=ON \
+        -DINSTALL_SELF_CONTAINED=ON \
+        -DCMAKE_INSTALL_PREFIX="${pkgdir}"/opt/duckstation
     ninja -C build -v
 }
 
 package() {
-    # Main files
-    install -m755 -d "${pkgdir}/opt"
-    cp -rv build/bin "${pkgdir}/opt/${pkgname%-git}"
-
-    # Install bundled shaderc
-    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/lib \
-        ${srcdir}/deps/opt/"${pkgname%-git}"/lib/libshaderc_shared.so \
-        ${srcdir}/deps/opt/"${pkgname%-git}"/lib/libspirv-cross-c-shared.so
-
-    install -Dvm755 "${srcdir}/duckstation-qt.sh" "${pkgdir}/usr/bin/duckstation-qt"
-    install -Dvm644 "${srcdir}/duckstation-qt.desktop" "${pkgdir}/usr/share/applications/duckstation-qt.desktop"
-    install -Dvm644 "${pkgname%-git}/data/resources/images/duck.png" "${pkgdir}/usr/share/icons/hicolor/64x64/apps/duckstation-qt.png"
+    ninja -C build install
+    install -Dm755 duckstation/scripts/packaging/duckstation-qt "${pkgdir}/usr/bin/duckstation-qt"
+    install -Dm644 duckstation/scripts/org.duckstation.DuckStation.desktop "${pkgdir}/usr/share/applications/org.duckstation.DuckStation.desktop"
+    install -Dm644 duckstation/scripts/org.duckstation.DuckStation.png "${pkgdir}/usr/share/icons/hicolor/512x512/apps/org.duckstation.DuckStation.png"
+    install -Dm644 duckstation/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dm644 duckstation/data/resources/thirdparty.html "${pkgdir}/usr/share/licenses/${pkgname}/thirdparty.html"
 }
 
-sha256sums=('SKIP'
-            '6463c6d54b99dddaa0f3da7a84926eb543672a4414dc2835bf35bb9eada9339f'
-            'f1dbf3270fc21bf6871ae8693ddfb467ce142009d3371fd407512b956c25ace0'
-            'be4a2494f139c3e04024d3bc5313a37a23ef901fb4d4dffa3a2ff9a5f2324709'
-            '852d1290d874546c9159fd349d42b4d314939f0ee4cb8601d26f7bf3910e9602'
-            'eb945dda13bb15066447845308275c0261f901430ed9d0b32e86059c0ca4790a'
-            '9c2a148a1e4c7ca16ab54991980ed6393c1c21794081083f2779d880b3dbf1d4'
-            '51094e60b84873325cfe630fd7092d0db73e1c4ee94ccfc0806f742252a4009a'
-            '7b0a99c4e1463743cc9b9619472badd172d999081a92b3977486c5eaf458201e')
