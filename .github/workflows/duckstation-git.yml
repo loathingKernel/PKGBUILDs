@@ -13,8 +13,6 @@ on:
         - 'build'
         - 'remove'
         - 'skip'
-  schedule:
-    - cron:  '0 0 */7 * *'
   push:
     branches:
      - master
@@ -25,7 +23,7 @@ jobs:
   repository:
     strategy:
       matrix:
-        repository: [public, personal]
+        repository: [public]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: local/duckstation-git
