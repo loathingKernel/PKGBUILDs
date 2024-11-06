@@ -62,7 +62,6 @@ build() {
   export ax_cv_c_float_words_bigendian=no
   ./configure --prefix=/usr \
               --enable-shared \
-              --with-threads \
               --with-computed-gotos \
               --enable-optimizations \
               --with-lto \
