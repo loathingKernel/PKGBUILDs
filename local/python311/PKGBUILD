@@ -9,8 +9,8 @@ shopt -s extglob
 
 pkgbase=python
 pkgname=(python311 python311-tests)
-pkgver=3.11.9
-pkgrel=2
+pkgver=3.11.10
+pkgrel=1
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="The Python programming language, version 3.11"
@@ -21,7 +21,7 @@ depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib' '
 makedepends=('tk' 'sqlite' 'bluez-libs' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-font')
 source=("https://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"{,.asc}
         EXTERNALLY-MANAGED)
-sha512sums=('2b0a1d936b4ef8376f9655797aece8ffdff75031ad7bfa840f330cac2aed189aecc80c163edc12ea772851d7a011f3fc1960470a73d9d4290cf3ab8ad6ed7e6a'
+sha512sums=('6ce77cced1ce90bb5eea38504dfc1bc19c872149a5a63fdd8353ac8c772c54ab7a42176e141c7f6f898d31761bf93e1739b238920fbeefbedd6016ad033c1de0'
             'SKIP'
             '62a6fbfbaeaa3ba7c54e109d9c3b7f67e73bb21986da4c1fcc5d28cca83d71e0fcae28e1fc70ee8ddce7dea8cd0b64e18d1031dae3a2eae5eaa379c53efd53a0')
 validpgpkeys=('0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D'  # Ned Deily (Python release signing key) <nad@python.org>
