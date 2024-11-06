@@ -8,8 +8,8 @@ shopt -s extglob
 
 pkgbase=python
 pkgname=(python39 python39-tests)
-pkgver=3.9.19
-pkgrel=2
+pkgver=3.9.20
+pkgrel=1
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="The Python programming language, version 3.9"
@@ -21,7 +21,7 @@ makedepends=('tk' 'sqlite' 'bluez-libs' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-fon
 source=("https://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"{,.asc}
         mpdecimal-2.5.1.patch
         EXTERNALLY-MANAGED)
-sha512sums=('5577830c734e63a70bbc62cd33d263b9aa87c4381b49cb694c3559067c4c682a55506b65ec5514a8e0a5abf6294dc728e909385d449ae1c388e62f83cea9bb89'
+sha512sums=('c828f33edf1704e3149499d6d34e89264cb5cdb2b09ff05561641b359716d7996f0fe928629e09f006b1fd7850fdaf937275919c7fdd83f5efc32707c64d814b'
             'SKIP'
             '58f683cbfdc6aa84c03d068c1bc2f1d8d2c17ba4f7b632c14ab1d529d8332e767354266c3815e239427497fff1a42ec2a37739ea312d24cb76a69dcf1c98c0ad'
             '62a6fbfbaeaa3ba7c54e109d9c3b7f67e73bb21986da4c1fcc5d28cca83d71e0fcae28e1fc70ee8ddce7dea8cd0b64e18d1031dae3a2eae5eaa379c53efd53a0')
@@ -62,6 +62,7 @@ build() {
   export ax_cv_c_float_words_bigendian=no
   ./configure --prefix=/usr \
               --enable-shared \
+              --with-threads \
               --with-computed-gotos \
               --enable-optimizations \
               --with-lto \
