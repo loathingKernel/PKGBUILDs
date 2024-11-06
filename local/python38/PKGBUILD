@@ -61,7 +61,6 @@ build() {
   # Disable bundled pip & setuptools
   ./configure --prefix=/usr \
               --enable-shared \
-              --with-threads \
               --with-computed-gotos \
               --enable-optimizations \
               --with-lto \
