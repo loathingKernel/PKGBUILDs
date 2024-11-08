@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=6.10.10.zen1
+pkgver=6.11.6.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Elitebook LLVM'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -29,6 +29,7 @@ _srctag=v${pkgver%.*}-${pkgver##*.}
 source=(
   https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
   $url/releases/download/$_srctag/linux-$_srctag.patch.zst{,.sig}
+  modprobed.db
   config  # the main kernel config file
 )
 validpgpkeys=(
@@ -37,16 +38,18 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('e687e735b5eb9efb6d67b42433c93fc9118106a995514f062652873b5e809bcd'
+sha256sums=('c954f60197008f1e1f32a1e77293903cf3801d2543ec4bf521f5651eb7f133ce'
             'SKIP'
-            'fc66084eecc225a2898cc3d23098aa6cc155f392a4a4355baa393bf1bd6e89f1'
+            'f1bbf09f8419cbbb09ad0d04a14ce3599965abbba94677da55d122e9ca920a50'
             'SKIP'
-            '7a8105d34f5741b46a42e91364bb811ccca83a84333bfb4a99e1bb5fb7ac99fa')
-b2sums=('8a15910089d080886046b1fd8d57ef28ce872bf428e67ccbc9d5ca92da794d6dee7ab83cc914a499b40962e2990c3b1e5b11ae7d12c1eff7bec548c9a67df03a'
+            'SKIP'
+            '65dc03a06807cf07e1520b44c2cf3694bc138dbfe74b6b10acd1faf0176bbe78')
+b2sums=('821eceaa7492122c724ea789a79aa99f61078f06c86fd6f76d08f640b47ea682f7441c47ed7b860ca39fd242b8797bb5bc311dc63dbb9c37bc15917eccafc255'
         'SKIP'
-        '9d79dc0c9a77db21475d2f1761c2eab75daf85f85a7f4be490b89c6562369f59ce905f371edc3f7da0be9bc134047e32633b78b8ca4e0bdc4598011eb88b6672'
+        '0b4964211e08bd77e52a61668453c2bfaf1326b60f57a5757161a737d16bac0762f65e0755c545f06f25a9e6efb85b285675c328ef95e3e8bc6040e6b43ae014'
         'SKIP'
-        '8bc07bc868bd071c330eabf0c67faae22df075ea5182e0352ac678fcbae70f369190ae0b62e484d2b8aa1e6e3c0411246ba5a5ccef9b31b5c611901f7b3c07ab')
+        'SKIP'
+        '62d2a70f5f7f21e19a216448cf3dfe774e57afac5117d17092476edf2b77701be65d9d6c9938e05cdc0cecfed7159bad6c61303f7409f424ae72f3a5c76bb00f')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -140,7 +143,7 @@ prepare() {
   test -t 0 && make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage2-nconfig"
   echo "-> Running localmodconfig..."
-  yes "" | make LLVM=1 LLVM_IAS=1 LSMOD="${startdir}/modprobed.db" localmodconfig
+  yes "" | make LLVM=1 LLVM_IAS=1 LSMOD="${srcdir}/modprobed.db" localmodconfig
   test -t 0 && make LLVM=1 LLVM_IAS=1 nconfig
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage3-localmod"
   fi
@@ -208,6 +211,7 @@ _package-headers() {
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
+  ln -srt "$builddir" "$builddir/scripts/gdb/vmlinux-gdb.py"
 
   # required when STACK_VALIDATION is enabled
   install -Dt "$builddir/tools/objtool" tools/objtool/objtool
