@@ -3,7 +3,7 @@
 pkgname=dissent
 _fqpn=so.libdb.${pkgname}
 pkgver=0.0.30
-pkgrel=1
+pkgrel=2
 pkgdesc='Discord client written in go and gtk4'
 arch=(x86_64 aarch64)
 url='https://github.com/diamondburned/dissent'
@@ -31,6 +31,7 @@ prepare() {
   cd "${pkgname}"
 
   export GOPATH="${srcdir}"
+  export GOFLAGS="-modcacherw"
   go mod download
 }
 
