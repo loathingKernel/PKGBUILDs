@@ -1,15 +1,15 @@
 # Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
 pkgname=dxvk-mingw
-pkgver=2.4.1
+pkgver=2.5
 pkgrel=1
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
 license=('zlib/libpng')
 makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'mingw-w64-gcc')
-provides=('dxvk' 'd9vk' "dxvk=$pkgver")
-conflicts=('dxvk' 'd9vk')
+provides=('dxvk' "dxvk=$pkgver")
+conflicts=('dxvk')
 options=(!lto !staticlibs)
 source=(
     "git+https://github.com/doitsujin/dxvk.git#tag=v$pkgver"
@@ -106,7 +106,7 @@ package() {
     install -Dm 755 -t "$pkgdir/usr/bin" setup_dxvk
 }
 
-sha256sums=('31e9e798a65bd3a93668e4e84a47b7158afd47da043a2470ed0769d15f060fd0'
+sha256sums=('5673200b157616580aab6e75086f276b2acc2af31c5553c2269a6a8c1481548b'
             'bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362'
             '9055513a311ca245e01002f7e7057e0d678a59a216f10bfa11c8b42dd115081e'
             'c1f6a18b03d1612b60f8081428f00cfac5e66315fe9d42719f01cf5564deeeff')
