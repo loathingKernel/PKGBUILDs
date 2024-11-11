@@ -1,6 +1,5 @@
 [dissent]
-source = "github"
-github = "diamondburned/dissent"
+source = "git"
+git = "https://github.com/diamondburned/dissent.git"
 prefix = "v"
 include_regex = "v\\d+\\.\\d+\\.\\d+-{0,1}\\d{0,2}"
-use_max_tag = true
