@@ -7,8 +7,6 @@
 pkgbase=lib32-mesa
 pkgname=(
   lib32-mesa
-  lib32-libva-mesa-driver
-  lib32-mesa-vdpau
   lib32-opencl-clover-mesa
   lib32-opencl-rusticl-mesa
   lib32-vulkan-intel
@@ -18,7 +16,7 @@ pkgname=(
   lib32-vulkan-swrast
   lib32-vulkan-virtio
 )
-pkgver=24.2.6
+pkgver=24.2.7
 pkgrel=1
 epoch=1
 pkgdesc="Open-source OpenGL drivers - 32-bit"
@@ -117,7 +115,7 @@ for _crate in "${!_crates[@]}"; do
   )
 done
 
-b2sums=('e49fc85c8a61315d86b253b7dd8052a1e46ea99d5188cf930c833317898c51b7b413286f57a53af3c2b1bb147ce2541ea80279ee9e237deeb499729bb7fd8381'
+b2sums=('eb1b0285e14e77c3140275b322ff084fca74a1048e6df38f4b14cb03ed7fc436897f7b33d107d1e262d9d4944229fb1e85d02e731c645ead5a7b269dec9334b7'
         'SKIP'
         'a6d47c903be6094423d89b8ec3ca899d0a84df6dbd6e76632bb6c9b9f40ad9c216f8fa400310753d392f85072756b43ac3892e0a2c4d55f87ab6463002554823'
         '9c34f1ab14ad5ae124882513e0f14b1d731d06a43203bdc37fa3b202dd3ce93dbe8ebb554d01bab475689fe6ffd3ec0cbc0d5365c9b984cb83fb34ea3e9e732e'
@@ -136,7 +134,7 @@ b2sums=('e49fc85c8a61315d86b253b7dd8052a1e46ea99d5188cf930c833317898c51b7b413286
         '8bc6f68ed286bea617a2cfaf3949bb699d3a0466faeca735314a51596ce950e4ee57eda88154bd562c1728cfaff4cdb5bc1ba701b9d47a9c50d4c4f011bee975')
 
 # https://docs.mesa3d.org/relnotes.html
-sha256sums=('2b68c4a6f204c1999815a457299f81c41ba7bf48c4674b0b2d1d8864f41f3709'
+sha256sums=('a0ce37228679647268a83b3652d859dcf23d6f6430d751489d4464f6de6459fd'
             'SKIP'
             'ed646292ffc8188ef8ea4d1e0e0150fb15a5c2e12ad9b8fc191ae7a8a7f3c4b9'
             'a941429fea7e08bedec25e4f6785b6ffaacc6b755da98df5ef3e7dcf4a124c4f'
@@ -236,11 +234,23 @@ package_lib32-mesa() {
   )
   optdepends=("opengl-man-pages: for the OpenGL API man pages")
   provides=(
-    lib32-mesa-libgl
+    "lib32-libva-mesa-driver=$epoch:$pkgver-$pkgrel"
+    "lib32-mesa-libgl=$epoch:$pkgver-$pkgrel"
+    "lib32-mesa-vdpau=$epoch:$pkgver-$pkgrel"
+    lib32-libva-driver
     lib32-opengl-driver
+    lib32-vdpau-driver
   )
-  conflicts=(lib32-mesa-libgl)
-  replaces=(lib32-mesa-libgl)
+  conflicts=(
+    'lib32-libva-mesa-driver<1:24.2.7-1'
+    'lib32-mesa-libgl<17.0.1-2'
+    'lib32-mesa-vdpau<1:24.2.7-1'
+  )
+  replaces=(
+    'lib32-libva-mesa-driver<1:24.2.7-1'
+    'lib32-mesa-libgl<17.0.1-2'
+    'lib32-mesa-vdpau<1:24.2.7-1'
+  )
 
   meson install -C build --destdir "$pkgdir"
 
@@ -248,10 +258,6 @@ package_lib32-mesa() {
     local libdir=usr/lib32 icddir=usr/share/vulkan/icd.d
 
     cd "$pkgdir"
-
-    _pick libva $libdir/dri/*_drv_video.so
-
-    _pick vdpau $libdir/vdpau
 
     _pick clover $libdir/gallium-pipe
     _pick clover $libdir/libMesaOpenCL*
@@ -280,54 +286,6 @@ package_lib32-mesa() {
     # indirect rendering
     ln -sr $libdir/libGLX_{mesa,indirect}.so.0
   )
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_lib32-libva-mesa-driver() {
-  pkgdesc="Open-source VA-API drivers - 32-bit"
-  depends=(
-    lib32-expat
-    lib32-gcc-libs
-    lib32-glibc
-    lib32-libdrm
-    lib32-libelf
-    lib32-libx11
-    lib32-libxcb
-    lib32-libxshmfence
-    lib32-llvm-libs
-    lib32-zlib
-    lib32-zstd
-
-    libva-mesa-driver
-  )
-  provides=(lib32-libva-driver)
-
-  mv libva/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_lib32-mesa-vdpau() {
-  pkgdesc="Open-source VDPAU drivers - 32-bit"
-  depends=(
-    lib32-expat
-    lib32-gcc-libs
-    lib32-glibc
-    lib32-libdrm
-    lib32-libelf
-    lib32-libx11
-    lib32-libxcb
-    lib32-libxshmfence
-    lib32-llvm-libs
-    lib32-zlib
-    lib32-zstd
-
-    mesa-vdpau
-  )
-  provides=(lib32-vdpau-driver)
-
-  mv vdpau/* "$pkgdir"
 
   install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
