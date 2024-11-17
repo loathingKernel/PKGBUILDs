@@ -2,7 +2,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-cachyos
-_srctag=9.0-20241031
+_srctag=9.0-20241115
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
@@ -97,9 +97,6 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
-    wine-optical-flow.patch
-    nvapi-optical-flow.patch
-    proton-optical-flow.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -166,22 +163,6 @@ prepare() {
         cargo fetch --locked --target "x86_64-unknown-linux-gnu"
     popd
     done
-
-    echo "Wine: Optical Flow"
-    pushd $srcdir/proton-cachyos/wine
-    patch -Np1 -i "$srcdir"/wine-optical-flow.patch
-    popd
-
-    echo "nvapi: Optical Flow"
-    pushd $srcdir/proton-cachyos/dxvk-nvapi
-    patch -Np1 -i "$srcdir"/nvapi-optical-flow.patch
-    popd
-
-    echo "Patch Proton Script for Optical Flow"
-    pushd $srcdir/proton-cachyos
-    patch -Np1 -i "$srcdir"/proton-optical-flow.patch
-    popd
-
 }
 
 build() {
@@ -269,11 +250,8 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('cae4d1d56e3c3a3aacbfa450631a68cbaac38b7cfeada44f483f98f50848197b'
+sha256sums=('bd473b585d6668c3a2602d6788484c5bda07ca19c90835fc37191085cfe6cac0'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             'c23deb9e3217a574f242b78d74cb94c4948a37d1f2715941b803a02e535854a6'
-            'a5cfd3090ebf7fb694bce573ef87b300b86f61204987ecbd068a2fe5079b7e6e'
-            '121fdea637d14ee1d386a1aea90682e9928f5b8d16c3baf7ff99ba84a212b046'
-            'add5cdfcc0b2c47d592adda00ca796327ee86289bb9bf31a52b7320a4b240254'
-            '43a645ac382c73649f61c6e1670d0c666dd40c6ea01df1ee308f1b465396aff9')
+            'a5cfd3090ebf7fb694bce573ef87b300b86f61204987ecbd068a2fe5079b7e6e')
