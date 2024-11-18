@@ -33,11 +33,6 @@ sha512sums=('ff52d871af884baccaebcb5dcbdb83c2118bce2a9fe8b89b531ac2f86f948760d07
             '34e25c868cf4572414fbc6c693877127152f9a97edf8865b4263a55cf16f71a5045ba96b1a9af8244ed49c35cab56e3fdb44348d191e9f85e2efb66392907132'
             '46a89313447c2aee40943e800bb79d05e30bb9f89fcd48e37ca1a0f9226efbfed20b0ff02cc88e03ed904069b98008525a66856568dbe57d1380389d74e4b091')
 
-CFLAGS="-march=native -O2 -pipe -fstack-protector-strong"
-CXXFLAGS="${CFLAGS} -ansi -std=gnu++11"
-CPPFLAGS="${CPPFLAGS} -DNDEBUG"
-MAKEFLAGS="-j$(nproc)"
-
 build() {
     sed  -i '/\#include \"cryptopp_inc.h\"/a #include "assert.h"' "${srcdir}/urbackup-client-${pkgver}.0/cryptoplugin/AESGCMDecryption.h"
 
