@@ -6,7 +6,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-cachyos-opt
-_srctag=9.0-20241031
+_srctag=9.0-20241115
 pkgver=${_srctag//-/.}
 pkgrel=1
 epoch=2
@@ -19,7 +19,6 @@ source=(wine-cachyos::git+https://github.com/CachyOS/wine-cachyos.git#tag=cachyo
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
-        wine-optical-flow.patch
 )
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -48,6 +47,7 @@ depends+=(
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
+  git
   python
   giflib                lib32-giflib
   gnutls                lib32-gnutls
@@ -113,7 +113,6 @@ prepare() {
       git config user.email "wine@cachyos.org"
       git config user.name "wine cachyos"
       git tag wine-9.0 --annotate -m "$pkgver" --force
-      patch -Np1 -i "$srcdir"/wine-optical-flow.patch
       ./dlls/winevulkan/make_vulkan -x vk.xml
       ./tools/make_specfiles
       ./tools/make_requests
@@ -218,7 +217,6 @@ package() {
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
-b2sums=('07db0f26144e00738fbbdeff3a96c303a62c706fa56d346d8c4b5a4956697fb9a05f7a91ae1235bdb922a8ec89ebf85479e7fdc5a99a19a02ea7bde4f5416d66'
+b2sums=('a60f80f5ebc8ac7e855b18f6f4614d3b080bee06eaaedda4a3ff83d485197d79f0fe0a1847992b0e44b13eafdf991e2fccf719c065f32298e1e60f261dbb722d'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
-        'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588'
-        '3c4516dd44c8bbec45fc30e75c45e3a87ca6d0275f22e1ba8a9b9a423768ea789166140519cceae3c8e24476d1d9acab5439075b073c3422c4fead4fa7a18b88')
+        'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588')

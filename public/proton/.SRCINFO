@@ -1,6 +1,6 @@
 pkgbase = proton
 	pkgdesc = Compatibility tool for Steam Play based on Wine and additional components
-	pkgver = 9.0.3.1
+	pkgver = 9.0.3.5
 	pkgrel = 1
 	epoch = 2
 	url = https://github.com/ValveSoftware/Proton
@@ -133,7 +133,7 @@ pkgbase = proton
 	options = !lto
 	options = !debug
 	options = emptydirs
-	source = proton::git+https://github.com/ValveSoftware/Proton.git#tag=proton-9.0-3c
+	source = proton::git+https://github.com/ValveSoftware/Proton.git#tag=proton-9.0-3e
 	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86.tar.xz
 	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86_64.tar.xz
 	source = https://github.com/madewokherd/wine-mono/releases/download/wine-mono-9.2.0/wine-mono-9.2.0-x86.tar.xz
@@ -143,15 +143,15 @@ pkgbase = proton
 	source = 0003-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
 	source = 0004-AUR-Strip-binaries-early.patch
 	source = 0005-AUR-Fix-hwnd-redefinition.patch
-	sha256sums = 37ecac911be06564785d9de4173418651ce4c5fe7e7eaca0e1f04cc1c4c989c2
+	sha256sums = 3eda5843a8fa2ff72beed26c57574092eec469953ad4f17a51bd8a9f04949719
 	sha256sums = 2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6
 	sha256sums = fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814
 	sha256sums = 59b35dfe525f32c581884b6c7865496e13b3cd200c5ed267c43fb4663e0cd757
 	sha256sums = 50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c
-	sha256sums = f0ab49114768788dac224256f1c38503c2cf06a95b8a214c5ae82698216fd398
-	sha256sums = 9074aa46a99f93b0b219a81a41e983fad8cca40d52a8a2f88cb556e8ad4fb91e
-	sha256sums = bced3cd932190fdeb386d2fdf9fc2d20ddb86f0904ddf711248f7de5d7beb784
-	sha256sums = 492e748a4eaa51dc1bf4f0ee295fd41a66495c5ad38f91718d4d6e0f3a79cf6d
-	sha256sums = 2e0b17cbc248dbb8cbd67f7fa2d2df1de9496ee6f0eaea4954f0ad4109f36bff
+	sha256sums = d5bc7871247ce9fddefb03813b70853a79e7b340a1dbfbb2213bd8b93b5a4e62
+	sha256sums = 0d5f2cc441b04928773a8dc0424cf9898e6ba4feda296566cbcf125d103a8d14
+	sha256sums = b6c3f47f6ef3055a74b838c0d372271925c607d2477eee75eda9646a18f33e7a
+	sha256sums = 2912d7b587cd309cb5f063bea03bf109c7225fdcb54d7ed72c7c064007f72f48
+	sha256sums = 239e4d8d462cbb0da223caa6f52d5987a5b2f4c6d7b5ddb274229f654a07b295
 
 pkgname = proton
