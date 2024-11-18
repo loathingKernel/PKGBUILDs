@@ -1,23 +1,29 @@
-# Maintainer: Behnam Momeni <sbmomeni [at the] gmail [dot] com>
+# Maintainer: envolution
+# Contributor: Behnam Momeni <sbmomeni [at the] gmail [dot] com>
 # Contributor: Andrew Sun <adsun701 at gmail dot com>
 # Contributor: orumin <dev at orum.in>
 
 pkgbase=lib32-lapack
 _basename=lapack
-pkgname=('lib32-lapack' 'lib32-blas' 'lib32-cblas' 'lib32-lapacke')
-pkgver=3.11.0
+pkgname=(
+  'lib32-lapack' 
+  'lib32-blas' 
+  'lib32-cblas' 
+  'lib32-lapacke'
+)
+pkgver=3.12.0
 pkgrel=1
 url="https://www.netlib.org/lapack"
 pkgdesc="Linear Algebra PACKage (32-bit)"
 makedepends=('gcc-fortran' 'lib32-gcc-libs' 'cmake' 'python')
 arch=('x86_64')
-license=("custom")
+license=(BSD-3-Clause)
 source=($_basename-$pkgver.tar.gz::"https://github.com/Reference-LAPACK/lapack/archive/v$pkgver.tar.gz")
-sha256sums=('4b9ba79bfd4921ca820e83979db76ab3363155709444a787979e81c22285ffa9')
+sha256sums=('eac9570f8e0ad6f30ce4b963f4f033f0f643e7c3912fc9ee6cd99120675ad48b')
 
 build() {
-  mkdir -p ${srcdir}/build
-  cd ${srcdir}/build
+  mkdir -p build
+  cd build
 
   export FFLAGS='-m32'
   export CC='gcc -m32'
@@ -39,6 +45,7 @@ build() {
 
 package_lib32-lapack() {
   depends=('lib32-blas' 'lapack')
+  install -vDm644 ${_basename}-${pkgver}/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   
   cd build
   make DESTDIR="$pkgdir" install
@@ -53,6 +60,7 @@ package_lib32-blas() {
   pkgdesc="Basic Linear Algebra Subprograms (32-bit)"
   depends=('lib32-gcc-libs' 'blas')
 
+  install -vDm644 ${_basename}-${pkgver}/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   cd build/BLAS
   make DESTDIR="$pkgdir" install
   
@@ -62,6 +70,7 @@ package_lib32-cblas() {
   pkgdesc="C interface to BLAS (32-bit)"
   depends=('lib32-blas' 'cblas')
 
+  install -vDm644 ${_basename}-${pkgver}/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   cd build/CBLAS
   make DESTDIR="$pkgdir" install
   rm -r "$pkgdir"/usr/include
@@ -71,6 +80,7 @@ package_lib32-lapacke() {
   pkgdesc="C interface to LAPACK (32-bit)"
   depends=('lib32-lapack' 'lapacke')
 
+  install -vDm644 ${_basename}-${pkgver}/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   cd build/LAPACKE
   make DESTDIR="$pkgdir" install
   rm -r "$pkgdir"/usr/include
