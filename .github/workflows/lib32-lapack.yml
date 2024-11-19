@@ -1,7 +1,18 @@
+
 name: lib32-lapack
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+        - 'build'
+        - 'remove'
+        - 'skip'
   push:
     branches:
      - master
@@ -9,11 +20,13 @@ on:
      - aur/lib32-lapack/.SRCINFO
 
 jobs:
-  public:
-    uses: ./.github/workflows/job_pkgbuild.yml
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: aur/lib32-lapack
-      pacman_conf: .github/conf/public_pacman.conf
-      makepkg_conf: .github/conf/public_makepkg.conf
+      repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
       multilib: true
-      release_tag: loathk-public
