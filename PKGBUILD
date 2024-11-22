@@ -16,7 +16,7 @@ pkgname=(
   lib32-vulkan-swrast
   lib32-vulkan-virtio
 )
-pkgver=24.2.7
+pkgver=24.3.0
 pkgrel=1
 epoch=1
 pkgdesc="Open-source OpenGL drivers - 32-bit"
@@ -31,12 +31,12 @@ makedepends=(
   lib32-libdrm
   lib32-libelf
   lib32-libglvnd
+  lib32-libpng
   lib32-libva
   lib32-libvdpau
   lib32-libx11
   lib32-libxcb
   lib32-libxext
-  lib32-libxfixes
   lib32-libxml2
   lib32-libxrandr
   lib32-libxshmfence
@@ -115,7 +115,7 @@ for _crate in "${!_crates[@]}"; do
   )
 done
 
-b2sums=('eb1b0285e14e77c3140275b322ff084fca74a1048e6df38f4b14cb03ed7fc436897f7b33d107d1e262d9d4944229fb1e85d02e731c645ead5a7b269dec9334b7'
+b2sums=('43977028609e1be35849e5b72d5cdfbe2052ce959ec43dd649fbf2f3d0f262fbbc3f5194a56a33463eb0b0de8f7f32e4fd2b0dc06cc2f83b27d01bca611f26ec'
         'SKIP'
         'a6d47c903be6094423d89b8ec3ca899d0a84df6dbd6e76632bb6c9b9f40ad9c216f8fa400310753d392f85072756b43ac3892e0a2c4d55f87ab6463002554823'
         '9c34f1ab14ad5ae124882513e0f14b1d731d06a43203bdc37fa3b202dd3ce93dbe8ebb554d01bab475689fe6ffd3ec0cbc0d5365c9b984cb83fb34ea3e9e732e'
@@ -134,7 +134,7 @@ b2sums=('eb1b0285e14e77c3140275b322ff084fca74a1048e6df38f4b14cb03ed7fc436897f7b3
         '8bc6f68ed286bea617a2cfaf3949bb699d3a0466faeca735314a51596ce950e4ee57eda88154bd562c1728cfaff4cdb5bc1ba701b9d47a9c50d4c4f011bee975')
 
 # https://docs.mesa3d.org/relnotes.html
-sha256sums=('a0ce37228679647268a83b3652d859dcf23d6f6430d751489d4464f6de6459fd'
+sha256sums=('97813fe65028ef21b4d4e54164563059e8408d8fee3489a2323468d198bf2efc'
             'SKIP'
             'ed646292ffc8188ef8ea4d1e0e0150fb15a5c2e12ad9b8fc191ae7a8a7f3c4b9'
             'a941429fea7e08bedec25e4f6785b6ffaacc6b755da98df5ef3e7dcf4a124c4f'
@@ -169,7 +169,6 @@ build() {
     -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,llvmpipe,softpipe,iris,crocus,i915,zink
     -D gallium-extra-hud=true
     -D gallium-nine=true
-    -D gallium-omx=disabled
     -D gallium-opencl=icd
     -D gallium-rusticl=true
     -D gles1=disabled
@@ -184,7 +183,7 @@ build() {
     -D valgrind=disabled
     -D video-codecs=all
     -D vulkan-drivers=amd,intel,intel_hasvk,nouveau,swrast,virtio
-    -D vulkan-layers=device-select,intel-nullhw,overlay
+    -D vulkan-layers=device-select,intel-nullhw,overlay,screenshot
   )
 
   export BINDGEN_EXTRA_CLANG_ARGS="-m32"
@@ -221,11 +220,11 @@ package_lib32-mesa() {
     lib32-libx11
     lib32-libxcb
     lib32-libxext
-    lib32-libxfixes
     lib32-libxshmfence
     lib32-libxxf86vm
     lib32-llvm-libs
     lib32-lm_sensors
+    lib32-spirv-tools
     lib32-wayland
     lib32-zlib
     lib32-zstd
@@ -300,8 +299,6 @@ package_lib32-opencl-clover-mesa() {
     lib32-libdrm
     lib32-libelf
     lib32-llvm-libs
-    lib32-spirv-llvm-translator
-    lib32-spirv-tools
     lib32-zlib
     lib32-zstd
 
@@ -354,6 +351,7 @@ package_lib32-vulkan-intel() {
     lib32-libx11
     lib32-libxcb
     lib32-libxshmfence
+    lib32-spirv-tools
     lib32-systemd
     lib32-vulkan-icd-loader
     lib32-wayland
@@ -377,6 +375,7 @@ package_lib32-vulkan-mesa-layers() {
     lib32-gcc-libs
     lib32-glibc
     lib32-libdrm
+    lib32-libpng
     lib32-libxcb
     lib32-wayland
 
@@ -400,6 +399,7 @@ package_lib32-vulkan-nouveau() {
     lib32-libx11
     lib32-libxcb
     lib32-libxshmfence
+    lib32-spirv-tools
     lib32-systemd
     lib32-vulkan-icd-loader
     lib32-wayland
@@ -429,6 +429,7 @@ package_lib32-vulkan-radeon() {
     lib32-libxcb
     lib32-libxshmfence
     lib32-llvm-libs
+    lib32-spirv-tools
     lib32-systemd
     lib32-vulkan-icd-loader
     lib32-wayland
@@ -457,6 +458,7 @@ package_lib32-vulkan-swrast() {
     lib32-libxcb
     lib32-libxshmfence
     lib32-llvm-libs
+    lib32-spirv-tools
     lib32-systemd
     lib32-vulkan-icd-loader
     lib32-wayland
