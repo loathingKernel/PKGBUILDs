@@ -156,8 +156,8 @@ build() {
 
   msg2 "Building Wine-64..."
 
-  export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_FLAGS"
-  export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_FLAGS"
+  export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
+  export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
   export CROSSCXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
@@ -181,8 +181,8 @@ build() {
   msg2 "Building Wine-32..."
 
   # Disable AVX instead of using 02, for 32bit
-  export CFLAGS="$COMMON_FLAGS -mstackrealign $LTO_FLAGS"
-  export CXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17 $LTO_FLAGS"
+  export CFLAGS="$COMMON_FLAGS -mstackrealign $LTO_CFLAGS"
+  export CXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign"
   export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
@@ -224,8 +224,8 @@ package() {
   ln -s ../conf.avail/30-win32-aliases.conf "$pkgdir/usr/share/fontconfig/conf.default/30-win32-aliases.conf"
   install -Dm 644 "$srcdir/wine-binfmt.conf" "$pkgdir/usr/lib/binfmt.d/wine.conf"
 
-  llvm-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib32/wine/i386-windows/*.{dll,exe}
-  llvm-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib/wine/x86_64-windows/*.{dll,exe}
+  llvm-strip --strip-unneeded "$pkgdir"/usr/lib32/wine/i386-windows/*.{dll,exe}
+  llvm-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe}
 
   #find "$pkgdir"/usr/lib{,32}/wine -iname "*.a" -delete
   #find "$pkgdir"/usr/lib{,32}/wine -iname "*.def" -delete
