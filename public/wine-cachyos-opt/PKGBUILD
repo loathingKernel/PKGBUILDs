@@ -137,9 +137,9 @@ build() {
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   #STRIP_FLAGS="-s"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS $STRIP_FLAGS"
+  LTO_CFLAGS="-flto=thin -D__LLD_LTO__"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-  LTO_CFLAGS="-flto=thin -D__LLD_LTO__"
   LTO_LDFLAGS="-flto=thin -fuse-ld=lld"
 
   # Per component CFLAGS and LDFlAGS (requires makedep patch)
