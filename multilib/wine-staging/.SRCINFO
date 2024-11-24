@@ -1,6 +1,6 @@
 pkgbase = wine-staging
 	pkgdesc = A compatibility layer for running Windows programs - Staging branch
-	pkgver = 9.20
+	pkgver = 9.22
 	pkgrel = 1
 	url = https://www.wine-staging.com
 	install = wine.install
@@ -11,7 +11,9 @@ pkgbase = wine-staging
 	makedepends = perl
 	makedepends = flex
 	makedepends = mingw-w64-gcc
+	makedepends = git
 	makedepends = python
+	makedepends = ffmpeg
 	makedepends = giflib
 	makedepends = lib32-giflib
 	makedepends = gnutls
@@ -53,7 +55,6 @@ pkgbase = wine-staging
 	makedepends = ffmpeg
 	makedepends = samba
 	makedepends = opencl-headers
-	makedepends = git
 	makedepends = ntsync-header
 	depends = attr
 	depends = lib32-attr
@@ -78,6 +79,7 @@ pkgbase = wine-staging
 	depends = lib32-libxkbcommon
 	depends = wayland
 	depends = lib32-wayland
+	optdepends = ffmpeg
 	optdepends = giflib
 	optdepends = lib32-giflib
 	optdepends = gnutls
@@ -115,27 +117,27 @@ pkgbase = wine-staging
 	optdepends = samba
 	optdepends = dosbox
 	optdepends = ntsync-dkms
-	provides = wine=9.20
+	provides = wine=9.22
 	conflicts = wine
 	options = !staticlibs
 	options = !lto
-	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-9.20
-	source = wine-staging-9.20::git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v9.20
+	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-9.22
+	source = wine-staging-9.22::git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v9.22
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
-	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=06b4f5f4b806a9e16c90491a17b0a5e034e1c449
+	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=52b87f0b58ef4e617282c4e362c3f948934e699b
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
 	source = wine-ntsync.patch
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = 1a7b129aaa8d43ff69378ffa9f65e7b0f41c81fe53502a71f64c54397b06aaf1183f4893024153482c84cf85eb9af024d0fc7bfe994c27c53c9e9d357da6cdcd
-	sha512sums = accbb0422fe8d246fd11f818e6ac9586a93684a81671ec59e265ac642ee3107b2cc90724c2138b00150ea7000d4c7fd165a2202d05556ee0aeb9ef365234af7f
+	sha512sums = 5fbc77ea573b4d0ae11ad30302e799d9a03620dfc87d005a8abee381010d1dae6c1b11cb06385b1ef6ae6f887f1e747c20e01bf0bb4853f0ca945486d9513857
+	sha512sums = c936aae676652de4c877cc696560777c1fe0f7f905919b45005e227aff1da1ea25e2088859dbe0ac01c9d436adf00bf6700d642203b5ae99ba5e4ff715eec92e
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
-	sha512sums = SKIP
+	sha512sums = f80ae8c9244e2864913ae61088e4b812c0c6d1275887b8e07962ea0f03e817da2d30f3a1842127d7475477a0b9ee9e6a2a4497da4e2986b4b98c543aa6ad6daf
 	sha512sums = 30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569
 	sha512sums = 3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282
-	sha512sums = 685257c1a70ff5d465256e9f915ed7823ad179844938d4c2c7a4dfcb76a144b3e59ede471c8c86b19ac4afe93e70eba98ff4ab216fd886d81ba7ec917ce93b23
+	sha512sums = f9ef6fa9b8a203c4726576ecd7c5c0ff0a5c1fca8b4ec970f9752ba9c1bdff046bea7d0717ce9f3f71931a17bf8f711b22e21d33b895d5f5e376c3ad43f8f62c
 
 pkgname = wine-staging
