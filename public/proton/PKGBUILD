@@ -40,7 +40,7 @@ depends+=(
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
-  git wget rsync unzip mingw-w64-tools lld nasm
+  wget rsync unzip mingw-w64-tools lld nasm
   meson cmake fontforge afdko python-pefile glib2-devel
   glslang vulkan-headers
   clang
@@ -63,6 +63,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   rust                  lib32-rust-libs
   libgphoto2
   opencl-headers
+  git
 )
 
 optdepends=(
