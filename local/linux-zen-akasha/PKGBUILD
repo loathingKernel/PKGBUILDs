@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-akasha
-pkgver=6.11.6.zen1
+pkgver=6.12.1.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Akasha'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -37,18 +37,18 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('c954f60197008f1e1f32a1e77293903cf3801d2543ec4bf521f5651eb7f133ce'
+sha256sums=('0193b1d86dd372ec891bae799f6da20deef16fc199f30080a4ea9de8cef0c619'
             'SKIP'
-            'f1bbf09f8419cbbb09ad0d04a14ce3599965abbba94677da55d122e9ca920a50'
+            '6cbacdf83d38d4897efb459a4d4860f88ae4434b508a11e1a2f61037daa11ab9'
             'SKIP'
-            'SKIP'
-            '65dc03a06807cf07e1520b44c2cf3694bc138dbfe74b6b10acd1faf0176bbe78')
-b2sums=('821eceaa7492122c724ea789a79aa99f61078f06c86fd6f76d08f640b47ea682f7441c47ed7b860ca39fd242b8797bb5bc311dc63dbb9c37bc15917eccafc255'
+            '7b22f805192c55fcf517a8b795d628f06a8caf6aaec55800ffbb5e19c40835c7'
+            'e4cac3a07f80e7e0212aceb3d5d74670cbada7aa116fc7142f06b4e43ca4dc8c')
+b2sums=('de3f4dec2fc7e36711c68683d6564d0c3ce6fe728ffa6a629604e2fa9e489dbab45fd6676343f6e68bafbd202a3e814e82a1448b46844e34046b9f82f819b8f4'
         'SKIP'
-        '0b4964211e08bd77e52a61668453c2bfaf1326b60f57a5757161a737d16bac0762f65e0755c545f06f25a9e6efb85b285675c328ef95e3e8bc6040e6b43ae014'
+        '0869ecc6898aa63cb8c7db00e1c2a55e2ec6b2219d557c389d5556f459d127b9433661a8b778d52a53166deabea9ec8f1915224820ba197e8ca63e0336b15eeb'
         'SKIP'
-        'SKIP'
-        '62d2a70f5f7f21e19a216448cf3dfe774e57afac5117d17092476edf2b77701be65d9d6c9938e05cdc0cecfed7159bad6c61303f7409f424ae72f3a5c76bb00f')
+        'adff05d35db356ab0600d622fcaeaf7d44e5d240686d59d53d0669642290bf6c07b8c8351a0ae02eb74e0576d8b72fd8a19f2c81cee0bbea3cc21cb459f92d62'
+        'ad5d73857724909ee927ac0505e2fdd22e847c6901bd1222157a4902d80fb0b6db8ae8467f884588bbe930c704f968c8b9e218930979327c469b7e507e4f43fc')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -83,7 +83,7 @@ prepare() {
 #    scripts/config --enable  CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
     scripts/config --enable  CONFIG_EXPERT
     # Mitigations
-    scripts/config --disable CONFIG_SPECULATION_MITIGATIONS
+    scripts/config --disable CONFIG_CPU_MITIGATIONS
     # IRQ subsystem
     scripts/config --disable CONFIG_GENERIC_IRQ_INJECTION
     # CPU/Task time and stats accounting
@@ -165,8 +165,9 @@ _package() {
     kmod
   )
   optdepends=(
-    'wireless-regdb: to set the correct wireless channels of your country'
     'linux-firmware: firmware images needed for some devices'
+    'scx-scheds: to use sched-ext schedulers'
+    'wireless-regdb: to set the correct wireless channels of your country'
   )
   provides=(
     KSMBD-MODULE
