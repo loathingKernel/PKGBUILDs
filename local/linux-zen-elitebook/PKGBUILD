@@ -83,7 +83,7 @@ prepare() {
 #    scripts/config --enable  CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
     scripts/config --enable  CONFIG_EXPERT
     # Mitigations
-    scripts/config --disable CONFIG_SPECULATION_MITIGATIONS
+    scripts/config --disable CONFIG_CPU_MITIGATIONS
     # IRQ subsystem
     scripts/config --disable CONFIG_GENERIC_IRQ_INJECTION
     # CPU/Task time and stats accounting
