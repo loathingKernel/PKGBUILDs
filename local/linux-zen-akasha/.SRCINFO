@@ -1,7 +1,7 @@
 pkgbase = linux-zen-akasha
 	pkgdesc = Linux ZEN Akasha
 	pkgver = 6.12.1.zen1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/zen-kernel/zen-kernel
 	arch = x86_64
 	license = GPL-2.0-only
@@ -29,13 +29,13 @@ pkgbase = linux-zen-akasha
 	sha256sums = SKIP
 	sha256sums = 6cbacdf83d38d4897efb459a4d4860f88ae4434b508a11e1a2f61037daa11ab9
 	sha256sums = SKIP
-	sha256sums = 7b22f805192c55fcf517a8b795d628f06a8caf6aaec55800ffbb5e19c40835c7
+	sha256sums = fb171d143bd4ac2b4637622cc32f0d3f42effe6e44c5c03ccbe7a3b5b6dd0d53
 	sha256sums = e4cac3a07f80e7e0212aceb3d5d74670cbada7aa116fc7142f06b4e43ca4dc8c
 	b2sums = de3f4dec2fc7e36711c68683d6564d0c3ce6fe728ffa6a629604e2fa9e489dbab45fd6676343f6e68bafbd202a3e814e82a1448b46844e34046b9f82f819b8f4
 	b2sums = SKIP
 	b2sums = 0869ecc6898aa63cb8c7db00e1c2a55e2ec6b2219d557c389d5556f459d127b9433661a8b778d52a53166deabea9ec8f1915224820ba197e8ca63e0336b15eeb
 	b2sums = SKIP
-	b2sums = adff05d35db356ab0600d622fcaeaf7d44e5d240686d59d53d0669642290bf6c07b8c8351a0ae02eb74e0576d8b72fd8a19f2c81cee0bbea3cc21cb459f92d62
+	b2sums = 940c50f07f2dbf553d02c4c2d69ee5eebb81e0fabcde694c4c0ec7aa8b663051cc4eaad72fd3bd24fc1a32063fef2aef2397d7bf82a4ac53d9f5dceee0ebca15
 	b2sums = ad5d73857724909ee927ac0505e2fdd22e847c6901bd1222157a4902d80fb0b6db8ae8467f884588bbe930c704f968c8b9e218930979327c469b7e507e4f43fc
 
 pkgname = linux-zen-akasha
