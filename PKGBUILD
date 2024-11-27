@@ -5,7 +5,7 @@
 
 _pkgbase=nvidia-settings
 pkgname=lib32-libxnvctrl
-pkgver=560.35.03
+pkgver=565.57.01
 pkgrel=1
 pkgdesc='NVIDIA NV-CONTROL X extension (32-bit)'
 url='https://github.com/NVIDIA/nvidia-settings'
@@ -16,7 +16,7 @@ optdepends=('libxnvctrl: XNVCtrl development headers')
 options=('staticlibs')
 source=(${_pkgbase}-${pkgver}.tar.gz::https://github.com/NVIDIA/nvidia-settings/archive/${pkgver}.tar.gz
         nvidia-settings-libxnvctrl_so.patch)
-sha512sums=('7f2ae7a2802f9755d565f6b7c62b28f94ea71d0126e2d6f57d2a1af5c0cde882a0676c0f426978e68e4972453d9476c6801d4a5c2ac151d1d26a7fa227b8de63'
+sha512sums=('014f16c2c98320ca8a2df532224144bf08530b077a718babd587da618dfb4d5b699843b1c13c7aeba35eef0361add7acef40e4fc77f294782fdaba8e944b6f2b'
             '0303fe615d6ef4e14112998c531a17613b94776f9a6a027ddb81e400fddd5f2ff15583da8b8631c2306aca854edf2f54a8007eb36f1732b4c064c857aaf268ae')
 
 prepare() {
