@@ -8,7 +8,7 @@
 pkgname=wine-ge-custom
 _srctag=GE-Proton9-20
 pkgver=${_srctag//-/.}
-pkgrel=1
+pkgrel=2
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -131,25 +131,32 @@ build() {
   local -A flags
   for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
   local march="${flags["-march"]:-nocona}"
-  local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
+  local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
   OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
+  #LTO_CFLAGS="-fuse-linker-plugin -fdevirtualize-at-ltrans -flto-partition=one -flto -Wl,-flto"
 
-  export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-  export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
+  COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
+  #LTO_LDFLAGS="$LTO_CFLAGS"
+
+  # Disable assertions
+  #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
+
+  export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
+  export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
 
   cd "$srcdir"
 
   msg2 "Building Wine-64..."
 
-  export CFLAGS="$COMMON_FLAGS -mcmodel=small"
-  export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
-  export CROSSCFLAGS="$CFLAGS"
-  export CROSSCXXFLAGS="$CXXFLAGS"
+  export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
+  export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
+  export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
+  export CROSSCXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-64-build"
   ../$pkgname/wine/configure \
@@ -171,10 +178,10 @@ build() {
   msg2 "Building Wine-32..."
 
   # Disable AVX instead of using 02, for 32bit
-  export CFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
-  export CXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
-  export CROSSCFLAGS="$CFLAGS"
-  export CROSSCXXFLAGS="$CXXFLAGS"
+  export CFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx $LTO_CFLAGS"
+  export CXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17 $LTO_CFLAGS"
+  export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
+  export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-32-build"
   ../$pkgname/wine/configure \
@@ -217,12 +224,11 @@ package() {
   i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib32/wine/i386-windows/*.{dll,exe}
   x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe}
 
-  find "$pkgdir"/usr/lib{,32}/wine -iname "*.a" -delete
-  find "$pkgdir"/usr/lib{,32}/wine -iname "*.def" -delete
+  #find "$pkgdir"/usr/lib{,32}/wine -iname "*.a" -delete
+  #find "$pkgdir"/usr/lib{,32}/wine -iname "*.def" -delete
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
-
 sha512sums=('f70e16858ad429b3dfcff36b12d48318a0a10dca333544b42321f2a178d6c8e5edc8a4ba693f537e2517cee8acae472b15ec36d89669069b54be70132292dc16'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
