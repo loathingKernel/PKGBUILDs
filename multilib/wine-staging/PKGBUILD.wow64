@@ -7,7 +7,7 @@
 
 pkgname=wine-staging
 pkgver=9.22
-pkgrel=1
+pkgrel=2
 _tkg_commit=52b87f0b58ef4e617282c4e362c3f948934e699b
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -169,23 +169,17 @@ build() {
   local -A flags
   for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
   local march="${flags["-march"]:-nocona}"
-  local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
+  local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
   OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
-  STRIP_FLAGS="-s"
-  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS $STRIP_FLAGS"
+  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
   #LTO_CFLAGS="-fuse-linker-plugin -fdevirtualize-at-ltrans -flto-partition=one -flto -Wl,-flto"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
   #LTO_LDFLAGS="$LTO_CFLAGS"
-
-  # Per component CFLAGS and LDFlAGS (requires makedep patch)
-  export preloader_CFLAGS=" -fno-lto -Wl,--no-relax"
-  export wine64_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
-  export wine_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
 
   # Disable assertions
   #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
@@ -240,8 +234,8 @@ package() {
   i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.{dll,exe}
   x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe}
 
-  find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
-  find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
+  #find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
+  #find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
