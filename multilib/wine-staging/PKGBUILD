@@ -216,8 +216,8 @@ build() {
   msg2 "Building Wine-32..."
 
   # Disable AVX instead of using 02, for 32bit
-  export CFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
-  export CXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
+  export CFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx $LTO_CFLAGS"
+  export CXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
   export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
