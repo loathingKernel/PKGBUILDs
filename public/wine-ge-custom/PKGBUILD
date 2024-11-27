@@ -9,7 +9,7 @@ pkgname=wine-ge-custom
 _srctag=GE-Proton8-26
 _commit=21f5f463cb761b94bcd00553f924f55516389f5b
 pkgver=${_srctag//-/.}
-pkgrel=6
+pkgrel=8
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -143,8 +143,13 @@ build() {
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
 
-  export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-  export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
+  COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
+
+  # Disable assertions
+  #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
+
+  export LDFLAGS="$COMMON_LDFLAGS"
+  export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
 
   cd "$srcdir"
 
@@ -152,8 +157,8 @@ build() {
 
   export CFLAGS="$COMMON_FLAGS -mcmodel=small"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
-  export CROSSCFLAGS="$CFLAGS"
-  export CROSSCXXFLAGS="$CXXFLAGS"
+  export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
+  export CROSSCXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-64-build"
   ../$pkgname/proton-wine/configure \
@@ -176,8 +181,8 @@ build() {
   # Disable AVX instead of using 02, for 32bit
   export CFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
   export CXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
-  export CROSSCFLAGS="$CFLAGS"
-  export CROSSCXXFLAGS="$CXXFLAGS"
+  export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
+  export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-32-build"
   ../$pkgname/proton-wine/configure \
