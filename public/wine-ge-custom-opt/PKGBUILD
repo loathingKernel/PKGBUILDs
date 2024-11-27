@@ -9,7 +9,7 @@ pkgname=wine-ge-custom-opt
 _srctag=GE-Proton8-26
 _commit=21f5f463cb761b94bcd00553f924f55516389f5b
 pkgver=${_srctag//-/.}
-pkgrel=6
+pkgrel=8
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -136,7 +136,7 @@ build() {
   local -A flags
   for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
   local march="${flags["-march"]:-nocona}"
-  local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
+  local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
   OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
@@ -144,8 +144,13 @@ build() {
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
 
-  export LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-  export CROSSLDFLAGS="$LDFLAGS -Wl,--file-alignment,4096"
+  COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
+
+  # Disable assertions
+  #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
+
+  export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
+  export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
 
   cd "$srcdir"
 
@@ -153,8 +158,8 @@ build() {
 
   export CFLAGS="$COMMON_FLAGS -mcmodel=small"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
-  export CROSSCFLAGS="$CFLAGS"
-  export CROSSCXXFLAGS="$CXXFLAGS"
+  export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
+  export CROSSCXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/${pkgname//-opt}-64-build"
   ../${pkgname//-opt}/proton-wine/configure \
@@ -177,8 +182,8 @@ build() {
   # Disable AVX instead of using 02, for 32bit
   export CFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
   export CXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
-  export CROSSCFLAGS="$CFLAGS"
-  export CROSSCXXFLAGS="$CXXFLAGS"
+  export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
+  export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/${pkgname//-opt}-32-build"
   ../${pkgname//-opt}/proton-wine/configure \
@@ -203,20 +208,20 @@ package() {
 
   make prefix="$pkgdir/opt/${pkgname//-opt}" \
     libdir="$pkgdir/opt/${pkgname//-opt}/lib32" \
-    dlldir="$pkgdir/opt/${pkgname//-opt}/lib32/wine" install
+    dlldir="$pkgdir/opt/${pkgname//-opt}/lib32/wine" install-lib
 
   msg2 "Packaging Wine-64..."
   cd "$srcdir/${pkgname//-opt}-64-build"
   make prefix="$pkgdir/opt/${pkgname//-opt}" \
     libdir="$pkgdir/opt/${pkgname//-opt}/lib" \
-    dlldir="$pkgdir/opt/${pkgname//-opt}/lib/wine" install
+    dlldir="$pkgdir/opt/${pkgname//-opt}/lib/wine" install-lib
 
 
   i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib32/wine/i386-windows/*.{dll,exe}
   x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib/wine/x86_64-windows/*.{dll,exe}
 
-  #find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.a" -delete
-  #find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.def" -delete
+  find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.a" -delete
+  find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.def" -delete
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
