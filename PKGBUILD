@@ -2,15 +2,13 @@
 
 pkgname=dissent
 _fqpn=so.libdb.${pkgname}
-pkgver=0.0.30
-pkgrel=2
+pkgver=0.0.31
+pkgrel=1
 pkgdesc='Discord client written in go and gtk4'
 arch=(x86_64 aarch64)
 url='https://github.com/diamondburned/dissent'
 license=('GPL-3.0-only')
 depends=(
-  'gtk4>=4.10.3'
-  'libadwaita>=1.3.2'
   cairo
   gcc-libs
   gdk-pixbuf2
@@ -18,17 +16,21 @@ depends=(
   glibc
   gobject-introspection
   graphene
+  gtk4
   gtksourceview5
   hicolor-icon-theme
+  libadwaita
   libspelling
   pango
 )
 makedepends=(git 'go>=1.20.3')
 source=("git+https://github.com/diamondburned/dissent#tag=v${pkgver}")
-sha256sums=('3c516858af3939240ebc1d1a1828ea41f8327a1740871d6db49826e87722bef2')
+sha256sums=('d4c26de1d5f2f4e6e2b71baabc243e30ef98ff2fba3279e2a4332ae575f07857')
 
 prepare() {
   cd "${pkgname}"
+
+  mkdir -p build
 
   export GOPATH="${srcdir}"
   export GOFLAGS="-modcacherw"
@@ -65,9 +67,9 @@ package() {
   install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   install -Dm644 "nix/${_fqpn}.desktop" "${pkgdir}/usr/share/applications/${_fqpn}.desktop"
   install -Dm644 "nix/${_fqpn}.service" "${pkgdir}/usr/share/dbus-1/services/${_fqpn}.service"
-  install -Dm644 "${pkgname}/${_fqpn}.metainfo.xml" "${pkgdir}/usr/share/metainfo/${_fqpn}.metainfo.xml"
+  install -Dm644 "${_fqpn}.metainfo.xml" "${pkgdir}/usr/share/metainfo/${_fqpn}.metainfo.xml"
 
-  cp -dr internal/icons/hicolor/ "${pkgir}/usr/share/icons/"
-  cp -dr internal/icons/scalable/ "${pkgir}/usr/share/icons/hicolor/"
+  cp -dr internal/icons/hicolor/ "${pkgdir}/usr/share/icons/"
+  cp -dr internal/icons/scalable/ "${pkgdir}/usr/share/icons/hicolor/"
   cp -dr internal/icons/symbolic/ "${pkgdir}/usr/share/icons/hicolor/"
 }
