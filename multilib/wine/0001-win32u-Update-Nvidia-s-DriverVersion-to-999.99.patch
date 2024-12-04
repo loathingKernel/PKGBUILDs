@@ -16,8 +16,8 @@ index 2b4a397af9b..e83e4b4f966 100644
              break;
          /* Nvidia */
          case 0x10de:
--            sprintf( buffer, "31.0.15.3625" );
-+            sprintf( buffer, "31.0.19.9999" );
+-            strcpy( buffer, "31.0.15.3625" );
++            strcpy( buffer, "31.0.19.9999" );
              break;
          /* Default value for any other vendor. */
          default:
