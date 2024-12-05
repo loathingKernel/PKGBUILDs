@@ -16,10 +16,10 @@ _libarchive_ver=3.7.7
 _gpgerrorver=1.51
 _libassuanver=3.0.0
 _gpgmever=1.24.1
-pkgrel=10
+pkgrel=11
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.0.0
-_git_patch_level_commit=77361331ae3864c6ea880e715c5864d59336f275
+_git_patch_level_commit=c685ae6412af04cae1eaa5d6bda8c277c7ffb8c8
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
