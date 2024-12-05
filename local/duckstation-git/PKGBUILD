@@ -1,7 +1,7 @@
 # Contributor: katt <magunasu.b97@gmail.com>
 
 pkgname=duckstation-git
-pkgver=0.1.r7016.g4221029
+pkgver=0.1.r8059.g3670c13
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
 pkgrel=1
 arch=(x86_64 aarch64)
@@ -105,8 +105,8 @@ build() {
 package() {
     ninja -C build install
     install -Dm755 duckstation/scripts/packaging/duckstation-qt "${pkgdir}/usr/bin/duckstation-qt"
-    install -Dm644 duckstation/scripts/org.duckstation.DuckStation.desktop "${pkgdir}/usr/share/applications/org.duckstation.DuckStation.desktop"
-    install -Dm644 duckstation/scripts/org.duckstation.DuckStation.png "${pkgdir}/usr/share/icons/hicolor/512x512/apps/org.duckstation.DuckStation.png"
+    install -Dm644 duckstation/scripts/packaging/org.duckstation.DuckStation.desktop "${pkgdir}/usr/share/applications/org.duckstation.DuckStation.desktop"
+    install -Dm644 duckstation/scripts/packaging/org.duckstation.DuckStation.png "${pkgdir}/usr/share/icons/hicolor/512x512/apps/org.duckstation.DuckStation.png"
     install -Dm644 duckstation/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
     install -Dm644 duckstation/data/resources/thirdparty.html "${pkgdir}/usr/share/licenses/${pkgname}/thirdparty.html"
 }
