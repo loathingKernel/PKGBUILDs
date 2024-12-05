@@ -1,15 +1,13 @@
 pkgbase = dissent
 	pkgdesc = Discord client written in go and gtk4
-	pkgver = 0.0.30
-	pkgrel = 2
+	pkgver = 0.0.31
+	pkgrel = 1
 	url = https://github.com/diamondburned/dissent
 	arch = x86_64
 	arch = aarch64
 	license = GPL-3.0-only
 	makedepends = git
 	makedepends = go>=1.20.3
-	depends = gtk4>=4.10.3
-	depends = libadwaita>=1.3.2
 	depends = cairo
 	depends = gcc-libs
 	depends = gdk-pixbuf2
@@ -17,11 +15,13 @@ pkgbase = dissent
 	depends = glibc
 	depends = gobject-introspection
 	depends = graphene
+	depends = gtk4
 	depends = gtksourceview5
 	depends = hicolor-icon-theme
+	depends = libadwaita
 	depends = libspelling
 	depends = pango
-	source = git+https://github.com/diamondburned/dissent#tag=v0.0.30
-	sha256sums = 3c516858af3939240ebc1d1a1828ea41f8327a1740871d6db49826e87722bef2
+	source = git+https://github.com/diamondburned/dissent#tag=v0.0.31
+	sha256sums = d4c26de1d5f2f4e6e2b71baabc243e30ef98ff2fba3279e2a4332ae575f07857
 
 pkgname = dissent
