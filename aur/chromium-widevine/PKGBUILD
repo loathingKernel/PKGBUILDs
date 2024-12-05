@@ -1,9 +1,11 @@
-# Maintainer: Doug Newgard <scimmia at archlinux dot org>
+# Maintainer: envolution
+# Contributor: Doug Newgard <scimmia at archlinux dot org>
+# shellcheck shell=bash disable=SC2034,SC2154
 
 pkgname=chromium-widevine
 pkgdesc='A browser plugin designed for the viewing of premium video content'
-pkgver=4.10.2710.0
-_chrome_ver=121.0.6167.184
+pkgver=4.10.2830.0
+_chrome_ver=131.0.6778.85
 pkgrel=1
 epoch=1
 arch=('x86_64')
@@ -11,7 +13,7 @@ url='https://www.widevine.com/'
 license=('custom')
 options=('!strip')
 source=("https://dl.google.com/linux/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${_chrome_ver}-1_amd64.deb")
-sha256sums=('50380ed6c27b6e08054deec2dfa0a71d85e31bdaccf99a8508eccdc880e94346')
+sha256sums=('0a7d1f83a588d6415d93cb342c292c30230b48390f2265c10cd2be84d3253294')
 
 prepare() {
   bsdtar -x --strip-components 4 -f data.tar.xz opt/google/chrome/WidevineCdm
@@ -28,6 +30,7 @@ package() {
   cp -a WidevineCdm "$pkgdir/usr/lib/chromium/"
   find "$pkgdir" -name '*.so' -exec chmod +x {} \;
   install -Dm644 WidevineCdm/LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
-# backward compatibility
+  # backward compatibility
   ln -s WidevineCdm/_platform_specific/linux_x64/libwidevinecdm.so "$pkgdir/usr/lib/chromium/libwidevinecdm.so"
 }
+# vim:set ts=2 sw=2 et:
