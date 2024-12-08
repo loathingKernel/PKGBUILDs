@@ -8,7 +8,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.0
 _xaliaver=0.4.4
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour"
 url="https://github.com/cachyos/proton-cachyos"
@@ -184,7 +184,7 @@ build() {
     local -A flags
     for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
     local march="${flags["-march"]:-nocona}"
-    local mtune="${flags["-mtune"]:-core-avx2}"
+    local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
 
     CFLAGS="-O3 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
     CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
