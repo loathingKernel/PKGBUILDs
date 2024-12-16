@@ -1,7 +1,7 @@
-From 099a7ebc5f867642b5fd8e2b44d74cb9deecb230 Mon Sep 17 00:00:00 2001
+From 4b4499079ce255e90bc30260d15fc8d68cddf65d Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 31 Oct 2023 12:23:30 -0500
-Subject: [PATCH 01/32] gcc 13 warnings
+Subject: [PATCH 01/30] gcc 13 warnings
 
 ---
  dlls/webservices/tests/channel.c | 3 +++
@@ -25,10 +25,10 @@ index 4cf39c10732..1fb12297eef 100644
 2.47.1
 
 
-From c525550fe1920afb8f8369d3628797ea9f8a3121 Mon Sep 17 00:00:00 2001
+From f1259adfff7a769d8ee3c7a192d3a1ce701e4e88 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Mon, 8 Mar 2021 14:31:06 -0600
-Subject: [PATCH 02/32] server: Add an object operation to retrieve a fast
+Date: Mon, 8 Mar 2021 22:31:06 +0200
+Subject: [PATCH 02/30] server: Add an object operation to retrieve a fast
  synchronization object.
 
 ---
@@ -41,9 +41,11 @@ Subject: [PATCH 02/32] server: Add an object operation to retrieve a fast
  server/debugger.c   |  2 ++
  server/device.c     |  4 ++++
  server/directory.c  |  2 ++
+ server/esync.c      |  1 +
  server/event.c      |  2 ++
  server/fd.c         |  4 ++++
  server/file.c       |  1 +
+ server/fsync.c      |  1 +
  server/handle.c     |  1 +
  server/hook.c       |  1 +
  server/mailslot.c   |  4 ++++
@@ -67,7 +69,7 @@ Subject: [PATCH 02/32] server: Add an object operation to retrieve a fast
  server/token.c      |  1 +
  server/window.c     |  1 +
  server/winstation.c |  2 ++
- 35 files changed, 91 insertions(+)
+ 37 files changed, 93 insertions(+)
 
 diff --git a/server/async.c b/server/async.c
 index 1f32d10a0f5..7459950494f 100644
@@ -281,6 +283,18 @@ index 878941cddbf..cd649103db6 100644
      no_close_handle,              /* close_handle */
      directory_destroy             /* destroy */
  };
+diff --git a/server/esync.c b/server/esync.c
+index a5164435ed6..66e074d86bd 100644
+--- a/server/esync.c
++++ b/server/esync.c
+@@ -143,6 +143,7 @@ const struct object_ops esync_ops =
+     default_unlink_name,       /* unlink_name */
+     no_open_file,              /* open_file */
+     no_kernel_obj_list,        /* get_kernel_obj_list */
++    no_get_fast_sync,          /* get_fast_sync */
+     no_close_handle,           /* close_handle */
+     esync_destroy              /* destroy */
+ };
 diff --git a/server/event.c b/server/event.c
 index b93a9960ad2..5f4f2125f9c 100644
 --- a/server/event.c
@@ -348,6 +362,18 @@ index 3d9bb46c590..c16dea5e145 100644
 +    no_get_fast_sync,             /* get_fast_sync */
      no_close_handle,              /* close_handle */
      file_destroy                  /* destroy */
+ };
+diff --git a/server/fsync.c b/server/fsync.c
+index dc50aa0a1f3..d401f9d3fda 100644
+--- a/server/fsync.c
++++ b/server/fsync.c
+@@ -164,6 +164,7 @@ const struct object_ops fsync_ops =
+     default_unlink_name,       /* unlink_name */
+     no_open_file,              /* open_file */
+     no_kernel_obj_list,        /* get_kernel_obj_list */
++    no_get_fast_sync,          /* get_fast_sync */
+     no_close_handle,           /* close_handle */
+     fsync_destroy              /* destroy */
  };
 diff --git a/server/handle.c b/server/handle.c
 index 2f47442d1f8..2c6cbc96a78 100644
@@ -798,18 +824,18 @@ index 875e87ed6b2..990c43f1099 100644
 2.47.1
 
 
-From b7177a005ea65da9cb48f0aa56fad74cfc94a49f Mon Sep 17 00:00:00 2001
+From 05ec614d3bbae70d22b603fd8e0d0c2b89e6fbe8 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Mon, 8 Mar 2021 16:38:18 -0600
-Subject: [PATCH 03/32] server: Create fast synchronization objects for events.
+Date: Tue, 9 Mar 2021 00:38:18 +0200
+Subject: [PATCH 03/30] server: Create fast synchronization objects for events.
 
 ---
  configure.ac       |   1 +
  server/Makefile.in |   1 +
- server/event.c     |  21 +++-
- server/fast_sync.c | 299 +++++++++++++++++++++++++++++++++++++++++++++
+ server/event.c     |  22 +++-
+ server/fast_sync.c | 303 +++++++++++++++++++++++++++++++++++++++++++++
  server/object.h    |   4 +
- 5 files changed, 325 insertions(+), 1 deletion(-)
+ 5 files changed, 330 insertions(+), 1 deletion(-)
  create mode 100644 server/fast_sync.c
 
 diff --git a/configure.ac b/configure.ac
@@ -837,7 +863,7 @@ index a98615cce72..728f1a069a7 100644
  	file.c \
  	fsync.c \
 diff --git a/server/event.c b/server/event.c
-index 5f4f2125f9c..d9d0f76ee84 100644
+index 5f4f2125f9c..47a61280149 100644
 --- a/server/event.c
 +++ b/server/event.c
 @@ -58,6 +58,7 @@ struct event
@@ -881,15 +907,16 @@ index 5f4f2125f9c..d9d0f76ee84 100644
  }
  
  void reset_event( struct event *event )
-@@ -232,6 +236,7 @@ void reset_event( struct event *event )
-         return;
-     }
-     event->signaled = 0;
-+    fast_reset_event( event->fast_sync );
+@@ -238,6 +242,8 @@ void reset_event( struct event *event )
  
-     if (do_fsync())
-         fsync_clear( &event->obj );
-@@ -297,10 +302,24 @@ static struct list *event_get_kernel_obj_list( struct object *obj )
+     if (do_esync())
+         esync_clear( event->esync_fd );
++
++    fast_reset_event( event->fast_sync );
+ }
+ 
+ static void event_dump( struct object *obj, int verbose )
+@@ -297,6 +303,19 @@ static struct list *event_get_kernel_obj_list( struct object *obj )
      return &event->kernel_object;
  }
  
@@ -909,17 +936,20 @@ index 5f4f2125f9c..d9d0f76ee84 100644
  static void event_destroy( struct object *obj )
  {
      struct event *event = (struct event *)obj;
- 
-+    if (event->fast_sync) release_object( event->fast_sync );
+@@ -304,6 +323,7 @@ static void event_destroy( struct object *obj )
      if (do_esync())
          close( event->esync_fd );
      if (event->fsync_idx) fsync_free_shm_idx( event->fsync_idx );
++    if (event->fast_sync) release_object( event->fast_sync );
+ }
+ 
+ struct keyed_event *create_keyed_event( struct object *root, const struct unicode_str *name,
 diff --git a/server/fast_sync.c b/server/fast_sync.c
 new file mode 100644
-index 00000000000..3100abd2630
+index 00000000000..39e5c010d9e
 --- /dev/null
 +++ b/server/fast_sync.c
-@@ -0,0 +1,299 @@
+@@ -0,0 +1,303 @@
 +/*
 + * Fast synchronization primitives
 + *
@@ -982,6 +1012,8 @@ index 00000000000..3100abd2630
 +    no_add_queue,                       /* add_queue */
 +    NULL,                               /* remove_queue */
 +    NULL,                               /* signaled */
++    NULL,                               /* get_esync_fd */
++    NULL,                               /* get_fsync_idx */
 +    NULL,                               /* satisfied */
 +    no_signal,                          /* signal */
 +    linux_device_get_fd,                /* get_fd */
@@ -1091,6 +1123,8 @@ index 00000000000..3100abd2630
 +    no_add_queue,               /* add_queue */
 +    NULL,                       /* remove_queue */
 +    NULL,                       /* signaled */
++    NULL,                       /* get_esync_fd */
++    NULL,                       /* get_fsync_idx */
 +    NULL,                       /* satisfied */
 +    no_signal,                  /* signal */
 +    no_get_fd,                  /* get_fd */
@@ -1238,10 +1272,10 @@ index ea978f2c79b..11f6ecfd335 100644
 2.47.1
 
 
-From 09a179d58fb01a85a0c1bd3eb96d9abcbde7a45a Mon Sep 17 00:00:00 2001
+From 75f6a4557dd67567a64ad41ddf31ca94b5449351 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Thu, 11 Mar 2021 16:45:30 -0600
-Subject: [PATCH 04/32] server: Create fast synchronization objects for
+Subject: [PATCH 04/30] server: Create fast synchronization objects for
  semaphores.
 
 ---
@@ -1251,10 +1285,10 @@ Subject: [PATCH 04/32] server: Create fast synchronization objects for
  3 files changed, 66 insertions(+), 8 deletions(-)
 
 diff --git a/server/fast_sync.c b/server/fast_sync.c
-index 3100abd2630..7b21f54e2b6 100644
+index 39e5c010d9e..20e1760fb60 100644
 --- a/server/fast_sync.c
 +++ b/server/fast_sync.c
-@@ -81,7 +81,7 @@ static const struct fd_ops fast_sync_fd_ops =
+@@ -83,7 +83,7 @@ static const struct fd_ops fast_sync_fd_ops =
  {
      default_fd_get_poll_events,     /* get_poll_events */
      default_poll_event,             /* poll_event */
@@ -1263,7 +1297,7 @@ index 3100abd2630..7b21f54e2b6 100644
      no_fd_read,                     /* read */
      no_fd_write,                    /* write */
      no_fd_flush,                    /* flush */
-@@ -160,8 +160,9 @@ struct fast_sync
+@@ -162,8 +162,9 @@ struct fast_sync
  
  static void linux_obj_dump( struct object *obj, int verbose );
  static void linux_obj_destroy( struct object *obj );
@@ -1274,8 +1308,8 @@ index 3100abd2630..7b21f54e2b6 100644
  {
      sizeof(struct fast_sync),   /* size */
      &no_type,                   /* type */
-@@ -171,7 +172,7 @@ static const struct object_ops fast_sync_ops =
-     NULL,                       /* signaled */
+@@ -175,7 +176,7 @@ static const struct object_ops fast_sync_ops =
+     NULL,                       /* get_fsync_idx */
      NULL,                       /* satisfied */
      no_signal,                  /* signal */
 -    no_get_fd,                  /* get_fd */
@@ -1283,7 +1317,7 @@ index 3100abd2630..7b21f54e2b6 100644
      default_map_access,         /* map_access */
      default_get_sd,             /* get_sd */
      default_set_sd,             /* set_sd */
-@@ -189,22 +190,29 @@ static const struct object_ops fast_sync_ops =
+@@ -193,22 +194,29 @@ static const struct object_ops fast_sync_ops =
  static void linux_obj_dump( struct object *obj, int verbose )
  {
      struct fast_sync *fast_sync = (struct fast_sync *)obj;
@@ -1316,7 +1350,7 @@ index 3100abd2630..7b21f54e2b6 100644
      {
          close( unix_fd );
          return NULL;
-@@ -258,6 +266,28 @@ struct fast_sync *fast_create_event( enum fast_sync_type type, int signaled )
+@@ -262,6 +270,28 @@ struct fast_sync *fast_create_event( enum fast_sync_type type, int signaled )
      return create_fast_sync( type, args.event );
  }
  
@@ -1345,7 +1379,7 @@ index 3100abd2630..7b21f54e2b6 100644
  void fast_set_event( struct fast_sync *fast_sync )
  {
      __u32 count;
-@@ -288,6 +318,12 @@ struct fast_sync *fast_create_event( enum fast_sync_type type, int signaled )
+@@ -292,6 +322,12 @@ struct fast_sync *fast_create_event( enum fast_sync_type type, int signaled )
      return NULL;
  }
  
@@ -1438,10 +1472,10 @@ index 156bc1dcd55..077376e15d4 100644
 2.47.1
 
 
-From 89dfa5ab835860a441a542ab0efc87a7de952022 Mon Sep 17 00:00:00 2001
+From 94a4dd327456885a8b710cb24a0b81fa9340c676 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Thu, 11 Mar 2021 16:52:55 -0600
-Subject: [PATCH 05/32] server: Create fast synchronization objects for
+Subject: [PATCH 05/30] server: Create fast synchronization objects for
  mutexes.
 
 ---
@@ -1451,10 +1485,10 @@ Subject: [PATCH 05/32] server: Create fast synchronization objects for
  3 files changed, 73 insertions(+), 6 deletions(-)
 
 diff --git a/server/fast_sync.c b/server/fast_sync.c
-index 7b21f54e2b6..4b9fc8a8f76 100644
+index 20e1760fb60..b6aff6f3857 100644
 --- a/server/fast_sync.c
 +++ b/server/fast_sync.c
-@@ -270,7 +270,6 @@ struct fast_sync *fast_create_semaphore( unsigned int count, unsigned int max )
+@@ -274,7 +274,6 @@ struct fast_sync *fast_create_semaphore( unsigned int count, unsigned int max )
  {
      struct ntsync_sem_args args = {0};
      struct linux_device *device;
@@ -1462,7 +1496,7 @@ index 7b21f54e2b6..4b9fc8a8f76 100644
  
      if (!(device = get_linux_device())) return NULL;
  
-@@ -288,6 +287,27 @@ struct fast_sync *fast_create_semaphore( unsigned int count, unsigned int max )
+@@ -292,6 +291,27 @@ struct fast_sync *fast_create_semaphore( unsigned int count, unsigned int max )
      return create_fast_sync( FAST_SYNC_SEMAPHORE, args.sem );
  }
  
@@ -1490,7 +1524,7 @@ index 7b21f54e2b6..4b9fc8a8f76 100644
  void fast_set_event( struct fast_sync *fast_sync )
  {
      __u32 count;
-@@ -310,6 +330,11 @@ void fast_reset_event( struct fast_sync *fast_sync )
+@@ -314,6 +334,11 @@ void fast_reset_event( struct fast_sync *fast_sync )
      ioctl( get_unix_fd( fast_sync->fd ), NTSYNC_IOC_EVENT_RESET, &count );
  }
  
@@ -1502,7 +1536,7 @@ index 7b21f54e2b6..4b9fc8a8f76 100644
  #else
  
  struct fast_sync *fast_create_event( enum fast_sync_type type, int signaled )
-@@ -324,6 +349,12 @@ struct fast_sync *fast_create_semaphore( unsigned int count, unsigned int max )
+@@ -328,6 +353,12 @@ struct fast_sync *fast_create_semaphore( unsigned int count, unsigned int max )
      return NULL;
  }
  
@@ -1515,7 +1549,7 @@ index 7b21f54e2b6..4b9fc8a8f76 100644
  void fast_set_event( struct fast_sync *fast_sync )
  {
  }
-@@ -332,4 +363,8 @@ void fast_reset_event( struct fast_sync *obj )
+@@ -336,4 +367,8 @@ void fast_reset_event( struct fast_sync *obj )
  {
  }
  
@@ -1650,10 +1684,10 @@ index 80a91304043..a5ebb251b01 100644
 2.47.1
 
 
-From 95436048a14ac782f63a6486c785bff9c107f19d Mon Sep 17 00:00:00 2001
+From 96b6e481ad1fce15ac735ac2160fd9925d985d61 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Thu, 11 Mar 2021 20:32:58 -0600
-Subject: [PATCH 06/32] server: Create fast synchronization objects for
+Date: Fri, 12 Mar 2021 04:32:58 +0200
+Subject: [PATCH 06/30] server: Create fast synchronization objects for
  completion ports.
 
 ---
@@ -1661,7 +1695,7 @@ Subject: [PATCH 06/32] server: Create fast synchronization objects for
  1 file changed, 22 insertions(+), 2 deletions(-)
 
 diff --git a/server/completion.c b/server/completion.c
-index 48e911c1840..1bd836cc94a 100644
+index 48e911c1840..cca4d27d905 100644
 --- a/server/completion.c
 +++ b/server/completion.c
 @@ -79,6 +79,7 @@ struct completion
@@ -1743,22 +1777,22 @@ index 48e911c1840..1bd836cc94a 100644
  }
  
  /* create a completion */
-@@ -431,6 +450,7 @@ DECL_HANDLER(remove_completion)
-         reply->wait_handle = 0;
-         if (list_empty( &completion->queue ))
+@@ -433,6 +452,7 @@ DECL_HANDLER(remove_completion)
          {
-+            fast_reset_event( completion->fast_sync );
              if (do_esync()) esync_clear( completion->esync_fd );
              if (do_fsync()) fsync_clear( &completion->obj );
++            fast_reset_event( completion->fast_sync );
          }
+     }
+ 
 -- 
 2.47.1
 
 
-From c0bf57c4696878a23fad27fb81f9c6f61beeb90b Mon Sep 17 00:00:00 2001
+From 976d61bee74cccb6098ca6aac672be8454c3c409 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 16:54:34 -0600
-Subject: [PATCH 07/32] server: Create fast synchronization objects for
+Subject: [PATCH 07/30] server: Create fast synchronization objects for
  consoles.
 
 ---
@@ -1953,10 +1987,10 @@ index eafea69a730..7a1bc24d489 100644
 2.47.1
 
 
-From 2e17bb867108a97f0c160a1a52af30430d21b805 Mon Sep 17 00:00:00 2001
+From aee9215085373d98896581e3839e61da8e37c097 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Mon, 8 Mar 2021 17:00:51 -0600
-Subject: [PATCH 08/32] server: Create fast synchronization objects for console
+Date: Tue, 9 Mar 2021 01:00:51 +0200
+Subject: [PATCH 08/30] server: Create fast synchronization objects for console
  servers.
 
 ---
@@ -1964,7 +1998,7 @@ Subject: [PATCH 08/32] server: Create fast synchronization objects for console
  1 file changed, 23 insertions(+), 1 deletion(-)
 
 diff --git a/server/console.c b/server/console.c
-index 7a1bc24d489..ba7ea8b8137 100644
+index 7a1bc24d489..0ddcb0125f1 100644
 --- a/server/console.c
 +++ b/server/console.c
 @@ -146,6 +146,7 @@ struct console_server
@@ -2008,14 +2042,14 @@ index 7a1bc24d489..ba7ea8b8137 100644
      }
  }
  
-@@ -932,6 +936,7 @@ static void console_server_destroy( struct object *obj )
-     assert( obj->ops == &console_server_ops );
-     disconnect_console_server( server );
+@@ -934,6 +938,7 @@ static void console_server_destroy( struct object *obj )
      if (server->fd) release_object( server->fd );
-+    if (server->fast_sync) release_object( server->fast_sync );
      if (do_esync()) close( server->esync_fd );
      if (server->fsync_idx) fsync_free_shm_idx( server->fsync_idx );
++    if (server->fast_sync) release_object( server->fast_sync );
  }
+ 
+ static struct object *console_server_lookup_name( struct object *obj, struct unicode_str *name,
 @@ -1002,6 +1007,17 @@ static struct object *console_server_open_file( struct object *obj, unsigned int
      return grab_object( obj );
  }
@@ -2042,33 +2076,32 @@ index 7a1bc24d489..ba7ea8b8137 100644
      server->fd = alloc_pseudo_fd( &console_server_fd_ops, &server->obj, FILE_SYNCHRONOUS_IO_NONALERT );
      if (!server->fd)
      {
-@@ -1666,6 +1683,8 @@ DECL_HANDLER(get_next_console_request)
-         /* set result of previous ioctl */
-         ioctl = LIST_ENTRY( list_head( &server->queue ), struct console_host_ioctl, entry );
-         list_remove( &ioctl->entry );
-+        if (list_empty( &server->queue ))
-+            fast_reset_event( server->fast_sync );
-         if (do_fsync() && list_empty( &server->queue ))
+@@ -1670,6 +1687,8 @@ DECL_HANDLER(get_next_console_request)
              fsync_clear( &server->obj );
          if (do_esync() && list_empty( &server->queue ))
-@@ -1755,6 +1774,9 @@ DECL_HANDLER(get_next_console_request)
-     {
-         set_error( STATUS_PENDING );
+             esync_clear( server->esync_fd );
++        if (list_empty( &server->queue ))
++            fast_reset_event( server->fast_sync );
      }
-+
+ 
+     if (ioctl)
+@@ -1760,5 +1779,8 @@ DECL_HANDLER(get_next_console_request)
+     if (do_esync() && list_empty( &server->queue ))
+         esync_clear( server->esync_fd );
+ 
 +    if (list_empty( &server->queue ))
 +        fast_reset_event( server->fast_sync );
-     if (do_fsync() && list_empty( &server->queue ))
-         fsync_clear( &server->obj );
-     if (do_esync() && list_empty( &server->queue ))
++
+     release_object( server );
+ }
 -- 
 2.47.1
 
 
-From 8736207b531d32c86d2e0a3dac1f1f6990c3ec65 Mon Sep 17 00:00:00 2001
+From d495cffb97a84716b1caac19827d35031df4e727 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:11:03 -0600
-Subject: [PATCH 09/32] server: Create fast synchronization objects for debug
+Subject: [PATCH 09/30] server: Create fast synchronization objects for debug
  objects.
 
 ---
@@ -2169,18 +2202,18 @@ index fe123b0d60e..1abd7db57a6 100644
 2.47.1
 
 
-From 6674bc3f948c60a814cf6a4e2a5f33b20f2bdb14 Mon Sep 17 00:00:00 2001
+From cee49cee338cc5a6533c30b6c08e0991e2eadd30 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Wed, 10 Mar 2021 11:02:42 -0600
-Subject: [PATCH 10/32] server: Create fast synchronization objects for device
+Date: Wed, 10 Mar 2021 19:02:42 +0200
+Subject: [PATCH 10/30] server: Create fast synchronization objects for device
  managers.
 
 ---
- server/device.c | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ server/device.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
 diff --git a/server/device.c b/server/device.c
-index a5d30941258..d46b2dbe93e 100644
+index a5d30941258..48950d53128 100644
 --- a/server/device.c
 +++ b/server/device.c
 @@ -97,12 +97,14 @@ struct device_manager
@@ -2231,8 +2264,8 @@ index a5d30941258..d46b2dbe93e 100644
      release_object( file );
  }
  
-@@ -820,6 +830,16 @@ static unsigned int device_manager_get_fsync_idx( struct object *obj, enum fsync
-     return manager->fsync_idx;
+@@ -806,6 +816,16 @@ static int device_manager_signaled( struct object *obj, struct wait_queue_entry
+     return !list_empty( &manager->requests );
  }
  
 +static struct fast_sync *device_manager_get_fast_sync( struct object *obj )
@@ -2245,18 +2278,19 @@ index a5d30941258..d46b2dbe93e 100644
 +    return manager->fast_sync;
 +}
 +
- static void device_manager_destroy( struct object *obj )
+ static int device_manager_get_esync_fd( struct object *obj, enum esync_type *type )
  {
      struct device_manager *manager = (struct device_manager *)obj;
-@@ -855,6 +875,7 @@ static void device_manager_destroy( struct object *obj )
-         release_object( irp );
-     }
- 
-+    if (manager->fast_sync) release_object( manager->fast_sync );
+@@ -858,6 +878,8 @@ static void device_manager_destroy( struct object *obj )
      if (do_esync())
          close( manager->esync_fd );
      if (manager->fsync_idx) fsync_free_shm_idx( manager->fsync_idx );
-@@ -867,6 +888,7 @@ static struct device_manager *create_device_manager(void)
++
++    if (manager->fast_sync) release_object( manager->fast_sync );
+ }
+ 
+ static struct device_manager *create_device_manager(void)
+@@ -867,6 +889,7 @@ static struct device_manager *create_device_manager(void)
      if ((manager = alloc_object( &device_manager_ops )))
      {
          manager->current_call = NULL;
@@ -2264,7 +2298,7 @@ index a5d30941258..d46b2dbe93e 100644
          list_init( &manager->devices );
          list_init( &manager->requests );
          wine_rb_init( &manager->kernel_objects, compare_kernel_object );
-@@ -1063,6 +1085,10 @@ DECL_HANDLER(get_next_device_request)
+@@ -1063,6 +1086,10 @@ DECL_HANDLER(get_next_device_request)
                  }
                  list_remove( &irp->mgr_entry );
                  list_init( &irp->mgr_entry );
@@ -2279,10 +2313,10 @@ index a5d30941258..d46b2dbe93e 100644
 2.47.1
 
 
-From 4b38af2da4678cfd505330aa5cb8a44dcb93d95d Mon Sep 17 00:00:00 2001
+From dbc4e3762bd76c51598029fac79d1885d719a763 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:13:20 -0600
-Subject: [PATCH 11/32] server: Create fast synchronization objects for keyed
+Subject: [PATCH 11/30] server: Create fast synchronization objects for keyed
  events.
 
 ---
@@ -2290,7 +2324,7 @@ Subject: [PATCH 11/32] server: Create fast synchronization objects for keyed
  1 file changed, 23 insertions(+), 2 deletions(-)
 
 diff --git a/server/event.c b/server/event.c
-index d9d0f76ee84..9f44dd3a720 100644
+index 47a61280149..187c46ac97b 100644
 --- a/server/event.c
 +++ b/server/event.c
 @@ -118,10 +118,13 @@ struct type_descr keyed_event_type =
@@ -2319,7 +2353,7 @@ index d9d0f76ee84..9f44dd3a720 100644
  };
  
  
-@@ -335,6 +338,7 @@ struct keyed_event *create_keyed_event( struct object *root, const struct unicod
+@@ -336,6 +339,7 @@ struct keyed_event *create_keyed_event( struct object *root, const struct unicod
          if (get_error() != STATUS_OBJECT_NAME_EXISTS)
          {
              /* initialize it if it didn't already exist */
@@ -2327,7 +2361,7 @@ index d9d0f76ee84..9f44dd3a720 100644
          }
      }
      return event;
-@@ -378,6 +382,23 @@ static int keyed_event_signaled( struct object *obj, struct wait_queue_entry *en
+@@ -379,6 +383,23 @@ static int keyed_event_signaled( struct object *obj, struct wait_queue_entry *en
      return 0;
  }
  
@@ -2355,10 +2389,10 @@ index d9d0f76ee84..9f44dd3a720 100644
 2.47.1
 
 
-From 9389ab4c098ff4d6df0a3c7de8f1e05a4195abbe Mon Sep 17 00:00:00 2001
+From 9b9e7d1bdc7afa273d57bd2cdf094290c90b4f90 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Mon, 8 Mar 2021 17:16:53 -0600
-Subject: [PATCH 12/32] server: Create fast synchronization objects for
+Date: Tue, 9 Mar 2021 01:16:53 +0200
+Subject: [PATCH 12/30] server: Create fast synchronization objects for
  processes.
 
 ---
@@ -2367,7 +2401,7 @@ Subject: [PATCH 12/32] server: Create fast synchronization objects for
  2 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/server/process.c b/server/process.c
-index e4af1ad7855..06ad28d474a 100644
+index e4af1ad7855..a7358ea3af9 100644
 --- a/server/process.c
 +++ b/server/process.c
 @@ -96,6 +96,7 @@ static unsigned int process_map_access( struct object *obj, unsigned int access
@@ -2395,15 +2429,15 @@ index e4af1ad7855..06ad28d474a 100644
      memset( &process->image_info, 0, sizeof(process->image_info) );
      process->esync_fd        = -1;
      process->fsync_idx       = 0;
-@@ -809,6 +811,8 @@ static void process_destroy( struct object *obj )
-     free( process->rawinput_devices );
-     free( process->dir_cache );
-     free( process->image );
+@@ -815,6 +817,8 @@ static void process_destroy( struct object *obj )
+         fsync_cleanup_process_shm_indices( process->id );
+         fsync_free_shm_idx( process->fsync_idx );
+     }
 +
 +    if (process->fast_sync) release_object( process->fast_sync );
-     if (do_esync()) close( process->esync_fd );
-     if (process->fsync_idx)
-     {
+ }
+ 
+ /* dump a process on stdout for debugging purposes */
 @@ -860,6 +864,16 @@ static struct list *process_get_kernel_obj_list( struct object *obj )
      return &process->kernel_object;
  }
@@ -2445,17 +2479,17 @@ index 112aa5d5062..eb19fff6767 100644
 2.47.1
 
 
-From d3717d40ba1feb9665cd553ccaab8a976a69b464 Mon Sep 17 00:00:00 2001
+From b85d1d42ae13dee644ede1fc9508d97cd32d74d7 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:17:35 -0600
-Subject: [PATCH 13/32] server: Create fast synchronization objects for jobs.
+Subject: [PATCH 13/30] server: Create fast synchronization objects for jobs.
 
 ---
  server/process.c | 18 +++++++++++++++++-
  1 file changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/server/process.c b/server/process.c
-index 06ad28d474a..9b8b7f9ea93 100644
+index a7358ea3af9..1bdd2d09c9b 100644
 --- a/server/process.c
 +++ b/server/process.c
 @@ -202,6 +202,7 @@ struct type_descr job_type =
@@ -2522,18 +2556,18 @@ index 06ad28d474a..9b8b7f9ea93 100644
 2.47.1
 
 
-From ce52d99b78c56f89e34d9799d5751e75a7edd3c9 Mon Sep 17 00:00:00 2001
+From a071f196b263aecb011a2a7e17b585144b9d86f1 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Mon, 8 Mar 2021 17:24:15 -0600
-Subject: [PATCH 14/32] server: Create fast synchronization objects for message
+Date: Tue, 9 Mar 2021 01:24:15 +0200
+Subject: [PATCH 14/30] server: Create fast synchronization objects for message
  queues.
 
 ---
- server/queue.c | 43 ++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 40 insertions(+), 3 deletions(-)
+ server/queue.c | 44 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 41 insertions(+), 3 deletions(-)
 
 diff --git a/server/queue.c b/server/queue.c
-index 8c918727ca6..ebc58322ce5 100644
+index 8c918727ca6..56b8ad91faa 100644
 --- a/server/queue.c
 +++ b/server/queue.c
 @@ -139,6 +139,7 @@ struct msg_queue
@@ -2582,16 +2616,17 @@ index 8c918727ca6..ebc58322ce5 100644
  }
  
  /* clear some queue bits */
-@@ -730,6 +737,8 @@ static inline void clear_queue_bits( struct msg_queue *queue, unsigned int bits
-         if (queue->keystate_lock) unlock_input_keystate( queue->input );
-         queue->keystate_lock = 0;
+@@ -743,6 +750,9 @@ static inline void clear_queue_bits( struct msg_queue *queue, unsigned int bits
+         shared->changed_bits = queue->changed_bits;
      }
+     SHARED_WRITE_END
++
 +    if (!is_signaled( queue ))
 +        fast_reset_event( queue->fast_sync );
+ }
  
-     if (do_fsync() && !is_signaled( queue ))
-         fsync_clear( &queue->obj );
-@@ -1351,6 +1360,17 @@ static void msg_queue_satisfied( struct object *obj, struct wait_queue_entry *en
+ /* check if message is matched by the filter */
+@@ -1351,6 +1361,17 @@ static void msg_queue_satisfied( struct object *obj, struct wait_queue_entry *en
          shared->changed_mask = queue->changed_mask;
      }
      SHARED_WRITE_END
@@ -2609,15 +2644,15 @@ index 8c918727ca6..ebc58322ce5 100644
  }
  
  static void cleanup_msg_queue( struct msg_queue *queue )
-@@ -1394,6 +1414,7 @@ static void cleanup_msg_queue( struct msg_queue *queue )
-     release_object( queue->input );
-     if (queue->hooks) release_object( queue->hooks );
+@@ -1396,6 +1417,7 @@ static void cleanup_msg_queue( struct msg_queue *queue )
      if (queue->fd) release_object( queue->fd );
-+    if (queue->fast_sync) release_object( queue->fast_sync );
      queue->destroyed = 1;
      if (do_esync()) close( queue->esync_fd );
++    if (queue->fast_sync) release_object( queue->fast_sync );
  }
-@@ -1423,6 +1444,7 @@ static void msg_queue_poll_event( struct fd *fd, int event )
+ 
+ static void msg_queue_destroy( struct object *obj )
+@@ -1423,6 +1445,7 @@ static void msg_queue_poll_event( struct fd *fd, int event )
      if (event & (POLLERR | POLLHUP)) set_fd_events( fd, -1 );
      else set_fd_events( queue->fd, 0 );
      wake_up( &queue->obj, 0 );
@@ -2625,7 +2660,7 @@ index 8c918727ca6..ebc58322ce5 100644
  }
  
  static void thread_input_dump( struct object *obj, int verbose )
-@@ -2974,7 +2996,15 @@ DECL_HANDLER(set_queue_mask)
+@@ -2974,7 +2997,15 @@ DECL_HANDLER(set_queue_mask)
                  }
                  SHARED_WRITE_END
              }
@@ -2642,7 +2677,7 @@ index 8c918727ca6..ebc58322ce5 100644
          }
  
          if (do_fsync() && !is_signaled( queue ))
-@@ -3007,6 +3037,9 @@ DECL_HANDLER(get_queue_status)
+@@ -3007,6 +3038,9 @@ DECL_HANDLER(get_queue_status)
              shared->changed_bits = queue->changed_bits;
          }
          SHARED_WRITE_END
@@ -2652,7 +2687,7 @@ index 8c918727ca6..ebc58322ce5 100644
      }
      else reply->wake_bits = reply->changed_bits = 0;
  }
-@@ -3194,6 +3227,9 @@ DECL_HANDLER(get_message)
+@@ -3194,6 +3228,9 @@ DECL_HANDLER(get_message)
      }
      SHARED_WRITE_END
  
@@ -2662,7 +2697,7 @@ index 8c918727ca6..ebc58322ce5 100644
      /* then check for posted messages */
      if ((filter & QS_POSTMESSAGE) &&
          get_posted_message( queue, get_win, req->get_first, req->get_last, req->flags, reply ))
-@@ -3260,6 +3296,7 @@ DECL_HANDLER(get_message)
+@@ -3260,6 +3297,7 @@ DECL_HANDLER(get_message)
      }
      SHARED_WRITE_END
  
@@ -2674,10 +2709,10 @@ index 8c918727ca6..ebc58322ce5 100644
 2.47.1
 
 
-From 4f47c60ee1ecf7dbd94e3338e848b99bee280a10 Mon Sep 17 00:00:00 2001
+From 600af47bfb45334893669c83dbe9d698878e93d9 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Mon, 8 Mar 2021 17:26:35 -0600
-Subject: [PATCH 15/32] server: Create fast synchronization objects for
+Date: Tue, 9 Mar 2021 01:26:35 +0200
+Subject: [PATCH 15/30] server: Create fast synchronization objects for
  threads.
 
 ---
@@ -2686,7 +2721,7 @@ Subject: [PATCH 15/32] server: Create fast synchronization objects for
  2 files changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/server/thread.c b/server/thread.c
-index 9446353aad1..656efc05110 100644
+index 9446353aad1..43fd0647a68 100644
 --- a/server/thread.c
 +++ b/server/thread.c
 @@ -191,6 +191,7 @@ static unsigned int thread_get_fsync_idx( struct object *obj, enum fsync_type *t
@@ -2731,14 +2766,14 @@ index 9446353aad1..656efc05110 100644
  /* cleanup everything that is no longer needed by a dead thread */
  /* used by destroy_thread and kill_thread */
  static void cleanup_thread( struct thread *thread )
-@@ -600,6 +612,7 @@ static void destroy_thread( struct object *obj )
-     release_object( thread->process );
-     if (thread->id) free_ptid( thread->id );
-     if (thread->token) release_object( thread->token );
+@@ -608,6 +620,7 @@ static void destroy_thread( struct object *obj )
+         fsync_free_shm_idx( thread->fsync_idx );
+         fsync_free_shm_idx( thread->fsync_apc_idx );
+     }
 +    if (thread->fast_sync) release_object( thread->fast_sync );
+ }
  
-     if (do_esync())
-         close( thread->esync_fd );
+ /* dump a thread on stdout for debugging purposes */
 @@ -1539,6 +1552,7 @@ void kill_thread( struct thread *thread, int violent_death )
      if (do_esync())
          esync_abandon_mutexes( thread );
@@ -2748,32 +2783,32 @@ index 9446353aad1..656efc05110 100644
      cleanup_thread( thread );
      remove_process_thread( thread->process, thread );
 diff --git a/server/thread.h b/server/thread.h
-index 416b01db318..cc9f744b745 100644
+index 416b01db318..75b3320125c 100644
 --- a/server/thread.h
 +++ b/server/thread.h
-@@ -95,6 +95,7 @@ struct thread
-     struct list            kernel_object; /* list of kernel object pointers */
-     data_size_t            desc_len;      /* thread description length in bytes */
-     WCHAR                 *desc;          /* thread description string */
-+    struct fast_sync      *fast_sync;     /* fast synchronization object */
-     struct object         *queue_shared_mapping; /* thread queue shared memory mapping */
-     queue_shm_t           *queue_shared;  /* thread queue shared memory ptr */
+@@ -100,6 +100,7 @@ struct thread
      struct object         *input_shared_mapping; /* thread input shared memory mapping */
+     input_shm_t           *input_shared;  /* thread input shared memory ptr */
+     struct completion_wait *completion_wait; /* completion port wait object the thread is associated with */
++    struct fast_sync      *fast_sync;     /* fast synchronization object */
+ };
+ 
+ extern struct thread *current;
 -- 
 2.47.1
 
 
-From 5691a87ac9bf952540b0817f96b8225712fb0d88 Mon Sep 17 00:00:00 2001
+From 263db893bd08850b14b71f91d93f304c80e6ef3f Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Mon, 8 Mar 2021 17:29:38 -0600
-Subject: [PATCH 16/32] server: Create fast synchronization objects for timers.
+Date: Tue, 9 Mar 2021 01:29:38 +0200
+Subject: [PATCH 16/30] server: Create fast synchronization objects for timers.
 
 ---
- server/timer.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ server/timer.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/server/timer.c b/server/timer.c
-index 4de4787de0d..e4339a22673 100644
+index 4de4787de0d..289f49945db 100644
 --- a/server/timer.c
 +++ b/server/timer.c
 @@ -63,6 +63,7 @@ struct timer
@@ -2817,15 +2852,16 @@ index 4de4787de0d..e4339a22673 100644
  }
  
  /* cancel a running timer */
-@@ -198,6 +202,7 @@ static int set_timer( struct timer *timer, timeout_t expire, unsigned int period
-     {
-         period = 0;  /* period doesn't make any sense for a manual timer */
-         timer->signaled = 0;
-+        fast_reset_event( timer->fast_sync );
+@@ -204,6 +208,8 @@ static int set_timer( struct timer *timer, timeout_t expire, unsigned int period
  
-         if (do_fsync())
-             fsync_clear( &timer->obj );
-@@ -252,6 +257,19 @@ static void timer_satisfied( struct object *obj, struct wait_queue_entry *entry
+         if (do_esync())
+             esync_clear( timer->esync_fd );
++
++        fast_reset_event( timer->fast_sync );
+     }
+     timer->when     = (expire <= 0) ? expire - monotonic_time : max( expire, current_time );
+     timer->period   = period;
+@@ -252,6 +258,19 @@ static void timer_satisfied( struct object *obj, struct wait_queue_entry *entry
      if (!timer->manual) timer->signaled = 0;
  }
  
@@ -2845,22 +2881,22 @@ index 4de4787de0d..e4339a22673 100644
  static void timer_destroy( struct object *obj )
  {
      struct timer *timer = (struct timer *)obj;
-@@ -259,6 +277,7 @@ static void timer_destroy( struct object *obj )
- 
-     if (timer->timeout) remove_timeout_user( timer->timeout );
+@@ -261,6 +280,7 @@ static void timer_destroy( struct object *obj )
      if (timer->thread) release_object( timer->thread );
-+    if (timer->fast_sync) release_object( timer->fast_sync );
      if (do_esync()) close( timer->esync_fd );
      if (timer->fsync_idx) fsync_free_shm_idx( timer->fsync_idx );
++    if (timer->fast_sync) release_object( timer->fast_sync );
  }
+ 
+ /* create a timer */
 -- 
 2.47.1
 
 
-From 1e3750c1aba4e78477dc2e3e8dbf1cadea3c305b Mon Sep 17 00:00:00 2001
+From bed1d14ac36bccc326379793c687f9a0c15845c8 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Mon, 8 Mar 2021 17:40:57 -0600
-Subject: [PATCH 17/32] server: Create fast synchronization objects for
+Date: Tue, 9 Mar 2021 01:40:57 +0200
+Subject: [PATCH 17/30] server: Create fast synchronization objects for
  fd-based objects.
 
 ---
@@ -2889,7 +2925,7 @@ index f2af2958312..5ff85b6364d 100644
      dir_destroy               /* destroy */
  };
 diff --git a/server/device.c b/server/device.c
-index d46b2dbe93e..ff1e66bf5b7 100644
+index 48950d53128..63eb91a9113 100644
 --- a/server/device.c
 +++ b/server/device.c
 @@ -246,7 +246,7 @@ static const struct object_ops device_file_ops =
@@ -2902,7 +2938,7 @@ index d46b2dbe93e..ff1e66bf5b7 100644
      device_file_destroy               /* destroy */
  };
 diff --git a/server/fd.c b/server/fd.c
-index fc623c64c5e..6b837390f5f 100644
+index fc623c64c5e..cc135d21afb 100644
 --- a/server/fd.c
 +++ b/server/fd.c
 @@ -158,6 +158,7 @@ struct fd
@@ -2913,14 +2949,14 @@ index fc623c64c5e..6b837390f5f 100644
      int                  esync_fd;    /* esync file descriptor */
      unsigned int         fsync_idx;   /* fsync shm index */
  };
-@@ -1581,6 +1582,7 @@ static void fd_destroy( struct object *obj )
-         if (fd->unix_fd != -1) close( fd->unix_fd );
-         free( fd->unix_name );
-     }
-+    if (fd->fast_sync) release_object( fd->fast_sync );
- 
+@@ -1585,6 +1586,7 @@ static void fd_destroy( struct object *obj )
      if (do_esync())
          close( fd->esync_fd );
+     if (fd->fsync_idx) fsync_free_shm_idx( fd->fsync_idx );
++    if (fd->fast_sync) release_object( fd->fast_sync );
+ }
+ 
+ /* check if the desired access is possible without violating */
 @@ -1703,6 +1705,7 @@ static struct fd *alloc_fd_object(void)
      fd->poll_index = -1;
      fd->completion = NULL;
@@ -3082,10 +3118,10 @@ index 581e9bf2b94..a84e3ceb73c 100644
 2.47.1
 
 
-From d745140d89dc4aae211b8c9a262022c3755d9fc4 Mon Sep 17 00:00:00 2001
+From b03202e7dbd396ff8ba37dd211dc48170fb87b0b Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:46:06 -0600
-Subject: [PATCH 18/32] server: Add a request to retrieve the fast
+Subject: [PATCH 18/30] server: Add a request to retrieve the fast
  synchronization device.
 
 ---
@@ -3094,7 +3130,7 @@ Subject: [PATCH 18/32] server: Add a request to retrieve the fast
  2 files changed, 24 insertions(+)
 
 diff --git a/server/fast_sync.c b/server/fast_sync.c
-index 4b9fc8a8f76..926aff0e132 100644
+index b6aff6f3857..911078bb07d 100644
 --- a/server/fast_sync.c
 +++ b/server/fast_sync.c
 @@ -29,6 +29,8 @@
@@ -3106,7 +3142,7 @@ index 4b9fc8a8f76..926aff0e132 100644
  #include "thread.h"
  
  #ifdef HAVE_LINUX_NTSYNC_H
-@@ -368,3 +370,18 @@ void fast_abandon_mutex( thread_id_t tid, struct fast_sync *fast_sync )
+@@ -372,3 +374,18 @@ void fast_abandon_mutex( thread_id_t tid, struct fast_sync *fast_sync )
  }
  
  #endif
@@ -3144,10 +3180,10 @@ index 87cb218236a..918fa78336c 100644
 2.47.1
 
 
-From 1076024a481e3c9948d7c8fa2777ce65c21e4f58 Mon Sep 17 00:00:00 2001
+From 952350132b199471bb4b3416b1258af59908bdae Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:55:00 -0600
-Subject: [PATCH 19/32] server: Add a request to retrieve the fast
+Subject: [PATCH 19/30] server: Add a request to retrieve the fast
  synchronization object from a handle.
 
 ---
@@ -3156,10 +3192,10 @@ Subject: [PATCH 19/32] server: Add a request to retrieve the fast
  2 files changed, 33 insertions(+)
 
 diff --git a/server/fast_sync.c b/server/fast_sync.c
-index 926aff0e132..12cd8eb3c6e 100644
+index 911078bb07d..d8773ff7eff 100644
 --- a/server/fast_sync.c
 +++ b/server/fast_sync.c
-@@ -385,3 +385,26 @@ DECL_HANDLER(get_linux_sync_device)
+@@ -389,3 +389,26 @@ DECL_HANDLER(get_linux_sync_device)
      set_error( STATUS_NOT_IMPLEMENTED );
  #endif
  }
@@ -3208,10 +3244,10 @@ index 918fa78336c..02a103bf79f 100644
 2.47.1
 
 
-From 4c932b4c40af5881a711087d3e2c2b55749364a1 Mon Sep 17 00:00:00 2001
+From 24e4a81a7ab99fb737cad64903f8dc8ad15b3fcd Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Tue, 9 Mar 2021 11:32:25 -0600
-Subject: [PATCH 20/32] server: Introduce fast_select_queue and
+Date: Tue, 9 Mar 2021 19:32:25 +0200
+Subject: [PATCH 20/30] server: Introduce fast_select_queue and
  fast_unselect_queue requests.
 
 ---
@@ -3241,7 +3277,7 @@ index 02a103bf79f..43f95ef0072 100644
 +    int          signaled;        /* was the queue signaled? */
 +@END
 diff --git a/server/queue.c b/server/queue.c
-index ebc58322ce5..dc963cc115a 100644
+index 56b8ad91faa..16b48403c62 100644
 --- a/server/queue.c
 +++ b/server/queue.c
 @@ -140,6 +140,7 @@ struct msg_queue
@@ -3260,17 +3296,17 @@ index ebc58322ce5..dc963cc115a 100644
          queue->shared          = thread->queue_shared;
          queue->esync_fd        = -1;
          queue->esync_in_msgwait = 0;
-@@ -1273,6 +1275,9 @@ static int is_queue_hung( struct msg_queue *queue )
-             return 0;  /* thread is waiting on queue -> not hung */
-     }
+@@ -1280,6 +1282,9 @@ static int is_queue_hung( struct msg_queue *queue )
+     if (do_esync() && queue->esync_in_msgwait)
+         return 0;   /* thread is waiting on queue in absentia -> not hung */
  
 +    if (queue->in_fast_wait)
 +        return 0;  /* thread is waiting on queue in absentia -> not hung */
 +
-     if (do_fsync() && queue->fsync_in_msgwait)
-         return 0;   /* thread is waiting on queue in absentia -> not hung */
+     return 1;
+ }
  
-@@ -4093,3 +4098,57 @@ DECL_HANDLER(fsync_msgwait)
+@@ -4094,3 +4099,57 @@ DECL_HANDLER(fsync_msgwait)
      if (queue->fd)
          set_fd_events( queue->fd, req->in_msgwait ? POLLIN : 0 );
  }
@@ -3332,10 +3368,10 @@ index ebc58322ce5..dc963cc115a 100644
 2.47.1
 
 
-From f5db344bda60ad3b8b4eea01778b98adc0802888 Mon Sep 17 00:00:00 2001
+From a15d71a6c5a97d99d373a5c19d521f95f1ebf270 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Thu, 21 Apr 2022 16:11:14 -0500
-Subject: [PATCH 21/32] server: Allow creating an event object for client-side
+Date: Fri, 22 Apr 2022 00:11:14 +0300
+Subject: [PATCH 21/30] server: Allow creating an event object for client-side
  user APC signaling.
 
 ---
@@ -3360,7 +3396,7 @@ index 43f95ef0072..d0346a6b0c7 100644
 +    obj_handle_t handle;          /* handle to the event */
 +@END
 diff --git a/server/thread.c b/server/thread.c
-index 656efc05110..50d30a86fc8 100644
+index 43fd0647a68..03249def742 100644
 --- a/server/thread.c
 +++ b/server/thread.c
 @@ -312,6 +312,7 @@ static inline void init_thread_structure( struct thread *thread )
@@ -3371,24 +3407,24 @@ index 656efc05110..50d30a86fc8 100644
      thread->queue_shared_mapping = NULL;
      thread->queue_shared         = NULL;
      thread->input_shared_mapping = NULL;
-@@ -613,6 +614,7 @@ static void destroy_thread( struct object *obj )
-     if (thread->id) free_ptid( thread->id );
-     if (thread->token) release_object( thread->token );
+@@ -621,6 +622,7 @@ static void destroy_thread( struct object *obj )
+         fsync_free_shm_idx( thread->fsync_apc_idx );
+     }
      if (thread->fast_sync) release_object( thread->fast_sync );
 +    if (thread->fast_alert_event) release_object( thread->fast_alert_event );
+ }
  
-     if (do_esync())
-         close( thread->esync_fd );
-@@ -1393,6 +1395,9 @@ static int queue_apc( struct process *process, struct thread *thread, struct thr
-     {
-         wake_thread( thread );
+ /* dump a thread on stdout for debugging purposes */
+@@ -1398,6 +1400,9 @@ static int queue_apc( struct process *process, struct thread *thread, struct thr
  
+         if (do_esync() && queue == &thread->user_apc)
+             esync_wake_fd( thread->esync_apc_fd );
++
 +        if (apc->call.type == APC_USER && thread->fast_alert_event)
 +            set_event( thread->fast_alert_event );
-+
-         if (do_fsync() && queue == &thread->user_apc)
-             fsync_wake_futex( thread->fsync_apc_idx );
+     }
  
+     return 1;
 @@ -1430,6 +1435,8 @@ void thread_cancel_apc( struct thread *thread, struct object *owner, enum apc_ty
          apc->executed = 1;
          wake_up( &apc->obj, 0 );
@@ -3422,25 +3458,25 @@ index 656efc05110..50d30a86fc8 100644
 +        reply->handle = alloc_handle( current->process, current->fast_alert_event, SYNCHRONIZE, 0 );
 +}
 diff --git a/server/thread.h b/server/thread.h
-index cc9f744b745..bb090afe833 100644
+index 75b3320125c..38b904237c1 100644
 --- a/server/thread.h
 +++ b/server/thread.h
-@@ -96,6 +96,7 @@ struct thread
-     data_size_t            desc_len;      /* thread description length in bytes */
-     WCHAR                 *desc;          /* thread description string */
+@@ -101,6 +101,7 @@ struct thread
+     input_shm_t           *input_shared;  /* thread input shared memory ptr */
+     struct completion_wait *completion_wait; /* completion port wait object the thread is associated with */
      struct fast_sync      *fast_sync;     /* fast synchronization object */
 +    struct event          *fast_alert_event; /* fast synchronization alert event */
-     struct object         *queue_shared_mapping; /* thread queue shared memory mapping */
-     queue_shm_t           *queue_shared;  /* thread queue shared memory ptr */
-     struct object         *input_shared_mapping; /* thread input shared memory mapping */
+ };
+ 
+ extern struct thread *current;
 -- 
 2.47.1
 
 
-From ea1043bae346c3e22aafce1bbfef32a46f21276e Mon Sep 17 00:00:00 2001
+From 69d8ff20f02a7fd1b91b43655e02f15efb693f99 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Mon, 8 Mar 2021 18:07:23 -0600
-Subject: [PATCH 22/32] ntdll: Introduce a helper to wait on an internal server
+Date: Tue, 9 Mar 2021 02:07:23 +0200
+Subject: [PATCH 22/30] ntdll: Introduce a helper to wait on an internal server
  handle.
 
 ---
@@ -3541,10 +3577,10 @@ index 9dc8ea627e0..8c335cd1efd 100644
 2.47.1
 
 
-From df1694f44da8b085b6146d5f9bc2e3e13c71c088 Mon Sep 17 00:00:00 2001
+From 10a18d349ed3684ffaf1124c556841886fac01db Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Tue, 9 Mar 2021 12:08:29 -0600
-Subject: [PATCH 23/32] ntdll: Add some traces to synchronization methods.
+Date: Tue, 9 Mar 2021 20:08:29 +0200
+Subject: [PATCH 23/30] ntdll: Add some traces to synchronization methods.
 
 Normally we can rely on +server for these, but with fast synchronization we'll
 be skipping the server.
@@ -3553,7 +3589,7 @@ be skipping the server.
  1 file changed, 57 insertions(+), 2 deletions(-)
 
 diff --git a/dlls/ntdll/unix/sync.c b/dlls/ntdll/unix/sync.c
-index 8361f12bb89..113b430d69b 100644
+index 8361f12bb89..22563eb9930 100644
 --- a/dlls/ntdll/unix/sync.c
 +++ b/dlls/ntdll/unix/sync.c
 @@ -76,9 +76,11 @@ HANDLE keyed_event = 0;
@@ -3588,15 +3624,15 @@ index 8361f12bb89..113b430d69b 100644
      *handle = 0;
  
      if (do_fsync())
-@@ -379,6 +386,8 @@ NTSTATUS WINAPI NtReleaseSemaphore( HANDLE handle, ULONG count, ULONG *previous
- {
-     unsigned int ret;
+@@ -385,6 +392,8 @@ NTSTATUS WINAPI NtReleaseSemaphore( HANDLE handle, ULONG count, ULONG *previous
+     if (do_esync())
+         return esync_release_semaphore( handle, count, previous );
  
 +    TRACE( "handle %p, count %u, prev_count %p\n", handle, (int)count, previous );
 +
-     if (do_fsync())
-         return fsync_release_semaphore( handle, count, previous );
- 
+     SERVER_START_REQ( release_semaphore )
+     {
+         req->handle = wine_server_obj_handle( handle );
 @@ -409,6 +418,9 @@ NTSTATUS WINAPI NtCreateEvent( HANDLE *handle, ACCESS_MASK access, const OBJECT_
      data_size_t len;
      struct object_attributes *objattr;
@@ -3616,33 +3652,33 @@ index 8361f12bb89..113b430d69b 100644
      *handle = 0;
      if ((ret = validate_open_object_attributes( attr ))) return ret;
  
-@@ -475,6 +489,8 @@ NTSTATUS WINAPI NtSetEvent( HANDLE handle, LONG *prev_state )
-     /* This comment is a dummy to make sure this patch applies in the right place. */
-     unsigned int ret;
+@@ -481,6 +495,8 @@ NTSTATUS WINAPI NtSetEvent( HANDLE handle, LONG *prev_state )
+     if (do_esync())
+         return esync_set_event( handle );
  
 +    TRACE( "handle %p, prev_state %p\n", handle, prev_state );
 +
-     if (do_fsync())
-         return fsync_set_event( handle, prev_state );
+     SERVER_START_REQ( event_op )
+     {
+         req->handle = wine_server_obj_handle( handle );
+@@ -508,6 +524,8 @@ NTSTATUS WINAPI NtResetEvent( HANDLE handle, LONG *prev_state )
+         return esync_reset_event( handle );
  
-@@ -501,6 +517,8 @@ NTSTATUS WINAPI NtResetEvent( HANDLE handle, LONG *prev_state )
-     /* This comment is a dummy to make sure this patch applies in the right place. */
-     unsigned int ret;
- 
-+    TRACE( "handle %p, prev_state %p\n", handle, prev_state );
-+
-     if (do_fsync())
-         return fsync_reset_event( handle, prev_state );
- 
-@@ -537,6 +555,8 @@ NTSTATUS WINAPI NtPulseEvent( HANDLE handle, LONG *prev_state )
- {
-     unsigned int ret;
  
 +    TRACE( "handle %p, prev_state %p\n", handle, prev_state );
 +
-     if (do_fsync())
-         return fsync_pulse_event( handle, prev_state );
+     SERVER_START_REQ( event_op )
+     {
+         req->handle = wine_server_obj_handle( handle );
+@@ -543,6 +561,8 @@ NTSTATUS WINAPI NtPulseEvent( HANDLE handle, LONG *prev_state )
+     if (do_esync())
+         return esync_pulse_event( handle );
  
++    TRACE( "handle %p, prev_state %p\n", handle, prev_state );
++
+     SERVER_START_REQ( event_op )
+     {
+         req->handle = wine_server_obj_handle( handle );
 @@ -605,6 +625,9 @@ NTSTATUS WINAPI NtCreateMutant( HANDLE *handle, ACCESS_MASK access, const OBJECT
      data_size_t len;
      struct object_attributes *objattr;
@@ -3662,15 +3698,15 @@ index 8361f12bb89..113b430d69b 100644
      *handle = 0;
      if ((ret = validate_open_object_attributes( attr ))) return ret;
  
-@@ -668,6 +693,8 @@ NTSTATUS WINAPI NtReleaseMutant( HANDLE handle, LONG *prev_count )
- {
-     unsigned int ret;
+@@ -674,6 +699,8 @@ NTSTATUS WINAPI NtReleaseMutant( HANDLE handle, LONG *prev_count )
+     if (do_esync())
+         return esync_release_mutex( handle, prev_count );
  
 +    TRACE( "handle %p, prev_count %p\n", handle, prev_count );
 +
-     if (do_fsync())
-         return fsync_release_mutex( handle, prev_count );
- 
+     SERVER_START_REQ( release_mutex )
+     {
+         req->handle = wine_server_obj_handle( handle );
 @@ -1417,6 +1444,9 @@ NTSTATUS WINAPI NtCreateTimer( HANDLE *handle, ACCESS_MASK access, const OBJECT_
      data_size_t len;
      struct object_attributes *objattr;
@@ -3699,13 +3735,17 @@ index 8361f12bb89..113b430d69b 100644
      SERVER_START_REQ( cancel_timer )
      {
          req->handle = wine_server_obj_handle( handle );
-@@ -1565,9 +1599,17 @@ NTSTATUS WINAPI NtWaitForMultipleObjects( DWORD count, const HANDLE *handles, BO
+@@ -1565,6 +1599,7 @@ NTSTATUS WINAPI NtWaitForMultipleObjects( DWORD count, const HANDLE *handles, BO
  {
      select_op_t select_op;
      UINT i, flags = SELECT_INTERRUPTIBLE;
 +    unsigned int ret;
  
      if (!count || count > MAXIMUM_WAIT_OBJECTS) return STATUS_INVALID_PARAMETER_1;
+ 
+@@ -1582,10 +1617,19 @@ NTSTATUS WINAPI NtWaitForMultipleObjects( DWORD count, const HANDLE *handles, BO
+             return ret;
+     }
  
 +    if (TRACE_ON(sync))
 +    {
@@ -3714,10 +3754,6 @@ index 8361f12bb89..113b430d69b 100644
 +        TRACE( "}, timeout %s\n", debugstr_timeout(timeout) );
 +    }
 +
-     if (do_fsync())
-     {
-         NTSTATUS ret = fsync_wait_objects( count, handles, wait_any, alertable, timeout );
-@@ -1585,7 +1627,9 @@ NTSTATUS WINAPI NtWaitForMultipleObjects( DWORD count, const HANDLE *handles, BO
      if (alertable) flags |= SELECT_ALERTABLE;
      select_op.wait.op = wait_any ? SELECT_WAIT : SELECT_WAIT_ALL;
      for (i = 0; i < count; i++) select_op.wait.handles[i] = wine_server_obj_handle( handles[i] );
@@ -3728,15 +3764,15 @@ index 8361f12bb89..113b430d69b 100644
  }
  
  
-@@ -1617,6 +1661,8 @@ NTSTATUS WINAPI NtSignalAndWaitForSingleObject( HANDLE signal, HANDLE wait,
-     select_op_t select_op;
-     UINT flags = SELECT_INTERRUPTIBLE;
+@@ -1623,6 +1667,8 @@ NTSTATUS WINAPI NtSignalAndWaitForSingleObject( HANDLE signal, HANDLE wait,
+     if (do_esync())
+         return esync_signal_and_wait( signal, wait, alertable, timeout );
  
 +    TRACE( "signal %p, wait %p, alertable %u, timeout %s\n", signal, wait, alertable, debugstr_timeout(timeout) );
 +
-     if (do_fsync())
-         return fsync_signal_and_wait( signal, wait, alertable, timeout );
+     if (!signal) return STATUS_INVALID_HANDLE;
  
+     if (alertable) flags |= SELECT_ALERTABLE;
 @@ -1874,6 +1920,9 @@ NTSTATUS WINAPI NtCreateKeyedEvent( HANDLE *handle, ACCESS_MASK access,
      data_size_t len;
      struct object_attributes *objattr;
@@ -3778,10 +3814,10 @@ index 8361f12bb89..113b430d69b 100644
 2.47.1
 
 
-From 03ced406a28f29023796b5375347f3d08e305d8b Mon Sep 17 00:00:00 2001
+From 7095da52e237cd06bec5145f8b6dbf737dd9effb Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Tue, 6 Apr 2021 15:37:02 -0500
-Subject: [PATCH 24/32] ntdll: Use fast synchronization objects.
+Date: Tue, 6 Apr 2021 23:37:02 +0300
+Subject: [PATCH 24/30] ntdll: Use fast synchronization objects.
 
 ---
  dlls/ntdll/unix/sync.c         | 762 +++++++++++++++++++++++++++++++++
@@ -3789,7 +3825,7 @@ Subject: [PATCH 24/32] ntdll: Use fast synchronization objects.
  2 files changed, 764 insertions(+)
 
 diff --git a/dlls/ntdll/unix/sync.c b/dlls/ntdll/unix/sync.c
-index 113b430d69b..9e1491516fd 100644
+index 22563eb9930..469148ce8d2 100644
 --- a/dlls/ntdll/unix/sync.c
 +++ b/dlls/ntdll/unix/sync.c
 @@ -30,9 +30,11 @@
@@ -4556,8 +4592,8 @@ index 113b430d69b..9e1491516fd 100644
      {
          req->handle = wine_server_obj_handle( handle );
 @@ -394,6 +1119,9 @@ NTSTATUS WINAPI NtReleaseSemaphore( HANDLE handle, ULONG count, ULONG *previous
-     if (do_esync())
-         return esync_release_semaphore( handle, count, previous );
+ 
+     TRACE( "handle %p, count %u, prev_count %p\n", handle, (int)count, previous );
  
 +    if ((ret = fast_release_semaphore( handle, count, previous )) != STATUS_NOT_IMPLEMENTED)
 +        return ret;
@@ -4566,8 +4602,8 @@ index 113b430d69b..9e1491516fd 100644
      {
          req->handle = wine_server_obj_handle( handle );
 @@ -497,6 +1225,9 @@ NTSTATUS WINAPI NtSetEvent( HANDLE handle, LONG *prev_state )
-     if (do_esync())
-         return esync_set_event( handle );
+ 
+     TRACE( "handle %p, prev_state %p\n", handle, prev_state );
  
 +    if ((ret = fast_set_event( handle, prev_state )) != STATUS_NOT_IMPLEMENTED)
 +        return ret;
@@ -4575,19 +4611,19 @@ index 113b430d69b..9e1491516fd 100644
      SERVER_START_REQ( event_op )
      {
          req->handle = wine_server_obj_handle( handle );
-@@ -525,6 +1256,9 @@ NTSTATUS WINAPI NtResetEvent( HANDLE handle, LONG *prev_state )
-     if (do_esync())
-         return esync_reset_event( handle );
+@@ -526,6 +1257,9 @@ NTSTATUS WINAPI NtResetEvent( HANDLE handle, LONG *prev_state )
+ 
+     TRACE( "handle %p, prev_state %p\n", handle, prev_state );
  
 +    if ((ret = fast_reset_event( handle, prev_state )) != STATUS_NOT_IMPLEMENTED)
 +        return ret;
 +
- 
      SERVER_START_REQ( event_op )
      {
+         req->handle = wine_server_obj_handle( handle );
 @@ -563,6 +1297,9 @@ NTSTATUS WINAPI NtPulseEvent( HANDLE handle, LONG *prev_state )
-     if (do_esync())
-         return esync_pulse_event( handle );
+ 
+     TRACE( "handle %p, prev_state %p\n", handle, prev_state );
  
 +    if ((ret = fast_pulse_event( handle, prev_state )) != STATUS_NOT_IMPLEMENTED)
 +        return ret;
@@ -4609,8 +4645,8 @@ index 113b430d69b..9e1491516fd 100644
      {
          req->handle = wine_server_obj_handle( handle );
 @@ -701,6 +1444,9 @@ NTSTATUS WINAPI NtReleaseMutant( HANDLE handle, LONG *prev_count )
-     if (do_esync())
-         return esync_release_mutex( handle, prev_count );
+ 
+     TRACE( "handle %p, prev_count %p\n", handle, prev_count );
  
 +    if ((ret = fast_release_mutex( handle, prev_count )) != STATUS_NOT_IMPLEMENTED)
 +        return ret;
@@ -4632,7 +4668,7 @@ index 113b430d69b..9e1491516fd 100644
      {
          req->handle = wine_server_obj_handle( handle );
 @@ -1624,6 +2376,12 @@ NTSTATUS WINAPI NtWaitForMultipleObjects( DWORD count, const HANDLE *handles, BO
-             return ret;
+         TRACE( "}, timeout %s\n", debugstr_timeout(timeout) );
      }
  
 +    if ((ret = fast_wait( count, handles, wait_any, alertable, timeout )) != STATUS_NOT_IMPLEMENTED)
@@ -4650,8 +4686,8 @@ index 113b430d69b..9e1491516fd 100644
      UINT flags = SELECT_INTERRUPTIBLE;
 +    NTSTATUS ret;
  
-     TRACE( "signal %p, wait %p, alertable %u, timeout %s\n", signal, wait, alertable, debugstr_timeout(timeout) );
- 
+     if (do_fsync())
+         return fsync_signal_and_wait( signal, wait, alertable, timeout );
 @@ -1671,6 +2430,9 @@ NTSTATUS WINAPI NtSignalAndWaitForSingleObject( HANDLE signal, HANDLE wait,
  
      if (!signal) return STATUS_INVALID_HANDLE;
@@ -4686,10 +4722,10 @@ index 8c335cd1efd..835e21c6774 100644
 2.47.1
 
 
-From b2d3ed8dcdb9892097f9604563ad13617de697f0 Mon Sep 17 00:00:00 2001
+From 3bff2b3121d9258827b38634f0e4e700570b57ec Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 20 Apr 2021 17:55:59 -0500
-Subject: [PATCH 25/32] ntdll: Use server_wait_for_object() when waiting on
+Subject: [PATCH 25/30] ntdll: Use server_wait_for_object() when waiting on
  only the queue object.
 
 ---
@@ -4697,7 +4733,7 @@ Subject: [PATCH 25/32] ntdll: Use server_wait_for_object() when waiting on
  1 file changed, 11 insertions(+)
 
 diff --git a/dlls/ntdll/unix/sync.c b/dlls/ntdll/unix/sync.c
-index 9e1491516fd..956ce4e28c0 100644
+index 469148ce8d2..586d054df2b 100644
 --- a/dlls/ntdll/unix/sync.c
 +++ b/dlls/ntdll/unix/sync.c
 @@ -831,6 +831,17 @@ static NTSTATUS fast_wait( DWORD count, const HANDLE *handles, BOOLEAN wait_any,
@@ -4722,10 +4758,10 @@ index 9e1491516fd..956ce4e28c0 100644
 2.47.1
 
 
-From 07318dc12f8fffe0870e19d4818d58e11ce88a8d Mon Sep 17 00:00:00 2001
+From c731e32dd119ff853977c496ac4a3e5860bbd9f4 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Fri, 12 Mar 2021 15:04:17 -0600
-Subject: [PATCH 26/32] ntdll: Cache fast synchronization objects.
+Date: Fri, 12 Mar 2021 23:04:17 +0200
+Subject: [PATCH 26/30] ntdll: Cache fast synchronization objects.
 
 ---
  dlls/ntdll/unix/server.c       |   9 ++
@@ -4774,7 +4810,7 @@ index d31d31be64f..91c9b27270e 100644
      {
          req->handle = wine_server_obj_handle( handle );
 diff --git a/dlls/ntdll/unix/sync.c b/dlls/ntdll/unix/sync.c
-index 956ce4e28c0..08994423f94 100644
+index 586d054df2b..5baded06ae2 100644
 --- a/dlls/ntdll/unix/sync.c
 +++ b/dlls/ntdll/unix/sync.c
 @@ -325,6 +325,12 @@ static int get_linux_sync_device(void)
@@ -5055,20 +5091,20 @@ index 835e21c6774..767fef5450b 100644
 2.47.1
 
 
-From bcb19a09057fa8d451b142a2348f563f7899d54c Mon Sep 17 00:00:00 2001
+From fa6262260e6169934728ff2c680a048acc493664 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Sat, 13 Mar 2021 16:20:30 -0600
-Subject: [PATCH 27/32] server: Allow disabling fast synchronization support.
+Subject: [PATCH 27/30] server: Allow disabling fast synchronization support.
 
 ---
  server/fast_sync.c | 6 ++++++
  1 file changed, 6 insertions(+)
 
 diff --git a/server/fast_sync.c b/server/fast_sync.c
-index 12cd8eb3c6e..ce7a564926d 100644
+index d8773ff7eff..d492c503fdb 100644
 --- a/server/fast_sync.c
 +++ b/server/fast_sync.c
-@@ -126,6 +126,12 @@ static struct linux_device *get_linux_device(void)
+@@ -128,6 +128,12 @@ static struct linux_device *get_linux_device(void)
      struct linux_device *device;
      int unix_fd;
  
@@ -5085,10 +5121,10 @@ index 12cd8eb3c6e..ce7a564926d 100644
 2.47.1
 
 
-From 7fb6316bc166b73f3dcf1c8db01c2b1f12a17f6a Mon Sep 17 00:00:00 2001
+From 734210c7675f603c30e2e5c20930af704c2c1268 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Sun, 14 Mar 2021 11:08:02 -0500
-Subject: [PATCH 28/32] server: Add a message to signal that fast
+Subject: [PATCH 28/30] server: Add a message to signal that fast
  synchronization is indeed active.
 
 ---
@@ -5096,10 +5132,10 @@ Subject: [PATCH 28/32] server: Add a message to signal that fast
  1 file changed, 1 insertion(+)
 
 diff --git a/server/fast_sync.c b/server/fast_sync.c
-index ce7a564926d..51fe32ea631 100644
+index d492c503fdb..9b6cab03b53 100644
 --- a/server/fast_sync.c
 +++ b/server/fast_sync.c
-@@ -155,6 +155,7 @@ static struct linux_device *get_linux_device(void)
+@@ -157,6 +157,7 @@ static struct linux_device *get_linux_device(void)
          return NULL;
      }
  
@@ -5111,301 +5147,17 @@ index ce7a564926d..51fe32ea631 100644
 2.47.1
 
 
-From 6b1550f392b574254292f0e1b2a5a10d006fba70 Mon Sep 17 00:00:00 2001
-From: Elizabeth Figura <zfigura@codeweavers.com>
-Date: Tue, 30 Jan 2024 18:11:04 -0600
-Subject: [PATCH 29/32] make_req
-
----
- include/wine/server_protocol.h | 97 ++++++++++++++++++++++++++++++++++
- server/request.h               | 27 ++++++++++
- server/trace.c                 | 56 ++++++++++++++++++++
- 3 files changed, 180 insertions(+)
-
-diff --git a/include/wine/server_protocol.h b/include/wine/server_protocol.h
-index 139a7bca69e..b3859291e4f 100644
---- a/include/wine/server_protocol.h
-+++ b/include/wine/server_protocol.h
-@@ -5637,6 +5637,88 @@ struct get_next_thread_reply
- };
- 
- 
-+enum fast_sync_type
-+{
-+    FAST_SYNC_SEMAPHORE = 1,
-+    FAST_SYNC_MUTEX,
-+    FAST_SYNC_AUTO_EVENT,
-+    FAST_SYNC_MANUAL_EVENT,
-+    FAST_SYNC_AUTO_SERVER,
-+    FAST_SYNC_MANUAL_SERVER,
-+    FAST_SYNC_QUEUE,
-+};
-+
-+
-+
-+struct get_linux_sync_device_request
-+{
-+    struct request_header __header;
-+    char __pad_12[4];
-+};
-+struct get_linux_sync_device_reply
-+{
-+    struct reply_header __header;
-+    obj_handle_t handle;
-+    char __pad_12[4];
-+};
-+
-+
-+
-+struct get_linux_sync_obj_request
-+{
-+    struct request_header __header;
-+    obj_handle_t handle;
-+};
-+struct get_linux_sync_obj_reply
-+{
-+    struct reply_header __header;
-+    obj_handle_t handle;
-+    int          type;
-+    unsigned int access;
-+    char __pad_20[4];
-+};
-+
-+
-+
-+struct fast_select_queue_request
-+{
-+    struct request_header __header;
-+    obj_handle_t handle;
-+};
-+struct fast_select_queue_reply
-+{
-+    struct reply_header __header;
-+};
-+
-+
-+
-+struct fast_unselect_queue_request
-+{
-+    struct request_header __header;
-+    obj_handle_t handle;
-+    int          signaled;
-+    char __pad_20[4];
-+};
-+struct fast_unselect_queue_reply
-+{
-+    struct reply_header __header;
-+};
-+
-+
-+
-+struct get_fast_alert_event_request
-+{
-+    struct request_header __header;
-+    char __pad_12[4];
-+};
-+struct get_fast_alert_event_reply
-+{
-+    struct reply_header __header;
-+    obj_handle_t handle;
-+    char __pad_12[4];
-+};
-+
-+
- enum request
- {
-     REQ_new_process,
-@@ -5923,6 +6005,11 @@ enum request
-     REQ_suspend_process,
-     REQ_resume_process,
-     REQ_get_next_thread,
-+    REQ_get_linux_sync_device,
-+    REQ_get_linux_sync_obj,
-+    REQ_fast_select_queue,
-+    REQ_fast_unselect_queue,
-+    REQ_get_fast_alert_event,
-     REQ_NB_REQUESTS
- };
- 
-@@ -6214,6 +6301,11 @@ union generic_request
-     struct suspend_process_request suspend_process_request;
-     struct resume_process_request resume_process_request;
-     struct get_next_thread_request get_next_thread_request;
-+    struct get_linux_sync_device_request get_linux_sync_device_request;
-+    struct get_linux_sync_obj_request get_linux_sync_obj_request;
-+    struct fast_select_queue_request fast_select_queue_request;
-+    struct fast_unselect_queue_request fast_unselect_queue_request;
-+    struct get_fast_alert_event_request get_fast_alert_event_request;
- };
- union generic_reply
- {
-@@ -6503,6 +6595,11 @@ union generic_reply
-     struct suspend_process_reply suspend_process_reply;
-     struct resume_process_reply resume_process_reply;
-     struct get_next_thread_reply get_next_thread_reply;
-+    struct get_linux_sync_device_reply get_linux_sync_device_reply;
-+    struct get_linux_sync_obj_reply get_linux_sync_obj_reply;
-+    struct fast_select_queue_reply fast_select_queue_reply;
-+    struct fast_unselect_queue_reply fast_unselect_queue_reply;
-+    struct get_fast_alert_event_reply get_fast_alert_event_reply;
- };
- 
- /* ### protocol_version begin ### */
-diff --git a/server/request.h b/server/request.h
-index 89d5a621b16..e255b8206e2 100644
---- a/server/request.h
-+++ b/server/request.h
-@@ -403,6 +403,11 @@ DECL_HANDLER(terminate_job);
- DECL_HANDLER(suspend_process);
- DECL_HANDLER(resume_process);
- DECL_HANDLER(get_next_thread);
-+DECL_HANDLER(get_linux_sync_device);
-+DECL_HANDLER(get_linux_sync_obj);
-+DECL_HANDLER(fast_select_queue);
-+DECL_HANDLER(fast_unselect_queue);
-+DECL_HANDLER(get_fast_alert_event);
- 
- #ifdef WANT_REQUEST_HANDLERS
- 
-@@ -693,6 +698,11 @@ static const req_handler req_handlers[REQ_NB_REQUESTS] =
-     (req_handler)req_suspend_process,
-     (req_handler)req_resume_process,
-     (req_handler)req_get_next_thread,
-+    (req_handler)req_get_linux_sync_device,
-+    (req_handler)req_get_linux_sync_obj,
-+    (req_handler)req_fast_select_queue,
-+    (req_handler)req_fast_unselect_queue,
-+    (req_handler)req_get_fast_alert_event,
- };
- 
- C_ASSERT( sizeof(abstime_t) == 8 );
-@@ -2336,6 +2346,23 @@ C_ASSERT( FIELD_OFFSET(struct get_next_thread_request, flags) == 28 );
- C_ASSERT( sizeof(struct get_next_thread_request) == 32 );
- C_ASSERT( FIELD_OFFSET(struct get_next_thread_reply, handle) == 8 );
- C_ASSERT( sizeof(struct get_next_thread_reply) == 16 );
-+C_ASSERT( sizeof(struct get_linux_sync_device_request) == 16 );
-+C_ASSERT( FIELD_OFFSET(struct get_linux_sync_device_reply, handle) == 8 );
-+C_ASSERT( sizeof(struct get_linux_sync_device_reply) == 16 );
-+C_ASSERT( FIELD_OFFSET(struct get_linux_sync_obj_request, handle) == 12 );
-+C_ASSERT( sizeof(struct get_linux_sync_obj_request) == 16 );
-+C_ASSERT( FIELD_OFFSET(struct get_linux_sync_obj_reply, handle) == 8 );
-+C_ASSERT( FIELD_OFFSET(struct get_linux_sync_obj_reply, type) == 12 );
-+C_ASSERT( FIELD_OFFSET(struct get_linux_sync_obj_reply, access) == 16 );
-+C_ASSERT( sizeof(struct get_linux_sync_obj_reply) == 24 );
-+C_ASSERT( FIELD_OFFSET(struct fast_select_queue_request, handle) == 12 );
-+C_ASSERT( sizeof(struct fast_select_queue_request) == 16 );
-+C_ASSERT( FIELD_OFFSET(struct fast_unselect_queue_request, handle) == 12 );
-+C_ASSERT( FIELD_OFFSET(struct fast_unselect_queue_request, signaled) == 16 );
-+C_ASSERT( sizeof(struct fast_unselect_queue_request) == 24 );
-+C_ASSERT( sizeof(struct get_fast_alert_event_request) == 16 );
-+C_ASSERT( FIELD_OFFSET(struct get_fast_alert_event_reply, handle) == 8 );
-+C_ASSERT( sizeof(struct get_fast_alert_event_reply) == 16 );
- 
- #endif  /* WANT_REQUEST_HANDLERS */
- 
-diff --git a/server/trace.c b/server/trace.c
-index e3afbc03611..140e4c5d566 100644
---- a/server/trace.c
-+++ b/server/trace.c
-@@ -4759,6 +4759,47 @@ static void dump_get_next_thread_reply( const struct get_next_thread_reply *req
-     fprintf( stderr, " handle=%04x", req->handle );
- }
- 
-+static void dump_get_linux_sync_device_request( const struct get_linux_sync_device_request *req )
-+{
-+}
-+
-+static void dump_get_linux_sync_device_reply( const struct get_linux_sync_device_reply *req )
-+{
-+    fprintf( stderr, " handle=%04x", req->handle );
-+}
-+
-+static void dump_get_linux_sync_obj_request( const struct get_linux_sync_obj_request *req )
-+{
-+    fprintf( stderr, " handle=%04x", req->handle );
-+}
-+
-+static void dump_get_linux_sync_obj_reply( const struct get_linux_sync_obj_reply *req )
-+{
-+    fprintf( stderr, " handle=%04x", req->handle );
-+    fprintf( stderr, ", type=%d", req->type );
-+    fprintf( stderr, ", access=%08x", req->access );
-+}
-+
-+static void dump_fast_select_queue_request( const struct fast_select_queue_request *req )
-+{
-+    fprintf( stderr, " handle=%04x", req->handle );
-+}
-+
-+static void dump_fast_unselect_queue_request( const struct fast_unselect_queue_request *req )
-+{
-+    fprintf( stderr, " handle=%04x", req->handle );
-+    fprintf( stderr, ", signaled=%d", req->signaled );
-+}
-+
-+static void dump_get_fast_alert_event_request( const struct get_fast_alert_event_request *req )
-+{
-+}
-+
-+static void dump_get_fast_alert_event_reply( const struct get_fast_alert_event_reply *req )
-+{
-+    fprintf( stderr, " handle=%04x", req->handle );
-+}
-+
- static const dump_func req_dumpers[REQ_NB_REQUESTS] = {
-     (dump_func)dump_new_process_request,
-     (dump_func)dump_get_new_process_info_request,
-@@ -5044,6 +5085,11 @@ static const dump_func req_dumpers[REQ_NB_REQUESTS] = {
-     (dump_func)dump_suspend_process_request,
-     (dump_func)dump_resume_process_request,
-     (dump_func)dump_get_next_thread_request,
-+    (dump_func)dump_get_linux_sync_device_request,
-+    (dump_func)dump_get_linux_sync_obj_request,
-+    (dump_func)dump_fast_select_queue_request,
-+    (dump_func)dump_fast_unselect_queue_request,
-+    (dump_func)dump_get_fast_alert_event_request,
- };
- 
- static const dump_func reply_dumpers[REQ_NB_REQUESTS] = {
-@@ -5331,6 +5377,11 @@ static const dump_func reply_dumpers[REQ_NB_REQUESTS] = {
-     NULL,
-     NULL,
-     (dump_func)dump_get_next_thread_reply,
-+    (dump_func)dump_get_linux_sync_device_reply,
-+    (dump_func)dump_get_linux_sync_obj_reply,
-+    NULL,
-+    NULL,
-+    (dump_func)dump_get_fast_alert_event_reply,
- };
- 
- static const char * const req_names[REQ_NB_REQUESTS] = {
-@@ -5618,6 +5669,11 @@ static const char * const req_names[REQ_NB_REQUESTS] = {
-     "suspend_process",
-     "resume_process",
-     "get_next_thread",
-+    "get_linux_sync_device",
-+    "get_linux_sync_obj",
-+    "fast_select_queue",
-+    "fast_unselect_queue",
-+    "get_fast_alert_event",
- };
- 
- static const struct
--- 
-2.47.1
-
-
-From d686f0db3817b3043e4129c3749c1dcc3a7f87c0 Mon Sep 17 00:00:00 2001
+From c60751b9045baaba5e816a24e06f5a2a7834ae7d Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 3 May 2024 14:35:50 -0400
-Subject: [PATCH 30/32] extra debugging
+Subject: [PATCH 29/30] extra debugging
 
 ---
  server/fast_sync.c | 23 ++++++++++++++++++++---
  1 file changed, 20 insertions(+), 3 deletions(-)
 
 diff --git a/server/fast_sync.c b/server/fast_sync.c
-index 51fe32ea631..fed6eb90639 100644
+index 9b6cab03b53..8a804ea7e2e 100644
 --- a/server/fast_sync.c
 +++ b/server/fast_sync.c
 @@ -21,6 +21,7 @@
@@ -5416,7 +5168,7 @@ index 51fe32ea631..fed6eb90639 100644
  #include <stdint.h>
  #include <stdio.h>
  
-@@ -124,21 +125,34 @@ static enum server_fd_type fast_sync_get_fd_type( struct fd *fd )
+@@ -126,21 +127,34 @@ static enum server_fd_type fast_sync_get_fd_type( struct fd *fd )
  static struct linux_device *get_linux_device(void)
  {
      struct linux_device *device;
@@ -5454,7 +5206,7 @@ index 51fe32ea631..fed6eb90639 100644
          return NULL;
      }
  
-@@ -146,17 +160,20 @@ static struct linux_device *get_linux_device(void)
+@@ -148,17 +162,20 @@ static struct linux_device *get_linux_device(void)
      {
          close( unix_fd );
          set_error( STATUS_NO_MEMORY );
@@ -5479,71 +5231,10 @@ index 51fe32ea631..fed6eb90639 100644
 2.47.1
 
 
-From e67dd58ddd76a67e6628a7ca96d58a881eee0729 Mon Sep 17 00:00:00 2001
-From: Stelios Tsampas <loathingkernel@gmail.com>
-Date: Sat, 14 Dec 2024 20:50:23 +0200
-Subject: [PATCH 31/32] server: esync/fsync compatibility
-
----
- server/esync.c     | 1 +
- server/fast_sync.c | 4 ++++
- server/fsync.c     | 1 +
- 3 files changed, 6 insertions(+)
-
-diff --git a/server/esync.c b/server/esync.c
-index a5164435ed6..66e074d86bd 100644
---- a/server/esync.c
-+++ b/server/esync.c
-@@ -143,6 +143,7 @@ const struct object_ops esync_ops =
-     default_unlink_name,       /* unlink_name */
-     no_open_file,              /* open_file */
-     no_kernel_obj_list,        /* get_kernel_obj_list */
-+    no_get_fast_sync,          /* get_fast_sync */
-     no_close_handle,           /* close_handle */
-     esync_destroy              /* destroy */
- };
-diff --git a/server/fast_sync.c b/server/fast_sync.c
-index fed6eb90639..8a804ea7e2e 100644
---- a/server/fast_sync.c
-+++ b/server/fast_sync.c
-@@ -63,6 +63,8 @@ static const struct object_ops linux_device_ops =
-     no_add_queue,                       /* add_queue */
-     NULL,                               /* remove_queue */
-     NULL,                               /* signaled */
-+    NULL,                               /* get_esync_fd */
-+    NULL,                               /* get_fsync_idx */
-     NULL,                               /* satisfied */
-     no_signal,                          /* signal */
-     linux_device_get_fd,                /* get_fd */
-@@ -196,6 +198,8 @@ static const struct object_ops linux_obj_ops =
-     no_add_queue,               /* add_queue */
-     NULL,                       /* remove_queue */
-     NULL,                       /* signaled */
-+    NULL,                       /* get_esync_fd */
-+    NULL,                       /* get_fsync_idx */
-     NULL,                       /* satisfied */
-     no_signal,                  /* signal */
-     linux_obj_get_fd,           /* get_fd */
-diff --git a/server/fsync.c b/server/fsync.c
-index dc50aa0a1f3..d401f9d3fda 100644
---- a/server/fsync.c
-+++ b/server/fsync.c
-@@ -164,6 +164,7 @@ const struct object_ops fsync_ops =
-     default_unlink_name,       /* unlink_name */
-     no_open_file,              /* open_file */
-     no_kernel_obj_list,        /* get_kernel_obj_list */
-+    no_get_fast_sync,          /* get_fast_sync */
-     no_close_handle,           /* close_handle */
-     fsync_destroy              /* destroy */
- };
--- 
-2.47.1
-
-
-From a9a3c0f86c05bda17251edf19ea404eed518979c Mon Sep 17 00:00:00 2001
+From c3a9f55a06cf532f4c31ce95b80a5b42a3ede28b Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sun, 15 Dec 2024 01:59:50 +0200
-Subject: [PATCH 32/32] ntsync: disable esync and fsync when ntsync is enabled
+Subject: [PATCH 30/30] ntsync: disable esync and fsync when ntsync is enabled
 
 ---
  dlls/ntdll/unix/esync.c | 3 ++-
