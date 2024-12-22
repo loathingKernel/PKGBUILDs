@@ -4,13 +4,13 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=9.22
-pkgrel=3
-_tkg_commit=52b87f0b58ef4e617282c4e362c3f948934e699b
+pkgver=10.0rc3
+pkgrel=1
+_tkg_commit=41f7e2477bb25179439698fa86613408ba9afed0
 
 _pkgbasever=${pkgver/rc/-rc}
 
-source=(https://dl.winehq.org/wine/source/9.x/$pkgname-$_pkgbasever.tar.xz{,.sign}
+source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbasever"
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -116,8 +116,9 @@ install=wine.install
 prepare() {
   # Get rid of old build dirs
   rm -rf $pkgname-{32,64}-build
+  mkdir $pkgname-{32,64}-build
 
-  cd $pkgname-$_pkgbasever
+  cd $pkgname
 
   patch -p1 -i "$srcdir"/wine-ntsync.patch
 
@@ -133,16 +134,13 @@ prepare() {
   patch -p1 -i "$srcdir"/wine-wmclass.patch
   patch -p1 -i "$srcdir"/wine-isolate_home.patch
   patch -p1 -i "$srcdir"/0001-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
+  ./tools/make_requests
   ./dlls/winevulkan/make_vulkan
   ./tools/make_specfiles
-  ./tools/make_requests
   autoreconf -fiv
 }
 
 build() {
-  # Allow ccache to work
-  mv $pkgname-$_pkgbasever $pkgname
-
   # Doesn't compile without remove these flags as of 4.10
   export CFLAGS="$CFLAGS -ffat-lto-objects"
 
@@ -173,6 +171,8 @@ build() {
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
   export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
 
+  cd "$srcdir"
+
   msg2 "Building Wine-64..."
 
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
@@ -180,8 +180,7 @@ build() {
   export CROSSCFLAGS="$COMMON_FLAGS"
   export CROSSCXXFLAGS="$COMMON_FLAGS -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
-  mkdir "$pkgname-64-build"
-  cd "$pkgname-64-build"
+  cd "$srcdir/$pkgname-64-build"
   ../$pkgname/configure \
     --prefix=/usr \
     --libdir=/usr/lib \

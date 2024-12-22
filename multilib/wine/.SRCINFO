@@ -1,7 +1,7 @@
 pkgbase = wine
 	pkgdesc = A compatibility layer for running Windows programs
-	pkgver = 9.22
-	pkgrel = 3
+	pkgver = 10.0rc3
+	pkgrel = 1
 	url = https://www.winehq.org
 	install = wine.install
 	arch = x86_64
@@ -140,11 +140,10 @@ pkgbase = wine
 	optdepends = ntsync-dkms
 	options = !staticlibs
 	options = !lto
-	source = https://dl.winehq.org/wine/source/9.x/wine-9.22.tar.xz
-	source = https://dl.winehq.org/wine/source/9.x/wine-9.22.tar.xz.sign
+	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-10.0-rc3
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
-	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=52b87f0b58ef4e617282c4e362c3f948934e699b
+	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=41f7e2477bb25179439698fa86613408ba9afed0
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
 	source = 0001-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch

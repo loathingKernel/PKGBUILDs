@@ -4,13 +4,13 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=9.22
-pkgrel=3
-_tkg_commit=52b87f0b58ef4e617282c4e362c3f948934e699b
+pkgver=10.0rc3
+pkgrel=1
+_tkg_commit=41f7e2477bb25179439698fa86613408ba9afed0
 
 _pkgbasever=${pkgver/rc/-rc}
 
-source=(https://dl.winehq.org/wine/source/9.x/$pkgname-$_pkgbasever.tar.xz{,.sign}
+source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbasever"
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -124,8 +124,9 @@ install=wine.install
 prepare() {
   # Get rid of old build dirs
   rm -rf $pkgname-{32,64}-build
+  mkdir $pkgname-{32,64}-build
 
-  cd $pkgname-$_pkgbasever
+  cd $pkgname
 
   patch -p1 -i "$srcdir"/wine-ntsync.patch
 
@@ -144,16 +145,13 @@ prepare() {
   patch -p1 -i "$srcdir"/0001-clang-fixup-lto.patch
   patch -p1 -i "$srcdir"/0002-makedep-add-per-source-cflags-and-per-program-ldflag.patch
   patch -p1 -i "$srcdir"/0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
+  ./tools/make_requests
   ./dlls/winevulkan/make_vulkan
   ./tools/make_specfiles
-  ./tools/make_requests
   autoreconf -fiv
 }
 
 build() {
-  # Allow ccache to work
-  mv $pkgname-$_pkgbasever $pkgname
-
   # Doesn't compile without remove these flags as of 4.10
   export CFLAGS="$CFLAGS -ffat-lto-objects"
 
@@ -192,6 +190,8 @@ build() {
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
   export CROSSLDFLAGS="-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF"
 
+  cd "$srcdir"
+
   msg2 "Building Wine-64..."
 
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
@@ -199,8 +199,7 @@ build() {
   export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
   export CROSSCXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
-  mkdir "$pkgname-64-build"
-  cd "$pkgname-64-build"
+  cd "$srcdir/$pkgname-64-build"
   ../$pkgname/configure \
     --prefix=/usr \
     --libdir=/usr/lib \
@@ -233,8 +232,7 @@ build() {
   export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign"
   export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
-  mkdir "$pkgname-32-build"
-  cd "$pkgname-32-build"
+  cd "$srcdir/$pkgname-32-build"
   ../$pkgname/configure \
     --prefix=/usr \
     --with-x \
