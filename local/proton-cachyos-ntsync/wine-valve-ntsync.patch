@@ -1,7 +1,98 @@
-From 9a0deeb3ba3ff2751c9308eeafc27333321fab58 Mon Sep 17 00:00:00 2001
+From 59dc8600ea34c642c04a8940a64bcc01f313fedc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?R=C3=A9mi=20Bernon?= <rbernon@codeweavers.com>
+Date: Tue, 4 Jun 2024 22:40:46 +0200
+Subject: [PATCH 01/32] server: Avoid calling set_event from within
+ msg_queue_add_queue.
+
+(cherry picked from commit 9ec501141e153aa01bcd6e4ce3846d1a4f786d51)
+---
+ server/queue.c  | 10 ++++++++--
+ server/thread.c |  8 ++++++--
+ server/user.h   |  1 +
+ 3 files changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/server/queue.c b/server/queue.c
+index 07a58718470..9a74e476483 100644
+--- a/server/queue.c
++++ b/server/queue.c
+@@ -1274,7 +1274,6 @@ static int is_queue_hung( struct msg_queue *queue )
+ static int msg_queue_add_queue( struct object *obj, struct wait_queue_entry *entry )
+ {
+     struct msg_queue *queue = (struct msg_queue *)obj;
+-    struct process *process = get_wait_queue_thread(entry)->process;
+ 
+     /* a thread can only wait on its own queue */
+     if (get_wait_queue_thread(entry)->queue != queue)
+@@ -1282,7 +1281,6 @@ static int msg_queue_add_queue( struct object *obj, struct wait_queue_entry *ent
+         set_error( STATUS_ACCESS_DENIED );
+         return 0;
+     }
+-    if (process->idle_event && !(queue->wake_mask & QS_SMRESULT)) set_event( process->idle_event );
+ 
+     if (queue->fd && list_empty( &obj->wait_queue ))  /* first on the queue */
+         set_fd_events( queue->fd, POLLIN );
+@@ -1481,6 +1479,14 @@ static int check_queue_input_window( struct msg_queue *queue, user_handle_t wind
+     return ret;
+ }
+ 
++/* check if the thread queue is idle and set the process idle event if so */
++void check_thread_queue_idle( struct thread *thread )
++{
++    struct msg_queue *queue = thread->queue;
++    if ((queue->wake_mask & QS_SMRESULT)) return;
++    if (thread->process->idle_event) set_event( thread->process->idle_event );
++}
++
+ /* make sure the specified thread has a queue */
+ int init_thread_queue( struct thread *thread )
+ {
+diff --git a/server/thread.c b/server/thread.c
+index 731012d755e..cbc41f6dcb4 100644
+--- a/server/thread.c
++++ b/server/thread.c
+@@ -1003,7 +1003,7 @@ static int wait_on( const select_op_t *select_op, unsigned int count, struct obj
+ {
+     struct thread_wait *wait;
+     struct wait_queue_entry *entry;
+-    unsigned int i;
++    unsigned int i, idle = 0;
+ 
+     if (!(wait = mem_alloc( FIELD_OFFSET(struct thread_wait, queues[count]) ))) return 0;
+     wait->next    = current->wait;
+@@ -1027,8 +1027,12 @@ static int wait_on( const select_op_t *select_op, unsigned int count, struct obj
+             end_wait( current, get_error() );
+             return 0;
+         }
++
++        if (obj == (struct object *)current->queue) idle = 1;
+     }
+-    return 1;
++
++    if (idle) check_thread_queue_idle( current );
++    return current->wait ? 1 : 0;
+ }
+ 
+ static int wait_on_handles( const select_op_t *select_op, unsigned int count, const obj_handle_t *handles,
+diff --git a/server/user.h b/server/user.h
+index 5e1d05754be..29676f579c8 100644
+--- a/server/user.h
++++ b/server/user.h
+@@ -104,6 +104,7 @@ extern void set_queue_hooks( struct thread *thread, struct hook_table *hooks );
+ extern void inc_queue_paint_count( struct thread *thread, int incr );
+ extern void queue_cleanup_window( struct thread *thread, user_handle_t win );
+ extern int init_thread_queue( struct thread *thread );
++extern void check_thread_queue_idle( struct thread *thread );
+ extern int attach_thread_input( struct thread *thread_from, struct thread *thread_to );
+ extern void detach_thread_input( struct thread *thread_from );
+ extern void set_clip_rectangle( struct desktop *desktop, const rectangle_t *rect,
+-- 
+2.47.1
+
+
+From 2d000d05e050d33c928dfecb4ebcafa35179483d Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 31 Oct 2023 12:23:30 -0500
-Subject: [PATCH 01/31] gcc 13 warnings
+Subject: [PATCH 02/32] gcc 13 warnings
 
 ---
  dlls/webservices/tests/channel.c | 3 +++
@@ -25,10 +116,10 @@ index 4cf39c10732..1fb12297eef 100644
 2.47.1
 
 
-From d2ee3a9e6574a813a0b2fdca1d61ce7f467446ed Mon Sep 17 00:00:00 2001
+From ce77469e02f347bb201e65aad25d3dbe47b86ab3 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 22:31:06 +0200
-Subject: [PATCH 02/31] server: Add an object operation to retrieve an
+Subject: [PATCH 03/32] server: Add an object operation to retrieve an
  in-process synchronization object.
 
 ---
@@ -617,7 +708,7 @@ index f52d2cf3b49..06dd44d3e79 100644
 +    INPROC_SYNC_QUEUE,
 +};
 diff --git a/server/queue.c b/server/queue.c
-index 07a58718470..6c3d1c8612a 100644
+index 9a74e476483..ddcf45ff519 100644
 --- a/server/queue.c
 +++ b/server/queue.c
 @@ -190,6 +190,7 @@ static const struct object_ops msg_queue_ops =
@@ -737,7 +828,7 @@ index 47098fe5823..8f2a6916c65 100644
      symlink_destroy               /* destroy */
  };
 diff --git a/server/thread.c b/server/thread.c
-index 731012d755e..320ac6f5066 100644
+index cbc41f6dcb4..30caeba7622 100644
 --- a/server/thread.c
 +++ b/server/thread.c
 @@ -116,6 +116,7 @@ static const struct object_ops thread_apc_ops =
@@ -824,10 +915,10 @@ index 875e87ed6b2..01dbbb6e79f 100644
 2.47.1
 
 
-From f22931b9bee23c97c503fcde7dc52db5c3b77952 Mon Sep 17 00:00:00 2001
+From 5f9a69ce4639e6f9478ddf491ce0515df811775a Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 00:38:18 +0200
-Subject: [PATCH 03/31] server: Create in-process synchronization objects for
+Subject: [PATCH 04/32] server: Create in-process synchronization objects for
  events.
 
 ---
@@ -1274,10 +1365,10 @@ index 395b22e5dbc..aaeaa3515e6 100644
 2.47.1
 
 
-From 27e6a2521041dbaea36f00bc18a106d1311e34bc Mon Sep 17 00:00:00 2001
+From 14b419c4cd74958deb0dfbb8b7c9e02fa58db612 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Thu, 11 Mar 2021 16:45:30 -0600
-Subject: [PATCH 04/31] server: Create in-process synchronization objects for
+Subject: [PATCH 05/32] server: Create in-process synchronization objects for
  semaphores.
 
 ---
@@ -1465,10 +1556,10 @@ index 567a922c0ac..778823394a6 100644
 2.47.1
 
 
-From 8469ed1d1d600e98cdaa9e881bd5cf56ffa32864 Mon Sep 17 00:00:00 2001
+From cba9a52c94139ff7bf90b42bf026a1dc892eb3f4 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Thu, 11 Mar 2021 16:52:55 -0600
-Subject: [PATCH 05/31] server: Create in-process synchronization objects for
+Subject: [PATCH 06/32] server: Create in-process synchronization objects for
  mutexes.
 
 ---
@@ -1671,10 +1762,10 @@ index 1d21e61f7df..b83eb671280 100644
 2.47.1
 
 
-From aa0035335817734befccb11ac73a7350e98163af Mon Sep 17 00:00:00 2001
+From 89c5155107e8f1a43a3157fd1bd1b3d406edeebe Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 12 Mar 2021 04:32:58 +0200
-Subject: [PATCH 06/31] server: Create in-process synchronization objects for
+Subject: [PATCH 07/32] server: Create in-process synchronization objects for
  completion ports.
 
 ---
@@ -1776,10 +1867,10 @@ index a8c3e2ce6bc..e021f99b700 100644
 2.47.1
 
 
-From 36de477d52a3ca5ef436f1ac6c458864ad01304d Mon Sep 17 00:00:00 2001
+From fa73d56df28ec3ab76b83a033e95bd42669cf99b Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 16:54:34 -0600
-Subject: [PATCH 07/31] server: Create in-process synchronization objects for
+Subject: [PATCH 08/32] server: Create in-process synchronization objects for
  consoles.
 
 ---
@@ -1974,10 +2065,10 @@ index fcd70f21dd0..d5c672126c0 100644
 2.47.1
 
 
-From 721e43cd6c4a65a4a3627f24809ccafd6edcd6b8 Mon Sep 17 00:00:00 2001
+From a3f81a5a9fb78c193125d278d01cb28e062dbe84 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:00:51 +0200
-Subject: [PATCH 08/31] server: Create in-process synchronization objects for
+Subject: [PATCH 09/32] server: Create in-process synchronization objects for
  console servers.
 
 ---
@@ -2085,10 +2176,10 @@ index d5c672126c0..be674f17332 100644
 2.47.1
 
 
-From 86c16ce4e0708e6d9325cbc2241770d982b725ca Mon Sep 17 00:00:00 2001
+From 229c73503433c3839caec10f40bc3b2e88601eda Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:11:03 -0600
-Subject: [PATCH 09/31] server: Create in-process synchronization objects for
+Subject: [PATCH 10/32] server: Create in-process synchronization objects for
  debug objects.
 
 ---
@@ -2189,10 +2280,10 @@ index 35c93d3c948..bb69b70eb55 100644
 2.47.1
 
 
-From ae800ebcee7af1689b71732aad48f52a68a4a741 Mon Sep 17 00:00:00 2001
+From 18ddf33be6fb7c534b5f7d9b6f6416886edf0b36 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Wed, 10 Mar 2021 19:02:42 +0200
-Subject: [PATCH 10/31] server: Create in-process synchronization objects for
+Subject: [PATCH 11/32] server: Create in-process synchronization objects for
  device managers.
 
 ---
@@ -2300,10 +2391,10 @@ index a0216152ea7..6bb748f8b01 100644
 2.47.1
 
 
-From 1675c926532e5bdb2fd106d2279551bd388de2b5 Mon Sep 17 00:00:00 2001
+From f4ca5640c329dabb3c69ee362dc397121522f643 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:13:20 -0600
-Subject: [PATCH 11/31] server: Create in-process synchronization objects for
+Subject: [PATCH 12/32] server: Create in-process synchronization objects for
  keyed events.
 
 ---
@@ -2376,10 +2467,10 @@ index 6a47cbec89e..7197a7017b1 100644
 2.47.1
 
 
-From 6bce509f82988fd7e5ad488081b873a6ef6670ff Mon Sep 17 00:00:00 2001
+From 0e626ed7633e2152c55bf8b1cf4619da9dc6b5cc Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:16:53 +0200
-Subject: [PATCH 12/31] server: Create in-process synchronization objects for
+Subject: [PATCH 13/32] server: Create in-process synchronization objects for
  processes.
 
 ---
@@ -2466,10 +2557,10 @@ index 112aa5d5062..90817ddd969 100644
 2.47.1
 
 
-From 8e254a7802649cee0f4e708106762589e18a0296 Mon Sep 17 00:00:00 2001
+From 5a1906200026621faa148458d5f42b4a9ba8cba1 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:17:35 -0600
-Subject: [PATCH 13/31] server: Create in-process synchronization objects for
+Subject: [PATCH 14/32] server: Create in-process synchronization objects for
  jobs.
 
 ---
@@ -2544,10 +2635,10 @@ index c51e4e5f34f..4d3e96b5b7a 100644
 2.47.1
 
 
-From 829b2eeb79c70128e02102ea5467b855516b12c7 Mon Sep 17 00:00:00 2001
+From 9137e8f6e2b3498ddcca1166ead1e0a1926b42e7 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:24:15 +0200
-Subject: [PATCH 14/31] server: Create in-process synchronization objects for
+Subject: [PATCH 15/32] server: Create in-process synchronization objects for
  message queues.
 
 ---
@@ -2555,7 +2646,7 @@ Subject: [PATCH 14/31] server: Create in-process synchronization objects for
  1 file changed, 41 insertions(+), 3 deletions(-)
 
 diff --git a/server/queue.c b/server/queue.c
-index 6c3d1c8612a..a3d0e7ec0eb 100644
+index ddcf45ff519..323f0f90e2c 100644
 --- a/server/queue.c
 +++ b/server/queue.c
 @@ -139,6 +139,7 @@ struct msg_queue
@@ -2614,7 +2705,7 @@ index 6c3d1c8612a..a3d0e7ec0eb 100644
  }
  
  /* check if message is matched by the filter */
-@@ -1351,6 +1361,17 @@ static void msg_queue_satisfied( struct object *obj, struct wait_queue_entry *en
+@@ -1349,6 +1359,17 @@ static void msg_queue_satisfied( struct object *obj, struct wait_queue_entry *en
          shared->changed_mask = queue->changed_mask;
      }
      SHARED_WRITE_END
@@ -2632,7 +2723,7 @@ index 6c3d1c8612a..a3d0e7ec0eb 100644
  }
  
  static void cleanup_msg_queue( struct msg_queue *queue )
-@@ -1396,6 +1417,7 @@ static void cleanup_msg_queue( struct msg_queue *queue )
+@@ -1394,6 +1415,7 @@ static void cleanup_msg_queue( struct msg_queue *queue )
      if (queue->fd) release_object( queue->fd );
      queue->destroyed = 1;
      if (do_esync()) close( queue->esync_fd );
@@ -2640,7 +2731,7 @@ index 6c3d1c8612a..a3d0e7ec0eb 100644
  }
  
  static void msg_queue_destroy( struct object *obj )
-@@ -1423,6 +1445,7 @@ static void msg_queue_poll_event( struct fd *fd, int event )
+@@ -1421,6 +1443,7 @@ static void msg_queue_poll_event( struct fd *fd, int event )
      if (event & (POLLERR | POLLHUP)) set_fd_events( fd, -1 );
      else set_fd_events( queue->fd, 0 );
      wake_up( &queue->obj, 0 );
@@ -2648,7 +2739,7 @@ index 6c3d1c8612a..a3d0e7ec0eb 100644
  }
  
  static void thread_input_dump( struct object *obj, int verbose )
-@@ -2974,7 +2997,15 @@ DECL_HANDLER(set_queue_mask)
+@@ -2980,7 +3003,15 @@ DECL_HANDLER(set_queue_mask)
                  }
                  SHARED_WRITE_END
              }
@@ -2665,7 +2756,7 @@ index 6c3d1c8612a..a3d0e7ec0eb 100644
          }
  
          if (do_fsync() && !is_signaled( queue ))
-@@ -3007,6 +3038,9 @@ DECL_HANDLER(get_queue_status)
+@@ -3013,6 +3044,9 @@ DECL_HANDLER(get_queue_status)
              shared->changed_bits = queue->changed_bits;
          }
          SHARED_WRITE_END
@@ -2675,7 +2766,7 @@ index 6c3d1c8612a..a3d0e7ec0eb 100644
      }
      else reply->wake_bits = reply->changed_bits = 0;
  }
-@@ -3194,6 +3228,9 @@ DECL_HANDLER(get_message)
+@@ -3200,6 +3234,9 @@ DECL_HANDLER(get_message)
      }
      SHARED_WRITE_END
  
@@ -2685,7 +2776,7 @@ index 6c3d1c8612a..a3d0e7ec0eb 100644
      /* then check for posted messages */
      if ((filter & QS_POSTMESSAGE) &&
          get_posted_message( queue, get_win, req->get_first, req->get_last, req->flags, reply ))
-@@ -3260,6 +3297,7 @@ DECL_HANDLER(get_message)
+@@ -3266,6 +3303,7 @@ DECL_HANDLER(get_message)
      }
      SHARED_WRITE_END
  
@@ -2697,10 +2788,10 @@ index 6c3d1c8612a..a3d0e7ec0eb 100644
 2.47.1
 
 
-From 724667e5e24b82b149ab97b5f6e4b1a85eedd3b5 Mon Sep 17 00:00:00 2001
+From 98dbf9e61293883e49774c0b526251921c67165c Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:26:35 +0200
-Subject: [PATCH 15/31] server: Create in-process synchronization objects for
+Subject: [PATCH 16/32] server: Create in-process synchronization objects for
  threads.
 
 ---
@@ -2709,7 +2800,7 @@ Subject: [PATCH 15/31] server: Create in-process synchronization objects for
  2 files changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/server/thread.c b/server/thread.c
-index 320ac6f5066..f282da30e4e 100644
+index 30caeba7622..ea57e7303c0 100644
 --- a/server/thread.c
 +++ b/server/thread.c
 @@ -191,6 +191,7 @@ static unsigned int thread_get_fsync_idx( struct object *obj, enum fsync_type *t
@@ -2762,7 +2853,7 @@ index 320ac6f5066..f282da30e4e 100644
  }
  
  /* dump a thread on stdout for debugging purposes */
-@@ -1539,6 +1552,7 @@ void kill_thread( struct thread *thread, int violent_death )
+@@ -1543,6 +1556,7 @@ void kill_thread( struct thread *thread, int violent_death )
      if (do_esync())
          esync_abandon_mutexes( thread );
      wake_up( &thread->obj, 0 );
@@ -2786,10 +2877,10 @@ index 416b01db318..b5afb565ef4 100644
 2.47.1
 
 
-From 7cff02a0117177104653bdd7ce0eccf5a27533af Mon Sep 17 00:00:00 2001
+From 4ce49febd0d8e571e99b899a88a5b3f044a040e6 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:29:38 +0200
-Subject: [PATCH 16/31] server: Create in-process synchronization objects for
+Subject: [PATCH 17/32] server: Create in-process synchronization objects for
  timers.
 
 ---
@@ -2882,10 +2973,10 @@ index 247b19c8305..16a7aed690c 100644
 2.47.1
 
 
-From 4746411e58f7aae87105528fc5eb41d3823461ae Mon Sep 17 00:00:00 2001
+From a1456e55c7047e8131badbffa738ec4eada90306 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:40:57 +0200
-Subject: [PATCH 17/31] server: Create in-process synchronization objects for
+Subject: [PATCH 18/32] server: Create in-process synchronization objects for
  fd-based objects.
 
 ---
@@ -3116,10 +3207,10 @@ index f353e70e3aa..38a323303ad 100644
 2.47.1
 
 
-From 6fba14663468370ff09ef466891c87c309d12d41 Mon Sep 17 00:00:00 2001
+From 3a9d8ac85ee930d38dc89e23ff32182e4e5566eb Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:46:06 -0600
-Subject: [PATCH 18/31] server: Add a request to retrieve the in-process
+Subject: [PATCH 19/32] server: Add a request to retrieve the in-process
  synchronization device.
 
 ---
@@ -3178,10 +3269,10 @@ index 06dd44d3e79..dc53d2b5716 100644
 2.47.1
 
 
-From 2d9c98a96307e12b8ae644661faaf5d9cf1aac4b Mon Sep 17 00:00:00 2001
+From 51b8e5da6fef71ba7fe5a018beb82710f76bc3e6 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:55:00 -0600
-Subject: [PATCH 19/31] server: Add a request to retrieve the in-process
+Subject: [PATCH 20/32] server: Add a request to retrieve the in-process
  synchronization object from a handle.
 
 ---
@@ -3242,10 +3333,10 @@ index dc53d2b5716..488fa3f973f 100644
 2.47.1
 
 
-From b7a13266b5e5e6b5e7dbfb4b5f1e0a027c367814 Mon Sep 17 00:00:00 2001
+From 485c24acffbcfa97ae195b9aface52cffeff6dad Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 19:32:25 +0200
-Subject: [PATCH 20/31] server: Introduce select_inproc_queue and
+Subject: [PATCH 21/32] server: Introduce select_inproc_queue and
  unselect_inproc_queue requests.
 
 ---
@@ -3273,7 +3364,7 @@ index 488fa3f973f..8868c0bfc57 100644
 +    int          signaled;        /* was the queue signaled? */
 +@END
 diff --git a/server/queue.c b/server/queue.c
-index a3d0e7ec0eb..e7c14ac7ca3 100644
+index 323f0f90e2c..7ca7a85035d 100644
 --- a/server/queue.c
 +++ b/server/queue.c
 @@ -140,6 +140,7 @@ struct msg_queue
@@ -3302,7 +3393,7 @@ index a3d0e7ec0eb..e7c14ac7ca3 100644
      return 1;
  }
  
-@@ -4094,3 +4099,42 @@ DECL_HANDLER(fsync_msgwait)
+@@ -4100,3 +4105,42 @@ DECL_HANDLER(fsync_msgwait)
      if (queue->fd)
          set_fd_events( queue->fd, req->in_msgwait ? POLLIN : 0 );
  }
@@ -3349,10 +3440,10 @@ index a3d0e7ec0eb..e7c14ac7ca3 100644
 2.47.1
 
 
-From e39f66bdb81d90551133d1a2cb45a8084d5c2a52 Mon Sep 17 00:00:00 2001
+From 8cdf1ad54a1b970c5d3d703a5429399375d20436 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 22 Apr 2022 00:11:14 +0300
-Subject: [PATCH 21/31] server: Allow creating an event object for client-side
+Subject: [PATCH 22/32] server: Allow creating an event object for client-side
  user APC signaling.
 
 ---
@@ -3377,7 +3468,7 @@ index 8868c0bfc57..3c35f2e39ba 100644
 +    obj_handle_t handle;          /* handle to the event */
 +@END
 diff --git a/server/thread.c b/server/thread.c
-index f282da30e4e..763b8d6f58f 100644
+index ea57e7303c0..cfd4c2c4256 100644
 --- a/server/thread.c
 +++ b/server/thread.c
 @@ -312,6 +312,7 @@ static inline void init_thread_structure( struct thread *thread )
@@ -3396,7 +3487,7 @@ index f282da30e4e..763b8d6f58f 100644
  }
  
  /* dump a thread on stdout for debugging purposes */
-@@ -1398,6 +1400,9 @@ static int queue_apc( struct process *process, struct thread *thread, struct thr
+@@ -1402,6 +1404,9 @@ static int queue_apc( struct process *process, struct thread *thread, struct thr
  
          if (do_esync() && queue == &thread->user_apc)
              esync_wake_fd( thread->esync_apc_fd );
@@ -3406,7 +3497,7 @@ index f282da30e4e..763b8d6f58f 100644
      }
  
      return 1;
-@@ -1430,6 +1435,8 @@ void thread_cancel_apc( struct thread *thread, struct object *owner, enum apc_ty
+@@ -1434,6 +1439,8 @@ void thread_cancel_apc( struct thread *thread, struct object *owner, enum apc_ty
          apc->executed = 1;
          wake_up( &apc->obj, 0 );
          release_object( apc );
@@ -3415,7 +3506,7 @@ index f282da30e4e..763b8d6f58f 100644
          return;
      }
  }
-@@ -1444,6 +1451,9 @@ static struct thread_apc *thread_dequeue_apc( struct thread *thread, int system
+@@ -1448,6 +1455,9 @@ static struct thread_apc *thread_dequeue_apc( struct thread *thread, int system
      {
          apc = LIST_ENTRY( ptr, struct thread_apc, entry );
          list_remove( ptr );
@@ -3425,7 +3516,7 @@ index f282da30e4e..763b8d6f58f 100644
      }
  
      if (do_fsync() && list_empty( &thread->system_apc ) && list_empty( &thread->user_apc ))
-@@ -2321,3 +2331,12 @@ DECL_HANDLER(get_next_thread)
+@@ -2325,3 +2335,12 @@ DECL_HANDLER(get_next_thread)
      set_error( STATUS_NO_MORE_ENTRIES );
      release_object( process );
  }
@@ -3454,10 +3545,10 @@ index b5afb565ef4..06d861b2776 100644
 2.47.1
 
 
-From bfcf68e6ec2b0ecc65573ab1d8e920d5f2d058c0 Mon Sep 17 00:00:00 2001
+From 0d669b31b010f97ad579d7210db85a0d59b5729a Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 02:07:23 +0200
-Subject: [PATCH 22/31] ntdll: Introduce a helper to wait on an internal server
+Subject: [PATCH 23/32] ntdll: Introduce a helper to wait on an internal server
  handle.
 
 ---
@@ -3558,10 +3649,10 @@ index 9dc8ea627e0..8c335cd1efd 100644
 2.47.1
 
 
-From 5b04f200f6fd1db2b9a91de6528ec52334e7c0b4 Mon Sep 17 00:00:00 2001
+From 0a692452a3949ed09630a071efe978be50c94d7f Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 20:08:29 +0200
-Subject: [PATCH 23/31] ntdll: Add some traces to synchronization methods.
+Subject: [PATCH 24/32] ntdll: Add some traces to synchronization methods.
 
 Normally we can rely on +server for these, but with fast synchronization we'll
 be skipping the server.
@@ -3795,10 +3886,10 @@ index 8361f12bb89..22563eb9930 100644
 2.47.1
 
 
-From d96c937ae2b92ca230410740d1bca055b41dc87e Mon Sep 17 00:00:00 2001
+From 61d0927a98936d2fde8eed8621c2f2fc65d9c816 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 6 Apr 2021 23:37:02 +0300
-Subject: [PATCH 24/31] ntdll: Use in-process synchronization objects.
+Subject: [PATCH 25/32] ntdll: Use in-process synchronization objects.
 
 ---
  dlls/ntdll/unix/sync.c         | 760 +++++++++++++++++++++++++++++++++
@@ -4714,10 +4805,10 @@ index 2af754736d1..46d5a76e090 100644
 2.47.1
 
 
-From 07eb5e7bbcec7ebb7554df5ba686b9c75234e1aa Mon Sep 17 00:00:00 2001
+From 26271cca4f6e87c4c24f1b58e81a224539a2ee7d Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 20 Apr 2021 17:55:59 -0500
-Subject: [PATCH 25/31] ntdll: Use server_wait_for_object() when waiting on
+Subject: [PATCH 26/32] ntdll: Use server_wait_for_object() when waiting on
  only the queue object.
 
 ---
@@ -4750,10 +4841,10 @@ index a433ba456e4..79a11c84203 100644
 2.47.1
 
 
-From 26863d1c78a1827cf902b56e5f3cf5321b344fa5 Mon Sep 17 00:00:00 2001
+From 5180717ae134b61bf80fd49dffa1853d9cace0d3 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 12 Mar 2021 23:04:17 +0200
-Subject: [PATCH 26/31] ntdll: Cache in-process synchronization objects.
+Subject: [PATCH 27/32] ntdll: Cache in-process synchronization objects.
 
 ---
  dlls/ntdll/unix/server.c       |   9 ++
@@ -5083,10 +5174,10 @@ index 02988a868f2..be6ee7be3e1 100644
 2.47.1
 
 
-From ac99f8cb128151461b51e493b4072632a7e8746d Mon Sep 17 00:00:00 2001
+From e50ade335386be619330ff9940bd9406e97333b7 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Sat, 13 Mar 2021 16:20:30 -0600
-Subject: [PATCH 27/31] server: Allow disabling in-process synchronization
+Subject: [PATCH 28/32] server: Allow disabling in-process synchronization
  support.
 
 ---
@@ -5114,10 +5205,10 @@ index c50bbb52bbc..e708aefe249 100644
 2.47.1
 
 
-From fb21843b00405c1913344ade4cb0929c9fe47735 Mon Sep 17 00:00:00 2001
+From c83b4a3b9609f082ffebf4302187ec27e4c01fd1 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Sun, 14 Mar 2021 11:08:02 -0500
-Subject: [PATCH 28/31] server: Add a message to signal that in-proces
+Subject: [PATCH 29/32] server: Add a message to signal that in-proces
  synchronization is indeed active.
 
 ---
@@ -5140,10 +5231,10 @@ index e708aefe249..3951aa41e5b 100644
 2.47.1
 
 
-From a9445a3283be59db320936e7dce0bd79f58c0f22 Mon Sep 17 00:00:00 2001
+From e8725c4318528c4fea2ef66dea7534c35c1ad3ea Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 3 May 2024 14:35:50 -0400
-Subject: [PATCH 29/31] extra debugging
+Subject: [PATCH 30/32] extra debugging
 
 ---
  server/inproc_sync.c | 23 ++++++++++++++++++++---
@@ -5224,10 +5315,10 @@ index 3951aa41e5b..2e0480e540b 100644
 2.47.1
 
 
-From ef5630ea6f797cace253445d0e80155e2152778d Mon Sep 17 00:00:00 2001
+From f702acd9cd3f0a4718d97900bb3311708835e589 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sun, 15 Dec 2024 01:59:50 +0200
-Subject: [PATCH 30/31] ntsync: disable esync and fsync when ntsync is enabled
+Subject: [PATCH 31/32] ntsync: disable esync and fsync when ntsync is enabled
 
 ---
  dlls/ntdll/unix/esync.c | 3 ++-
@@ -5318,10 +5409,10 @@ index d0a0a4879b5..d0ac24b0a1f 100644
 2.47.1
 
 
-From d8c5c6b0962b3431e42f3315b5328b0806239980 Mon Sep 17 00:00:00 2001
+From dc76375244b13b65297f46e5a0d315fe0e9df642 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sun, 22 Dec 2024 14:03:35 +0200
-Subject: [PATCH 31/31] ntdll: Use server_wait_for_object() when waiting in
+Subject: [PATCH 32/32] ntdll: Use server_wait_for_object() when waiting in
  NtSuspendThread
 
 ---
