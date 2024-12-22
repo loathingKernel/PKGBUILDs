@@ -5,16 +5,13 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=1.7.5794.r0.g052951fb
+pkgver=2.3.71.r0.gc6d0f5e3cd
 pkgrel=1
 pkgdesc='A Sony PlayStation 2 emulator'
 arch=(x86_64)
 url=https://www.pcsx2.net
 license=(
-    GPL2
-    GPL3
-    LGPL2.1
-    LGPL3
+    GPL-3.0+
 )
 
 depends=(
@@ -22,9 +19,12 @@ depends=(
     libpcap
     libglvnd
     libxrandr
+    libbacktrace
     alsa-lib
     ffmpeg
     sdl2
+    lld
+    shaderc
     qt6-base
     qt6-svg
     soundtouch
@@ -61,33 +61,13 @@ provides=(${pkgname%-git})
 conflicts=(${pkgname%-git})
 options=(!lto)
 
-LIBBACKTRACE=ad106d5fdd5d960bd33fae1c48a351af567fd075
-SHADERC=2024.1
-SHADERC_GLSLANG=142052fa30f9eca191aa9dcf65359fcaed09eeec
-SHADERC_SPIRVHEADERS=5e3ad389ee56fca27c9705d093ae5387ce404df4
-SHADERC_SPIRVTOOLS=dd4b663e13c07fea4fbb3f70c1c91c86731099f7
-
 source=(
     git+https://github.com/PCSX2/pcsx2.git
     git+https://github.com/PCSX2/pcsx2_patches.git
-    git+https://github.com/ianlancetaylor/libbacktrace.git#commit=$LIBBACKTRACE
-    git+https://github.com/google/shaderc.git#tag=v$SHADERC
-    git+https://github.com/KhronosGroup/glslang.git#commit=$SHADERC_GLSLANG
-    git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=$SHADERC_SPIRVHEADERS
-    git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit=$SHADERC_SPIRVTOOLS
-    pcsx2-qt.sh
 )
 install=pcsx2-git.install
 
 prepare() {
-
-    pushd shaderc
-    mv -n "${srcdir}"/glslang third_party/glslang
-    mv -n "${srcdir}"/SPIRV-Headers third_party/spirv-headers
-    mv -n "${srcdir}"/SPIRV-Tools third_party/spirv-tools
-    patch -p1 -i "$srcdir/pcsx2/.github/workflows/scripts/common/shaderc-changes.patch"
-    popd
-
     cd pcsx2
     git remote set-url origin https://github.com/PCSX2/pcsx2.git
     git submodule update --init --filter=tree:0 --recursive
@@ -99,75 +79,40 @@ pkgver() {
 }
 
 build() {
-
-    echo "Building libbacktrace..."
-    pushd libbacktrace
-    ./configure --prefix="/opt/${pkgname%-git}"
-    make
-    DESTDIR="$srcdir/deps" make install
-    popd
-
-    echo "Building shaderc..."
-    cmake -B build-shaderc -S shaderc \
-        -G Ninja \
-        -Wno-dev \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_C_COMPILER=clang \
-        -DCMAKE_CXX_COMPILER=clang++ \
-        -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_PREFIX_PATH="${srcdir}/deps/opt/${pkgname%-git}" \
-        -DCMAKE_INSTALL_PREFIX="/opt/${pkgname%-git}" \
-        -DSHADERC_SKIP_TESTS=ON \
-        -DSHADERC_SKIP_EXAMPLES=ON \
-        -DSHADERC_SKIP_COPYRIGHT_CHECK=ON
-    ninja -C build-shaderc
-    DESTDIR="$srcdir/deps" ninja -C build-shaderc install
-
-    echo "Building ${pkgname%-git}..."
     cmake -S pcsx2 -B build \
-        -G Ninja \
-        -Wno-dev \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_C_COMPILER=clang \
-        -DCMAKE_CXX_COMPILER=clang++ \
-        -DCMAKE_C_FLAGS="$CFLAGS -Wno-error=format-security" \
-        -DCMAKE_CXX_FLAGS="$CXXFLAGS -Wno-error=format-security" \
-        -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
-        -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
-        -DCMAKE_PREFIX_PATH="${srcdir}/deps/opt/${pkgname%-git}" \
-        -DCMAKE_BUILD_RPATH="/opt/${pkgname%-git}/lib" \
-        -DUSE_VULKAN=ON \
-        -DENABLE_SETCAP=OFF \
-        -DX11_API=ON \
-        -DWAYLAND_API=ON \
-        -DUSE_SYSTEM_LIBS=OFF \
-        -DDISABLE_ADVANCE_SIMD=ON
+    -G Ninja \
+    -Wno-dev \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
+    -DCMAKE_C_FLAGS="$CFLAGS -Wno-error=format-security" \
+    -DCMAKE_CXX_FLAGS="$CXXFLAGS -Wno-error=format-security" \
+    -DCMAKE_EXE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_MODULE_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_SHARED_LINKER_FLAGS_INIT="-fuse-ld=lld" \
+    -DCMAKE_INSTALL_PREFIX="/usr" \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DUSE_VULKAN=ON \
+    -DENABLE_SETCAP=OFF \
+    -DWAYLAND_API=ON \
+    -DUSE_SYSTEM_LIBS=OFF \
+    -DDISABLE_ADVANCE_SIMD=ON \
+    -DPACKAGE_MODE=ON
+
     ninja -C build -v
     
     7z a -r patches.zip ./pcsx2_patches/patches/*
 }
 
 package() {
-    install -dm755  "${pkgdir}"/opt/
-    cp -r build/bin "${pkgdir}"/opt/"${pkgname%-git}"
-    install -Dm755 pcsx2-qt.sh "$pkgdir"/usr/bin/pcsx2-qt
+    DESTDIR="${pkgdir}" cmake --install build
+
     install -Dm644 pcsx2/.github/workflows/scripts/linux/pcsx2-qt.desktop \
         "${pkgdir}"/usr/share/applications/PCSX2.desktop
     install -Dm644 pcsx2/bin/resources/icons/AppIconLarge.png \
         "${pkgdir}"/usr/share/icons/hicolor/512x512/apps/PCSX2.png
-    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/resources/ patches.zip
-    install -Dm644 -t "${pkgdir}"/opt/"${pkgname%-git}"/lib ${srcdir}/deps/opt/"${pkgname%-git}"/lib/libshaderc_shared.so.1
+    install -Dm644 -t "${pkgdir}"/usr/share/PCSX2/resources/ patches.zip
 }
 
 b2sums=('SKIP'
-        'SKIP'
-        '1e8bcec29693e6402fd8d64619c3c1c283ca49b337a9a1b8944900f02c2a3ca625648a32ef2a74a1edc4b8d8c26fa6b0cbc01e3899e441cdb3368e53c48528d8'
-        '2bf06418786c2e2dd9c4bddd387231d61818f2b857829e6f7c8d739687c957c6345c4fd57f0f809e6b0ca51686dced45b2cd8f84c2907b5901eb0d0c1b6d8b35'
-        '88ec1732fbd39ae9a4fd70baee9dead4186ce80b07f171325b37a12cda28e933bf9440c4a82efbf0814e71787ca3e1724eacdb7d8008ae5d774d62c008fe4461'
-        '982335b9c326d4d5feeff531090fb9878a967667d5d73b1fc233f7c0c25b842ba94e0a88af29e2f284fa8f5ad2f1760d16e7b4270604982a634941a1e47ad549'
-        '26b319c497a41c3dc575ca38b1b3222928e98e632f8fc2c5fc4d3aa49fad746b1e6bda84806264b857c4d4612202ea038566c2b76c3d9c2ac163c60c4b3bc9fa'
-        '5aeb01be2e9e77c26c4039b183ff2751f787350e274b1c1d1cead7491eabced556e3934502eaf4887e9b49581f515382f096b29e9daef6e9e94c443e2bc7e048')
+        'SKIP')
