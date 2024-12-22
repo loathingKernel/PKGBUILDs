@@ -6,15 +6,15 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=9.22
-pkgrel=3
-_tkg_commit=52b87f0b58ef4e617282c4e362c3f948934e699b
+pkgver=10.0rc3
+pkgrel=1
+_tkg_commit=41f7e2477bb25179439698fa86613408ba9afed0
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
 
-source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$pkgver"
+source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbasever"
         "wine-staging-$_pkgbasever::git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v$_pkgbasever"
         30-win32-aliases.conf
         wine-binfmt.conf)
@@ -28,18 +28,18 @@ source+=(
         0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
         wine-ntsync.patch
 )
-sha512sums=('5fbc77ea573b4d0ae11ad30302e799d9a03620dfc87d005a8abee381010d1dae6c1b11cb06385b1ef6ae6f887f1e747c20e01bf0bb4853f0ca945486d9513857'
-            'c936aae676652de4c877cc696560777c1fe0f7f905919b45005e227aff1da1ea25e2088859dbe0ac01c9d436adf00bf6700d642203b5ae99ba5e4ff715eec92e'
+sha512sums=('5c8ce1cc77011240513b944ace8378b69b7932c4f0a65376ef1a12d58815539a255643eb2ec57ca86b07f0a17a441afbcfa3974fb68e9604f1f494a3792638c8'
+            '2212a12afc0add4002f167c7430a1c809d4bfdee94bf2f34e77de150bbe13cf468a40be2dd1eb57634f5956a85f756f210c4a54744be24129103891499eea922'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
-            'f80ae8c9244e2864913ae61088e4b812c0c6d1275887b8e07962ea0f03e817da2d30f3a1842127d7475477a0b9ee9e6a2a4497da4e2986b4b98c543aa6ad6daf'
+            '29c8f5c1d72e5a9ccfab1f168d1898fbe91d135a2a131ce2c10205816546a5b9732435c80b64d5768354437b89d24ed780b0caf20fd3133c929bffc10978709a'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             '785987b4eb881ecd0fcd217bc89315261c82fcbe33f39e3ddf4d87d05df3e94c3fff910dba8861a2269a1c184c9832f24db1603d9c7508892ba6488805ae6a83'
             '8694685c4b4e8559b98286a11e39b662edc6c0ff1fa0446abd828af84f31d26fc6b8d18c00e3e3d273dcdad373dd6af8f01eeaa0d3de14ef28512494c756bdc4'
             '605f6f527fc0b25768a3fa7bd921506269c2e70edb17289042eac4f34a410da26bfc4e61d0ae6356258d5fc10be25b8baab9dcabbd7bed034e94560882be457f'
             '67d2e1e08d7f3bab2cd8d39d9bafd2451ab813fd4696ace70e3a310dd4d249112f3a88dedb7a2bcc0f4b85131a41cd1f20a6f21384ef92ec02ec66f07fd46a93'
-            'f9ef6fa9b8a203c4726576ecd7c5c0ff0a5c1fca8b4ec970f9752ba9c1bdff046bea7d0717ce9f3f71931a17bf8f711b22e21d33b895d5f5e376c3ad43f8f62c')
+            '533b1976bc53122d41c9bdc834af714e9847357a6543b6930920a96e1177a4a21071c14e4d141cee9b7cdbb9ccf9aa97b9d5a1a00a9ace7e25962554cb532046')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
@@ -163,9 +163,9 @@ prepare() {
   patch -p1 -i "$srcdir"/0001-clang-fixup-lto.patch
   patch -p1 -i "$srcdir"/0002-makedep-add-per-source-cflags-and-per-program-ldflag.patch
   patch -p1 -i "$srcdir"/0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
+  ./tools/make_requests
   ./dlls/winevulkan/make_vulkan
   ./tools/make_specfiles
-  ./tools/make_requests
   autoreconf -fiv
 }
 
