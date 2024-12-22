@@ -1,7 +1,7 @@
 From 4b4499079ce255e90bc30260d15fc8d68cddf65d Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 31 Oct 2023 12:23:30 -0500
-Subject: [PATCH 01/30] gcc 13 warnings
+Subject: [PATCH 01/31] gcc 13 warnings
 
 ---
  dlls/webservices/tests/channel.c | 3 +++
@@ -28,7 +28,7 @@ index 4cf39c10732..1fb12297eef 100644
 From f1259adfff7a769d8ee3c7a192d3a1ce701e4e88 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 22:31:06 +0200
-Subject: [PATCH 02/30] server: Add an object operation to retrieve a fast
+Subject: [PATCH 02/31] server: Add an object operation to retrieve a fast
  synchronization object.
 
 ---
@@ -827,7 +827,7 @@ index 875e87ed6b2..990c43f1099 100644
 From 05ec614d3bbae70d22b603fd8e0d0c2b89e6fbe8 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 00:38:18 +0200
-Subject: [PATCH 03/30] server: Create fast synchronization objects for events.
+Subject: [PATCH 03/31] server: Create fast synchronization objects for events.
 
 ---
  configure.ac       |   1 +
@@ -1275,7 +1275,7 @@ index ea978f2c79b..11f6ecfd335 100644
 From 75f6a4557dd67567a64ad41ddf31ca94b5449351 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Thu, 11 Mar 2021 16:45:30 -0600
-Subject: [PATCH 04/30] server: Create fast synchronization objects for
+Subject: [PATCH 04/31] server: Create fast synchronization objects for
  semaphores.
 
 ---
@@ -1475,7 +1475,7 @@ index 156bc1dcd55..077376e15d4 100644
 From 94a4dd327456885a8b710cb24a0b81fa9340c676 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Thu, 11 Mar 2021 16:52:55 -0600
-Subject: [PATCH 05/30] server: Create fast synchronization objects for
+Subject: [PATCH 05/31] server: Create fast synchronization objects for
  mutexes.
 
 ---
@@ -1687,7 +1687,7 @@ index 80a91304043..a5ebb251b01 100644
 From 96b6e481ad1fce15ac735ac2160fd9925d985d61 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 12 Mar 2021 04:32:58 +0200
-Subject: [PATCH 06/30] server: Create fast synchronization objects for
+Subject: [PATCH 06/31] server: Create fast synchronization objects for
  completion ports.
 
 ---
@@ -1792,7 +1792,7 @@ index 48e911c1840..cca4d27d905 100644
 From 976d61bee74cccb6098ca6aac672be8454c3c409 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 16:54:34 -0600
-Subject: [PATCH 07/30] server: Create fast synchronization objects for
+Subject: [PATCH 07/31] server: Create fast synchronization objects for
  consoles.
 
 ---
@@ -1990,7 +1990,7 @@ index eafea69a730..7a1bc24d489 100644
 From aee9215085373d98896581e3839e61da8e37c097 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:00:51 +0200
-Subject: [PATCH 08/30] server: Create fast synchronization objects for console
+Subject: [PATCH 08/31] server: Create fast synchronization objects for console
  servers.
 
 ---
@@ -2101,7 +2101,7 @@ index 7a1bc24d489..0ddcb0125f1 100644
 From d495cffb97a84716b1caac19827d35031df4e727 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:11:03 -0600
-Subject: [PATCH 09/30] server: Create fast synchronization objects for debug
+Subject: [PATCH 09/31] server: Create fast synchronization objects for debug
  objects.
 
 ---
@@ -2205,7 +2205,7 @@ index fe123b0d60e..1abd7db57a6 100644
 From cee49cee338cc5a6533c30b6c08e0991e2eadd30 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Wed, 10 Mar 2021 19:02:42 +0200
-Subject: [PATCH 10/30] server: Create fast synchronization objects for device
+Subject: [PATCH 10/31] server: Create fast synchronization objects for device
  managers.
 
 ---
@@ -2316,7 +2316,7 @@ index a5d30941258..48950d53128 100644
 From dbc4e3762bd76c51598029fac79d1885d719a763 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:13:20 -0600
-Subject: [PATCH 11/30] server: Create fast synchronization objects for keyed
+Subject: [PATCH 11/31] server: Create fast synchronization objects for keyed
  events.
 
 ---
@@ -2392,7 +2392,7 @@ index 47a61280149..187c46ac97b 100644
 From 9b9e7d1bdc7afa273d57bd2cdf094290c90b4f90 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:16:53 +0200
-Subject: [PATCH 12/30] server: Create fast synchronization objects for
+Subject: [PATCH 12/31] server: Create fast synchronization objects for
  processes.
 
 ---
@@ -2482,7 +2482,7 @@ index 112aa5d5062..eb19fff6767 100644
 From b85d1d42ae13dee644ede1fc9508d97cd32d74d7 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:17:35 -0600
-Subject: [PATCH 13/30] server: Create fast synchronization objects for jobs.
+Subject: [PATCH 13/31] server: Create fast synchronization objects for jobs.
 
 ---
  server/process.c | 18 +++++++++++++++++-
@@ -2559,7 +2559,7 @@ index a7358ea3af9..1bdd2d09c9b 100644
 From a071f196b263aecb011a2a7e17b585144b9d86f1 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:24:15 +0200
-Subject: [PATCH 14/30] server: Create fast synchronization objects for message
+Subject: [PATCH 14/31] server: Create fast synchronization objects for message
  queues.
 
 ---
@@ -2712,7 +2712,7 @@ index 8c918727ca6..56b8ad91faa 100644
 From 600af47bfb45334893669c83dbe9d698878e93d9 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:26:35 +0200
-Subject: [PATCH 15/30] server: Create fast synchronization objects for
+Subject: [PATCH 15/31] server: Create fast synchronization objects for
  threads.
 
 ---
@@ -2801,7 +2801,7 @@ index 416b01db318..75b3320125c 100644
 From 263db893bd08850b14b71f91d93f304c80e6ef3f Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:29:38 +0200
-Subject: [PATCH 16/30] server: Create fast synchronization objects for timers.
+Subject: [PATCH 16/31] server: Create fast synchronization objects for timers.
 
 ---
  server/timer.c | 22 +++++++++++++++++++++-
@@ -2896,7 +2896,7 @@ index 4de4787de0d..289f49945db 100644
 From bed1d14ac36bccc326379793c687f9a0c15845c8 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 01:40:57 +0200
-Subject: [PATCH 17/30] server: Create fast synchronization objects for
+Subject: [PATCH 17/31] server: Create fast synchronization objects for
  fd-based objects.
 
 ---
@@ -3121,7 +3121,7 @@ index 581e9bf2b94..a84e3ceb73c 100644
 From b03202e7dbd396ff8ba37dd211dc48170fb87b0b Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:46:06 -0600
-Subject: [PATCH 18/30] server: Add a request to retrieve the fast
+Subject: [PATCH 18/31] server: Add a request to retrieve the fast
  synchronization device.
 
 ---
@@ -3183,7 +3183,7 @@ index 87cb218236a..918fa78336c 100644
 From 952350132b199471bb4b3416b1258af59908bdae Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Mon, 8 Mar 2021 17:55:00 -0600
-Subject: [PATCH 19/30] server: Add a request to retrieve the fast
+Subject: [PATCH 19/31] server: Add a request to retrieve the fast
  synchronization object from a handle.
 
 ---
@@ -3247,7 +3247,7 @@ index 918fa78336c..02a103bf79f 100644
 From 24e4a81a7ab99fb737cad64903f8dc8ad15b3fcd Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 19:32:25 +0200
-Subject: [PATCH 20/30] server: Introduce fast_select_queue and
+Subject: [PATCH 20/31] server: Introduce fast_select_queue and
  fast_unselect_queue requests.
 
 ---
@@ -3371,7 +3371,7 @@ index 56b8ad91faa..16b48403c62 100644
 From a15d71a6c5a97d99d373a5c19d521f95f1ebf270 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 22 Apr 2022 00:11:14 +0300
-Subject: [PATCH 21/30] server: Allow creating an event object for client-side
+Subject: [PATCH 21/31] server: Allow creating an event object for client-side
  user APC signaling.
 
 ---
@@ -3476,7 +3476,7 @@ index 75b3320125c..38b904237c1 100644
 From 69d8ff20f02a7fd1b91b43655e02f15efb693f99 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 02:07:23 +0200
-Subject: [PATCH 22/30] ntdll: Introduce a helper to wait on an internal server
+Subject: [PATCH 22/31] ntdll: Introduce a helper to wait on an internal server
  handle.
 
 ---
@@ -3580,7 +3580,7 @@ index 9dc8ea627e0..8c335cd1efd 100644
 From 10a18d349ed3684ffaf1124c556841886fac01db Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 9 Mar 2021 20:08:29 +0200
-Subject: [PATCH 23/30] ntdll: Add some traces to synchronization methods.
+Subject: [PATCH 23/31] ntdll: Add some traces to synchronization methods.
 
 Normally we can rely on +server for these, but with fast synchronization we'll
 be skipping the server.
@@ -3817,7 +3817,7 @@ index 8361f12bb89..22563eb9930 100644
 From 7095da52e237cd06bec5145f8b6dbf737dd9effb Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 6 Apr 2021 23:37:02 +0300
-Subject: [PATCH 24/30] ntdll: Use fast synchronization objects.
+Subject: [PATCH 24/31] ntdll: Use fast synchronization objects.
 
 ---
  dlls/ntdll/unix/sync.c         | 762 +++++++++++++++++++++++++++++++++
@@ -4725,7 +4725,7 @@ index 8c335cd1efd..835e21c6774 100644
 From 3bff2b3121d9258827b38634f0e4e700570b57ec Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Tue, 20 Apr 2021 17:55:59 -0500
-Subject: [PATCH 25/30] ntdll: Use server_wait_for_object() when waiting on
+Subject: [PATCH 25/31] ntdll: Use server_wait_for_object() when waiting on
  only the queue object.
 
 ---
@@ -4761,7 +4761,7 @@ index 469148ce8d2..586d054df2b 100644
 From c731e32dd119ff853977c496ac4a3e5860bbd9f4 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 12 Mar 2021 23:04:17 +0200
-Subject: [PATCH 26/30] ntdll: Cache fast synchronization objects.
+Subject: [PATCH 26/31] ntdll: Cache fast synchronization objects.
 
 ---
  dlls/ntdll/unix/server.c       |   9 ++
@@ -5094,7 +5094,7 @@ index 835e21c6774..767fef5450b 100644
 From fa6262260e6169934728ff2c680a048acc493664 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Sat, 13 Mar 2021 16:20:30 -0600
-Subject: [PATCH 27/30] server: Allow disabling fast synchronization support.
+Subject: [PATCH 27/31] server: Allow disabling fast synchronization support.
 
 ---
  server/fast_sync.c | 6 ++++++
@@ -5124,7 +5124,7 @@ index d8773ff7eff..d492c503fdb 100644
 From 734210c7675f603c30e2e5c20930af704c2c1268 Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Sun, 14 Mar 2021 11:08:02 -0500
-Subject: [PATCH 28/30] server: Add a message to signal that fast
+Subject: [PATCH 28/31] server: Add a message to signal that fast
  synchronization is indeed active.
 
 ---
@@ -5150,7 +5150,7 @@ index d492c503fdb..9b6cab03b53 100644
 From c60751b9045baaba5e816a24e06f5a2a7834ae7d Mon Sep 17 00:00:00 2001
 From: Elizabeth Figura <zfigura@codeweavers.com>
 Date: Fri, 3 May 2024 14:35:50 -0400
-Subject: [PATCH 29/30] extra debugging
+Subject: [PATCH 29/31] extra debugging
 
 ---
  server/fast_sync.c | 23 ++++++++++++++++++++---
@@ -5234,7 +5234,7 @@ index 9b6cab03b53..8a804ea7e2e 100644
 From c3a9f55a06cf532f4c31ce95b80a5b42a3ede28b Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sun, 15 Dec 2024 01:59:50 +0200
-Subject: [PATCH 30/30] ntsync: disable esync and fsync when ntsync is enabled
+Subject: [PATCH 30/31] ntsync: disable esync and fsync when ntsync is enabled
 
 ---
  dlls/ntdll/unix/esync.c | 3 ++-
@@ -5321,6 +5321,33 @@ index d0a0a4879b5..d0ac24b0a1f 100644
  
      if (debug_level) fprintf( stderr, "wineserver: starting (pid=%ld)\n", (long) getpid() );
      set_current_time();
+-- 
+2.47.1
+
+
+From a6cda48469c4d833136004a22528a044bda7a457 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Sun, 22 Dec 2024 14:03:35 +0200
+Subject: [PATCH 31/31] ntdll: Use server_wait_for_object() when waiting in
+ NtSuspendThread
+
+---
+ dlls/ntdll/unix/thread.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dlls/ntdll/unix/thread.c b/dlls/ntdll/unix/thread.c
+index 8314d8800b0..e6ffb586015 100644
+--- a/dlls/ntdll/unix/thread.c
++++ b/dlls/ntdll/unix/thread.c
+@@ -1644,7 +1644,7 @@ NTSTATUS WINAPI NtSuspendThread( HANDLE handle, ULONG *ret_count )
+ 
+     if (ret == STATUS_PENDING && wait_handle)
+     {
+-        NtWaitForSingleObject( wait_handle, FALSE, NULL );
++        server_wait_for_object( wait_handle, FALSE, NULL );
+ 
+         SERVER_START_REQ( suspend_thread )
+         {
 -- 
 2.47.1
 
