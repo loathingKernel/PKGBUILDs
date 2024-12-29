@@ -67,6 +67,9 @@ if [ "x${INPUT_USECCACHEEXT:-false}" == xtrue ]; then
     pacman -Syu --noconfirm --needed ccache-ext
 fi
 
+# Update again before continuing
+pacman -Syu --noconfirm
+
 # Makepkg does not allow running as root
 # Create a new user `builder`
 # `builder` needs to have a home directory because some PKGBUILDs will try to
