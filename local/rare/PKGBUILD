@@ -2,7 +2,7 @@
 
 pkgname=rare
 pkgver=1.10.11.525
-pkgrel=1
+pkgrel=2
 pkgdesc="Open source alternative for Epic Games Launcher, using Legendary"
 arch=('any')
 url="https://github.com/RareDevs/Rare"
@@ -31,7 +31,7 @@ sha256sums=('5571dce60d9dfca6f58c678a31a8e24425b3cb64e7184a8451a0fdcf47702f1f')
 
 build() {
   cd Rare
-  python -m build -wn
+  python -m build -wnv
 }
 
 package() {
