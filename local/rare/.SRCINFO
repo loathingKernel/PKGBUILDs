@@ -1,6 +1,6 @@
 pkgbase = rare
-	pkgdesc = A GUI for legendary, an open source replacement for Epic Games Launcher
-	pkgver = 1.10.11
+	pkgdesc = Open source alternative for Epic Games Launcher, using Legendary
+	pkgver = 1.10.11.525
 	pkgrel = 1
 	url = https://github.com/RareDevs/Rare
 	arch = any
@@ -10,17 +10,18 @@ pkgbase = rare
 	makedepends = python-installer
 	makedepends = python-wheel
 	makedepends = python-setuptools
-	depends = python-pyqt5
-	depends = qt5-svg
-	depends = python-qtawesome
+	makedepends = python-setuptools-scm
+	depends = pyside6
 	depends = python-requests
+	depends = python-qtawesome
 	depends = python-orjson
+	depends = python-vdf
 	depends = legendary
 	optdepends = wine: run Windows games
 	optdepends = proton: run Windows games
 	optdepends = python-pypresence: Discord RPC integration
 	optdepends = python-pywebview: embedded browser for logging in
-	source = git+https://github.com/RareDevs/Rare.git#tag=1.10.11
-	sha256sums = SKIP
+	source = git+https://github.com/RareDevs/Rare.git#tag=1.10.11.525
+	sha256sums = 5571dce60d9dfca6f58c678a31a8e24425b3cb64e7184a8451a0fdcf47702f1f
 
 pkgname = rare
