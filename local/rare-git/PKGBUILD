@@ -38,7 +38,9 @@ pkgver() {
 
 build() {
   cd Rare
-  python -m build -wn
+  ls -lah * .
+  env
+  SETUPTOOLS_SCM_DEBUG=true python -m build -wn
 }
 
 package() {
