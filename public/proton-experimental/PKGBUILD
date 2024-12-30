@@ -1,13 +1,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-experimental
-_srctag=9.0-20241111
+_srctag=9.0-20241223
 _commit=
 pkgver=${_srctag//-/.}
 #pkgver=
 _geckover=2.47.4
-_monover=9.3.0
-_xaliaver=0.4.4
+_monover=9.3.1
+_xaliaver=0.4.5
 pkgrel=1
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch"
@@ -258,14 +258,14 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('557f2723c2e8fd4b5967e64e7cdb7f81f1f1cb98d46168225dc0d8abc5aa89fd'
+sha256sums=('b48aa3c4ef03c4f0a99b1bdf42c67eb4edcb97871502191d248212c151d457ba'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
-            'c23deb9e3217a574f242b78d74cb94c4948a37d1f2715941b803a02e535854a6'
-            'a5cfd3090ebf7fb694bce573ef87b300b86f61204987ecbd068a2fe5079b7e6e'
-            'fde4292d2892798d82391a16676627337fd9da543362ee499e56beb12e779159'
-            '6b5c8c5234fd1bd929dd58fdf9e251ed6ee15215201c65785003324f7612d0f2'
-            'cd9337441a191f8a6642499ba43c55afc112e71907169fc1d895c32100f2c5aa'
-            'f3480fabf56edb8494dccd16cddb92d9bfc05770560237ef98aa76612bff6f79'
-            'ee07e4991e4e2bf47a87fc49f085581cbc5bea5ba90a8a12b640696523b97c93'
-            'b59577bdaaabc0a5d69f023783c5e50707013e1b59a7ab3c63a7652c41e584c4')
+            '32eff652b96390f04fb52ee695fc3a6d197b1bb616ed2df7e25119fe5700c950'
+            '7e061783acf005c8dc90bd47fea1af9fc941f80c459477752fc32fbc2924ec65'
+            '82bc982d7bcddfab5872e4b2b13fe0dbe5ebeecc5cbf2fa37a26af3102f20ffa'
+            'fdaf3be45e00569c5cf08491d3417b08b3b21b6ac93049eca7626acff65d955b'
+            '234efcaacd76d520f5e31523aa9ad3a98b5a41ebcf9a8d4e93445f723e1237cf'
+            'ee308621f16a304f91d9c94bd81ec4f4128c0ad8d47c1a04d9fdc427b74f3de3'
+            '99241bce4fb95cf5e02e87e54385bf82c5fbd10db54bb0e3f22edf6d9ff20241'
+            '8e824ef6dd6b3bc58c29ee8fcebfd91afca37f5c97e6ab0f4886f97c57958d57')
