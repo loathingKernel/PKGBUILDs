@@ -1,7 +1,7 @@
 # Maintainer: Dummerle
 
 pkgname=rare-git
-pkgver=1.10.11.r525.g3f452ff8
+pkgver=1.10.11.r535.gbb4cc47b
 pkgrel=1
 pkgdesc="Open source alternative for Epic Games Launcher, using Legendary"
 arch=('any')
@@ -38,9 +38,7 @@ pkgver() {
 
 build() {
   cd Rare
-  ls -lah * .
-  env
-  SETUPTOOLS_SCM_DEBUG=true python -m build -wn
+  python setup.py bdist_wheel
 }
 
 package() {
