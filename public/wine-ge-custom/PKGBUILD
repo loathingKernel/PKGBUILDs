@@ -119,9 +119,9 @@ prepare() {
       git config user.email "makepkg@aur.not"
       git config user.name "makepkg aur"
       git tag wine-ge-8.0 --annotate -m "$pkgver"
+      ./tools/make_requests
       ./dlls/winevulkan/make_vulkan -x vk.xml
       ./tools/make_specfiles
-      ./tools/make_requests
       autoreconf -fiv
     popd
   popd
