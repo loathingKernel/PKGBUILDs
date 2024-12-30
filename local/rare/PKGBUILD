@@ -31,7 +31,7 @@ sha256sums=('5571dce60d9dfca6f58c678a31a8e24425b3cb64e7184a8451a0fdcf47702f1f')
 
 build() {
   cd Rare
-  python -m build -wn
+  python setup.py bdist_wheel
 }
 
 package() {
