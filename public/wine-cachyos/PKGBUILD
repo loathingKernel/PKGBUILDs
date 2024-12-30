@@ -113,9 +113,9 @@ prepare() {
       git config user.email "wine@cachyos.org"
       git config user.name "wine cachyos"
       git tag wine-9.0 --annotate -m "$pkgver" --force
+      ./tools/make_requests
       ./dlls/winevulkan/make_vulkan -x vk.xml
       ./tools/make_specfiles
-      ./tools/make_requests
       autoreconf -fiv
   popd
 }
