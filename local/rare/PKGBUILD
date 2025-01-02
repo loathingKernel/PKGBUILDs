@@ -1,7 +1,7 @@
 # Maintainer: Dummerle
 
 pkgname=rare
-pkgver=1.10.11.525
+pkgver=1.11.2
 pkgrel=1
 pkgdesc="Open source alternative for Epic Games Launcher, using Legendary"
 arch=('any')
@@ -27,7 +27,7 @@ optdepends=(
   "python-pywebview: embedded browser for logging in"
 )
 source=("git+https://github.com/RareDevs/Rare.git#tag=$pkgver")
-sha256sums=('5571dce60d9dfca6f58c678a31a8e24425b3cb64e7184a8451a0fdcf47702f1f')
+sha256sums=('64d8f9c0f0c9291ca10a5d40bcd96c39f03b1e650f216edbe212d977de078edc')
 
 build() {
   cd Rare
