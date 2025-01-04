@@ -4,9 +4,9 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=10.0rc3
+pkgver=10.0rc4
 pkgrel=1
-_tkg_commit=41f7e2477bb25179439698fa86613408ba9afed0
+_tkg_commit=975bc35af94f7387798fb491b7cda245ae4423ab
 
 _pkgbasever=${pkgver/rc/-rc}
 
