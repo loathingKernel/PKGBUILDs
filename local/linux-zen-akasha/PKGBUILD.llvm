@@ -95,7 +95,7 @@ prepare() {
     scripts/config --disable CONFIG_PROFILING
     # Processor type and features
     scripts/config --enable  CONFIG_PROCESSOR_SELECT
-    scripts/config --disable CONFIG_CPU_SUP_AMD
+    scripts/config --enable  CONFIG_CPU_SUP_AMD
     scripts/config --disable CONFIG_CPU_SUP_HYGON
     scripts/config --disable CONFIG_CPU_SUP_CENTAUR
     scripts/config --disable CONFIG_CPU_SUP_ZHAOXIN
