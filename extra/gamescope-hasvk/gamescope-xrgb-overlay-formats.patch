@@ -1,0 +1,19 @@
+diff --git a/src/Backends/DRMBackend.cpp b/src/Backends/DRMBackend.cpp
+index c62635f1..4c91a9d1 100644
+--- a/src/Backends/DRMBackend.cpp
++++ b/src/Backends/DRMBackend.cpp
+@@ -1247,11 +1247,11 @@ bool init_drm(struct drm_t *drm, int width, int height, int refresh)
+ 	}
+ 
+ 	// ARGB8888 is the Xformat and AFormat here in this function as we want transparent overlay
+-	g_nDRMFormatOverlay = pick_plane_format(&drm->primary_formats, DRM_FORMAT_ARGB2101010, DRM_FORMAT_ARGB2101010);
++	g_nDRMFormatOverlay = pick_plane_format(&drm->primary_formats, DRM_FORMAT_XRGB2101010, DRM_FORMAT_ARGB2101010);
+ 	if ( g_nDRMFormatOverlay == DRM_FORMAT_INVALID ) {
+-		g_nDRMFormatOverlay = pick_plane_format(&drm->primary_formats, DRM_FORMAT_ABGR2101010, DRM_FORMAT_ABGR2101010);
++		g_nDRMFormatOverlay = pick_plane_format(&drm->primary_formats, DRM_FORMAT_XBGR2101010, DRM_FORMAT_ABGR2101010);
+ 		if ( g_nDRMFormatOverlay == DRM_FORMAT_INVALID ) {
+-			g_nDRMFormatOverlay = pick_plane_format(&drm->primary_formats, DRM_FORMAT_ARGB8888, DRM_FORMAT_ARGB8888);
++			g_nDRMFormatOverlay = pick_plane_format(&drm->primary_formats, DRM_FORMAT_XRGB8888, DRM_FORMAT_ARGB8888);
+ 			if ( g_nDRMFormatOverlay == DRM_FORMAT_INVALID ) {
+ 				drm_log.errorf("Overlay plane doesn't support any formats >= 8888");
+ 				return false;

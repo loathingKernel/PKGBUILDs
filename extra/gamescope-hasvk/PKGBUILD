@@ -1,0 +1,106 @@
+# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
+# Maintainer: Giancarlo Razzolini <grazzolini@archlinux.org>
+# Contributor: Samuel "scrufulufugus" Monson <smonson@irbash.net>
+# Contributor: PedroHLC <root@pedrohlc.com>
+
+pkgname=gamescope-hasvk
+pkgver=3.16.1
+pkgrel=1
+pkgdesc='SteamOS session compositing window manager'
+arch=(x86_64)
+url=https://github.com/ValveSoftware/gamescope
+license=(
+  BSD-2-Clause
+  BSD-3-Clause
+  LicenseRef-Reshade
+)
+depends=(
+  gcc-libs
+  glibc
+  lcms2
+  libavif
+  libcap.so
+  libdecor
+  libdrm
+  libei
+  libinput
+  libpipewire-0.3.so
+  libx11
+  libxcb
+  libxcomposite
+  libxcursor
+  libxdamage
+  libxext
+  libxfixes
+  libxi
+  libxkbcommon.so
+  libxmu
+  libxrender
+  libxres
+  libxtst
+  libxxf86vm
+  luajit
+  pixman
+  sdl2
+  seatd
+  systemd-libs
+  vulkan-icd-loader
+  wayland
+  xcb-util-errors
+  xcb-util-wm
+  xorg-server-xwayland
+)
+makedepends=(
+  benchmark
+  cmake
+  git
+  glslang
+  meson
+  ninja
+  vulkan-headers
+  wayland-protocols
+)
+provides=('gamescope')
+conflicts=('gamescope')
+_tag=4da5e4a37560f9b3c85af2679330f9ec292c8ee1
+source=(
+  git+https://github.com/ValveSoftware/gamescope.git#tag=${_tag}
+  gamescope-vk-1_2-comp-target.patch
+  gamescope-xrgb-overlay-formats.patch
+)
+b2sums=('35960b5d33604f9649004cf0aa32470349111ec4f41d1750f1fb0525ca4acff070e7874454c3fbebc8f3d00b80f5529c4e80b8cd71dcb3e8ae0967bc3c1c6181'
+        'f05d33a496b23a3797038d8c0d1a301f669360b5c6fc0694e2f906fbee218eb1263456cadf9ebc3fb2f06e3e06988da0e5567836db3991aebe655e6483d75e18'
+        '2a07482fa88186d5152599754a73e082f8bbfe0dd7fabc0ec7aac64be75c4579ebc184c88f99bd70301af3a6e6b748ef39b9756e823894f4d750915e81c93591')
+
+prepare() {
+  cd gamescope
+
+  patch -Np1 -i "${srcdir}"/gamescope-vk-1_2-comp-target.patch
+  patch -Np1 -i "${srcdir}"/gamescope-xrgb-overlay-formats.patch
+
+  meson subprojects download
+
+  # Explicitly set origin URL for submodules using relative paths
+  git remote set-url origin https://github.com/ValveSoftware/gamescope.git
+  git submodule update --init --filter=tree:0 --recursive
+}
+
+pkgver() {
+  cd gamescope
+  git describe --tags | sed 's/-//'
+}
+
+build() {
+  arch-meson gamescope build \
+    -Dforce_fallback_for=glm,stb,libdisplay-info,libliftoff,vkroots,wlroots \
+    -Dpipewire=enabled
+  meson compile -C build
+}
+
+package() {
+  DESTDIR="${pkgdir}" meson install -C build \
+    --skip-subprojects
+  install -Dm 644 gamescope/LICENSE -t "${pkgdir}"/usr/share/licenses/gamescope/
+}
+
+# vim: ts=2 sw=2 et:
