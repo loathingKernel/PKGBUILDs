@@ -23,9 +23,14 @@ jobs:
   repository:
     strategy:
       matrix:
-        repository: [public, personal]
+        include:
+          - repository: public
+            pkgbuild: PKGBUILD
+          - repository: personal
+            pkgbuild: PKGBUILD.vcs
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: extra/gamescope
       repository: ${{ matrix.repository }}
       action: ${{ inputs.action != '' && inputs.action || 'build' }}
+      pkgbuild: ${{ matrix.pkgbuild }}
