@@ -6,12 +6,12 @@
 pkgbase=lib32-lapack
 _basename=lapack
 pkgname=(
-  'lib32-lapack' 
-  'lib32-blas' 
-  'lib32-cblas' 
+  'lib32-lapack'
+  'lib32-blas'
+  'lib32-cblas'
   'lib32-lapacke'
 )
-pkgver=3.12.0
+pkgver=3.12.1
 pkgrel=1
 url="https://www.netlib.org/lapack"
 pkgdesc="Linear Algebra PACKage (32-bit)"
@@ -19,7 +19,7 @@ makedepends=('gcc-fortran' 'lib32-gcc-libs' 'cmake' 'python')
 arch=('x86_64')
 license=(BSD-3-Clause)
 source=($_basename-$pkgver.tar.gz::"https://github.com/Reference-LAPACK/lapack/archive/v$pkgver.tar.gz")
-sha256sums=('eac9570f8e0ad6f30ce4b963f4f033f0f643e7c3912fc9ee6cd99120675ad48b')
+sha256sums=('2ca6407a001a474d4d4d35f3a61550156050c48016d949f0da0529c0aa052422')
 
 build() {
   mkdir -p build
@@ -38,15 +38,14 @@ build() {
     -DCMAKE_INSTALL_LIBDIR=lib32 \
     -DCMAKE_Fortran_COMPILER=gfortran \
     -DLAPACKE_WITH_TMG=ON \
-    -DCBLAS=ON \
-    -DBUILD_DEPRECATED=ON
+    -DCBLAS=ON
   make
 }
 
 package_lib32-lapack() {
   depends=('lib32-blas' 'lapack')
   install -vDm644 ${_basename}-${pkgver}/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  
+
   cd build
   make DESTDIR="$pkgdir" install
 
@@ -63,7 +62,7 @@ package_lib32-blas() {
   install -vDm644 ${_basename}-${pkgver}/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   cd build/BLAS
   make DESTDIR="$pkgdir" install
-  
+
 }
 
 package_lib32-cblas() {
@@ -85,4 +84,3 @@ package_lib32-lapacke() {
   make DESTDIR="$pkgdir" install
   rm -r "$pkgdir"/usr/include
 }
-
