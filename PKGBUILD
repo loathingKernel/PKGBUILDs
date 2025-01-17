@@ -8,7 +8,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.1
 _xaliaver=0.4.5
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour"
 url="https://github.com/cachyos/proton-cachyos"
@@ -97,6 +97,7 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
+    0001-cachyos-Stop-forcing-mno-avx-for-32bit-libraries.patch
     879f09d2ac799cca99b78de3442194ebbe29d24a.patch
 )
 noextract=(
@@ -155,6 +156,8 @@ prepare() {
     git remote set-url origin https://github.com/CachyOS/proton-cachyos.git
     git submodule update --init --filter=tree:0 --recursive
 
+    patch -Np1 -i "$srcdir"/0001-cachyos-Stop-forcing-mno-avx-for-32bit-libraries.patch
+
     pushd openfst
         patch -Np1 -i "$srcdir"/879f09d2ac799cca99b78de3442194ebbe29d24a.patch
     popd
@@ -184,18 +187,12 @@ build() {
     local -A flags
     for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
     local march="${flags["-march"]:-nocona}"
-    local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
 
     CFLAGS="-O3 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
     CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
     RUSTFLAGS="-C opt-level=3 -C target-cpu=$march"
     LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-
-    # AVX is "hard" disabled for 32bit in any case.
-    # AVX/AVX2 for 64bit is disabled below.
-    # Seems unnecessery for 64bit if -mtune=generic is used
-    #CFLAGS+=" -mno-avx2 -mno-avx"
-    #CXXFLAGS+=" -mno-avx2 -mno-avx"
 
     export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
 
@@ -260,4 +257,5 @@ sha256sums=('77e96ad14be4c94f3178c87b003cc99f678da20a782376658138fc2fedfec161'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '32eff652b96390f04fb52ee695fc3a6d197b1bb616ed2df7e25119fe5700c950'
             '7e061783acf005c8dc90bd47fea1af9fc941f80c459477752fc32fbc2924ec65'
+            'a398278c66f0228bf5c41a91405a657998f06d0dca194ad7b0ea010c1900e524'
             '9331932ad8ffa920fb7812cfd57074657cdf1d226077559ade667b82648405cf')
