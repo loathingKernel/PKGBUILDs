@@ -1,4 +1,5 @@
 # Maintainer: Levente Polyak <anthraxx[at]archlinux[dot]org>
+# Maintainer: Carl Smedstad <carsme@archlinux.org>
 # Contributor: Gaetan Bisson <bisson@archlinux.org>
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 # Contributor: James Rayner <james@archlinux.org>
@@ -55,12 +56,12 @@ depends=(
   'wireless_tools'
 )
 source=(
-  "git+$url.git"
+  "git+$url.git#tag=v${pkgver}?signed"
   "use-system-cmake.patch"
 )
-sha512sums=('SKIP'
+sha512sums=('db1344b31e035d9f38eaceaba44f40d3f4954ae64190e1f5e0cad6b10de9a188c264720644a204c5c560e07a5838e63a261c7146d9981e17380fdd6d4a468017'
             '5bdcef1172e53e5d4344bccf33250227f7e1e52b97e8ed95e226fb5ca2b3dde6da9607d2dd0db5d1cf69a972d315e27e534e4a9732880a3670956e8ee988120d')
-b2sums=('SKIP'
+b2sums=('44ab19b432550638993c10814b9f00de2bb65daff24a7e56a78e3228bd98a52c24e0853b4248cbb60ab49e79efaac4877fcf3846186b0c18deea6ae0715cce6b'
         '9ce6d4fe9ad315d5b74f19208c983c917e21c3f2475f4abe53f5df1e5258c298c64f8e26ecc97d84b1465efe6cb425ec2d7510b1ae6526479c1f2798a4f32c6d')
 validpgpkeys=(
   'AF310802C8EFA20499CF3556137B7AC2BDFD8DF0' # Brenden Matthews <github@brenden.brndn.io>
