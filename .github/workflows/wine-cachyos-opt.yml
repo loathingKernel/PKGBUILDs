@@ -23,7 +23,7 @@ jobs:
   repository:
     strategy:
       matrix:
-        repository: [personal]
+        repository: [public, personal]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
       pkgdir: public/wine-cachyos-opt
