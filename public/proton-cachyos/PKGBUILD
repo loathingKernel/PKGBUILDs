@@ -2,13 +2,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-cachyos
-_srctag=9.0-20250106
+_srctag=9.0-20250117
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.1
 _xaliaver=0.4.5
-pkgrel=2
+pkgrel=1
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour"
 url="https://github.com/cachyos/proton-cachyos"
@@ -97,8 +97,9 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
-    0001-cachyos-Stop-forcing-mno-avx-for-32bit-libraries.patch
-    879f09d2ac799cca99b78de3442194ebbe29d24a.patch
+    gstreamer-5509.patch
+    gstreamer-5511.patch
+    openfst-879f09d2ac799cca99b78de3442194ebbe29d24a.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -156,10 +157,13 @@ prepare() {
     git remote set-url origin https://github.com/CachyOS/proton-cachyos.git
     git submodule update --init --filter=tree:0 --recursive
 
-    patch -Np1 -i "$srcdir"/0001-cachyos-Stop-forcing-mno-avx-for-32bit-libraries.patch
+    pushd gstreamer
+        patch -Np1 -i "$srcdir"/gstreamer-5509.patch
+        patch -Np1 -i "$srcdir"/gstreamer-5511.patch
+    popd
 
     pushd openfst
-        patch -Np1 -i "$srcdir"/879f09d2ac799cca99b78de3442194ebbe29d24a.patch
+        patch -Np1 -i "$srcdir"/openfst-879f09d2ac799cca99b78de3442194ebbe29d24a.patch
     popd
 
     for rustlib in gst-plugins-rs; do
@@ -252,10 +256,11 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('77e96ad14be4c94f3178c87b003cc99f678da20a782376658138fc2fedfec161'
+sha256sums=('e7ef7cbaa25220c51229f25891684632ebd50c9e227c202fb7a677246a6c8b9f'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '32eff652b96390f04fb52ee695fc3a6d197b1bb616ed2df7e25119fe5700c950'
             '7e061783acf005c8dc90bd47fea1af9fc941f80c459477752fc32fbc2924ec65'
-            'a398278c66f0228bf5c41a91405a657998f06d0dca194ad7b0ea010c1900e524'
+            'a3251ffc491b5aee109a133b8069b47118490680d73365bd680c6f0a411ef5eb'
+            '9ff849772c61fa8051e2b9fbdd4a692ffcfcb2eb73c0d43f5b754565ed543a98'
             '9331932ad8ffa920fb7812cfd57074657cdf1d226077559ade667b82648405cf')
