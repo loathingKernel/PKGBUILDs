@@ -2,7 +2,7 @@
 
 pkgname=dxvk-mingw
 pkgver=2.5.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
@@ -36,7 +36,7 @@ prepare() {
     local -A flags
     for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
     local march="${flags["-march"]:-nocona}"
-    local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
 
     CFLAGS="-O3 -march=$march -mtune=$mtune -pipe"
     CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe"
@@ -47,25 +47,19 @@ prepare() {
     CXXFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing -std=c++17"
     LDFLAGS+=" -Wl,--file-alignment,4096"
 
-    # AVX is "hard" disabled for 32bit in any case.
-    # AVX/AVX2 for 64bit is disabled below.
-    # Seems unnecessery for 64bit if -mtune=generic is used
-    #CFLAGS+=" -mno-avx2 -mno-avx"
-    #CXXFLAGS+=" -mno-avx2 -mno-avx"
-
     export CFLAGS CXXFLAGS LDFLAGS
 
     local cross_ldflags="$LDFLAGS"
 
-    local cross_cflags="$CFLAGS -mcmodel=small"
-    local cross_cxxflags="$CXXFLAGS -mcmodel=small"
+    local cross_cflags="$CFLAGS -mcmodel=small -mprefer-avx128"
+    local cross_cxxflags="$CXXFLAGS -mcmodel=small -mprefer-avx128"
     sed -i build-win64.txt \
         -e "s|@CARGS@|\'${cross_cflags// /\',\'}\'|g" \
         -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
         -e "s|@LDARGS@|\'${cross_ldflags// /\',\'}\'|g"
 
-    local cross_cflags="$CFLAGS -mstackrealign -mno-avx"
-    local cross_cxxflags="$CXXFLAGS -mstackrealign -mno-avx"
+    local cross_cflags="$CFLAGS -mstackrealign -mprefer-avx128 -mpreferred-stack-boundary=2"
+    local cross_cxxflags="$CXXFLAGS -mstackrealign -mprefer-avx128 -mpreferred-stack-boundary=2"
     sed -i build-win32.txt \
         -e "s|@CARGS@|\'${cross_cflags// /\',\'}\'|g" \
         -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
@@ -79,6 +73,7 @@ build() {
         --bindir "" --libdir "" \
         --buildtype "plain" \
         --force-fallback-for=libdisplay-info \
+        -Db_ndebug=true \
         --strip
     ninja -C "build/x64" -v
 
@@ -88,6 +83,7 @@ build() {
         --bindir "" --libdir "" \
         --buildtype "plain" \
         --force-fallback-for=libdisplay-info \
+        -Db_ndebug=true \
         --strip
     ninja -C "build/x32" -v
 }
