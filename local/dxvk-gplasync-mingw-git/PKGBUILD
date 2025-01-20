@@ -15,6 +15,7 @@ options=(!lto !staticlibs)
 source=(
     "git+https://github.com/doitsujin/dxvk.git"
     "https://gitlab.com/Ph42oN/dxvk-gplasync/-/raw/$_gplasync_sha/patches/dxvk-gplasync-master.patch"
+    "0001-d3d11-Fix-missing-argument-reference.patch"
     "dxvk-extraopts.patch"
     "setup_dxvk.sh"
     "setup_dxvk"
@@ -35,20 +36,20 @@ prepare() {
     git remote set-url origin https://github.com/doitsujin/dxvk.git
     git submodule update --init --filter=tree:0 --recursive
 
+    patch -p1 -i "$srcdir"/0001-d3d11-Fix-missing-argument-reference.patch
+
     # Uncomment to enable extra optimizations
     # Patch crossfiles with extra optimizations from makepkg.conf
     patch -p1 -i "$srcdir"/dxvk-extraopts.patch
 
     # By default export FLAGS used by proton and ignore makepkg
     # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
-    # If you want the "best" possible optimizations for your system you can use
-    # `-march=native` and remove the `-mtune=core-avx2` option.
 
     local -a split=($CFLAGS)
     local -A flags
     for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
     local march="${flags["-march"]:-nocona}"
-    local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
 
     CFLAGS="-O3 -march=$march -mtune=$mtune -pipe"
     CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe"
@@ -58,12 +59,6 @@ prepare() {
     CFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing"
     CXXFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing -std=c++17"
     LDFLAGS+=" -Wl,--file-alignment,4096"
-
-    # AVX is "hard" disabled for 32bit in any case.
-    # AVX/AVX2 for 64bit is disabled below.
-    # Seems unnecessery for 64bit if -mtune=generic is used
-    #CFLAGS+=" -mno-avx2 -mno-avx"
-    #CXXFLAGS+=" -mno-avx2 -mno-avx"
 
     export CFLAGS CXXFLAGS LDFLAGS
 
@@ -76,8 +71,8 @@ prepare() {
         -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
         -e "s|@LDARGS@|\'${cross_ldflags// /\',\'}\'|g"
 
-    local cross_cflags="$CFLAGS -mstackrealign -mno-avx"
-    local cross_cxxflags="$CXXFLAGS -mstackrealign -mno-avx"
+    local cross_cflags="$CFLAGS -mstackrealign -mpreferred-stack-boundary=2"
+    local cross_cxxflags="$CXXFLAGS -mstackrealign -mpreferred-stack-boundary=2"
     sed -i build-win32.txt \
         -e "s|@CARGS@|\'${cross_cflags// /\',\'}\'|g" \
         -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
@@ -91,6 +86,7 @@ build() {
         --bindir "" --libdir "" \
         --buildtype "plain" \
         --force-fallback-for=libdisplay-info \
+        -Db_ndebug=false \
         --strip
     ninja -C "build/x64" -v
 
@@ -100,6 +96,7 @@ build() {
         --bindir "" --libdir "" \
         --buildtype "plain" \
         --force-fallback-for=libdisplay-info \
+        -Db_ndebug=false \
         --strip
     ninja -C "build/x32" -v
 }
@@ -117,7 +114,8 @@ package() {
 }
 
 sha256sums=('SKIP'
-            'SKIP'
+            '1d070957a8af462b52df66bc7f01ed7784a74cf15394a6b3e8f809f24bf2ed2c'
+            'b3c82902e437c11adee1062481f22014c154bb9a3bb5f433513676773bdef89e'
             'bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362'
             '9055513a311ca245e01002f7e7057e0d678a59a216f10bfa11c8b42dd115081e'
             'c1f6a18b03d1612b60f8081428f00cfac5e66315fe9d42719f01cf5564deeeff')

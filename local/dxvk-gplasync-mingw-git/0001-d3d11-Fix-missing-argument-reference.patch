@@ -1,0 +1,33 @@
+From 9153477bbf34b5fd5f18bbaac41d52633f321322 Mon Sep 17 00:00:00 2001
+From: Vasiliy Stelmachenok <ventureo@cachyos.org>
+Date: Mon, 20 Jan 2025 19:26:31 +0300
+Subject: [PATCH] [d3d11] Fix missing argument reference
+
+Signed-off-by: Vasiliy Stelmachenok <ventureo@cachyos.org>
+---
+ src/d3d11/d3d11_view.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/d3d11/d3d11_view.h b/src/d3d11/d3d11_view.h
+index 50fcef10..dbd54d3e 100644
+--- a/src/d3d11/d3d11_view.h
++++ b/src/d3d11/d3d11_view.h
+@@ -55,7 +55,7 @@ namespace dxvk {
+    * \param [in] b Second view to check
+    * \returns \c true if the views overlap
+    */
+-  inline bool CheckViewOverlap(const D3D11_VK_VIEW_INFO& a, const D3D11_VK_VIEW_INFO b) {
++  inline bool CheckViewOverlap(const D3D11_VK_VIEW_INFO& a, const D3D11_VK_VIEW_INFO& b) {
+     if (likely(a.pResource != b.pResource))
+       return false;
+     
+@@ -78,4 +78,4 @@ namespace dxvk {
+     return a && b && CheckViewOverlap(a->GetViewInfo(), b->GetViewInfo());
+   }
+ 
+-}
+\ No newline at end of file
++}
+-- 
+2.48.1
+
