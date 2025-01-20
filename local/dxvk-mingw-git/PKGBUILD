@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
 pkgname=dxvk-mingw-git
-pkgver=2.5.3.r31.gc52a68a5b
+pkgver=2.5.3.r32.g863591275
 pkgrel=1
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
 arch=('x86_64')
@@ -13,6 +13,7 @@ conflicts=('dxvk' 'd9vk')
 options=(!lto !staticlibs)
 source=(
     "git+https://github.com/doitsujin/dxvk.git"
+    "0001-d3d11-Fix-missing-argument-reference.patch"
     "dxvk-extraopts.patch"
     "setup_dxvk.sh"
     "setup_dxvk"
@@ -29,6 +30,8 @@ prepare() {
     # Explicitly set origin URL for submodules using relative paths
     git remote set-url origin https://github.com/doitsujin/dxvk.git
     git submodule update --init --filter=tree:0 --recursive
+
+    patch -p1 -i "$srcdir"/0001-d3d11-Fix-missing-argument-reference.patch
 
     # Uncomment to enable extra optimizations
     # Patch crossfiles with extra optimizations from makepkg.conf
@@ -56,15 +59,15 @@ prepare() {
 
     local cross_ldflags="$LDFLAGS"
 
-    local cross_cflags="$CFLAGS -mcmodel=small -mprefer-avx128"
-    local cross_cxxflags="$CXXFLAGS -mcmodel=small -mprefer-avx128"
+    local cross_cflags="$CFLAGS -mcmodel=small"
+    local cross_cxxflags="$CXXFLAGS -mcmodel=small"
     sed -i build-win64.txt \
         -e "s|@CARGS@|\'${cross_cflags// /\',\'}\'|g" \
         -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
         -e "s|@LDARGS@|\'${cross_ldflags// /\',\'}\'|g"
 
-    local cross_cflags="$CFLAGS -mstackrealign -mprefer-avx128 -mpreferred-stack-boundary=2"
-    local cross_cxxflags="$CXXFLAGS -mstackrealign -mprefer-avx128 -mpreferred-stack-boundary=2"
+    local cross_cflags="$CFLAGS -mstackrealign -mpreferred-stack-boundary=2"
+    local cross_cxxflags="$CXXFLAGS -mstackrealign -mpreferred-stack-boundary=2"
     sed -i build-win32.txt \
         -e "s|@CARGS@|\'${cross_cflags// /\',\'}\'|g" \
         -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
@@ -78,7 +81,7 @@ build() {
         --bindir "" --libdir "" \
         --buildtype "plain" \
         --force-fallback-for=libdisplay-info \
-        -Db_ndebug=true \
+        -Db_ndebug=false \
         --strip
     ninja -C "build/x64" -v
 
@@ -88,7 +91,7 @@ build() {
         --bindir "" --libdir "" \
         --buildtype "plain" \
         --force-fallback-for=libdisplay-info \
-        -Db_ndebug=true \
+        -Db_ndebug=false \
         --strip
     ninja -C "build/x32" -v
 }
@@ -106,6 +109,7 @@ package() {
 }
 
 sha256sums=('SKIP'
+            'b3c82902e437c11adee1062481f22014c154bb9a3bb5f433513676773bdef89e'
             'bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362'
             '9055513a311ca245e01002f7e7057e0d678a59a216f10bfa11c8b42dd115081e'
             'c1f6a18b03d1612b60f8081428f00cfac5e66315fe9d42719f01cf5564deeeff')
