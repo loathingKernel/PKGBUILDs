@@ -204,7 +204,7 @@ build() {
   export wine_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
 
   # Disable assertions
-  export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
+  #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
 
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
   export CROSSLDFLAGS="-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF"
