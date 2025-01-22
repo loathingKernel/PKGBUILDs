@@ -7,7 +7,7 @@
 
 pkgname=wine-staging
 pkgver=10.0
-pkgrel=1
+pkgrel=2
 _tkg_commit=975bc35af94f7387798fb491b7cda245ae4423ab
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -192,7 +192,7 @@ build() {
   OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
-  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -DNDEBUG"
+  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS"
   LTO_CFLAGS="-flto=thin -D__LLD_LTO__"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
@@ -204,7 +204,7 @@ build() {
   export wine_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
 
   # Disable assertions
-  #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
+  export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
 
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
   export CROSSLDFLAGS="-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF"
