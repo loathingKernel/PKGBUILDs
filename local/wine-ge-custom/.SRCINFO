@@ -1,6 +1,6 @@
 pkgbase = wine-ge-custom
 	pkgdesc = A compatibility layer for running Windows programs - GloriousEggroll branch
-	pkgver = GE.Proton9.22
+	pkgver = GE.Proton9.23
 	pkgrel = 1
 	epoch = 1
 	url = https://github.com/GloriousEggroll/wine-ge-custom
@@ -122,12 +122,12 @@ pkgbase = wine-ge-custom
 	options = !staticlibs
 	options = !lto
 	options = !debug
-	source = wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#tag=GE-Proton9-22
+	source = wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#tag=GE-Proton9-23
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = b6987eaf45b6feff597713b3970946941c9ea8e13536e741599fb94d5dd73eb66c3c8565a0f94457e1c4d9f6c83b5253af30bfdd83df0238e870a06edd10e3a0
+	sha512sums = f8cbf6dab2182292b04673ce67a1d8e25ccaf490ef1bdbddfcf886382114166310356f54877a5bf2efd7cc9fb328af65756aa5db5474b2a9d33eb7d1523d1882
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
 

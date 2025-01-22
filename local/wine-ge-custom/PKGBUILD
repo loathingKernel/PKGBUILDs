@@ -6,7 +6,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-ge-custom
-_srctag=GE-Proton9-22
+_srctag=GE-Proton9-23
 pkgver=${_srctag//-/.}
 pkgrel=1
 epoch=1
@@ -144,7 +144,7 @@ build() {
   #LTO_LDFLAGS="$LTO_CFLAGS"
 
   # Disable assertions
-  #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
+  export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
 
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
   export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
@@ -178,10 +178,10 @@ build() {
   msg2 "Building Wine-32..."
 
   # Disable AVX instead of using 02, for 32bit
-  export CFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx $LTO_CFLAGS"
-  export CXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17 $LTO_CFLAGS"
-  export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
-  export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
+  export CFLAGS="$COMMON_FLAGS -mstackrealign $LTO_CFLAGS"
+  export CXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17 $LTO_CFLAGS"
+  export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign"
+  export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-32-build"
   ../$pkgname/wine/configure \
@@ -229,6 +229,6 @@ package() {
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
-sha512sums=('b6987eaf45b6feff597713b3970946941c9ea8e13536e741599fb94d5dd73eb66c3c8565a0f94457e1c4d9f6c83b5253af30bfdd83df0238e870a06edd10e3a0'
+sha512sums=('f8cbf6dab2182292b04673ce67a1d8e25ccaf490ef1bdbddfcf886382114166310356f54877a5bf2efd7cc9fb328af65756aa5db5474b2a9d33eb7d1523d1882'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
