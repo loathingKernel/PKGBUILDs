@@ -4,7 +4,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=10.0rc4
+pkgver=10.0
 pkgrel=1
 _tkg_commit=975bc35af94f7387798fb491b7cda245ae4423ab
 
@@ -20,7 +20,7 @@ source+=(
         0001-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
         wine-ntsync.patch
 )
-sha512sums=('a8c362973ad78e2280be2c5e401e5cd67ef2f53ba60c6e90e0d0e1effc91984d0c845322a32512c45f077ef8b38dbba6fca847768afee5ef1a2204f6b02c82c9'
+sha512sums=('3eef70afae25a40537e2f4bc615c90374829eaf46f3654202d53ac55e9e53bbc31c7fb3c3c65b9caf1a64baba85b1ede9822fe8e3f6e55c4bb3f181b1258751c'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
             '2f1200597bb0f15398d027cf2a06bf98a634ebb2738a14e78949607a1000dae99071982fdc8e919e54643f91531c345a94c6b825a6dcc45d8a5123940d680623'
@@ -158,7 +158,7 @@ build() {
   OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
-  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
+  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s -DNDEBUG"
   #LTO_CFLAGS="-fuse-linker-plugin -fdevirtualize-at-ltrans -flto-partition=one -flto -Wl,-flto"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
