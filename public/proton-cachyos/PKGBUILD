@@ -193,9 +193,9 @@ build() {
     local march="${flags["-march"]:-nocona}"
     local mtune="${flags["-mtune"]:-core-avx2}"
 
-    CFLAGS="-O3 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
-    CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
-    RUSTFLAGS="-C opt-level=3 -C target-cpu=$march"
+    CFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
+    CXXFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
+    RUSTFLAGS="-C opt-level=2 -C target-cpu=$march"
     LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
