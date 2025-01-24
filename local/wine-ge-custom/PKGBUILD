@@ -8,7 +8,9 @@
 pkgname=wine-ge-custom
 _srctag=GE-Proton9-23
 pkgver=${_srctag//-/.}
-pkgrel=1
+_geckover=2.47.4
+_monover=9.3.1
+pkgrel=2
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -16,6 +18,8 @@ _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
 
 source=(wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#tag=${_srctag}
+        https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
+        https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -98,8 +102,8 @@ optdepends=(
   samba           dosbox
 )
 
-provides=("wine=9.0")
-conflicts=('wine')
+provides=("wine=9.0" 'wine-mono' 'wine-gecko')
+conflicts=('wine' 'wine-mono' 'wine-gecko')
 install=wine.install
 
 prepare() {
@@ -134,7 +138,7 @@ build() {
   local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
@@ -226,9 +230,20 @@ package() {
 
   #find "$pkgdir"/usr/lib{,32}/wine -iname "*.a" -delete
   #find "$pkgdir"/usr/lib{,32}/wine -iname "*.def" -delete
+
+  # Install wine-gecko
+  install -d -m755 "$pkgdir"/usr/share/wine/gecko/
+  cp -dr --no-preserve='ownership' wine-gecko-${_geckover}-x86{,_64} "$pkgdir"/usr/share/wine/gecko/
+
+  # Install wine-mono
+  install -d -m755 "$pkgdir"/usr/share/wine/mono
+  cp -r -a --no-preserve='ownership' "wine-mono-${_monover}" "$pkgdir"/usr/share/wine/mono
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
 sha512sums=('f8cbf6dab2182292b04673ce67a1d8e25ccaf490ef1bdbddfcf886382114166310356f54877a5bf2efd7cc9fb328af65756aa5db5474b2a9d33eb7d1523d1882'
+            '1279456eca4439e9adc3c97678fabeca42cc89f683246805ca14f85fc104bf4ba970fb6490f4ebd0938fc8e0a0ca372b000fdd5165f900070eeee30a1aeec117'
+            '1defbbc1fb5029bf43872a4e1c49995b61e0f106b1fcc4c99159bf4788226981b9ba8a25a2296d3a9312dbfa7e27b469ca27c0867afb218990d45f68705dbfbe'
+            'cc4faff237b46d870e1afeb99be1e77f8f0d599c8567dfc365256558b4ec533efee3d5324bfe1bd5bc7f318112899dd800e3e2ef9cbc6d50063f47fc7039c879'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')

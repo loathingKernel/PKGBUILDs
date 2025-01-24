@@ -1,7 +1,7 @@
 pkgbase = wine-ge-custom
 	pkgdesc = A compatibility layer for running Windows programs - GloriousEggroll branch
 	pkgver = GE.Proton9.23
-	pkgrel = 1
+	pkgrel = 2
 	epoch = 1
 	url = https://github.com/GloriousEggroll/wine-ge-custom
 	install = wine.install
@@ -118,16 +118,26 @@ pkgbase = wine-ge-custom
 	optdepends = samba
 	optdepends = dosbox
 	provides = wine=9.0
+	provides = wine-mono
+	provides = wine-gecko
 	conflicts = wine
+	conflicts = wine-mono
+	conflicts = wine-gecko
 	options = !staticlibs
 	options = !lto
 	options = !debug
 	source = wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#tag=GE-Proton9-23
+	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86.tar.xz
+	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86_64.tar.xz
+	source = https://github.com/madewokherd/wine-mono/releases/download/wine-mono-9.3.1/wine-mono-9.3.1-x86.tar.xz
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
 	sha512sums = f8cbf6dab2182292b04673ce67a1d8e25ccaf490ef1bdbddfcf886382114166310356f54877a5bf2efd7cc9fb328af65756aa5db5474b2a9d33eb7d1523d1882
+	sha512sums = 1279456eca4439e9adc3c97678fabeca42cc89f683246805ca14f85fc104bf4ba970fb6490f4ebd0938fc8e0a0ca372b000fdd5165f900070eeee30a1aeec117
+	sha512sums = 1defbbc1fb5029bf43872a4e1c49995b61e0f106b1fcc4c99159bf4788226981b9ba8a25a2296d3a9312dbfa7e27b469ca27c0867afb218990d45f68705dbfbe
+	sha512sums = cc4faff237b46d870e1afeb99be1e77f8f0d599c8567dfc365256558b4ec533efee3d5324bfe1bd5bc7f318112899dd800e3e2ef9cbc6d50063f47fc7039c879
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
 
