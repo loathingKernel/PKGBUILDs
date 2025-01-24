@@ -10,7 +10,7 @@ _srctag=9.0-20250117
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.1
-pkgrel=2
+pkgrel=3
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -212,7 +212,6 @@ build() {
 package() {
   msg2 "Packaging Wine-32..."
   cd "$srcdir/${pkgname//-opt}-32-build"
-
   make prefix="$pkgdir/opt/${pkgname//-opt}" \
     libdir="$pkgdir/opt/${pkgname//-opt}/lib32" \
     dlldir="$pkgdir/opt/${pkgname//-opt}/lib32/wine" install-lib
@@ -231,12 +230,14 @@ package() {
   find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.def" -delete
 
   # Install wine-gecko
+  cd "$srcdir"
   install -d -m755 "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/gecko/
   cp -dr --no-preserve='ownership' wine-gecko-${_geckover}-x86{,_64} "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/gecko/
 
   # Install wine-mono
+  cd "$srcdir"
   install -d -m755 "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/mono
-  cp -r -a --no-preserve='ownership' "wine-mono-${_monover}" "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/mono
+  cp -r -a --no-preserve='ownership' wine-mono-${_monover} "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/mono
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
