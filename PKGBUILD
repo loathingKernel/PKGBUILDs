@@ -231,11 +231,11 @@ package() {
   find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.def" -delete
 
   # Install wine-gecko
-  install -d -m755 "$pkgdir"/usr/share/wine/gecko/
+  install -d -m755 "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/gecko/
   cp -dr --no-preserve='ownership' wine-gecko-${_geckover}-x86{,_64} "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/gecko/
 
   # Install wine-mono
-  install -d -m755 "${pkgdir}/usr/share/wine/mono"
+  install -d -m755 "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/mono
   cp -r -a --no-preserve='ownership' "wine-mono-${_monover}" "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/mono
 }
 
