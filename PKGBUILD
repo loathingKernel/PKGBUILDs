@@ -239,8 +239,8 @@ package() {
   cp -dr --no-preserve='ownership' wine-gecko-${_geckover}-x86{,_64} "$pkgdir"/usr/share/wine/gecko/
 
   # Install wine-mono
-  install -d -m755 "${pkgdir}/usr/share/wine/mono"
-  cp -r -a --no-preserve='ownership' "wine-mono-${_monover}" "$pkgdir/usr/share/wine/mono"
+  install -d -m755 "$pkgdir"/usr/share/wine/mono
+  cp -r -a --no-preserve='ownership' "wine-mono-${_monover}" "$pkgdir"/usr/share/wine/mono
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
