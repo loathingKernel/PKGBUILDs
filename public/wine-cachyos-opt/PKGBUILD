@@ -10,7 +10,7 @@ _srctag=9.0-20250126
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.1
-pkgrel=1
+pkgrel=2
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -20,6 +20,7 @@ _winever=$_pkgbasever
 source=(wine-cachyos::git+https://github.com/CachyOS/wine-cachyos.git#tag=cachyos-${_srctag}-wine
         https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
         https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
+        wine-cachyos-remove-icu.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -115,6 +116,7 @@ prepare() {
   mkdir ${pkgname//-opt}-{32,64}-build
 
   pushd ${pkgname//-opt}
+      patch -Np1 -i "$srcdir"/wine-cachyos-remove-icu.patch
       git config user.email "wine@cachyos.org"
       git config user.name "wine cachyos"
       git tag wine-9.0 --annotate -m "$pkgver" --force
@@ -245,5 +247,6 @@ b2sums=('4f31e44da7d13106fdde87edb99d914519789cc214705e355470931a11820868ea320b3
         '2a73c12585b502ae11188482cbc9fb1f45f95bfe4383a7615011104b132f4845f9813d01fb40277e1934fab5f1b35ab40b4f4a66a9967463dd1d666a666904e9'
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         '5f4c2a07355a3d394086467f1b0c45698cd83731a4137b59975abdeda2d564f44922a67b1bec111e4209c4fe74247486076e95dffc84d88b5b7a02774efd070b'
+        '6cf4a8f0a781f160f87b7621aaf63bc44e67ebecb05234096a98a99f9d1ee7c2b27f88f0a02c3b009761b23a37df5e8dd969c5c384a4828578d1ef9fb7f8e307'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
         'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588')
