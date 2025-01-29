@@ -21,7 +21,7 @@ prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	
 	# Arch command doesn't seem to exist on arch linux so instead we can substitute it for 'uname' for now
-	sed -i 's/\['\''arch'\''\]/\['\''uname'\'', '\''-m'\''\]/g' src/AppDetails.py
+	sed -i "s/\(\['arch'\]\)/['uname', '-m']/g" src/AppDetails.py
 }
 
 build() {
