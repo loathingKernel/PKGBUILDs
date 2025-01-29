@@ -19,4 +19,4 @@ jobs:
     with:
       pkgdir: local/dhewm3
       repository: ${{ matrix.repository }}
-      pkgbuild: PKGBUILD.live
+      pkgbuild: PKGBUILD.vcs
