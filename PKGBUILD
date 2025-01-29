@@ -2,7 +2,7 @@
 
 pkgname=jay
 pkgver=1.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A Wayland Compositor'
 arch=('x86_64')
 license=(GPL-3.0-only)
@@ -15,7 +15,6 @@ depends=(
   libinput
   libudev.so
   libvulkan.so
-  libxkbcommon.so
   mesa
   pango
 )
