@@ -1,0 +1,11 @@
+pkg/
+src/
+dxvk/
+*\.h
+mingw-directx-headers/
+Vulkan-Headers/
+SPIRV-Headers/
+*pkg.tar*
+msvc-wine/
+msvc/
+.winepfx
