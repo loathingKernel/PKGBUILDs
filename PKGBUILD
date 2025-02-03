@@ -11,7 +11,7 @@ pkgrel=1
 pkgdesc="A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers Windows DLL version)"
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
-license=('zlib/libpng')
+license=('zlib/libpng' 'EULA')
 depends=('vulkan-icd-loader' 'lib32-vulkan-icd-loader')
 provides=("dxvk" "d9vk" "dxvk=$pkgver")
 makedepends=('wine' 'clang' 'libunwind' 'cmake' 'ninja' 'meson>=0.43' 'glslang' 'git' 'python')

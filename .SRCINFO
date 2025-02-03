@@ -5,6 +5,7 @@ pkgbase = dxvk-msvc-git
 	url = https://github.com/doitsujin/dxvk
 	arch = x86_64
 	license = zlib/libpng
+	license = EULA
 	makedepends = wine
 	makedepends = clang
 	makedepends = libunwind
