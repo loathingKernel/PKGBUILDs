@@ -1,5 +1,5 @@
 pkgbase = dxvk-msvc-git
-	pkgdesc = A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine. Clang+MSVC headers Windows DLL version)
+	pkgdesc = A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers Windows DLL version)
 	pkgver = 2.5.3.r86.gcf946eb98
 	pkgrel = 1
 	url = https://github.com/doitsujin/dxvk
@@ -30,6 +30,7 @@ pkgbase = dxvk-msvc-git
 	source = git+https://github.com/Joshua-Ashton/mingw-directx-headers.git
 	source = git+https://github.com/KhronosGroup/Vulkan-Headers.git
 	source = git+https://github.com/KhronosGroup/SPIRV-Headers.git
+	source = git+https://gitlab.freedesktop.org/JoshuaAshton/libdisplay-info.git#commit=275e645
 	source = https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8caps.h
 	source = https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8types.h
 	source = https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8.h
@@ -40,6 +41,7 @@ pkgbase = dxvk-msvc-git
 	sha256sums = SKIP
 	sha256sums = SKIP
 	sha256sums = SKIP
+	sha256sums = e341e1f897220f586c95e1843059031633d780ea08800eea023ce3282730dfe7
 	sha256sums = b4966d702022996aa435acba24b98e125c4f5d6f4d9089c3bc62cede876ad9f6
 	sha256sums = 6c03f80228539ad1a78390186ae9ebeae40d5c02559a39b58ed8ec4738a7b957
 	sha256sums = d06d0375a6976ccbf452bba2feb7d7e5db43c6631bd4d59ad563315e9c973ccb

@@ -1,8 +1,10 @@
-# shellcheck disable=SC1091,SC2164,SC2034,SC2154
+# shellcheck shell=bash
+# shellcheck disable=SC1091,SC2164
 
 # Maintainer: William Horvath <william at horvath dot blog>
 # Contributor: Adrià Cereto i Massagué <ssorgatem at gmail.com>
 
+# shellcheck disable=SC2034
 pkgname=('dxvk-msvc-git')
 pkgver=2.5.3.r86.gcf946eb98
 pkgrel=1
@@ -21,6 +23,7 @@ source=(
     "git+https://github.com/Joshua-Ashton/mingw-directx-headers.git"
     "git+https://github.com/KhronosGroup/Vulkan-Headers.git"
     "git+https://github.com/KhronosGroup/SPIRV-Headers.git"
+    "git+https://gitlab.freedesktop.org/JoshuaAshton/libdisplay-info.git#commit=275e645"
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8caps.h"
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8types.h"
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8.h"
@@ -32,6 +35,7 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
+            'e341e1f897220f586c95e1843059031633d780ea08800eea023ce3282730dfe7'
             'b4966d702022996aa435acba24b98e125c4f5d6f4d9089c3bc62cede876ad9f6'
             '6c03f80228539ad1a78390186ae9ebeae40d5c02559a39b58ed8ec4738a7b957'
             'd06d0375a6976ccbf452bba2feb7d7e5db43c6631bd4d59ad563315e9c973ccb'
@@ -40,6 +44,7 @@ sha256sums=('SKIP'
             '5b059c4084940d31460a34ec579026fe9526f7cb9bdcc0b6d928271ab52f89db')
 
 pkgver() {
+    # shellcheck disable=SC2154
     cd "${srcdir}/dxvk"
     git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g'
 }
@@ -96,20 +101,24 @@ prepare() {
     cd "${srcdir}/dxvk"
 
     git submodule init include/{native/directx,vulkan,spirv}
-    git submodule init subprojects/libdisplay-info
     git config submodule.include/native/directx.url "${srcdir}/mingw-directx-headers"
     git config submodule.include/vulkan.url "${srcdir}/Vulkan-Headers"
     git config submodule.include/spirv.url "${srcdir}/SPIRV-Headers"
-    git -c protocol.file.allow=always submodule update include/{native/directx,vulkan,spirv} subprojects/libdisplay-info
+    git -c protocol.file.allow=always submodule update include/{native/directx,vulkan,spirv}
 
-    cp -r "${srcdir}/d3d8"{,types,caps}.h "${srcdir}/dxvk/include"
+    rm -rf "${srcdir}/dxvk/subprojects/libdisplay-info"
+    cp -r "${srcdir}/libdisplay-info" "${srcdir}/dxvk/subprojects/libdisplay-info"
 
+    cp -r --update "${srcdir}/d3d8"{,types,caps}.h "${srcdir}/dxvk/include/"
+
+    # patch the build system a bit
     mapfile -t patchlist < <(find "${srcdir}" '(' -type f -o -type l ')' -regex ".*\.patch" | LC_ALL=C sort -f)
 
     for patch in "${patchlist[@]}"; do
         patch -Np1 <"${patch}"
     done
 
+    # debug, strip, lto handling (requires editing sources because meson)
     for opt in "${options[@]}"; do
         if [ "${opt}" = "debug" ]; then
             # this is schizo because meson sucks
@@ -132,6 +141,7 @@ prepare() {
         echo "!!! This package will have debug symbols, which substantially increases the size, but allows for better support from the developers."
     fi
 
+    # -march= flag handling
     _march=
     if [ -n "${CFLAGS}" ]; then
         _march="$(echo "$CFLAGS" | grep -o '\-march=[^ ]*')"
@@ -143,6 +153,7 @@ prepare() {
         sed -i "s|_DEPRECATION_WARNINGS'|\0, '${_march}'|g" "${srcdir}/dxvk/meson.build"
     fi
 
+    # ccache handling
     if [ -n "${BUILDENV}" ]; then for _env in "${BUILDENV[@]}"; do
         if [ "${_env}" = "ccache" ]; then
             for arch in win32 win64; do
@@ -163,7 +174,7 @@ build() {
     export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
 
     cd "${srcdir}"
-
+    # shellcheck disable=SC2086
     meson dxvk "build/x64" \
         --cross-file dxvk/build-win64.txt \
         --prefix "/usr/share/dxvk/x64" \
@@ -174,6 +185,7 @@ build() {
     export PATH="${_msvcpath}/x86:${_regpath}" && BIN="${_msvcpath}/x86" . "${srcdir}/msvc-wine/msvcenv-native.sh"
     export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
 
+    # shellcheck disable=SC2086
     meson dxvk "build/x32" \
         --cross-file dxvk/build-win32.txt \
         --prefix "/usr/share/dxvk/x32" \
@@ -189,6 +201,7 @@ package() {
     export DISPLAY=
 
     export PATH="${_msvcpath}/x86:${_regpath}" && BIN="${_msvcpath}/x86" . "${srcdir}/msvc-wine/msvcenv-native.sh"
+    # shellcheck disable=SC2154
     DESTDIR="${pkgdir}" ninja -C "build/x32" install
 
     export PATH="${_msvcpath}/x64:${_regpath}" && BIN="${_msvcpath}/x64" . "${srcdir}/msvc-wine/msvcenv-native.sh"
