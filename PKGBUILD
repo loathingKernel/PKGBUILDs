@@ -6,7 +6,7 @@
 pkgname=('dxvk-msvc-git')
 pkgver=2.5.3.r86.gcf946eb98
 pkgrel=1
-pkgdesc="A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine. Clang+MSVC headers Windows DLL version)"
+pkgdesc="A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers Windows DLL version)"
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
 license=('zlib/libpng')
@@ -64,7 +64,7 @@ _prepare_msvc() {
 
     echo "!!! WARNING !!!"
     echo "Downloading MSVC toolchain+headers to the PKGBUILD folder! This requires about ~8GB of space when uncompressed."
-    echo "If you want to use a globally shared installation, please install the 'wine-msvc-git' AUR package."
+    echo "If you want to use a globally shared installation, please install the 'msvc-wine-git' AUR package."
     echo "The script will continue in 3 seconds, CTRL+C now if you want to install the separate package instead (recommended)."
     echo "!!! WARNING !!!"
     echo "3..." && sleep 1 && echo "2..." && sleep 1 && echo "1..." && sleep 1
