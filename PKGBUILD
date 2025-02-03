@@ -100,14 +100,14 @@ prepare() {
 
     cd "${srcdir}/dxvk"
 
-    git submodule init include/{native/directx,vulkan,spirv}
+    git submodule init include/{native/directx,vulkan,spirv} subprojects/libdisplay-info
     git config submodule.include/native/directx.url "${srcdir}/mingw-directx-headers"
     git config submodule.include/vulkan.url "${srcdir}/Vulkan-Headers"
     git config submodule.include/spirv.url "${srcdir}/SPIRV-Headers"
-    git -c protocol.file.allow=always submodule update include/{native/directx,vulkan,spirv}
+    git config submodule.subprojects/libdisplay-info.url "${srcdir}/libdisplay-info"
+    git -c protocol.file.allow=always submodule update include/{native/directx,vulkan,spirv} subprojects/libdisplay-info
 
-    rm -rf "${srcdir}/dxvk/subprojects/libdisplay-info"
-    cp -r "${srcdir}/libdisplay-info" "${srcdir}/dxvk/subprojects/libdisplay-info"
+    git -C subprojects/libdisplay-info reset --hard
 
     cp -r --update "${srcdir}/d3d8"{,types,caps}.h "${srcdir}/dxvk/include/"
 
