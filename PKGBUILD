@@ -44,7 +44,7 @@ prepare() {
 
     # These flags are taken from Proton
     CFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing"
-    CXXFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing -std=c++17"
+    CXXFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing"
     LDFLAGS+=" -Wl,--file-alignment,4096"
 
     export CFLAGS CXXFLAGS LDFLAGS
@@ -73,7 +73,7 @@ build() {
         --bindir "" --libdir "" \
         --buildtype "plain" \
         --force-fallback-for=libdisplay-info \
-        -Db_ndebug=true \
+        -Db_ndebug=false \
         --strip
     ninja -C "build/x64" -v
 
@@ -83,7 +83,7 @@ build() {
         --bindir "" --libdir "" \
         --buildtype "plain" \
         --force-fallback-for=libdisplay-info \
-        -Db_ndebug=true \
+        -Db_ndebug=false \
         --strip
     ninja -C "build/x32" -v
 }
