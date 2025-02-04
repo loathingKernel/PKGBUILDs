@@ -8,6 +8,8 @@ arch=('x86_64')
 url="https://github.com/jp7677/dxvk-nvapi"
 license=('MIT')
 makedepends=('ninja' 'meson>=0.43' 'glslang' 'git' 'mingw-w64-gcc')
+provides=('dxvk-nvapi' "dxvk-nvapi=$pkgver")
+conflicts=('dxvk-nvapi')
 options=(!lto !staticlibs)
 source=(
     "git+https://github.com/jp7677/dxvk-nvapi.git#tag=v${pkgver}"
@@ -29,8 +31,6 @@ prepare() {
 
     # By default export FLAGS used by proton and ignore makepkg
     # This overrides FLAGS from makepkg.conf, if you comment these you are on your own
-    # If you want the "best" possible optimizations for your system you can use
-    # `-march=native` and remove the `-mtune=core-avx2` option.
 
     local -a split=($CFLAGS)
     local -A flags
@@ -44,22 +44,22 @@ prepare() {
 
     # These flags are taken from Proton
     CFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing"
-    CXXFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing -std=c++17"
+    CXXFLAGS+=" -mfpmath=sse -fwrapv -fno-strict-aliasing"
     LDFLAGS+=" -Wl,--file-alignment,4096"
 
     export CFLAGS CXXFLAGS LDFLAGS
 
     local cross_ldflags="$LDFLAGS"
 
-    local cross_cflags="$CFLAGS -mcmodel=small -mprefer-avx128"
-    local cross_cxxflags="$CXXFLAGS -mcmodel=small -mprefer-avx128"
+    local cross_cflags="$CFLAGS -mcmodel=small"
+    local cross_cxxflags="$CXXFLAGS -mcmodel=small"
     sed -i build-win64.txt \
         -e "s|@CARGS@|\'${cross_cflags// /\',\'}\'|g" \
         -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
         -e "s|@LDARGS@|\'${cross_ldflags// /\',\'}\'|g"
 
-    local cross_cflags="$CFLAGS -mstackrealign -mprefer-avx128 -mpreferred-stack-boundary=2"
-    local cross_cxxflags="$CXXFLAGS -mstackrealign -mprefer-avx128 -mpreferred-stack-boundary=2"
+    local cross_cflags="$CFLAGS -mstackrealign -mpreferred-stack-boundary=2"
+    local cross_cxxflags="$CXXFLAGS -mstackrealign -mpreferred-stack-boundary=2"
     sed -i build-win32.txt \
         -e "s|@CARGS@|\'${cross_cflags// /\',\'}\'|g" \
         -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
@@ -73,7 +73,7 @@ build() {
         --bindir "" --libdir "" \
         --buildtype "plain" \
         -Denable_tests=false \
-        -Db_ndebug=true \
+        -Db_ndebug=false \
         --strip
     ninja -C "build/x64" -v
 
@@ -83,7 +83,7 @@ build() {
         --bindir "" --libdir "" \
         --buildtype "plain" \
         -Denable_tests=false \
-        -Db_ndebug=true \
+        -Db_ndebug=false \
         --strip
     ninja -C "build/x32" -v
 }
