@@ -11,10 +11,8 @@ pkgbase = dxvk-gplasync-mingw-git
 	makedepends = git
 	makedepends = mingw-w64-gcc
 	provides = dxvk
-	provides = d9vk
 	provides = dxvk=2.5.3.r36.gb73f9d8ec
 	conflicts = dxvk
-	conflicts = d9vk
 	options = !lto
 	options = !staticlibs
 	source = git+https://github.com/doitsujin/dxvk.git
