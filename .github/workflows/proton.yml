@@ -6,7 +6,7 @@ on:
     branches:
      - master
     paths:
-     - public/proton/.SRCINFO
+     - local/proton/.SRCINFO
 
 jobs:
   repository:
@@ -15,6 +15,6 @@ jobs:
         repository: [public, personal]
     uses: ./.github/workflows/job_pkgrepo.yml
     with:
-      pkgdir: public/proton
+      pkgdir: local/proton
       repository: ${{ matrix.repository }}
       multilib: true
