@@ -6,10 +6,12 @@ pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
 url="https://mijorus.it/projects/gearlever/"
 license=('GPL-3.0-or-later')
-depends=( '7zip' 'binutils' 'dconf' 'fuse2' 'gdk-pixbuf2' 'glibc' 'glib2' 'gtk4' 'hicolor-icon-theme' 'libadwaita' 'pango' 'python' 'python-dbus' 'python-gobject' 'python-pyxdg' 'python-requests' 'zlib' )
-makedepends=( 'gettext' 'meson' )
-checkdepends=( 'appstream' 'desktop-file-utils' )
-options=( '!strip' '!debug' )
+depends=('7zip' 'binutils' 'dconf' 'fuse2' 'gdk-pixbuf2' 'glibc' 'glib2' 'gtk4' 'hicolor-icon-theme'
+		 'libadwaita' 'pango' 'python' 'python-dbus' 'python-gobject' 'python-pyxdg' 'python-requests'
+		 'zlib')
+makedepends=('gettext' 'meson')
+checkdepends=('appstream' 'desktop-file-utils')
+options=('!strip' '!debug')
 source=(
 	"${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz"
 )
