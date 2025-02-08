@@ -1,6 +1,6 @@
 pkgbase = python
 	pkgdesc = The Python programming language, version 3.12
-	pkgver = 3.12.8
+	pkgver = 3.12.9
 	pkgrel = 1
 	url = https://www.python.org/
 	arch = x86_64
@@ -22,14 +22,14 @@ pkgbase = python
 	depends = zlib
 	depends = tzdata
 	depends = mpdecimal
-	source = https://www.python.org/ftp/python/3.12.8/Python-3.12.8.tar.xz
-	source = https://www.python.org/ftp/python/3.12.8/Python-3.12.8.tar.xz.asc
+	source = https://www.python.org/ftp/python/3.12.9/Python-3.12.9.tar.xz
+	source = https://www.python.org/ftp/python/3.12.9/Python-3.12.9.tar.xz.asc
 	source = EXTERNALLY-MANAGED
 	validpgpkeys = 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
 	validpgpkeys = E3FF2839C048B25C084DEBE9B26995E310250568
 	validpgpkeys = A035C8C19219BA821ECEA86B64E628F8D684696D
 	validpgpkeys = 7169605F62C751356D054A26A821E680E5FA6305
-	sha512sums = 406ce1146c4c2c70d252df56bbe9e5970ef469395cbaa211a96af71f32de2cf7abd944906920cc18b4a470027e63a3f64bf7679fb4954b31bf4ca4baf24fa370
+	sha512sums = c840b14aa21e6a963d18c06ebaafb551d9c9a101b3866417e762fc4a2fde071a7a25fa257faba2956c7344bbc2413ed61690a712d26fba4d0dbeaa50e49b2574
 	sha512sums = SKIP
 	sha512sums = 62a6fbfbaeaa3ba7c54e109d9c3b7f67e73bb21986da4c1fcc5d28cca83d71e0fcae28e1fc70ee8ddce7dea8cd0b64e18d1031dae3a2eae5eaa379c53efd53a0
 
