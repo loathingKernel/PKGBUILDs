@@ -1,8 +1,8 @@
 # Maintainer: Stipe Kotarac <stipe@kotarac.net>
 
 pkgname=jay
-pkgver=1.9.0
-pkgrel=2
+pkgver=1.9.1
+pkgrel=1
 pkgdesc='A Wayland Compositor'
 arch=('x86_64')
 license=(GPL-3.0-only)
@@ -28,7 +28,7 @@ makedepends=(
 )
 options=(!lto)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/mahkoh/jay/archive/v$pkgver.tar.gz")
-sha512sums=('509586f82838d99094f2c300687734e07b82467feb3e8f57e25f8526acd80c39aa1c3de6451148fa1a3513f58d20c604c9c097e5aa68204e6116c845b6f911b0')
+sha512sums=('2e32bc5fa5be545f3875f8a2fb480806c81115c3c1cdeb0e6c2cf99c350a38a748d84e65e2ffd773293f499aafc70f5281ca211d5c683630c9df38da9b744ce4')
 
 build() {
   cd $pkgname-$pkgver/
