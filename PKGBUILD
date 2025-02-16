@@ -1,7 +1,7 @@
 # Maintainer: devome <evinedeng@hotmail.com>
 
 pkgname="backrest"
-pkgver=1.7.1
+pkgver=1.7.2
 pkgrel=1
 pkgdesc="A web UI and orchestrator for restic backup."
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
@@ -11,7 +11,7 @@ depends=("restic")
 makedepends=("npm" "go")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}@.service")
-sha256sums=('dd79048684d050cfbef100d795f36b5722731a1432ab02bee21f43326e3ca2a7'
+sha256sums=('b428cdacb386178fff2bde2abf5815aa5890d480aa11a078281e2fb54b5a38cd'
             '54d7ceddc2d3abb1c00a3f45ff7dd43b5fdc05c6be1019ead7f7cbf4a40ab926')
 
 build() {
