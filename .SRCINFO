@@ -1,7 +1,7 @@
 pkgbase = dxvk-msvc-git
 	pkgdesc = A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers Windows DLL version)
-	pkgver = 2.5.3.r86.gcf946eb98
-	pkgrel = 1
+	pkgver = 2.5.3.r129.g6d9e0baa2
+	pkgrel = 2
 	url = https://github.com/doitsujin/dxvk
 	arch = x86_64
 	license = zlib/libpng
@@ -15,12 +15,16 @@ pkgbase = dxvk-msvc-git
 	makedepends = glslang
 	makedepends = git
 	makedepends = python
+	makedepends = sed
+	makedepends = python-simplejson
+	makedepends = python-six
+	makedepends = msitools
 	depends = vulkan-icd-loader
 	depends = lib32-vulkan-icd-loader
 	optdepends = msvc-wine-git: A very convenient package for having the msvc headers available globally. This is the preferred method instead of letting this PKGBUILD manage it.
 	provides = dxvk
 	provides = d9vk
-	provides = dxvk=2.5.3.r86.gcf946eb98
+	provides = dxvk=2.5.3.r129.g6d9e0baa2
 	conflicts = d9vk
 	conflicts = dxvk
 	conflicts = dxvk-mingw-git
