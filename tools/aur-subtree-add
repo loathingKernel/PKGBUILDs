@@ -19,5 +19,5 @@ if [[ -d "$1" ]]; then
 fi
 
 repo="$(basename "$1")"
-git subtree add --prefix="$1" ssh://aur@aur.archlinux.org/"$repo".git master --squash
+git subtree add --prefix="$1" ssh://aur@aur.archlinux.org/"$repo".git master
 
