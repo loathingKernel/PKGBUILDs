@@ -7,17 +7,17 @@
 # shellcheck disable=SC2034
 pkgname=('dxvk-msvc-git')
 pkgver=2.5.3.r129.g6d9e0baa2
-pkgrel=2
+pkgrel=3
 pkgdesc="A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers Windows DLL version)"
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
 license=('zlib/libpng' 'EULA')
 depends=('vulkan-icd-loader' 'lib32-vulkan-icd-loader')
 provides=("dxvk" "d9vk" "dxvk=$pkgver")
-makedepends=('wine' 'clang' 'libunwind' 'cmake' 'ninja' 'meson>=0.43' 'glslang' 'git' 'python' 'sed' 'python-simplejson' 'python-six' 'msitools')
+makedepends=('wine' 'clang' 'lld' 'llvm' 'libunwind' 'cmake' 'ninja' 'meson>=0.43' 'glslang' 'git' 'python' 'sed' 'python-simplejson' 'python-six' 'msitools')
 optdepends=('msvc-wine-git: A very convenient package for having the msvc headers available globally. This is the preferred method instead of letting this PKGBUILD manage it.')
 conflicts=('d9vk'  "dxvk" 'dxvk-mingw-git')
-options=('!strip' '!staticlibs' 'lto')
+options=('!strip' '!staticlibs' 'lto' '!buildflags')
 source=(
     "git+https://github.com/doitsujin/dxvk.git"
     "git+https://github.com/Joshua-Ashton/mingw-directx-headers.git"
