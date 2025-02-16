@@ -15,6 +15,7 @@ pkgbase = rpcs3-git
 	makedepends = python
 	makedepends = vulkan-validation-layers
 	makedepends = clang
+	makedepends = lld
 	depends = alsa-lib
 	depends = glew
 	depends = glu

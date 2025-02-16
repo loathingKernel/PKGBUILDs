@@ -45,8 +45,9 @@ makedepends=(
   libpipewire
   python
   vulkan-validation-layers
-  # clang is required because audio is broken with latest gcc
+  # clang+lld is required because audio is broken with latest gcc
   clang
+  lld
 )
 optdepends=(
   libpulse
@@ -88,6 +89,9 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
+    -DCMAKE_LINKER=lld \
+    -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
+    -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
     -DUSE_NATIVE_INSTRUCTIONS=OFF \
     -DUSE_PRECOMPILED_HEADERS=OFF\
     -DUSE_SYSTEM_FFMPEG=OFF \
