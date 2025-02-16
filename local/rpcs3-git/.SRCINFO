@@ -35,6 +35,7 @@ pkgbase = rpcs3-git
 	depends = sdl2
 	depends = vulkan-icd-loader
 	depends = zlib
+	depends = llvm
 	optdepends = libpulse
 	optdepends = jack
 	optdepends = libpipewire

@@ -34,6 +34,7 @@ depends=(
   zlib
 # newer system flatbuffers is incompatible with the version RPCS3 depends on
 # flatbuffers
+  llvm
 )
 makedepends=(
   cmake
@@ -98,13 +99,14 @@ build() {
     -DUSE_SYSTEM_XXHASH=OFF \
     -DUSE_SYSTEM_FAUDIO=OFF \
     -DUSE_SYSTEM_LIBUSB=OFF \
-    -DUSE_SYSTEM_SDL=ON \
     -DUSE_SYSTEM_LIBPNG=ON \
     -DUSE_SYSTEM_ZLIB=ON \
     -DUSE_SYSTEM_CURL=OFF \
     -DUSE_SYSTEM_FLATBUFFERS=OFF \
     -DUSE_SYSTEM_PUGIXML=OFF \
-    -DBUILD_LLVM=ON \
+    -DUSE_SDL=ON \
+    -DUSE_SYSTEM_SDL=ON \
+    -DBUILD_LLVM=OFF \
     -DUSE_SYSTEM_WOLFSSL=OFF
 
   ninja -C build -v
