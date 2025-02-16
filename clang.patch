@@ -1,0 +1,104 @@
+diff --git a/build-win32.txt b/build-win32.txt
+index 40e9d47d7..26d44878b 100644
+--- a/build-win32.txt
++++ b/build-win32.txt
+@@ -1,13 +1,16 @@
+ [binaries]
+-c = 'i686-w64-mingw32-gcc'
+-cpp = 'i686-w64-mingw32-g++'
+-ar = 'i686-w64-mingw32-ar'
+-strip = 'i686-w64-mingw32-strip'
+-windres = 'i686-w64-mingw32-windres'
++c = ['clang', '--target=i686-windows-msvc', '-fuse-ld=lld']
++cpp = ['clang++', '--target=i686-windows-msvc', '-fuse-ld=lld']
++ar = ['llvm-ar']
++strip = ['llvm-strip']
+ 
+ [properties]
+ needs_exe_wrapper = true
+ 
++[built-in options]
++c_link_args = ['-fuse-ld=lld']
++cpp_link_args = ['-fuse-ld=lld']
++
+ [host_machine]
+ system = 'windows'
+ cpu_family = 'x86'
+diff --git a/build-win64.txt b/build-win64.txt
+index 8eb1b29d1..4f2f90e28 100644
+--- a/build-win64.txt
++++ b/build-win64.txt
+@@ -1,13 +1,16 @@
+ [binaries]
+-c = 'x86_64-w64-mingw32-gcc'
+-cpp = 'x86_64-w64-mingw32-g++'
+-ar = 'x86_64-w64-mingw32-ar'
+-strip = 'x86_64-w64-mingw32-strip'
+-windres = 'x86_64-w64-mingw32-windres'
++c = ['clang', '--target=x86_64-windows-msvc', '-fuse-ld=lld']
++cpp = ['clang++', '--target=x86_64-windows-msvc', '-fuse-ld=lld']
++ar = ['llvm-ar']
++strip = ['llvm-strip']
+ 
+ [properties]
+ needs_exe_wrapper = true
+ 
++[built-in options]
++c_link_args = ['-fuse-ld=lld']
++cpp_link_args = ['-fuse-ld=lld']
++
+ [host_machine]
+ system = 'windows'
+ cpu_family = 'x86_64'
+diff --git a/meson.build b/meson.build
+index 9d352e1ca..52eaed2da 100644
+--- a/meson.build
++++ b/meson.build
+@@ -7,7 +7,7 @@ fs = import('fs')
+ 
+ cpp = meson.get_compiler('cpp')
+ cc = meson.get_compiler('c')
+-dxvk_is_msvc = cpp.get_argument_syntax() == 'msvc'
++dxvk_is_msvc = cc.has_link_argument('-Wl,--file-alignment=4096') != true
+ 
+ compiler_args = [
+   '-msse',
+@@ -26,6 +26,7 @@ compiler_args = [
+   '-Wno-extern-c-compat',
+   '-Wno-unused-const-variable',
+   '-Wno-missing-braces',
++  '-Wno-nontrivial-memcall',
+ ]
+ 
+ link_args = []
+@@ -95,11 +96,10 @@ if platform == 'windows'
+     # setup file alignment + enable PDB output for MSVC builds
+     # PDBs are useful for Windows consumers of DXVK 
+     compiler_args += [
+-      '/Z7'
++      '-D_CRT_SECURE_NO_WARNINGS', '-D_SILENCE_ALL_CXX23_DEPRECATION_WARNINGS', '-fms-runtime-lib=static'
+     ]
+     link_args += [
+-      '/FILEALIGN:4096',
+-      '/DEBUG:FULL'
++      '-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF' # pdbs don't work well on Linux
+     ]
+   endif
+ 
+diff --git a/subprojects/libdisplay-info/meson.build b/subprojects/libdisplay-info/meson.build
+index cccaa8d39..299d29dec 100644
+--- a/subprojects/libdisplay-info/meson.build
++++ b/subprojects/libdisplay-info/meson.build
+@@ -23,10 +23,11 @@ cc = meson.get_compiler('c')
+ 
+ math = cc.find_library('m', required: false)
+ 
+-if cc.get_id() != 'msvc'
++if cc.has_link_argument('-Wl,--file-alignment=4096') != false
+ 	add_project_arguments(['-D_POSIX_C_SOURCE=200809L'], language: 'c')
+ 	add_project_arguments(['-Dstatic_array=static'], language: 'c')
+ else
++    add_project_arguments(['-D_CRT_SECURE_NO_WARNINGS'], language: 'c')
+ 	add_project_arguments(['-Dstatic_array='], language: 'c')
+ 	add_project_arguments(['-Dssize_t=intptr_t'], language: 'c')
+ endif
