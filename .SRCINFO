@@ -1,7 +1,7 @@
 pkgbase = dxvk-msvc-git
 	pkgdesc = A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers Windows DLL version)
 	pkgver = 2.5.3.r141.g23067c48c
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/doitsujin/dxvk
 	arch = x86_64
 	license = zlib/libpng
@@ -54,7 +54,7 @@ pkgbase = dxvk-msvc-git
 	sha256sums = 6c03f80228539ad1a78390186ae9ebeae40d5c02559a39b58ed8ec4738a7b957
 	sha256sums = d06d0375a6976ccbf452bba2feb7d7e5db43c6631bd4d59ad563315e9c973ccb
 	sha256sums = bf7883203d9c8fe729131f1f9d82da799f33a1c3c3ebb22d2070ac77e337de8c
-	sha256sums = 7ee97ccf414ede6889514080b8818f139947b531a15cd293e22b06822c6f7b4c
+	sha256sums = 279d85e9c222c341073c92b9fd37076fe30354da4ac9b9c7d233fdfe4ebbdc9a
 	sha256sums = 5b059c4084940d31460a34ec579026fe9526f7cb9bdcc0b6d928271ab52f89db
 
 pkgname = dxvk-msvc-git
