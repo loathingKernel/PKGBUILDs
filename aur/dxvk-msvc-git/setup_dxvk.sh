@@ -50,21 +50,30 @@ fi
 export WINEDEBUG=-all
 # disable mscoree and mshtml to avoid downloading
 # wine gecko and mono
-export WINEDLLOVERRIDES="mscoree,mshtml="
+export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-}${WINEDLLOVERRIDES:+,}mscoree,mshtml="
 
 wine="wine"
 wine64="wine64"
 wineboot="wineboot"
+wow64=true
 
 # $PATH is the way for user to control where wine is located (including custom Wine versions).
 # Pure 64-bit Wine (non Wow64) requries skipping 32-bit steps.
 # In such case, wine64 and winebooot will be present, but wine binary will be missing,
 # however it can be present in other PATHs, so it shouldn't be used, to avoid versions mixing.
 wine_path=$(dirname "$(which $wineboot)")
-wow64=true
-if ! [ -f "$wine_path/$wine" ]; then
-   wine=$wine64
-   wow64=false
+base_path=$(dirname "$wine_path")
+x32_binary=$(find "$base_path" -name "i386-unix" -type d -exec find {} -name "wine" -type f \; 2>/dev/null | head -n1)
+x64_binary=$(find "$base_path" -name "x86_64-unix" -type d -exec find {} -name "wine" -type f \; 2>/dev/null | head -n1)
+
+[ -z "$(find "$base_path" -name "i386-windows" -type d -exec find {} -name "wineboot.exe" -type f \; 2>/dev/null)" ] && wow64=false
+
+if [ -n "$x64_binary" ]; then
+    wine64=$wine
+fi
+
+if { [ ! -f "$wine_path/$wine" ] && [ ! -L "$wine_path/$wine" ] ; } || { [ -n "$x64_binary" ] && [ -z "$x32_binary" ] ; }; then
+    wine=$wine64
 fi
 
 # resolve 32-bit and 64-bit system32 path
@@ -78,11 +87,22 @@ fi
 # if they are missing
 $wineboot -u
 
-win64_sys_path=$($wine64 winepath -u 'C:\windows\system32' 2> /dev/null)
+winepath64=$(find "$base_path" -name "x86_64-windows" -type d -exec find {} -name "winepath.exe" -type f \; 2>/dev/null | head -n1)
+if [ -z "$winepath64" ]; then
+    win64_sys_path=$($wine64 winepath -u 'C:\windows\system32' 2> /dev/null)
+else
+    win64_sys_path=$($wine64 "$winepath64" -u 'C:\windows\system32' 2> /dev/null)
+fi
 win64_sys_path="${win64_sys_path/$'\r'/}"
+
 if $wow64; then
-  win32_sys_path=$($wine winepath -u 'C:\windows\system32' 2> /dev/null)
-  win32_sys_path="${win32_sys_path/$'\r'/}"
+    winepath32=$(find "$base_path" -name "i386-windows" -type d -exec find {} -name "winepath.exe" -type f \; 2>/dev/null | head -n1)
+    if [ -z "$winepath32" ]; then
+        win32_sys_path=$($wine winepath -u 'C:\windows\system32' 2> /dev/null)
+    else
+        win32_sys_path=$($wine "$winepath32" -u 'C:\windows\system32' 2> /dev/null)
+    fi
+    win32_sys_path="${win32_sys_path/$'\r'/}"
 fi
 
 if [ -z "$win32_sys_path" ] && [ -z "$win64_sys_path" ]; then
