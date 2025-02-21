@@ -13,8 +13,8 @@ url="https://github.com/pi-hole/pi-hole"
 depends=('pi-hole-ftl>=6.0' 'netcat' 'logrotate' 'bind' 'sudo' 'lsof' 'inetutils' 'iproute2' 'procps-ng' 'jq')
 makedepends=('git')
 optdepends=()
-conflicts=('pi-hole-standalone')
-provide=('pi-hole-standalone')
+conflicts=('pi-hole-standalone' 'pi-hole-server')
+provides=('pi-hole-standalone' 'pi-hole-server')
 install=$pkgname.install
 backup=('etc/dnsmasq.d/01-pihole.conf' 'etc/pihole/adlists.list' 'etc/dnsmasq.conf' 'etc/sudoers.d/pihole')
 
