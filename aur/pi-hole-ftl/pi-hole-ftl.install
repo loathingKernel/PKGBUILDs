@@ -5,11 +5,11 @@ post_install() {
 
 post_upgrade() {
   # /etc/pihole/versions file generation
-  [ -f /opt/pihole/updatecheck.sh ] && /opt/pihole/updatecheck.sh
+  [ -f /opt/pihole/updatecheck.sh ] && sudo -u pihole bash /opt/pihole/updatecheck.sh;
 
   post_install $1
 }
 
 post_remove() {
-  id -u pihole > /dev/null 2>&1 && userdel -f pihole
+  /bin/true
 }
