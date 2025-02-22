@@ -24,7 +24,7 @@ source=($pkgname-v$pkgver.tar.gz::"https://github.com/pi-hole/FTL/archive/v$pkgv
         "$pkgname.sysuser"
         "$pkgname.service")
 sha256sums=('ccf7adebcfc844d29dd63742eecff585084bb53bf6421ceca1c1c15b44402314'
-            '01efd66ab61c67d8cf7f46cf449e5f26fa13d0e41f50cb1947a30892047ba6e7'
+            '71b01d6edd05c312ae1446aa4993e1bcbe457ad2490583a2f1165038e6b36c5e'
             '0feb4597a4afd9054553505d305b0feb7e1f6e1705b092561648ff37d0a2893c'
             'dd1d2a341e774d4e549373ae75604031b9af0ee44debcd71a89259d9110d2a77'
             'fd54fa39539a298a6733a8732ea2f0bcce213361900ad6aa21aad30d2395abfe')
