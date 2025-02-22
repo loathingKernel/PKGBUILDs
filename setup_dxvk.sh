@@ -75,7 +75,7 @@ win64_sys_path="${win64_sys_path/$'\r'/}"
 
 [ -z "$win64_sys_path" ] && win64=false
 
-if ! [[ "$($wine "${win64_sys_path}"/'cmd.exe' /c 'echo %ProgramW6432%' 2>/dev/null)" =~ .*Files.* ]]; then
+if grep --quiet -e '#arch=win32' "${WINEPREFIX:-$HOME/.wine}/system.reg"; then
   win32_sys_path=$win64_sys_path
   win64=false
   win32=true
