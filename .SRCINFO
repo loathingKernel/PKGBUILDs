@@ -1,7 +1,7 @@
 pkgbase = pi-hole-core
 	pkgdesc = The Pi-hole is an advertising-aware DNS/Web server. Arch adaptation for lan wide DNS server.
 	pkgver = 6.0.3
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/pi-hole/pi-hole
 	install = pi-hole-core.install
 	arch = any
@@ -26,7 +26,7 @@ pkgbase = pi-hole-core
 	backup = etc/dnsmasq.conf
 	backup = etc/sudoers.d/pihole
 	source = pi-hole-core-6.0.3.tar.gz::https://github.com/pi-hole/pi-hole/archive/refs/tags/v6.0.3.tar.gz
-	source = https://raw.githubusercontent.com/max72bra/pi-hole-core-archlinux-customization/main/arch-core-6.0.3-1.patch
+	source = https://raw.githubusercontent.com/max72bra/pi-hole-core-archlinux-customization/main/arch-core-6.0.3-2.patch
 	source = pi-hole.tmpfile
 	source = pi-hole-gravity.service
 	source = pi-hole-gravity.timer

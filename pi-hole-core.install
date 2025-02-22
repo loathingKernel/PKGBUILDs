@@ -27,7 +27,7 @@ post_upgrade() {
 
   # /etc/pihole/versions file generation
   echo -e "\e[1;33m==>\e[0m Updating 'versions' file...\e[0m"
-  /opt/pihole/updatecheck.sh
+  sudo -u pihole bash /opt/pihole/updatecheck.sh;
 
   # keep pacman from throwing errors should none them be on the filesystem
   return 0
