@@ -47,34 +47,13 @@ if [ -n "$WINEPREFIX" ] && ! [ -f "$WINEPREFIX/system.reg" ]; then
 fi
 
 # find wine executable
-export WINEDEBUG=-all
+export WINEDEBUG="${WINEDEBUG:--all}"
 # disable mscoree and mshtml to avoid downloading
 # wine gecko and mono
 export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-}${WINEDLLOVERRIDES:+,}mscoree,mshtml="
 
-wine="wine"
-wine64="wine64"
-wineboot="wineboot"
-wow64=true
-
-# $PATH is the way for user to control where wine is located (including custom Wine versions).
-# Pure 64-bit Wine (non Wow64) requries skipping 32-bit steps.
-# In such case, wine64 and winebooot will be present, but wine binary will be missing,
-# however it can be present in other PATHs, so it shouldn't be used, to avoid versions mixing.
-wine_path=$(dirname "$(which $wineboot)")
-base_path=$(dirname "$wine_path")
-x32_binary=$(find "$base_path" -name "i386-unix" -type d -exec find {} -name "wine" -type f \; 2>/dev/null | head -n1)
-x64_binary=$(find "$base_path" -name "x86_64-unix" -type d -exec find {} -name "wine" -type f \; 2>/dev/null | head -n1)
-
-[ -z "$(find "$base_path" -name "i386-windows" -type d -exec find {} -name "wineboot.exe" -type f \; 2>/dev/null)" ] && wow64=false
-
-if [ -n "$x64_binary" ]; then
-    wine64=$wine
-fi
-
-if { [ ! -f "$wine_path/$wine" ] && [ ! -L "$wine_path/$wine" ] ; } || { [ -n "$x64_binary" ] && [ -z "$x32_binary" ] ; }; then
-    wine=$wine64
-fi
+wine="$(which "${WINE:-wine}")"
+[ -z "$wine" ] && wine="$(which "${wine}64")"
 
 # resolve 32-bit and 64-bit system32 path
 winever=$($wine --version | grep wine)
@@ -83,27 +62,23 @@ if [ -z "$winever" ]; then
     exit 1
 fi
 
+wineboot="$wine wineboot"
+win64=true
+win32=true
+
 # ensure wine placeholder dlls are recreated
 # if they are missing
 $wineboot -u
 
-winepath64=$(find "$base_path" -name "x86_64-windows" -type d -exec find {} -name "winepath.exe" -type f \; 2>/dev/null | head -n1)
-if [ -z "$winepath64" ]; then
-    win64_sys_path=$($wine64 winepath -u 'C:\windows\system32' 2> /dev/null)
-else
-    win64_sys_path=$($wine64 "$winepath64" -u 'C:\windows\system32' 2> /dev/null)
-fi
+win64_sys_path="$($wine cmd /c '%SystemRoot%\system32\winepath.exe -u C:\windows\system32' 2>/dev/null)"
 win64_sys_path="${win64_sys_path/$'\r'/}"
 
-if $wow64; then
-    winepath32=$(find "$base_path" -name "i386-windows" -type d -exec find {} -name "winepath.exe" -type f \; 2>/dev/null | head -n1)
-    if [ -z "$winepath32" ]; then
-        win32_sys_path=$($wine winepath -u 'C:\windows\system32' 2> /dev/null)
-    else
-        win32_sys_path=$($wine "$winepath32" -u 'C:\windows\system32' 2> /dev/null)
-    fi
-    win32_sys_path="${win32_sys_path/$'\r'/}"
-fi
+[ -z "$win64_sys_path" ] && win64=false
+
+win32_sys_path="$($wine cmd /c '%SystemRoot%\syswow64\winepath.exe -u C:\windows\system32' 2>/dev/null)"
+win32_sys_path="${win32_sys_path/$'\r'/}"
+
+[ -z "$win32_sys_path" ] && win32=false
 
 if [ -z "$win32_sys_path" ] && [ -z "$win64_sys_path" ]; then
   echo 'Failed to resolve C:\windows\system32.' >&2
@@ -186,11 +161,14 @@ uninstallFile() {
 }
 
 install() {
-  installFile "$win64_sys_path" "$dxvk_lib64" "$1"
-  inst64_ret="$?"
+  inst64_ret=-1
+  if [ $win64 = "true" ]; then
+    installFile "$win64_sys_path" "$dxvk_lib64" "$1"
+    inst64_ret="$?"
+  fi
 
   inst32_ret=-1
-  if $wow64; then
+  if [ $win32 = "true" ]; then
     installFile "$win32_sys_path" "$dxvk_lib32" "$1"
     inst32_ret="$?"
   fi
@@ -201,11 +179,14 @@ install() {
 }
 
 uninstall() {
-  uninstallFile "$win64_sys_path" "$dxvk_lib64" "$1"
-  uninst64_ret="$?"
+  uninst64_ret=-1
+  if [ $win64 = "true" ]; then
+    uninstallFile "$win64_sys_path" "$dxvk_lib64" "$1"
+    uninst64_ret="$?"
+  fi
 
   uninst32_ret=-1
-  if $wow64; then
+  if [ $win32 = "true" ]; then
     uninstallFile "$win32_sys_path" "$dxvk_lib32" "$1"
     uninst32_ret="$?"
   fi
