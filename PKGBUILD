@@ -5,7 +5,7 @@
 pkgname=pi-hole-core
 _pkgname=pi-hole
 pkgver=6.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc='The Pi-hole is an advertising-aware DNS/Web server. Arch adaptation for lan wide DNS server.'
 arch=('any')
 license=('EUPL-1.2')
@@ -16,7 +16,7 @@ optdepends=()
 conflicts=('pi-hole-standalone' 'pi-hole-server')
 provides=('pi-hole-standalone' 'pi-hole-server')
 install=$pkgname.install
-backup=('etc/dnsmasq.d/01-pihole.conf' 'etc/pihole/adlists.list' 'etc/dnsmasq.conf' 'etc/sudoers.d/pihole')
+backup=('etc/pihole/adlists.list' 'etc/sudoers.d/pihole')
 
 source=($pkgname-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/archive/refs/tags/v$pkgver.tar.gz
       "https://raw.githubusercontent.com/max72bra/pi-hole-core-archlinux-customization/main/arch-core-$pkgver-$pkgrel.patch"
@@ -31,7 +31,7 @@ source=($pkgname-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/archive/
 )
 
 sha256sums=('1b6f4240adf83f915591e86688351b3e0df25db1a77a963c971ba3602b799e19'
-            '88161cd7d6ebb0629c92da4bdae960fb9d9462c815dcd0a164e78b370dc46931'
+            'd8442d30217692418d0a9bc37f00f6236ebfe4f6310e848409637180ba7831e2'
             'd09f9d10ebdfb6db24d4e1abff8cd09519a7b3f3878ef3974c26aa6838f74e7e'
             '9b72d7769036f8f4bb7121968d2ae4bdba427e4b16787ce340205a5f62b45c7c'
             '5228b4f923eab7784952a0fd6da895e7bff2f80a7f91c4a7c6350491dfdbb2e8'
@@ -74,7 +74,7 @@ package() {
 
   install -dm750 "$pkgdir"/etc/sudoers.d
   install -Dm440 $_pkgname-$pkgver/advanced/Templates/pihole.sudo "$pkgdir"/etc/sudoers.d/pihole
-  install -Dm644 $_pkgname-$pkgver/advanced/dnsmasq.conf.original "$pkgdir"/etc/dnsmasq.conf
+# install -Dm644 $_pkgname-$pkgver/advanced/dnsmasq.conf.original "$pkgdir"/etc/dnsmasq.conf
 
   install -Dm644 pi-hole.tmpfile "$pkgdir"/usr/lib/tmpfiles.d/pi-hole.conf
 
@@ -91,9 +91,6 @@ package() {
   install -Dm644 $_pkgname-$pkgver/dns-servers.conf "$pkgdir"/etc/pihole/dns-servers.conf
   install -Dm644 $_pkgname-$pkgver/advanced/Templates/logrotate "$pkgdir"/etc/pihole/logrotate
   install -Dm644 $_pkgname-$pkgver/adlists.list "$pkgdir"/etc/pihole/adlists.list
-#  install -Dm644 /dev/null "$pkgdir"/etc/pihole/whitelist.txt
-#  install -Dm644 /dev/null "$pkgdir"/etc/pihole/blacklist.txt
-#  install -Dm664 /dev/null "$pkgdir"/etc/pihole/regex.list
 
   install -dm755 "$pkgdir"/usr/share/licenses/pihole
   install -Dm644 ${pkgname%-*}-$pkgver/LICENSE "$pkgdir"/usr/share/licenses/pihole/Pi-hole
