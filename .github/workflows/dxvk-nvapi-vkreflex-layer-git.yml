@@ -13,6 +13,8 @@ on:
         - 'build'
         - 'remove'
         - 'skip'
+  schedule:
+    - cron:  '0 3 */3 * *'
   push:
     branches:
      - master
