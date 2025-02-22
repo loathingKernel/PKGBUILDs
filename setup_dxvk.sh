@@ -75,10 +75,16 @@ win64_sys_path="${win64_sys_path/$'\r'/}"
 
 [ -z "$win64_sys_path" ] && win64=false
 
-win32_sys_path="$($wine cmd /c '%SystemRoot%\syswow64\winepath.exe -u C:\windows\system32' 2>/dev/null)"
-win32_sys_path="${win32_sys_path/$'\r'/}"
+if ! [[ "$($wine "${win64_sys_path}"/'cmd.exe' /c 'echo %ProgramW6432%' 2>/dev/null)" =~ .*Files.* ]]; then
+  win32_sys_path=$win64_sys_path
+  win64=false
+  win32=true
+else
+  win32_sys_path="$($wine cmd /c '%SystemRoot%\syswow64\winepath.exe -u C:\windows\system32' 2>/dev/null)"
+  win32_sys_path="${win32_sys_path/$'\r'/}"
 
-[ -z "$win32_sys_path" ] && win32=false
+  [ -z "$win32_sys_path" ] && win32=false
+fi
 
 if [ -z "$win32_sys_path" ] && [ -z "$win64_sys_path" ]; then
   echo 'Failed to resolve C:\windows\system32.' >&2
