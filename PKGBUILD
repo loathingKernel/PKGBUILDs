@@ -5,7 +5,7 @@
 pkgname=pi-hole-core
 _pkgname=pi-hole
 pkgver=6.0.3
-pkgrel=2
+pkgrel=1
 pkgdesc='The Pi-hole is an advertising-aware DNS/Web server. Arch adaptation for lan wide DNS server.'
 arch=('any')
 license=('EUPL-1.2')
