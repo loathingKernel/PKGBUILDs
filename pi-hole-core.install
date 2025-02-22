@@ -37,4 +37,5 @@ post_remove() {
   # delete all temp files except those modified the user
   # TODO - make this more intelligent to save *.pacsave.# where # is a number
   find /etc/pihole -type f ! -name '*.pacsave' ! -name 'pihole-FTL.conf' ! -name 'pihole-FTL.db' ! -name 'gravity.db' -delete
+  id -u pihole > /dev/null 2>&1 && userdel -f pihole
 }
