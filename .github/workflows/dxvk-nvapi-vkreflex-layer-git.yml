@@ -1,0 +1,31 @@
+
+name: dxvk-nvapi-vkreflex-layer-git
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+        - 'build'
+        - 'remove'
+        - 'skip'
+  push:
+    branches:
+     - master
+    paths:
+     - public/dxvk-nvapi-vkreflex-layer-git/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public, personal]
+    uses: ./.github/workflows/job_pkgrepo.yml
+    with:
+      pkgdir: public/dxvk-nvapi-vkreflex-layer-git
+      repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
