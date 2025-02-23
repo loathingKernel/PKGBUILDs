@@ -6,16 +6,17 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=10.1
-pkgrel=1
-_tkg_commit=975bc35af94f7387798fb491b7cda245ae4423ab
+pkgver=10.2
+pkgrel=2
+_tkg_commit=21d3c43e7c4d5e817657ad9f3e21616b2c5de52a
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
 
 source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbasever"
-        "wine-staging-$_pkgbasever::git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v$_pkgbasever"
+        "git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v$_pkgbasever"
+        fix-ptr-access.patch::https://gitlab.winehq.org/wine/wine/-/commit/05315ce3da4d6f04232611fb5dd6ffbd77f87ce7.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -25,15 +26,16 @@ source+=(
         0001-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
         wine-ntsync.patch
 )
-sha512sums=('cce446679970bd40782b5ccdc9544e13981bee20c22e25cba710e6bcc91897bfd7a4077bcd7ee2c286c9e6c5e40adfb87c03ce293e4bccab828fed058ec78baa'
-            'dcaa61a286f94dda85b20d418c03e20ae4598a7729ab42912e69f3b7c66841e7f1afcc13b6d88ac3a70d7d3bebec854f18944865ed1fc5cdb3fe91c4b3b2317d'
+sha512sums=('2664d57860cd74706556bcf7e6ec48b4a7c49d8f22ed791bfc43caa50d43733a5a28c68a9d89842b9cce7b403d68dd21b9e328efc3349229cdeaf1f31188b51e'
+            '913331168a9e0011314f26dfdc9f41241652246688984025768c7b2e7a52aa257fb17c8477c22df795a23b199c834b462e03aa8da29bebe3811057129741dd00'
+            '547a1a31fcfa421e982da6032cdf398e5814d6f35c0670029d69853b89bde6dddfe47c514c2c5ff59d1d0f673c9a9df9adce88d199305f8ed2143ae8d65e2057'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
-            '2f1200597bb0f15398d027cf2a06bf98a634ebb2738a14e78949607a1000dae99071982fdc8e919e54643f91531c345a94c6b825a6dcc45d8a5123940d680623'
+            '2221d217bbff9e1b238ebd2954fa1bd3f20b742df599117526b098f806c609624b14cae0adf1ee131c0c699d89d2a98bb8d480e58567a614ec36a822bc4ca8a1'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             '785987b4eb881ecd0fcd217bc89315261c82fcbe33f39e3ddf4d87d05df3e94c3fff910dba8861a2269a1c184c9832f24db1603d9c7508892ba6488805ae6a83'
-            '533b1976bc53122d41c9bdc834af714e9847357a6543b6930920a96e1177a4a21071c14e4d141cee9b7cdbb9ccf9aa97b9d5a1a00a9ace7e25962554cb532046')
+            '2f75fa3d15163f49fb8f7d1f4c281f282e7f3dfed044e3faceacd5d173446aa4c71b11c5fd97c6855051251f40ff6726b7b02a806ef8ba1fd4c401c1da70aacf')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
@@ -42,78 +44,74 @@ url="https://www.wine-staging.com"
 arch=(x86_64)
 options=(!staticlibs !lto)
 license=(LGPL-2.1-or-later)
-
 depends=(
-  attr             #lib32-attr
-  fontconfig       #lib32-fontconfig
-  libxcursor       #lib32-libxcursor
-  libxrandr        #lib32-libxrandr
-  libxi            #lib32-libxi
-  gettext          #lib32-gettext
-  freetype2        #lib32-freetype2
-  gcc-libs         #lib32-gcc-libs
-  libpcap          #lib32-libpcap
+  attr            #lib32-attr
   desktop-file-utils
+  fontconfig      #lib32-fontconfig
+  freetype2       #lib32-freetype2
+  gcc-libs        #lib32-gcc-libs
+  gettext         #lib32-gettext
+  libpcap         #lib32-libpcap
+  libxcursor      #lib32-libxcursor
+  libxkbcommon    #lib32-libxkbcommon
+  libxi           #lib32-libxi
+  libxrandr       #lib32-libxrandr
+  wayland         #lib32-wayland
 )
-depends+=(
-  libxkbcommon     #lib32-libxkbcommon
-  wayland          #lib32-wayland
-)
-
 makedepends=(autoconf bison perl flex mingw-w64-gcc
   git
-  python
+  alsa-lib              #lib32-alsa-lib
   ffmpeg
   giflib                #lib32-giflib
   gnutls                #lib32-gnutls
-  libxinerama           #lib32-libxinerama
-  libxcomposite         #lib32-libxcomposite
-  libxxf86vm            #lib32-libxxf86vm
-  v4l-utils             #lib32-v4l-utils
-  alsa-lib              #lib32-alsa-lib
-  libxcomposite         #lib32-libxcomposite
-  mesa                  #lib32-mesa
-  mesa-libgl            #lib32-mesa-libgl
-  opencl-icd-loader     #lib32-opencl-icd-loader
+  gst-plugins-base-libs #lib32-gst-plugins-base-libs
+  gst-plugins-good      #lib32-gst-plugins-good
+  gtk3                  #lib32-gtk3
+  libcups               #lib32-libcups
+  libgphoto2
   libpulse              #lib32-libpulse
   libva                 #lib32-libva
-  gtk3                  #lib32-gtk3
-  gst-plugins-base-libs #lib32-gst-plugins-base-libs
-  vulkan-icd-loader     #lib32-vulkan-icd-loader
-  sdl2                  #lib32-sdl2
-  libcups               #lib32-libcups
-  sane
-  libgphoto2
-  ffmpeg
-  samba
+  libxcomposite         #lib32-libxcomposite
+  libxinerama           #lib32-libxinerama
+  libxxf86vm            #lib32-libxxf86vm
+  mesa                  #lib32-mesa
+  mesa-libgl            #lib32-mesa-libgl
   opencl-headers
+  opencl-icd-loader     #lib32-opencl-icd-loader
+  python
+  samba
+  sane
+  sdl2                  #lib32-sdl2
+  v4l-utils             #lib32-v4l-utils
+  vulkan-icd-loader     #lib32-vulkan-icd-loader
 )
 makedepends+=(
   ntsync-header
 )
-
 optdepends=(
+  alsa-lib              #lib32-alsa-lib
+  alsa-plugins          #lib32-alsa-plugins
+  cups                  #lib32-libcups
+  dosbox
   ffmpeg
   giflib                #lib32-giflib
   gnutls                #lib32-gnutls
-  v4l-utils             #lib32-v4l-utils
+  gst-plugins-base-libs #lib32-gst-plugins-base-libs
+  gst-plugins-good      #lib32-gst-plugins-good
+  gtk3                  #lib32-gtk3
+  libgphoto2
   libpulse              #lib32-libpulse
-  alsa-plugins          #lib32-alsa-plugins
-  alsa-lib              #lib32-alsa-lib
+  libva                 #lib32-libva
   libxcomposite         #lib32-libxcomposite
   libxinerama           #lib32-libxinerama
   opencl-icd-loader     #lib32-opencl-icd-loader
-  libva                 #lib32-libva
-  gtk3                  #lib32-gtk3
-  gst-plugins-base-libs #lib32-gst-plugins-base-libs
-  gst-plugins-good      #lib32-gst-plugins-good
-  vulkan-icd-loader     #lib32-vulkan-icd-loader
-  sdl2                  #lib32-sdl2
+  samba
   sane
-  libgphoto2
-  ffmpeg
-  cups
-  samba           dosbox
+  sdl2                  #lib32-sdl2
+  v4l-utils             #lib32-v4l-utils
+  vulkan-icd-loader     #lib32-vulkan-icd-loader
+  wine-gecko
+  wine-mono
 )
 optdepends+=(
   ntsync-dkms
@@ -124,34 +122,33 @@ conflicts=('wine')
 install=wine.install
 
 prepare() {
-  # Allow ccache to work
-  mv wine $pkgname
-
   # Get rid of old build dirs
   rm -rf $pkgname-{32,64}-build
   mkdir $pkgname-{32,64}-build
 
+  cd wine
+  # Fix for https://bugs.winehq.org/show_bug.cgi?id=57854
+  patch -Np1 -i "$srcdir"/fix-ptr-access.patch
   # apply wine-staging patchset
-  cd $pkgname
-  ../wine-staging-$_pkgbasever/staging/patchinstall.py --backend=git-apply --all \
+  ../wine-staging/staging/patchinstall.py --backend=git-apply --all \
     -W eventfd_synchronization \
     -W ntdll-Syscall_Emulation \
     -W server-PeekMessage \
     -W server-Signal_Thread
 
-  patch -p1 -i "$srcdir"/wine-ntsync.patch
+  patch -Np1 -i "$srcdir"/wine-ntsync.patch
 
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
-  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-staging.patch
-  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
-  patch -p1 -i "$_tkg_path"/proton/LAA/LAA-unix-staging.patch
-  patch -p1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
-  patch -p1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
-  #patch -p1 -i "$_tkg_path"/proton/valve_proton_fullscreen_hack/FS_bypass_compositor.patch
+  #patch -Np1 -i "$_tkg_path"/proton/fsync/fsync-unix-staging.patch
+  #patch -Np1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
+  patch -Np1 -i "$_tkg_path"/proton/LAA/LAA-unix-staging.patch
+  patch -Np1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
+  patch -Np1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
+  #patch -Np1 -i "$_tkg_path"/proton/valve_proton_fullscreen_hack/FS_bypass_compositor.patch
 
-  patch -p1 -i "$srcdir"/wine-wmclass.patch
-  patch -p1 -i "$srcdir"/wine-isolate_home.patch
-  patch -p1 -i "$srcdir"/0001-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
+  patch -Np1 -i "$srcdir"/wine-wmclass.patch
+  patch -Np1 -i "$srcdir"/wine-isolate_home.patch
+  patch -Np1 -i "$srcdir"/0001-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
   ./tools/make_requests
   ./dlls/winevulkan/make_vulkan
   ./tools/make_specfiles
@@ -175,7 +172,7 @@ build() {
   local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
@@ -190,17 +187,14 @@ build() {
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
   export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
 
-  cd "$srcdir"
-
-  msg2 "Building Wine-64..."
-
+  echo "Building Wine-64..."
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS"
   export CROSSCXXFLAGS="$COMMON_FLAGS -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-64-build"
-  ../$pkgname/configure \
+  ../wine/configure \
     --prefix=/usr \
     --libdir=/usr/lib \
     --with-x \
@@ -211,22 +205,18 @@ build() {
     --without-oss \
     --disable-winemenubuilder \
     --disable-tests \
-    --enable-archs=x86_64,i386 \
-    --with-xattr
+    --with-xattr \
+    --enable-archs=x86_64,i386
 
   make
-
 }
 
 package() {
-
-  msg2 "Packaging Wine-64..."
+  echo "Packaging Wine-64..."
   cd "$srcdir/$pkgname-64-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
     dlldir="$pkgdir/usr/lib/wine" install
-
-  ln -sf /usr/bin/wine "$pkgdir"/usr/bin/wine64
 
   # Font aliasing settings for Win32 applications
   install -d "$pkgdir"/usr/share/fontconfig/conf.{avail,default}
