@@ -4,15 +4,16 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=10.1
-pkgrel=1
-_tkg_commit=975bc35af94f7387798fb491b7cda245ae4423ab
+pkgver=10.2
+pkgrel=2
+_tkg_commit=21d3c43e7c4d5e817657ad9f3e21616b2c5de52a
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbasever"
         30-win32-aliases.conf
-        wine-binfmt.conf)
+        wine-binfmt.conf
+        fix-ptr-access.patch::https://gitlab.winehq.org/wine/wine/-/commit/05315ce3da4d6f04232611fb5dd6ffbd77f87ce7.patch)
 source+=(
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
         wine-wmclass.patch
@@ -23,17 +24,18 @@ source+=(
         0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
         wine-ntsync.patch
 )
-sha512sums=('cce446679970bd40782b5ccdc9544e13981bee20c22e25cba710e6bcc91897bfd7a4077bcd7ee2c286c9e6c5e40adfb87c03ce293e4bccab828fed058ec78baa'
+sha512sums=('2664d57860cd74706556bcf7e6ec48b4a7c49d8f22ed791bfc43caa50d43733a5a28c68a9d89842b9cce7b403d68dd21b9e328efc3349229cdeaf1f31188b51e'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
-            '2f1200597bb0f15398d027cf2a06bf98a634ebb2738a14e78949607a1000dae99071982fdc8e919e54643f91531c345a94c6b825a6dcc45d8a5123940d680623'
+            '547a1a31fcfa421e982da6032cdf398e5814d6f35c0670029d69853b89bde6dddfe47c514c2c5ff59d1d0f673c9a9df9adce88d199305f8ed2143ae8d65e2057'
+            '2221d217bbff9e1b238ebd2954fa1bd3f20b742df599117526b098f806c609624b14cae0adf1ee131c0c699d89d2a98bb8d480e58567a614ec36a822bc4ca8a1'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             '785987b4eb881ecd0fcd217bc89315261c82fcbe33f39e3ddf4d87d05df3e94c3fff910dba8861a2269a1c184c9832f24db1603d9c7508892ba6488805ae6a83'
             '8694685c4b4e8559b98286a11e39b662edc6c0ff1fa0446abd828af84f31d26fc6b8d18c00e3e3d273dcdad373dd6af8f01eeaa0d3de14ef28512494c756bdc4'
             '605f6f527fc0b25768a3fa7bd921506269c2e70edb17289042eac4f34a410da26bfc4e61d0ae6356258d5fc10be25b8baab9dcabbd7bed034e94560882be457f'
             '67d2e1e08d7f3bab2cd8d39d9bafd2451ab813fd4696ace70e3a310dd4d249112f3a88dedb7a2bcc0f4b85131a41cd1f20a6f21384ef92ec02ec66f07fd46a93'
-            '533b1976bc53122d41c9bdc834af714e9847357a6543b6930920a96e1177a4a21071c14e4d141cee9b7cdbb9ccf9aa97b9d5a1a00a9ace7e25962554cb532046')
+            '2f75fa3d15163f49fb8f7d1f4c281f282e7f3dfed044e3faceacd5d173446aa4c71b11c5fd97c6855051251f40ff6726b7b02a806ef8ba1fd4c401c1da70aacf')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
@@ -54,8 +56,10 @@ depends=(
   libxkbcommon    lib32-libxkbcommon
   libxi           lib32-libxi
   libxrandr       lib32-libxrandr
-  llvm-libs       lib32-llvm-libs
   wayland         lib32-wayland
+)
+depends+=(
+  llvm-libs       lib32-llvm-libs
 )
 makedepends=(autoconf bison perl flex clang lld
   git
@@ -71,7 +75,6 @@ makedepends=(autoconf bison perl flex clang lld
   libxcomposite         lib32-libxcomposite
   libxinerama           lib32-libxinerama
   libxxf86vm            lib32-libxxf86vm
-  llvm                  lib32-llvm
   mesa                  lib32-mesa
   mesa-libgl            lib32-mesa-libgl
   opencl-headers
@@ -86,6 +89,7 @@ makedepends=(autoconf bison perl flex clang lld
   vulkan-icd-loader     lib32-vulkan-icd-loader
 )
 makedepends+=(
+  llvm                  lib32-llvm
   ntsync-header
 )
 optdepends=(
@@ -126,24 +130,25 @@ prepare() {
   mkdir $pkgname-{32,64}-build
 
   cd $pkgname
-
-  patch -p1 -i "$srcdir"/wine-ntsync.patch
+  # Fix for https://bugs.winehq.org/show_bug.cgi?id=57854
+  patch -Np1 -i "$srcdir"/fix-ptr-access.patch
+  patch -Np1 -i "$srcdir"/wine-ntsync.patch
 
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
-  #patch -p1 -i "$_tkg_path"/proton/esync/esync-unix-mainline.patch
-  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync-unix-mainline.patch
-  #patch -p1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
-  patch -p1 -i "$_tkg_path"/proton/LAA/LAA-unix.patch
-  patch -p1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
-  patch -p1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
-  #patch -p1 -i "$_tkg_path"/proton/valve_proton_fullscreen_hack/FS_bypass_compositor.patch
+  #patch -Np1 -i "$_tkg_path"/proton/esync/esync-unix-mainline.patch
+  #patch -Np1 -i "$_tkg_path"/proton/fsync/fsync-unix-mainline.patch
+  #patch -Np1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
+  patch -Np1 -i "$_tkg_path"/proton/LAA/LAA-unix.patch
+  patch -Np1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
+  patch -Np1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
+  #patch -Np1 -i "$_tkg_path"/proton/valve_proton_fullscreen_hack/FS_bypass_compositor.patch
 
-  patch -p1 -i "$srcdir"/wine-wmclass.patch
-  patch -p1 -i "$srcdir"/wine-isolate_home.patch
-  patch -p1 -i "$srcdir"/0001-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
-  patch -p1 -i "$srcdir"/0001-clang-fixup-lto.patch
-  patch -p1 -i "$srcdir"/0002-makedep-add-per-source-cflags-and-per-program-ldflag.patch
-  patch -p1 -i "$srcdir"/0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
+  patch -Np1 -i "$srcdir"/wine-wmclass.patch
+  patch -Np1 -i "$srcdir"/wine-isolate_home.patch
+  patch -Np1 -i "$srcdir"/0001-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
+  patch -Np1 -i "$srcdir"/0001-clang-fixup-lto.patch
+  patch -Np1 -i "$srcdir"/0002-makedep-add-per-source-cflags-and-per-program-ldflag.patch
+  patch -Np1 -i "$srcdir"/0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
   ./tools/make_requests
   ./dlls/winevulkan/make_vulkan
   ./tools/make_specfiles
@@ -191,8 +196,7 @@ build() {
 
   cd "$srcdir"
 
-  msg2 "Building Wine-64..."
-
+  echo "Building Wine-64..."
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
@@ -217,7 +221,7 @@ build() {
   cd ..
 
   _wine32opts=(
-    --libdir=/usr/lib32
+    --libdir=/usr/lib
     --with-wine64="$srcdir/$pkgname-64-build"
   )
 
@@ -248,14 +252,13 @@ build() {
 }
 
 package() {
-  msg2 "Packaging Wine-32..."
+  echo "Packaging Wine-32..."
   cd "$srcdir/$pkgname-32-build"
-
   make prefix="$pkgdir/usr" \
-    libdir="$pkgdir/usr/lib32" \
-    dlldir="$pkgdir/usr/lib32/wine" install
+    libdir="$pkgdir/usr/lib" \
+    dlldir="$pkgdir/usr/lib/wine" install
 
-  msg2 "Packaging Wine-64..."
+  echo "Packaging Wine-64..."
   cd "$srcdir/$pkgname-64-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
@@ -267,11 +270,11 @@ package() {
   ln -s ../conf.avail/30-win32-aliases.conf "$pkgdir/usr/share/fontconfig/conf.default/30-win32-aliases.conf"
   install -Dm 644 "$srcdir/wine-binfmt.conf" "$pkgdir/usr/lib/binfmt.d/wine.conf"
 
-  llvm-strip --strip-unneeded "$pkgdir"/usr/lib32/wine/i386-windows/*.{dll,exe}
+  llvm-strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.{dll,exe}
   llvm-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe}
 
-  #find "$pkgdir"/usr/lib{,32}/wine -iname "*.a" -delete
-  #find "$pkgdir"/usr/lib{,32}/wine -iname "*.def" -delete
+  #find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
+  #find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
