@@ -1,0 +1,6 @@
+*.pkg.tar*
+/llvm-mingw/
+/llvm-mingw/
+/llvm-project/
+/pkg/
+/src/
