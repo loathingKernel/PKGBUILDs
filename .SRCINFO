@@ -1,0 +1,53 @@
+pkgbase = llvm-mingw
+	pkgdesc = A self-contained LLVM/Clang/LLD based mingw-w64 toolchain for i686 and x86_64 targets
+	pkgver = 19.1.7+20250114
+	pkgrel = 1
+	url = https://github.com/mstorsjo/llvm-mingw
+	arch = x86_64
+	groups = mingw-w64-toolchain
+	groups = mingw-w64
+	license = LicenseRef-custom
+	license = ZPL-2.1
+	license = GPL-3.0
+	license = GPL-3.0-with-GCC-exception
+	license = GFDL-1.3-or-later
+	license = Apache-2.0 WITH LLVM-exception
+	license = custom:ISC
+	makedepends = cmake>=3.20.0
+	makedepends = ninja
+	makedepends = python
+	makedepends = git
+	makedepends = libxml2
+	makedepends = zlib
+	makedepends = xz
+	makedepends = swig
+	makedepends = lua53
+	makedepends = doxygen
+	makedepends = perl
+	depends = gcc-libs
+	depends = glibc
+	depends = zlib
+	depends = libffi
+	depends = libedit
+	depends = ncurses
+	depends = libxml2
+	depends = bash
+	optdepends = wine: for running Windows executables
+	provides = mingw-w64-gcc
+	provides = mingw-w64-clang
+	provides = mingw-w64-binutils
+	provides = mingw-w64-tools
+	provides = mingw-w64-crt
+	provides = mingw-w64-headers
+	provides = mingw-w64-winpthreads
+	provides = mingw-w64-winstorecompat
+	provides = llvm-mingw-w64-toolchain
+	options = staticlibs
+	options = !buildflags
+	options = !emptydirs
+	source = git+https://github.com/mstorsjo/llvm-mingw#tag=20250114
+	source = git+https://github.com/llvm/llvm-project.git#tag=llvmorg-19.1.7+20250114
+	sha256sums = f3de01627afe67ba5427681ed33d7258fda90fc5b9b87728e21e58f0daca1deb
+	sha256sums = f6c754bd1b8d7da76f357a539ff8175f214b7dc1b52391a0fe75cfb9a57f28dd
+
+pkgname = llvm-mingw
