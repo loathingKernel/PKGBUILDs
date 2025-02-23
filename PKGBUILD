@@ -60,7 +60,7 @@ provides=( # what to do here?
 options=('staticlibs' '!buildflags' '!emptydirs')
 source=(
   "git+${url}#tag=${_tag}"
-  "git+https://github.com/llvm/llvm-project.git#tag=llvmorg-${pkgver#"$_tag"'+'}"
+  "git+https://github.com/llvm/llvm-project.git#tag=llvmorg-${pkgver%'+'"$_tag"}"
 )
 sha256sums=('f3de01627afe67ba5427681ed33d7258fda90fc5b9b87728e21e58f0daca1deb'
             'f6c754bd1b8d7da76f357a539ff8175f214b7dc1b52391a0fe75cfb9a57f28dd')
