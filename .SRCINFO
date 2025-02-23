@@ -6,7 +6,6 @@ pkgbase = pi-hole-core
 	install = pi-hole-core.install
 	arch = any
 	license = EUPL-1.2
-	makedepends = git
 	depends = pi-hole-ftl>=6.0
 	depends = netcat
 	depends = logrotate
@@ -17,6 +16,7 @@ pkgbase = pi-hole-core
 	depends = iproute2
 	depends = procps-ng
 	depends = jq
+	depends = git
 	provides = pi-hole-standalone
 	provides = pi-hole-server
 	conflicts = pi-hole-standalone

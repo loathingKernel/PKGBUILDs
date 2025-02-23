@@ -10,8 +10,8 @@ pkgdesc='The Pi-hole is an advertising-aware DNS/Web server. Arch adaptation for
 arch=('any')
 license=('EUPL-1.2')
 url="https://github.com/pi-hole/pi-hole"
-depends=('pi-hole-ftl>=6.0' 'netcat' 'logrotate' 'bind' 'sudo' 'lsof' 'inetutils' 'iproute2' 'procps-ng' 'jq')
-makedepends=('git')
+depends=('pi-hole-ftl>=6.0' 'netcat' 'logrotate' 'bind' 'sudo' 'lsof' 'inetutils' 'iproute2' 'procps-ng' 'jq' 'git')
+makedepends=()
 optdepends=()
 conflicts=('pi-hole-standalone' 'pi-hole-server')
 provides=('pi-hole-standalone' 'pi-hole-server')
