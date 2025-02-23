@@ -48,7 +48,7 @@ depends=(
   desktop-file-utils
   fontconfig      lib32-fontconfig
   freetype2       lib32-freetype2
-  gcc-libs        lib32-gcc-libs
+  llvm-libs       lib32-llvm-libs
   gettext         lib32-gettext
   libpcap         lib32-libpcap
   libunwind       lib32-libunwind
@@ -58,10 +58,8 @@ depends=(
   libxrandr       lib32-libxrandr
   wayland         lib32-wayland
 )
-depends+=(
-  llvm-libs       lib32-llvm-libs
-)
-makedepends=(autoconf bison perl flex clang lld
+makedepends=(autoconf bison perl flex mingw-w64-gcc
+  clang lld
   git
   alsa-lib              lib32-alsa-lib
   ffmpeg
