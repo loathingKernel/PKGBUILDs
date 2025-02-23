@@ -64,7 +64,8 @@ depends=(
   libxrandr       lib32-libxrandr
   wayland         lib32-wayland
 )
-makedepends=(autoconf bison perl flex clang lld
+makedepends=(autoconf bison perl flex mingw-w64-gcc
+  clang lld
   git
   alsa-lib              lib32-alsa-lib
   ffmpeg
@@ -133,14 +134,15 @@ prepare() {
   mkdir $pkgname-{32,64}-build
 
   cd wine
-  # Fix for https://bugs.winehq.org/show_bug.cgi?id=57854
-  patch -Np1 -i "$srcdir"/fix-ptr-access.patch
   # apply wine-staging patchset
   ../wine-staging/staging/patchinstall.py --backend=git-apply --all \
+    --no-autoconf \
     -W eventfd_synchronization \
     -W ntdll-Syscall_Emulation \
     -W server-PeekMessage \
     -W server-Signal_Thread
+  # Fix for https://bugs.winehq.org/show_bug.cgi?id=57854
+  patch -Np1 -i "$srcdir"/fix-ptr-access.patch
 
   patch -Np1 -i "$srcdir"/wine-ntsync.patch
 
