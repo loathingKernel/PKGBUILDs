@@ -21,6 +21,8 @@ post_install() {
 post_upgrade() {
   # clean old/unused/deprecated files
   [ -e /etc/pihole/.useIPv6 ] && rm /etc/pihole/.useIPv6
+  [ -e /etc/pihole/adlists.list ] && rm /etc/pihole/adlists.list
+  [ -e /etc/pihole/dns-servers.conf ] && rm /etc/pihole/dns-servers.conf
 
   # query logging disabling needs this
   grep -qF 'QUERY_LOGGING=' /etc/pihole/setupVars.conf || echo 'QUERY_LOGGING=true' >> /etc/pihole/setupVars.conf

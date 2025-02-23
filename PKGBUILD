@@ -4,8 +4,8 @@
 
 pkgname=pi-hole-core
 _pkgname=pi-hole
-pkgver=6.0.3
-pkgrel=2
+pkgver=6.0.4
+pkgrel=1
 pkgdesc='The Pi-hole is an advertising-aware DNS/Web server. Arch adaptation for lan wide DNS server.'
 arch=('any')
 license=('EUPL-1.2')
@@ -30,8 +30,8 @@ source=($pkgname-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/archive/
 	    piholeDebug.sh
 )
 
-sha256sums=('1b6f4240adf83f915591e86688351b3e0df25db1a77a963c971ba3602b799e19'
-            'd8442d30217692418d0a9bc37f00f6236ebfe4f6310e848409637180ba7831e2'
+sha256sums=('f3eabd0a4c426246c83930ea20a831eb46bf67ce233c5d4191da819b76191b5b'
+            'd5f4b12d16b815b1954b51729539cc5eb1d4808ecdd52062972611e8846e4d77'
             'd09f9d10ebdfb6db24d4e1abff8cd09519a7b3f3878ef3974c26aa6838f74e7e'
             '9b72d7769036f8f4bb7121968d2ae4bdba427e4b16787ce340205a5f62b45c7c'
             '5228b4f923eab7784952a0fd6da895e7bff2f80a7f91c4a7c6350491dfdbb2e8'
@@ -74,7 +74,6 @@ package() {
 
   install -dm750 "$pkgdir"/etc/sudoers.d
   install -Dm440 $_pkgname-$pkgver/advanced/Templates/pihole.sudo "$pkgdir"/etc/sudoers.d/pihole
-# install -Dm644 $_pkgname-$pkgver/advanced/dnsmasq.conf.original "$pkgdir"/etc/dnsmasq.conf
 
   install -Dm644 pi-hole.tmpfile "$pkgdir"/usr/lib/tmpfiles.d/pi-hole.conf
 
@@ -87,10 +86,7 @@ package() {
   ln -s ../$_pkgname-logtruncate.timer "$pkgdir/usr/lib/systemd/system/multi-user.target.wants/$_pkgname-logtruncate.timer"
 
   install -dm755 "$pkgdir"/etc/pihole
-  install -dm755 "$pkgdir"/usr/share/pihole/configs
-  install -Dm644 $_pkgname-$pkgver/dns-servers.conf "$pkgdir"/etc/pihole/dns-servers.conf
   install -Dm644 $_pkgname-$pkgver/advanced/Templates/logrotate "$pkgdir"/etc/pihole/logrotate
-  install -Dm644 $_pkgname-$pkgver/adlists.list "$pkgdir"/etc/pihole/adlists.list
 
   install -dm755 "$pkgdir"/usr/share/licenses/pihole
   install -Dm644 ${pkgname%-*}-$pkgver/LICENSE "$pkgdir"/usr/share/licenses/pihole/Pi-hole
