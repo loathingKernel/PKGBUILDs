@@ -12,6 +12,7 @@ pkgbase = pi-hole-ftl
 	arch = aarch64
 	license = EUPL-1.2
 	makedepends = cmake
+	makedepends = xxd
 	depends = nettle
 	depends = gmp
 	depends = mbedtls
