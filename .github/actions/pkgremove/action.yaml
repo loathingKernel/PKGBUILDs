@@ -14,14 +14,19 @@ inputs:
     required: true
     default: ""
 outputs:
+  oldfiles:
+    description: "List of removed package archives in JSON format. Usually only one."
   oldfile0:
-    description: "Filename of the first removed package archive. Usually only one."
+    description: "Filename of the 1st removed package archive. Usually only one."
   oldfile1:
     description: "Filename of the 2nd removed package archive."
   oldfile2:
     description: "Filename of the 3rd removed package archive."
   oldfile3:
     description: "Filename of the 4th removed package archive. etc."
+
+  repofiles:
+    description: "List of repository files in JSON format."
   repofile0:
     description: "<repoReleaseTag>.db"
   repofile1:

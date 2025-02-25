@@ -62,6 +62,9 @@ chown -R builder .
 mapfile -t PKGNAMES < <(source PKGBUILD && echo "${pkgname[@]}" | sed 's/ /\n/g' )
 echo "Package name(s): ${PKGNAMES[*]}"
 
+# Install jq to create json arrays from bash arrays
+pacman -Syu --noconfirm jq
+
 if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	# Download database files again in case another action updated them in the meantime
 	download_database
@@ -79,24 +82,31 @@ for PKGNAME in "${PKGNAMES[@]}"; do
 	(( ++i ))
 done
 
+
 if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	# Delete the `<repo_name>.db` and `repo_name.files` symlinks
 	rm "${INPUT_REPORELEASETAG:-}".{db,files}
 	# Copy repo archives to their suffix-less symlinks because symlinks are not uploaded to GitHub releases
 	cp "${INPUT_REPORELEASETAG:-}".db{.tar.gz,}
 	cp "${INPUT_REPORELEASETAG:-}".files{.tar.gz,}
+
 	REPOFILES=("${INPUT_REPORELEASETAG:-}".{db{,.tar.gz},files{,.tar.gz}})
-	j=0
+	j=0; OUTPUT_REPOFILES=();
 	for REPOFILE in "${REPOFILES[@]}"; do
 		RELREPOFILE="$(realpath --relative-base="$BASEDIR" "$(realpath -s "$REPOFILE")")"
 		echo "repofile$j=$RELREPOFILE" >> $GITHUB_OUTPUT
+		OUTPUT_REPOFILES+=("$RELREPOFILE")
 		(( ++j ))
 	done
+	echo "repofiles=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${OUTPUT_REPOFILES[@]}")" >> $GITHUB_OUTPUT
+
 	# List package files removed from the database
 	zcat "${INPUT_REPORELEASETAG:-}".db.tar.gz | strings | grep '.pkg.tar.' | sort > new_db.packages
-	k=0
-	for OLDFILE in $(diff {old,new}_db.packages | grep -E "^<" | cut -c3-);do
+	k=0; OUTPUT_OLDFILES=();
+	for OLDFILE in $(diff {old,new}_db.packages | grep -E "^<" | cut -c3-); do
 		echo "oldfile$k=$OLDFILE" >> $GITHUB_OUTPUT
+		OUTPUT_OLDFILES+=("$OLDFILE")
 		(( ++k ))
 	done
+	echo "oldfiles=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${OUTPUT_OLDFILES[@]}")" >> $GITHUB_OUTPUT
 fi
