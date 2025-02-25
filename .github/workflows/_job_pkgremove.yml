@@ -1,4 +1,4 @@
-name: job_pkgremove
+name: _job_pkgremove
 
 on:
   workflow_call:

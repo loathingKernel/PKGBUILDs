@@ -1,4 +1,4 @@
-name: job_pkgrepo
+name: _job_pkgrepo
 
 on:
   workflow_call:
@@ -35,7 +35,7 @@ concurrency:
 jobs:
   pkgbuild:
     if: ${{ inputs.action == 'build' }}
-    uses: ./.github/workflows/job_pkgbuild.yml
+    uses: ./.github/workflows/_job_pkgbuild.yml
     with:
       pkgdir: ${{ inputs.pkgdir }}
       pacman_conf: .github/conf/${{ inputs.repository }}/pacman.conf
@@ -46,7 +46,7 @@ jobs:
       release_tag: loathk-${{ inputs.repository }}
   pkgremove:
     if: ${{ inputs.action == 'remove' }}
-    uses: ./.github/workflows/job_pkgremove.yml
+    uses: ./.github/workflows/_job_pkgremove.yml
     with:
       pkgdir: ${{ inputs.pkgdir }}
       release_tag: loathk-${{ inputs.repository }}

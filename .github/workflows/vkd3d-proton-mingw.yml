@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         repository: [public, personal]
-    uses: ./.github/workflows/job_pkgrepo.yml
+    uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: public/vkd3d-proton-mingw
       repository: ${{ matrix.repository }}

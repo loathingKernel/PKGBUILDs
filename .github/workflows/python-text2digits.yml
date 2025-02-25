@@ -10,7 +10,7 @@ on:
 
 jobs:
   public:
-    uses: ./.github/workflows/job_pkgbuild.yml
+    uses: ./.github/workflows/_job_pkgbuild.yml
     with:
       pkgdir: public/python-text2digits
       pacman_conf: .github/conf/public_pacman.conf

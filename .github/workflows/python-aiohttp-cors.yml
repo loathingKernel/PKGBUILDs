@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         repository: [public]
-    uses: ./.github/workflows/job_pkgrepo.yml
+    uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: aur/python-aiohttp-cors
       repository: ${{ matrix.repository }}

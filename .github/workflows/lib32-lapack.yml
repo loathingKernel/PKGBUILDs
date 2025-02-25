@@ -24,7 +24,7 @@ jobs:
     strategy:
       matrix:
         repository: [public]
-    uses: ./.github/workflows/job_pkgrepo.yml
+    uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: aur/lib32-lapack
       repository: ${{ matrix.repository }}

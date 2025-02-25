@@ -28,7 +28,7 @@ jobs:
             pkgbuild: PKGBUILD
           - repository: personal
             pkgbuild: PKGBUILD
-    uses: ./.github/workflows/job_pkgrepo.yml
+    uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: extra/gamescope-hasvk
       repository: ${{ matrix.repository }}

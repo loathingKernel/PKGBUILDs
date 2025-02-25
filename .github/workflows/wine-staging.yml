@@ -30,7 +30,7 @@ jobs:
           - repository: personal
             pkgbuild: PKGBUILD.llvm
             multilib: true
-    uses: ./.github/workflows/job_pkgrepo.yml
+    uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: multilib/wine-staging
       repository: ${{ matrix.repository }}

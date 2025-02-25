@@ -1,4 +1,4 @@
-name: job_pkgbuild
+name: _job_pkgbuild
 
 on:
   workflow_call:

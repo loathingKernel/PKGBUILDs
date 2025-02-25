@@ -26,7 +26,7 @@ jobs:
         include:
           - repository: personal
             pkgbuild: PKGBUILD.llvm.lto
-    uses: ./.github/workflows/job_pkgrepo.yml
+    uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: local/linux-zen-elitebook
       repository: ${{ matrix.repository }}

@@ -26,7 +26,7 @@ jobs:
     strategy:
       matrix:
         repository: [public, personal]
-    uses: ./.github/workflows/job_pkgrepo.yml
+    uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: local/dxvk-gplasync-mingw-git
       repository: ${{ matrix.repository }}

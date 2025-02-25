@@ -35,7 +35,7 @@ jobs:
     strategy:
       matrix:
         repository: [public]
-    uses: ./.github/workflows/job_pkgrepo.yml
+    uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: {subdir}/{pkgname}
       repository: ${{{{ matrix.repository }}}}
