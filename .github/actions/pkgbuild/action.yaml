@@ -50,6 +50,8 @@ inputs:
     required: false
     default: ""
 outputs:
+  pkgfiles:
+    description: "List of generated package archives in JSON format. Usually only one."
   pkgfile0:
     description: "Filename of the 1st generated package archive. Usually only one."
   pkgfile1:
@@ -58,6 +60,9 @@ outputs:
     description: "Filename of the 3rd generated package archive."
   pkgfile3:
     description: "Filename of the 4th generated package archive. etc."
+
+  oldfiles:
+    description: "List of removed package archives in JSON format. Usually only one."
   oldfile0:
     description: "Filename of the 1st removed package archive. Usually only one."
   oldfile1:
@@ -66,6 +71,9 @@ outputs:
     description: "Filename of the 3rd removed package archive."
   oldfile3:
     description: "Filename of the 4th removed package archive. etc."
+
+  repofiles:
+    description: "List of repository files in JSON format."
   repofile0:
     description: "<repoReleaseTag>.db"
   repofile1:

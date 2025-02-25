@@ -43,8 +43,8 @@ if [ -n "${INPUT_MAKEPKGCONF:-}" ]; then
 	cp -v "${INPUT_MAKEPKGCONF:-}" /etc/makepkg.conf
     MAKEPKGCONFD="$(dirname "${INPUT_MAKEPKGCONF:-}")"/makepkg.conf.d
     if [ -d "$MAKEPKGCONFD" ]; then
-        for file in $(ls "$MAKEPKGCONFD"); do
-            cp -v "$MAKEPKGCONFD"/"$file" /etc/makepkg.conf.d/"$file"
+        for file in "$MAKEPKGCONFD"/*; do
+            cp -v "$file" /etc/makepkg.conf.d/"$(basename "$file")"
         done
     fi
 fi
@@ -140,6 +140,9 @@ sudo -H -u builder CCACHE_DIR="$BASEDIR/.ccache" makepkg --syncdeps --noconfirm 
 mapfile -t PKGFILES < <( sudo -u builder makepkg --packagelist ${INPUT_MAKEPKGARGS:-})
 echo "Package(s): ${PKGFILES[*]}"
 
+# Install jq to create json arrays from bash arrays
+pacman -Syu --noconfirm jq
+
 if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	# Download database files again in case another action updated them in the meantime
 	download_database
@@ -147,8 +150,9 @@ if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	zcat "${INPUT_REPORELEASETAG:-}".db.tar.gz | strings | grep '.pkg.tar.' | sort > old_db.packages
 fi
 
+
 # Report built package archives
-i=0
+i=0; OUTPUT_PKGFILES=();
 for PKGFILE in "${PKGFILES[@]}"; do
 	# Replace colon (:) in files name because releases don't like it
 	# It seems to not mess with pacman so it doesn't need to be guarded
@@ -164,6 +168,7 @@ for PKGFILE in "${PKGFILES[@]}"; do
 	# Caller arguments to makepkg may mean the pacakge is not built
 	if [ -f "$PKGFILE" ]; then
 		echo "pkgfile$i=$RELPKGFILE" >> $GITHUB_OUTPUT
+		OUTPUT_PKGFILES+=("$RELPKGFILE")
 		# Optionally add the packages to a makeshift repository in GitHub releases
 		if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 			sudo -u builder repo-add "${INPUT_REPORELEASETAG:-}".db.tar.gz "$(basename "$PKGFILE")"
@@ -175,6 +180,8 @@ for PKGFILE in "${PKGFILES[@]}"; do
 	fi
 	(( ++i ))
 done
+echo "pkgfiles=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${OUTPUT_PKGFILES[@]}")" >> $GITHUB_OUTPUT
+
 
 if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	# Delete the `<repo_name>.db` and `repo_name.files` symlinks
@@ -182,21 +189,28 @@ if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	# Copy repo archives to their suffix-less symlinks because symlinks are not uploaded to GitHub releases
 	cp "${INPUT_REPORELEASETAG:-}".db{.tar.gz,}
 	cp "${INPUT_REPORELEASETAG:-}".files{.tar.gz,}
+
 	REPOFILES=("${INPUT_REPORELEASETAG:-}".{db{,.tar.gz},files{,.tar.gz}})
-	j=0
+	j=0; OUTPUT_REPOFILES=();
 	for REPOFILE in "${REPOFILES[@]}"; do
 		RELREPOFILE="$(realpath --relative-base="$BASEDIR" "$(realpath -s "$REPOFILE")")"
 		echo "repofile$j=$RELREPOFILE" >> $GITHUB_OUTPUT
+		OUTPUT_REPOFILES+=("$RELREPOFILE")
 		(( ++j ))
 	done
+	echo "repofiles=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${OUTPUT_REPOFILES[@]}")" >> $GITHUB_OUTPUT
+
 	# List package files removed from the database
 	zcat "${INPUT_REPORELEASETAG:-}".db.tar.gz | strings | grep '.pkg.tar.' | sort > new_db.packages
-	k=0
-	for OLDFILE in $(diff {old,new}_db.packages | grep -E "^<" | cut -c3-);do
+	k=0; OUTPUT_OLDFILES=();
+	for OLDFILE in $(diff {old,new}_db.packages | grep -E "^<" | cut -c3-); do
 		echo "oldfile$k=$OLDFILE" >> $GITHUB_OUTPUT
+		OUTPUT_OLDFILES+=("$OLDFILE")
 		(( ++k ))
 	done
+	echo "oldfiles=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${OUTPUT_OLDFILES[@]}")" >> $GITHUB_OUTPUT
 fi
+
 
 function prepend () {
 	# Prepend the argument to each input line
@@ -204,6 +218,7 @@ function prepend () {
 		echo "$1$line"
 	done
 }
+
 
 function namcap_check() {
 	# Run namcap checks
