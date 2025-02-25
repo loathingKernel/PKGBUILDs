@@ -143,6 +143,7 @@ echo "Package(s): ${PKGFILES[*]}"
 # Install jq to create json arrays from bash arrays
 pacman -Syu --noconfirm jq
 
+
 if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	# Download database files again in case another action updated them in the meantime
 	download_database
@@ -152,9 +153,9 @@ fi
 
 
 # Report built package archives
-i=0; OUTPUT_PKGFILES=();
+OUTPUT_PKGFILES=()
 for PKGFILE in "${PKGFILES[@]}"; do
-	# Replace colon (:) in files name because releases don't like it
+	# Replace colon (:) in file name because releases don't like it
 	# It seems to not mess with pacman so it doesn't need to be guarded
 	srcdir="$(dirname "$PKGFILE")"
 	srcfile="$(basename "$PKGFILE")"
@@ -167,7 +168,6 @@ for PKGFILE in "${PKGFILES[@]}"; do
 	RELPKGFILE="$(realpath --relative-base="$BASEDIR" "$PKGFILE")"
 	# Caller arguments to makepkg may mean the pacakge is not built
 	if [ -f "$PKGFILE" ]; then
-		echo "pkgfile$i=$RELPKGFILE" >> $GITHUB_OUTPUT
 		OUTPUT_PKGFILES+=("$RELPKGFILE")
 		# Optionally add the packages to a makeshift repository in GitHub releases
 		if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
@@ -178,7 +178,6 @@ for PKGFILE in "${PKGFILES[@]}"; do
 	else
 		echo "Archive $RELPKGFILE not built"
 	fi
-	(( ++i ))
 done
 echo "pkgfiles=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${OUTPUT_PKGFILES[@]}")" >> $GITHUB_OUTPUT
 
@@ -191,22 +190,18 @@ if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	cp "${INPUT_REPORELEASETAG:-}".files{.tar.gz,}
 
 	REPOFILES=("${INPUT_REPORELEASETAG:-}".{db{,.tar.gz},files{,.tar.gz}})
-	j=0; OUTPUT_REPOFILES=();
+	OUTPUT_REPOFILES=()
 	for REPOFILE in "${REPOFILES[@]}"; do
 		RELREPOFILE="$(realpath --relative-base="$BASEDIR" "$(realpath -s "$REPOFILE")")"
-		echo "repofile$j=$RELREPOFILE" >> $GITHUB_OUTPUT
 		OUTPUT_REPOFILES+=("$RELREPOFILE")
-		(( ++j ))
 	done
 	echo "repofiles=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${OUTPUT_REPOFILES[@]}")" >> $GITHUB_OUTPUT
 
 	# List package files removed from the database
 	zcat "${INPUT_REPORELEASETAG:-}".db.tar.gz | strings | grep '.pkg.tar.' | sort > new_db.packages
-	k=0; OUTPUT_OLDFILES=();
+	OUTPUT_OLDFILES=()
 	for OLDFILE in $(diff {old,new}_db.packages | grep -E "^<" | cut -c3-); do
-		echo "oldfile$k=$OLDFILE" >> $GITHUB_OUTPUT
 		OUTPUT_OLDFILES+=("$OLDFILE")
-		(( ++k ))
 	done
 	echo "oldfiles=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${OUTPUT_OLDFILES[@]}")" >> $GITHUB_OUTPUT
 fi

@@ -65,6 +65,7 @@ echo "Package name(s): ${PKGNAMES[*]}"
 # Install jq to create json arrays from bash arrays
 pacman -Syu --noconfirm jq
 
+
 if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	# Download database files again in case another action updated them in the meantime
 	download_database
@@ -72,14 +73,13 @@ if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	zcat "${INPUT_REPORELEASETAG:-}".db.tar.gz | strings | grep '.pkg.tar.' | sort > old_db.packages
 fi
 
-i=0
+
 for PKGNAME in "${PKGNAMES[@]}"; do
 	if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 		sudo -u builder repo-remove "${INPUT_REPORELEASETAG:-}".db.tar.gz "$PKGNAME"
 	else
 		echo "Skipping repository update for $RELPKGFILE"
 	fi
-	(( ++i ))
 done
 
 
@@ -91,22 +91,18 @@ if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	cp "${INPUT_REPORELEASETAG:-}".files{.tar.gz,}
 
 	REPOFILES=("${INPUT_REPORELEASETAG:-}".{db{,.tar.gz},files{,.tar.gz}})
-	j=0; OUTPUT_REPOFILES=();
+	OUTPUT_REPOFILES=()
 	for REPOFILE in "${REPOFILES[@]}"; do
 		RELREPOFILE="$(realpath --relative-base="$BASEDIR" "$(realpath -s "$REPOFILE")")"
-		echo "repofile$j=$RELREPOFILE" >> $GITHUB_OUTPUT
 		OUTPUT_REPOFILES+=("$RELREPOFILE")
-		(( ++j ))
 	done
 	echo "repofiles=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${OUTPUT_REPOFILES[@]}")" >> $GITHUB_OUTPUT
 
 	# List package files removed from the database
 	zcat "${INPUT_REPORELEASETAG:-}".db.tar.gz | strings | grep '.pkg.tar.' | sort > new_db.packages
-	k=0; OUTPUT_OLDFILES=();
+	OUTPUT_OLDFILES=()
 	for OLDFILE in $(diff {old,new}_db.packages | grep -E "^<" | cut -c3-); do
-		echo "oldfile$k=$OLDFILE" >> $GITHUB_OUTPUT
 		OUTPUT_OLDFILES+=("$OLDFILE")
-		(( ++k ))
 	done
 	echo "oldfiles=$(jq --compact-output --null-input '$ARGS.positional' --args -- "${OUTPUT_OLDFILES[@]}")" >> $GITHUB_OUTPUT
 fi
