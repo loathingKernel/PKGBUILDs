@@ -1,0 +1,22 @@
+name: repofiles
+description: Upload repository database to release
+inputs:
+  repofiles:
+    required: true
+    type: string
+  release_tag:
+    required: true
+    type: string
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        for file in $REPOFILES
+        do
+          echo "Uploading package file $file"
+          gh release upload ${{ inputs.release_tag }} $file --clobber
+        done
+      env:
+        REPOFILES: ${{ join(fromJSON(inputs.repofiles), ' ') }}
+        GITHUB_TOKEN: ${{ github.token }}

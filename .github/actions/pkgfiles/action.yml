@@ -1,0 +1,22 @@
+name: pkgfiles
+description: Upload new package artifacts to release
+inputs:
+  pkgfiles:
+    required: true
+    type: string
+  release_tag:
+    required: true
+    type: string
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        for file in $PKGFILES
+        do
+          echo "Uploading package file $file"
+          gh release upload ${{ inputs.release_tag }} $file --clobber
+        done
+      env:
+        PKGFILES: ${{ join(fromJSON(inputs.pkgfiles), ' ') }}
+        GITHUB_TOKEN: ${{ github.token }}

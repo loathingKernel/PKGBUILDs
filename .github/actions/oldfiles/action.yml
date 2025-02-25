@@ -1,0 +1,22 @@
+name: oldfiles
+description: Remove old package artifacts from release
+inputs:
+  oldfiles:
+    required: true
+    type: string
+  release_tag:
+    required: true
+    type: string
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        for file in $OLDFILES
+        do
+          echo "Uploading package file $file"
+          gh release delete-asset ${{ inputs.release_tag }} $file --yes
+        done
+      env:
+        OLDFILES: ${{ join(fromJSON(inputs.oldfiles), ' ') }}
+        GITHUB_TOKEN: ${{ github.token }}

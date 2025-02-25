@@ -55,117 +55,32 @@ jobs:
         repoReleaseTag: ${{ inputs.release_tag }}
 
     - name: Print Package Files
+      env:
+        PKGFILES: ${{ join(fromJSON(steps.pkgbuild.outputs.pkgfiles), ' ') }}
+        REPOFILES: ${{ join(fromJSON(steps.pkgbuild.outputs.repofiles), ' ') }}
+        OLDFILES: ${{ join(fromJSON(steps.pkgbuild.outputs.oldfiles), ' ') }}
       run: |
         echo "* Successfully built package archives"
-        echo "    ${{ steps.pkgbuild.outputs.pkgfile0 }}"
-        echo "    ${{ steps.pkgbuild.outputs.pkgfile1 }}"
-        echo "    ${{ steps.pkgbuild.outputs.pkgfile2 }}"
-        echo "    ${{ steps.pkgbuild.outputs.pkgfile3 }}"
-        echo "* Replacing package archives"
-        echo "    ${{ steps.pkgbuild.outputs.oldfile0 }}"
-        echo "    ${{ steps.pkgbuild.outputs.oldfile1 }}"
-        echo "    ${{ steps.pkgbuild.outputs.oldfile2 }}"
-        echo "    ${{ steps.pkgbuild.outputs.oldfile3 }}"
+        for file in $PKGFILES; do echo "    $file"; done
         echo "* Repository database files"
-        echo "    ${{ steps.pkgbuild.outputs.repofile0 }}"
-        echo "    ${{ steps.pkgbuild.outputs.repofile1 }}"
-        echo "    ${{ steps.pkgbuild.outputs.repofile2 }}"
-        echo "    ${{ steps.pkgbuild.outputs.repofile3 }}"
+        for file in $REPOFILES; do echo "    $file"; done
+        echo "* Removing package archives"
+        for file in $OLDFILES; do echo "    $file"; done
 
-    - uses: svenstaro/upload-release-action@v2
-      name: Upload ${{ steps.pkgbuild.outputs.pkgfile0 }}
+    - uses: ./.github/actions/pkgfiles
+      name: Upload new package artifacts
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        file: ${{ steps.pkgbuild.outputs.pkgfile0 }}
-        overwrite: true
-    - uses: svenstaro/upload-release-action@v2
-      name: Upload ${{ steps.pkgbuild.outputs.pkgfile1 }}
-      if: ${{ steps.pkgbuild.outputs.pkgfile1 != '' }}
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        file: ${{ steps.pkgbuild.outputs.pkgfile1 }}
-        overwrite: true
-    - uses: svenstaro/upload-release-action@v2
-      name: Upload ${{ steps.pkgbuild.outputs.pkgfile2 }}
-      if: ${{ steps.pkgbuild.outputs.pkgfile2 != '' }}
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        file: ${{ steps.pkgbuild.outputs.pkgfile2 }}
-        overwrite: true
-    - uses: svenstaro/upload-release-action@v2
-      name: Upload ${{ steps.pkgbuild.outputs.pkgfile3 }}
-      if: ${{ steps.pkgbuild.outputs.pkgfile3 != '' }}
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        file: ${{ steps.pkgbuild.outputs.pkgfile3 }}
-        overwrite: true
+        release_tag: ${{ inputs.release_tag }}
+        pkgfiles: ${{ steps.pkgbuild.outputs.pkgfiles }}
 
-    - uses: svenstaro/upload-release-action@v2
-      name: Upload ${{ steps.pkgbuild.outputs.repofile0 }}
+    - uses: ./.github/actions/repofiles
+      name: Upload repository database
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        file: ${{ steps.pkgbuild.outputs.repofile0 }}
-        overwrite: true
-    - uses: svenstaro/upload-release-action@v2
-      name: Upload ${{ steps.pkgbuild.outputs.repofile1 }}
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        file: ${{ steps.pkgbuild.outputs.repofile1 }}
-        overwrite: true
-    - uses: svenstaro/upload-release-action@v2
-      name: Upload ${{ steps.pkgbuild.outputs.repofile2 }}
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        file: ${{ steps.pkgbuild.outputs.repofile2 }}
-        overwrite: true
-    - uses: svenstaro/upload-release-action@v2
-      name: Upload ${{ steps.pkgbuild.outputs.repofile3 }}
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        file: ${{ steps.pkgbuild.outputs.repofile3 }}
-        overwrite: true
+        release_tag: ${{ inputs.release_tag }}
+        repofiles: ${{ steps.pkgbuild.outputs.repofiles }}
 
-    - uses: mknejp/delete-release-assets@v1
-      name: Remove ${{ steps.pkgbuild.outputs.oldfile0 }}
-      if: ${{ steps.pkgbuild.outputs.oldfile0 != '' }}
+    - uses: ./.github/actions/oldfiles
+      name: Remove old package artifacts
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        fail-if-no-assets: false
-        fail-if-no-release: true
-        assets: ${{ steps.pkgbuild.outputs.oldfile0 }}
-    - uses: mknejp/delete-release-assets@v1
-      name: Remove ${{ steps.pkgbuild.outputs.oldfile1 }}
-      if: ${{ steps.pkgbuild.outputs.oldfile1 != '' }}
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        assets: ${{ steps.pkgbuild.outputs.oldfile1 }}
-        fail-if-no-assets: false
-        fail-if-no-release: true
-    - uses: mknejp/delete-release-assets@v1
-      name: Remove ${{ steps.pkgbuild.outputs.oldfile2 }}
-      if: ${{ steps.pkgbuild.outputs.oldfile2 != '' }}
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        assets: ${{ steps.pkgbuild.outputs.oldfile2 }}
-        fail-if-no-assets: false
-        fail-if-no-release: true
-    - uses: mknejp/delete-release-assets@v1
-      name: Remove ${{ steps.pkgbuild.outputs.oldfile3 }}
-      if: ${{ steps.pkgbuild.outputs.oldfile3 != '' }}
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ inputs.release_tag }}
-        assets: ${{ steps.pkgbuild.outputs.oldfile3 }}
-        fail-if-no-assets: false
-        fail-if-no-release: true
+        release_tag: ${{ inputs.release_tag }}
+        oldfiles: ${{ steps.pkgbuild.outputs.oldfiles }}
