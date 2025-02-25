@@ -2,7 +2,7 @@
 
 pkgname=dxvk-mingw
 pkgver=2.5.3
-pkgrel=3
+pkgrel=4
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
@@ -102,5 +102,5 @@ package() {
 
 sha256sums=('5b9a483de6b7aeafb900bcaeae3163106c47787ad741d9d3cfe2cabc08d9fa53'
             'bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362'
-            '3f725b125c97461b1835d5edeb42360777b30f4c4f889c41ac6f8efb3e2365ae'
+            'b562e8dc9539ef3cd1554c6679eef10aacf21103403d7390a141a41ae146b7a6'
             'c1f6a18b03d1612b60f8081428f00cfac5e66315fe9d42719f01cf5564deeeff')
