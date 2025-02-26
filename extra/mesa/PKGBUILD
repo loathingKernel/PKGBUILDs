@@ -183,7 +183,7 @@ build() {
     -D gallium-rusticl=true
     -D gles1=disabled
     -D glx=dri
-    -D html-docs=enabled
+    -D html-docs=disabled
     -D intel-clc=enabled
     -D intel-rt=enabled
     -D libunwind=disabled
