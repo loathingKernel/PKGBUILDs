@@ -19,3 +19,4 @@ fi
 repo="$(basename "$1")"
 #git subtree split --prefix="$1" --rejoin
 git subtree pull --prefix="$1" ssh://aur@aur.archlinux.org/"$repo".git master
+

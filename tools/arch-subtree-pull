@@ -16,10 +16,7 @@ if [[ ! -d "$(pwd)/.git" ]]; then
     exit 2
 fi
 
-for arg in "$@"; do
-    repo="$(basename "$arg")"
-    #git subtree split --prefix="$1" --rejoin
-    git subtree push --prefix="$1" ssh://aur@aur.archlinux.org/"$repo".git master
-    #git gc --prune=now
-done
+repo="$(basename "$1")"
+#git subtree split --prefix="$1" --rejoin
+git subtree pull --prefix="$1" ssh://git@gitlab.archlinux.org/archlinux/packaging/packages/"$repo".git main
 
