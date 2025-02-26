@@ -15,7 +15,6 @@ pkgname=(
   vulkan-radeon
   vulkan-swrast
   vulkan-virtio
-  mesa-docs
 )
 pkgver=24.3.4
 pkgrel=1
@@ -291,8 +290,6 @@ package_mesa() {
     _pick vkvirtio $icddir/virtio_icd*.json
     _pick vkvirtio $libdir/libvulkan_virtio.so
 
-    _pick docs usr/share/doc
-
     # indirect rendering
     ln -sr $libdir/libGLX_{mesa,indirect}.so.0
   )
@@ -502,14 +499,6 @@ package_vulkan-virtio() {
   provides=(vulkan-driver)
 
   mv vkvirtio/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_mesa-docs() {
-  pkgdesc="Mesa's documentation"
-
-  mv docs/* "$pkgdir"
 
   install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
