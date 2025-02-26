@@ -25,14 +25,11 @@ jobs:
         repoReleaseTag: ${{ inputs.release_tag }}
 
     - name: Print Package Files
-      env:
-        REPOFILES: ${{ join(fromJSON(steps.pkgbuild.outputs.repofiles), ' ') }}
-        OLDFILES: ${{ join(fromJSON(steps.pkgbuild.outputs.oldfiles), ' ') }}
       run: |
         echo "* Repository database files"
-        for file in $REPOFILES; do echo "    $file"; done
+        for file in ${{ join(fromJSON(steps.pkgbuild.outputs.repofiles), ' ') }}; do echo "    $file"; done
         echo "* Removing package archives"
-        for file in $OLDFILES; do echo "    $file"; done
+        for file in ${{ join(fromJSON(steps.pkgbuild.outputs.oldfiles), ' ') }}; do echo "    $file"; done
 
     - uses: ./.github/actions/repofiles
       name: Upload repository database

@@ -15,7 +15,7 @@ runs:
         for file in $OLDFILES
         do
           echo "Uploading package file $file"
-          gh release delete-asset ${{ inputs.release_tag }} $file --yes
+          gh release delete-asset ${{ inputs.release_tag }} $file --yes || true
         done
       env:
         OLDFILES: ${{ join(fromJSON(inputs.oldfiles), ' ') }}
