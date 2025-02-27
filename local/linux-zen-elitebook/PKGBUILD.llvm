@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=6.12.8.zen1
+pkgver=6.13.4.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Elitebook LLVM'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -38,18 +38,18 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('2291da065ca04b715c89ee50362aec3f021a7414bc963f1b56736682c8122979'
+sha256sums=('b80e0bc8efbc31e9ce5a84d1084dcccfa40e01bea8cc25afd06648b93d61339e'
             'SKIP'
-            '80af8dd7e2842038d95989983fab61e207a8727928af63c4c7c214905e2549ae'
+            'e1c6382a9bc0664da5e344de07413d2773eadc8002db3aba260d0512d310cea9'
             'SKIP'
             '6d762ccc8ce1e88e2c63b9f15c5e7a7d563f7d48a6276d6b108626f506b20f9c'
-            '107d53b37882deb07653d6a9679eafd2ae0a3f99e157f37ec6c5e8ee2170cbee')
-b2sums=('62a3f435bbe7d24bea361f2545ba50f8b36030a98bd28d0979b86052d8af34dc7a4c27f7ca2890daba5e5bb51f5848e6b21cd5df4dbbd19919867bf67d38790d'
+            '457681b58e2e6d67c8445784b5ba3bef652eed91865d77eebe097fbd5e2a29cd')
+b2sums=('2fe8e972e7de458fba6fbb18a08a01f17b49e4a2d31aa1368e50895a2698c6e1aaaf5137d0c0018860de3fe598e4ba425d6126ade7387ba227f690137111a66d'
         'SKIP'
-        'd1d29422c79f7423c1482377cb0d1f26b08973c65cc01d7c6fcebb31ff0eaf2c9f2c2a569806cf38642b48bca06a6b9f096bdd6f9dea1f6a3176518f742d8b26'
+        'eb14739a625f7d6ab4bf60fcaafd8d00ae2a060518c4d42fc7ce56b1037750211ccfae248cffa306352c1a1a6c4ce0640953e13b5a91c69adf820fc80a9b74e7'
         'SKIP'
         'a8b108f62e6bcf95803f1b4a5fd3f9b578ac5be21e151645f1f466f83b7a9eb54a433f4a7773aee0f6a60e21b66f10544c6c1d5d321693278d9b4aded7e894fb'
-        '17c250c9aa049926825a06c9206748c5e30c0d270c56fe8effe6997203f60a96ae3b19272b29e0e120db1611507b6569834a3d2bcc67b38089a5d026d13983cc')
+        '488bcd4d04d34ab7caf648889e6ce22ab751e4de2c71074062274bc6fb8b0e1a0330451b0ccab15f2a13e6aa9d4583732a06c76e10e0ec063b862e8af1c43855')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
