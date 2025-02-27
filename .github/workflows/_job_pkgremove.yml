@@ -31,14 +31,14 @@ jobs:
         echo "* Removing package archives"
         for file in ${{ join(fromJSON(steps.pkgbuild.outputs.oldfiles), ' ') }}; do echo "    $file"; done
 
-    - uses: ./.github/actions/repofiles
+    - uses: ./.github/actions/assets-upload
       name: Upload repository database
       with:
         release_tag: ${{ inputs.release_tag }}
-        repofiles: ${{ steps.pkgbuild.outputs.repofiles }}
+        assets: ${{ steps.pkgbuild.outputs.repofiles }}
 
-    - uses: ./.github/actions/oldfiles
+    - uses: ./.github/actions/assets-delete
       name: Remove old package artifacts
       with:
         release_tag: ${{ inputs.release_tag }}
-        oldfiles: ${{ steps.pkgbuild.outputs.oldfiles }}
+        assets: ${{ steps.pkgbuild.outputs.oldfiles }}

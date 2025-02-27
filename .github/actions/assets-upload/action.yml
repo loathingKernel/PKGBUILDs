@@ -1,0 +1,23 @@
+name: assets-upload
+description: Upload new assets to a release
+inputs:
+  assets:
+    description: List of assets to upload to a release in JSON format.
+    required: true
+    type: string
+  release_tag:
+    required: true
+    type: string
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        for file in $ASSETS
+        do
+          echo "Uploading asset $file"
+          gh release upload ${{ inputs.release_tag }} "$file" --clobber
+        done
+      env:
+        ASSETS: ${{ join(fromJSON(inputs.assets), ' ') }}
+        GITHUB_TOKEN: ${{ github.token }}

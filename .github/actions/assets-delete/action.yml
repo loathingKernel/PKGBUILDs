@@ -1,0 +1,23 @@
+name: assets-delete
+description: Delete old assets from a release
+inputs:
+  assets:
+    description: List of assets to delete from a release in JSON format.
+    required: true
+    type: string
+  release_tag:
+    required: true
+    type: string
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        for file in $ASSETS
+        do
+          echo "Deleting asset $file"
+          gh release delete-asset ${{ inputs.release_tag }} "$file" --yes || true
+        done
+      env:
+        ASSETS: ${{ join(fromJSON(inputs.assets), ' ') }}
+        GITHUB_TOKEN: ${{ github.token }}
