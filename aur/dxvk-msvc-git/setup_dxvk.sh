@@ -53,7 +53,7 @@ export WINEDEBUG="${WINEDEBUG:--all}"
 export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-}${WINEDLLOVERRIDES:+,}mscoree,mshtml="
 
 wine="$(which "${WINE:-wine}")"
-[ -z "$wine" ] && wine="$(which "${wine}64")"
+[ -z "$wine" ] && wine="$(which "${WINE:-wine}64")"
 
 # resolve 32-bit and 64-bit system32 path
 winever=$($wine --version | grep wine)
