@@ -246,7 +246,7 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('97fafc7fca87440364f84aa9233accfe15f404ab6fc08d3e7f15000da34adb95'
+sha256sums=('69396d29bc2ef2c3cd1d5ad3a27b0c2ff5678380f62cdcae29ff8e0f4a1dff14'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '32eff652b96390f04fb52ee695fc3a6d197b1bb616ed2df7e25119fe5700c950'
