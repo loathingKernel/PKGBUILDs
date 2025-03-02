@@ -1,4 +1,4 @@
-pkgver=20250302
+pkgver=25.03.02
 pkgname=millennium
 pkgrel=1
 pkgdesc="Millennium is an open-source low-code modding framework to create, manage and use themes/plugins for the desktop Steam Client without any low-level internal interaction or overhead."
