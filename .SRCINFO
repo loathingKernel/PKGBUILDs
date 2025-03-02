@@ -22,6 +22,7 @@ pkgbase = millennium
 	depends = libffi
 	depends = sqlite
 	depends = xz
+	depends = python-i686-bin
 	options = !debug
 	source = git+https://github.com/shdwmtr/millennium.git
 	sha256sums = SKIP
