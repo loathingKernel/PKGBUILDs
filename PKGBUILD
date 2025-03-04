@@ -1,4 +1,4 @@
-pkgver=25.03.02
+pkgver=25.03.04
 pkgname=millennium
 pkgrel=1
 pkgdesc="Millennium is an open-source low-code modding framework to create, manage and use themes/plugins for the desktop Steam Client without any low-level internal interaction or overhead."
@@ -65,8 +65,6 @@ package() {
     install -Dm755 build/cli/millennium "$pkgdir/usr/bin/millennium"
     
     mkdir -p "$pkgdir/usr/lib/millennium"
-    cp "/opt/python-i686-3.11.8/lib/libpython-3.11.8.so" "$pkgdir/usr/lib/millennium/libpython-3.11.8.so"
-
     mkdir -p "$pkgdir/usr/share/millennium/shims"
 
     cp -r ./node_modules/@steambrew/api/dist/webkit_api.js "$pkgdir/usr/share/millennium/shims/webkit_api.js"
