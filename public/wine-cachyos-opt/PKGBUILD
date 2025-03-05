@@ -10,7 +10,7 @@ _srctag=9.0-20250227
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.1
-pkgrel=1
+pkgrel=2
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -32,79 +32,69 @@ url="https://github.com/CachyOS/wine-cachyos"
 arch=(x86_64 x86_64_v3)
 options=(!staticlibs !lto !debug)
 license=(LGPL-2.1-or-later)
-
 depends=(
-  attr             lib32-attr
-  fontconfig       lib32-fontconfig
-  libxcursor       lib32-libxcursor
-  libxrandr        lib32-libxrandr
-  libxi            lib32-libxi
-  gettext          lib32-gettext
-  freetype2        lib32-freetype2
-  llvm-libs        lib32-llvm-libs
-  libpcap          lib32-libpcap
+  attr            lib32-attr
   desktop-file-utils
+  fontconfig      lib32-fontconfig
+  freetype2       lib32-freetype2
+  llvm-libs       lib32-llvm-libs
+  gettext         lib32-gettext
+  libpcap         lib32-libpcap
+  libxcursor      lib32-libxcursor
+  libxkbcommon    lib32-libxkbcommon
+  libxi           lib32-libxi
+  libxrandr       lib32-libxrandr
+  wayland         lib32-wayland
 )
-depends+=(
-  libxkbcommon     lib32-libxkbcommon
-  wayland          lib32-wayland
-)
-
 makedepends=(autoconf bison perl flex clang lld
   git
-  python
-  llvm                  lib32-llvm
+  alsa-lib              lib32-alsa-lib
+  ffmpeg
   giflib                lib32-giflib
   gnutls                lib32-gnutls
+  gst-plugins-base-libs lib32-gst-plugins-base-libs
+  gst-plugins-good      lib32-gst-plugins-good
+  gtk3                  lib32-gtk3
+  libcups               lib32-libcups
+  libgphoto2
+  libpulse              lib32-libpulse
+  libva                 lib32-libva
+  libxcomposite         lib32-libxcomposite
   libxinerama           lib32-libxinerama
-  libxcomposite         lib32-libxcomposite
   libxxf86vm            lib32-libxxf86vm
-  v4l-utils             lib32-v4l-utils
-  alsa-lib              lib32-alsa-lib
-  libxcomposite         lib32-libxcomposite
   mesa                  lib32-mesa
   mesa-libgl            lib32-mesa-libgl
-  opencl-icd-loader     lib32-opencl-icd-loader
-  libpulse              lib32-libpulse
-  libva                 lib32-libva
-  gtk3                  lib32-gtk3
-  gst-plugins-base-libs lib32-gst-plugins-base-libs
-  gst-plugins-good      lib32-gst-plugins-good
-  vulkan-icd-loader     lib32-vulkan-icd-loader
-  sdl2                  lib32-sdl2
-  libcups               lib32-libcups
-  sane
-  libgphoto2
-  ffmpeg
-  samba
   opencl-headers
-  git
+  opencl-icd-loader     lib32-opencl-icd-loader
+  python
+  samba
+  sane
+  sdl2                  lib32-sdl2
+  v4l-utils             lib32-v4l-utils
+  vulkan-icd-loader     lib32-vulkan-icd-loader
 )
-
 optdepends=(
+  alsa-lib              lib32-alsa-lib
+  alsa-plugins          lib32-alsa-plugins
+  cups                  lib32-libcups
+  dosbox
+  ffmpeg
   giflib                lib32-giflib
   gnutls                lib32-gnutls
-  v4l-utils             lib32-v4l-utils
+  gst-plugins-base-libs lib32-gst-plugins-base-libs
+  gst-plugins-good      lib32-gst-plugins-good
+  gtk3                  lib32-gtk3
+  libgphoto2
   libpulse              lib32-libpulse
-  alsa-plugins          lib32-alsa-plugins
-  alsa-lib              lib32-alsa-lib
+  libva                 lib32-libva
   libxcomposite         lib32-libxcomposite
   libxinerama           lib32-libxinerama
   opencl-icd-loader     lib32-opencl-icd-loader
-  libva                 lib32-libva
-  gtk3                  lib32-gtk3
-  gst-plugins-base-libs lib32-gst-plugins-base-libs
-  gst-plugins-good      lib32-gst-plugins-good
-  vulkan-icd-loader     lib32-vulkan-icd-loader
-  sdl2                  lib32-sdl2
+  samba
   sane
-  libgphoto2
-  ffmpeg
-  cups
-  samba           dosbox
-)
-optdepends+=(
-  wine
+  sdl2                  lib32-sdl2
+  v4l-utils             lib32-v4l-utils
+  vulkan-icd-loader     lib32-vulkan-icd-loader
 )
 
 install=wine.install
@@ -157,10 +147,7 @@ build() {
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
   export CROSSLDFLAGS="-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF"
 
-  cd "$srcdir"
-
-  msg2 "Building Wine-64..."
-
+  echo "Building Wine-64..."
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
@@ -178,14 +165,12 @@ build() {
     --without-oss \
     --disable-winemenubuilder \
     --disable-tests \
-    --enable-win64 \
-    --with-xattr
+    --with-xattr \
+    --enable-win64
 
   make
 
-  msg2 "Building Wine-32..."
-
-  # Disable AVX instead of using 02, for 32bit
+  echo "Building Wine-32..."
   export CFLAGS="$COMMON_FLAGS -mstackrealign $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign"
@@ -194,6 +179,7 @@ build() {
   cd "$srcdir/${pkgname//-opt}-32-build"
   ../${pkgname//-opt}/configure \
     --prefix=/opt/"${pkgname//-opt}" \
+    --libdir=/opt/"${pkgname//-opt}"/lib \
     --with-x \
     --with-wayland \
     --with-gstreamer \
@@ -203,27 +189,26 @@ build() {
     --disable-winemenubuilder \
     --disable-tests \
     --with-xattr \
-    --libdir=/opt/"${pkgname//-opt}"/lib32 \
     --with-wine64="$srcdir/${pkgname//-opt}-64-build"
 
   make
 }
 
 package() {
-  msg2 "Packaging Wine-32..."
+  echo "Packaging Wine-32..."
   cd "$srcdir/${pkgname//-opt}-32-build"
   make prefix="$pkgdir/opt/${pkgname//-opt}" \
-    libdir="$pkgdir/opt/${pkgname//-opt}/lib32" \
-    dlldir="$pkgdir/opt/${pkgname//-opt}/lib32/wine" install-lib
+    libdir="$pkgdir/opt/${pkgname//-opt}/lib" \
+    dlldir="$pkgdir/opt/${pkgname//-opt}/lib/wine" install-lib
 
-  msg2 "Packaging Wine-64..."
+  echo "Packaging Wine-64..."
   cd "$srcdir/${pkgname//-opt}-64-build"
   make prefix="$pkgdir/opt/${pkgname//-opt}" \
     libdir="$pkgdir/opt/${pkgname//-opt}/lib" \
     dlldir="$pkgdir/opt/${pkgname//-opt}/lib/wine" install-lib
 
 
-  llvm-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib32/wine/i386-windows/*.{dll,exe}
+  llvm-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib/wine/i386-windows/*.{dll,exe}
   llvm-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib/wine/x86_64-windows/*.{dll,exe}
 
   find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.a" -delete
