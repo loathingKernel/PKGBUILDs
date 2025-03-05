@@ -37,7 +37,7 @@ depends=(
   desktop-file-utils
   fontconfig      lib32-fontconfig
   freetype2       lib32-freetype2
-  llvm-libs       lib32-llvm-libs
+  gcc-libs        lib32-gcc-libs
   gettext         lib32-gettext
   libpcap         lib32-libpcap
   libxcursor      lib32-libxcursor
@@ -46,7 +46,7 @@ depends=(
   libxrandr       lib32-libxrandr
   wayland         lib32-wayland
 )
-makedepends=(autoconf bison perl flex clang lld
+makedepends=(autoconf bison perl flex mingw-w64-gcc
   git
   alsa-lib              lib32-alsa-lib
   ffmpeg
@@ -116,8 +116,6 @@ prepare() {
 }
 
 build() {
-  export CC="clang"
-  export CXX="clang++"
 
   local -a split=($CFLAGS)
   local -A flags
@@ -126,26 +124,21 @@ build() {
   local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
-  #STRIP_FLAGS="-s"
+  STRIP_FLAGS="-s"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS $STRIP_FLAGS"
-  LTO_CFLAGS="-flto=thin -D__LLD_LTO__"
+  #LTO_CFLAGS="-fuse-linker-plugin -fdevirtualize-at-ltrans -flto-partition=one -flto -Wl,-flto"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-  LTO_LDFLAGS="-flto=thin -fuse-ld=lld"
-
-  # Per component CFLAGS and LDFlAGS (requires makedep patch)
-  export preloader_CFLAGS=" -fno-lto -Wl,--no-relax"
-  export wine64_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
-  export wine_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
+  #LTO_LDFLAGS="$LTO_CFLAGS"
 
   # Disable assertions
   #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
 
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
-  export CROSSLDFLAGS="-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF"
+  export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
 
   echo "Building Wine-64..."
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
@@ -160,7 +153,7 @@ build() {
     --with-x \
     --with-wayland \
     --with-gstreamer \
-    --with-mingw=clang \
+    --with-mingw \
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
@@ -183,7 +176,7 @@ build() {
     --with-x \
     --with-wayland \
     --with-gstreamer \
-    --with-mingw=clang \
+    --with-mingw \
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
@@ -208,8 +201,8 @@ package() {
     dlldir="$pkgdir/opt/${pkgname//-opt}/lib/wine" install-lib
 
 
-  llvm-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib/wine/i386-windows/*.{dll,exe}
-  llvm-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib/wine/x86_64-windows/*.{dll,exe}
+  i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib/wine/i386-windows/*.{dll,exe}
+  x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/opt/"${pkgname//-opt}"/lib/wine/x86_64-windows/*.{dll,exe}
 
   find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.a" -delete
   find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.def" -delete
