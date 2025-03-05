@@ -37,7 +37,7 @@ depends=(
   desktop-file-utils
   fontconfig      lib32-fontconfig
   freetype2       lib32-freetype2
-  gcc-libs        lib32-gcc-libs
+  llvm-libs       lib32-llvm-libs
   gettext         lib32-gettext
   libpcap         lib32-libpcap
   libxcursor      lib32-libxcursor
@@ -46,7 +46,7 @@ depends=(
   libxrandr       lib32-libxrandr
   wayland         lib32-wayland
 )
-makedepends=(autoconf bison perl flex mingw-w64-gcc
+makedepends=(autoconf bison perl flex clang llvm lld
   git
   alsa-lib              lib32-alsa-lib
   ffmpeg
@@ -126,21 +126,26 @@ build() {
   local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
-  STRIP_FLAGS="-s"
+  #STRIP_FLAGS="-s"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS $STRIP_FLAGS"
-  #LTO_CFLAGS="-fuse-linker-plugin -fdevirtualize-at-ltrans -flto-partition=one -flto -Wl,-flto"
+  LTO_CFLAGS="-flto=thin -D__LLD_LTO__"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-  #LTO_LDFLAGS="$LTO_CFLAGS"
+  LTO_LDFLAGS="-flto=thin -fuse-ld=lld"
+
+  # Per component CFLAGS and LDFlAGS (requires makedep patch)
+  export preloader_CFLAGS=" -fno-lto -Wl,--no-relax"
+  export wine64_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
+  export wine_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
 
   # Disable assertions
   #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
 
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
-  export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
+  export CROSSLDFLAGS="-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF"
 
   echo "Building Wine-64..."
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
@@ -155,7 +160,7 @@ build() {
     --with-x \
     --with-wayland \
     --with-gstreamer \
-    --with-mingw \
+    --with-mingw=clang \
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
@@ -178,7 +183,7 @@ build() {
     --with-x \
     --with-wayland \
     --with-gstreamer \
-    --with-mingw \
+    --with-mingw=clang \
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
