@@ -10,7 +10,7 @@ _srctag=9.0-20250227
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.1
-pkgrel=1
+pkgrel=2
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -37,7 +37,7 @@ depends=(
   desktop-file-utils
   fontconfig      lib32-fontconfig
   freetype2       lib32-freetype2
-  llvm-libs       lib32-llvm-libs
+  gcc-libs        lib32-gcc-libs
   gettext         lib32-gettext
   libpcap         lib32-libpcap
   libxcursor      lib32-libxcursor
@@ -118,8 +118,6 @@ prepare() {
 }
 
 build() {
-  export CC="clang"
-  export CXX="clang++"
 
   local -a split=($CFLAGS)
   local -A flags
@@ -128,31 +126,23 @@ build() {
   local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
-  #STRIP_FLAGS="-s"
+  STRIP_FLAGS="-s"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS $STRIP_FLAGS"
-  LTO_CFLAGS="-flto=thin -D__LLD_LTO__"
+  #LTO_CFLAGS="-fuse-linker-plugin -fdevirtualize-at-ltrans -flto-partition=one -flto -Wl,-flto"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-  LTO_LDFLAGS="-flto=thin -fuse-ld=lld"
-
-  # Per component CFLAGS and LDFlAGS (requires makedep patch)
-  export preloader_CFLAGS=" -fno-lto -Wl,--no-relax"
-  export wine64_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
-  export wine_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
+  #LTO_LDFLAGS="$LTO_CFLAGS"
 
   # Disable assertions
   #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
 
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
-  export CROSSLDFLAGS="-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF"
+  export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
 
-  cd "$srcdir"
-
-  msg2 "Building Wine-64..."
-
+  echo "Building Wine-64..."
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
@@ -165,7 +155,7 @@ build() {
     --with-x \
     --with-wayland \
     --with-gstreamer \
-    --with-mingw=clang \
+    --with-mingw \
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
@@ -175,9 +165,7 @@ build() {
 
   make
 
-  msg2 "Building Wine-32..."
-
-  # Disable AVX instead of using 02, for 32bit
+  echo "Building Wine-32..."
   export CFLAGS="$COMMON_FLAGS -mstackrealign $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign"
@@ -186,11 +174,11 @@ build() {
   cd "$srcdir/$pkgname-32-build"
   ../$pkgname/configure \
     --prefix=/usr \
-    --libdir=/usr/lib32 \
+    --libdir=/usr/lib \
     --with-x \
     --with-wayland \
     --with-gstreamer \
-    --with-mingw=clang \
+    --with-mingw \
     --with-alsa \
     --without-oss \
     --disable-winemenubuilder \
@@ -202,13 +190,13 @@ build() {
 }
 
 package() {
-  msg2 "Packaging Wine-32..."
+  echo "Packaging Wine-32..."
   cd "$srcdir/$pkgname-32-build"
   make prefix="$pkgdir/usr" \
-    libdir="$pkgdir/usr/lib32" \
-    dlldir="$pkgdir/usr/lib32/wine" install
+    libdir="$pkgdir/usr/lib" \
+    dlldir="$pkgdir/usr/lib/wine" install
 
-  msg2 "Packaging Wine-64..."
+  echo "Packaging Wine-64..."
   cd "$srcdir/$pkgname-64-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
@@ -220,11 +208,11 @@ package() {
   ln -s ../conf.avail/30-win32-aliases.conf "$pkgdir/usr/share/fontconfig/conf.default/30-win32-aliases.conf"
   install -Dm 644 "$srcdir/wine-binfmt.conf" "$pkgdir/usr/lib/binfmt.d/wine.conf"
 
-  llvm-strip --strip-unneeded "$pkgdir"/usr/lib32/wine/i386-windows/*.{dll,exe}
-  llvm-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe}
+  i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.{dll,exe}
+  x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe}
 
-  #find "$pkgdir"/usr/lib{,32}/wine -iname "*.a" -delete
-  #find "$pkgdir"/usr/lib{,32}/wine -iname "*.def" -delete
+  #find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
+  #find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
 
   # Install wine-gecko
   cd "$srcdir"
