@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=10.2
-pkgrel=2
+pkgrel=3
 _tkg_commit=21d3c43e7c4d5e817657ad9f3e21616b2c5de52a
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -161,14 +161,14 @@ build() {
   export CROSSCXXFLAGS="-O2 -pipe -g"
   export CROSSLDFLAGS="-Wl,-O1"
 
-  export CC="clang"
-  export CXX="clang++"
-
   local -a split=($CFLAGS)
   local -A flags
   for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
   local march="${flags["-march"]:-nocona}"
   local mtune="${flags["-mtune"]:-core-avx2}"
+
+  export CC="clang"
+  export CXX="clang++"
 
   # From Proton
   OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
