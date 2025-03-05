@@ -188,7 +188,8 @@ build() {
   OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
-  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS"
+  #STRIP_FLAGS="-s"
+  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS $STRIP_FLAGS"
   LTO_CFLAGS="-flto=thin -D__LLD_LTO__"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
