@@ -46,7 +46,7 @@ depends=(
   libxrandr       lib32-libxrandr
   wayland         lib32-wayland
 )
-makedepends=(autoconf bison perl flex clang lld
+makedepends=(autoconf bison perl flex mingw-w64-gcc
   git
   alsa-lib              lib32-alsa-lib
   ffmpeg
