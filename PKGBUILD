@@ -4,7 +4,7 @@
 
 pkgname=pi-hole-core
 _pkgname=pi-hole
-pkgver=6.0.4
+pkgver=6.0.5
 pkgrel=1
 pkgdesc='The Pi-hole is an advertising-aware DNS/Web server. Arch adaptation for lan wide DNS server.'
 arch=('any')
@@ -16,7 +16,7 @@ optdepends=()
 conflicts=('pi-hole-standalone' 'pi-hole-server')
 provides=('pi-hole-standalone' 'pi-hole-server')
 install=$pkgname.install
-backup=('etc/pihole/adlists.list' 'etc/sudoers.d/pihole')
+backup=(''etc/pihole/adlists.list'' 'etc/sudoers.d/pihole')
 
 source=($pkgname-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/archive/refs/tags/v$pkgver.tar.gz
       "https://raw.githubusercontent.com/max72bra/pi-hole-core-archlinux-customization/main/arch-core-$pkgver-$pkgrel.patch"
@@ -30,8 +30,8 @@ source=($pkgname-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/archive/
 	    piholeDebug.sh
 )
 
-sha256sums=('f3eabd0a4c426246c83930ea20a831eb46bf67ce233c5d4191da819b76191b5b'
-            'd5f4b12d16b815b1954b51729539cc5eb1d4808ecdd52062972611e8846e4d77'
+sha256sums=('912f5cf1641dc506eaf30813d2dd35722ea1fe7a1f91d5334b19c553c9fd43c6'
+            '2986159932c6de0aa1741e5fcbb7b23ff87f27bac2dacad3c2092058815e71ae'
             'd09f9d10ebdfb6db24d4e1abff8cd09519a7b3f3878ef3974c26aa6838f74e7e'
             '9b72d7769036f8f4bb7121968d2ae4bdba427e4b16787ce340205a5f62b45c7c'
             '5228b4f923eab7784952a0fd6da895e7bff2f80a7f91c4a7c6350491dfdbb2e8'
@@ -87,6 +87,7 @@ package() {
 
   install -dm755 "$pkgdir"/etc/pihole
   install -Dm644 $_pkgname-$pkgver/advanced/Templates/logrotate "$pkgdir"/etc/pihole/logrotate
+  install -Dm644 $_pkgname-$pkgver/adlists.list "$pkgdir"/etc/pihole/adlists.list
 
   install -dm755 "$pkgdir"/usr/share/licenses/pihole
   install -Dm644 ${pkgname%-*}-$pkgver/LICENSE "$pkgdir"/usr/share/licenses/pihole/Pi-hole
