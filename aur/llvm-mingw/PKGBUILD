@@ -9,6 +9,9 @@ pkgrel=1
 # This controls the version we will pull.
 _tag="20250305"
 
+# When updating, needs to be manually changed to the mingw_commit echoed during prepare().
+mingw_commit="2be9e0f319990e48bfb0b2dd7b9e7045791b465f"
+
 pkgdesc="A self-contained LLVM/Clang/LLD based mingw-w64 toolchain for i686 and x86_64 targets"
 arch=('x86_64')
 url="https://github.com/mstorsjo/${pkgname}"
@@ -59,11 +62,13 @@ provides=( # what to do here?
 )
 options=('staticlibs' '!buildflags' '!emptydirs')
 source=(
-  "git+${url}#tag=${_tag}"
-  "git+https://github.com/llvm/llvm-project.git#tag=llvmorg-${pkgver%'+'"$_tag"}"
+  "llvm-mingw-${_tag}.tar.gz::https://github.com/mstorsjo/llvm-mingw/archive/refs/tags/${_tag}.tar.gz"
+  "llvm-project-${pkgver%'+'"$_tag"}.tar.gz::https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-${pkgver%'+'"$_tag"}.tar.gz"
+  "mingw-w64-g${mingw_commit:0:6}.tar.gz::https://github.com/mingw-w64/mingw-w64/archive/${mingw_commit}.tar.gz"
 )
-sha256sums=('56a9302be33d061d2d8c5f34709d45fac1e1c8c32661e8eaa74853880be4b40e'
-            '3f783a0ed5e8e028e8cc83355fff734fd48190e62d8d8231dc68e9e278bd2c11')
+sha256sums=('a4d1a78a6b84304942e2cea22a9510d32e4795dcc56a335d38901dacfc35be10'
+            '08bc382733777dda3c96259e3732ff96c1df98d0470c4f85b163274eae687f4f'
+            '728fa2f99a490e1ced14edc068e5cc0034ab08a8adc3c4f0318ba0746f9604c2')
 
 pkgver() {
   # This looks to be where the maintainer (Martin Storsjö) does version bumps
@@ -72,13 +77,21 @@ pkgver() {
 }
 
 prepare() {
-  cd "${srcdir}/${pkgname}"
+  cd "${srcdir}"
 
-  chmod +x build-all.sh
-  chmod +x build-llvm.sh
+  find "./" -maxdepth 1 -type d -name llvm-mingw-\* -exec mv '{''}' "./${pkgname}" ';'
 
-  rm -rf "${srcdir}/llvm-mingw/llvm-project"
-  ln -srf "${srcdir}/llvm-project" "${srcdir}/llvm-mingw/"
+  chmod +x "${pkgname}/build-all.sh"
+  chmod +x "${pkgname}/build-llvm.sh"
+
+  unlink "${srcdir}/${pkgname}/llvm-project" &>/dev/null || rm -rf "${srcdir}/${pkgname}/llvm-project"
+  find "./" -maxdepth 1 -type d -name llvm-project-\* -exec ln -srf '{''}' "./${pkgname}/llvm-project" ';'
+
+  unlink "${srcdir}/${pkgname}/mingw-w64" &>/dev/null || rm -rf "${srcdir}/${pkgname}/mingw-w64"
+  find "./" -maxdepth 1 -type d -name mingw-w64-\* -exec ln -srf '{''}' "./${pkgname}/mingw-w64" ';'
+
+  _mingw_commit="$(grep -e "MINGW_W64_VERSION:=" "${srcdir}/${pkgname}"/build-mingw-w64.sh | cut -f2 -d'=' | tr -d '}')"
+  echo "mingw_commit=${_mingw_commit}"
 }
 
 build() {
@@ -86,6 +99,7 @@ build() {
 
   # Never pop Wine prefix dialog during mingw configure
   export DISPLAY=
+  export WAYLAND_DISPLAY=
 
   # Configure to build only i686 and x86_64 targets (default builds i686, x86_64, armv7, aarch64)
   export TOOLCHAIN_ARCHS="i686 x86_64"
@@ -93,17 +107,17 @@ build() {
   # Flags from GH Actions workflow
   export LLVM_CMAKEFLAGS="-DLLVM_ENABLE_LIBXML2=OFF -DLLVM_ENABLE_TERMINFO=OFF -DLLDB_ENABLE_PYTHON=OFF"
 
-  ./build-all.sh "${srcdir}/install/llvm-mingw"
+  ./build-all.sh "${srcdir}/${pkgname}/install/llvm-mingw"
 }
 
 package() {
   cd "${srcdir}"
 
   install -d "${pkgdir}/opt"
-  cp -r install/llvm-mingw "${pkgdir}/opt/"
+  cp -r "${srcdir}/${pkgname}/install/llvm-mingw" "${pkgdir}/opt/"
 
   install -d "${pkgdir}/etc/profile.d"
-  echo 'export PATH="${PATH}:/opt/llvm-mingw/bin"' >"${pkgdir}/etc/profile.d/llvm-mingw.sh"
+  echo 'export PATH="${PATH}:/opt/${pkgname}/bin"' >"${pkgdir}/etc/profile.d/${pkgname}.sh"
 
   ## llvm-mingw license
   install -Dm644 "${srcdir}/${pkgname}/LICENSE.txt" \
@@ -138,9 +152,9 @@ package() {
     "${pkgdir}/usr/share/licenses/${pkgname}/COPYING.genpeimg.txt"
 
   ## cleanup
-  find "${pkgdir}/opt/llvm-mingw" -name '*.exe.manifest' -delete
-  find "${pkgdir}/opt/llvm-mingw" -name '*.la' -delete
-  find "${pkgdir}/opt/llvm-mingw" -type f '(' -name '*COPYING*' -o -name '*LICENSE*' ')' -delete
+  find "${pkgdir}/opt/${pkgname}" -name '*.exe.manifest' -delete
+  find "${pkgdir}/opt/${pkgname}" -name '*.la' -delete
+  find "${pkgdir}/opt/${pkgname}" -type f '(' -name '*COPYING*' -o -name '*LICENSE*' ')' -delete
 
   ## To strip or not to strip, that is the question 
 }

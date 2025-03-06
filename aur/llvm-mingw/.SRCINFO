@@ -45,9 +45,11 @@ pkgbase = llvm-mingw
 	options = staticlibs
 	options = !buildflags
 	options = !emptydirs
-	source = git+https://github.com/mstorsjo/llvm-mingw#tag=20250305
-	source = git+https://github.com/llvm/llvm-project.git#tag=llvmorg-20.1.0
-	sha256sums = 56a9302be33d061d2d8c5f34709d45fac1e1c8c32661e8eaa74853880be4b40e
-	sha256sums = 3f783a0ed5e8e028e8cc83355fff734fd48190e62d8d8231dc68e9e278bd2c11
+	source = llvm-mingw-20250305.tar.gz::https://github.com/mstorsjo/llvm-mingw/archive/refs/tags/20250305.tar.gz
+	source = llvm-project-20.1.0.tar.gz::https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-20.1.0.tar.gz
+	source = mingw-w64-g2be9e0.tar.gz::https://github.com/mingw-w64/mingw-w64/archive/2be9e0f319990e48bfb0b2dd7b9e7045791b465f.tar.gz
+	sha256sums = a4d1a78a6b84304942e2cea22a9510d32e4795dcc56a335d38901dacfc35be10
+	sha256sums = 08bc382733777dda3c96259e3732ff96c1df98d0470c4f85b163274eae687f4f
+	sha256sums = 728fa2f99a490e1ced14edc068e5cc0034ab08a8adc3c4f0318ba0746f9604c2
 
 pkgname = llvm-mingw
