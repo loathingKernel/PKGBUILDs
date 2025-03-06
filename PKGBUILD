@@ -3,11 +3,11 @@
 # Maintainer: William Horvath <william at horvath dot blog>
 
 pkgname=llvm-mingw
-pkgver=19.1.7+20250114
+pkgver=20.1.0+20250305
 pkgrel=1
 
 # This controls the version we will pull.
-_tag="20250114"
+_tag="20250305"
 
 pkgdesc="A self-contained LLVM/Clang/LLD based mingw-w64 toolchain for i686 and x86_64 targets"
 arch=('x86_64')
@@ -62,8 +62,8 @@ source=(
   "git+${url}#tag=${_tag}"
   "git+https://github.com/llvm/llvm-project.git#tag=llvmorg-${pkgver%'+'"$_tag"}"
 )
-sha256sums=('f3de01627afe67ba5427681ed33d7258fda90fc5b9b87728e21e58f0daca1deb'
-            'f6c754bd1b8d7da76f357a539ff8175f214b7dc1b52391a0fe75cfb9a57f28dd')
+sha256sums=('56a9302be33d061d2d8c5f34709d45fac1e1c8c32661e8eaa74853880be4b40e'
+            '3f783a0ed5e8e028e8cc83355fff734fd48190e62d8d8231dc68e9e278bd2c11')
 
 pkgver() {
   # This looks to be where the maintainer (Martin Storsjö) does version bumps
