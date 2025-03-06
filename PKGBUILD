@@ -6,7 +6,7 @@
 
 # shellcheck disable=SC2034
 pkgname=('dxvk-msvc-git')
-pkgver=2.5.3.r219.gfcbdff3b7
+pkgver=2.5.3.r251.gd8eb4d0d6
 pkgrel=1
 pkgdesc="A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers Windows DLL version)"
 arch=('x86_64')
@@ -40,7 +40,7 @@ sha256sums=('SKIP'
             '6c03f80228539ad1a78390186ae9ebeae40d5c02559a39b58ed8ec4738a7b957'
             'd06d0375a6976ccbf452bba2feb7d7e5db43c6631bd4d59ad563315e9c973ccb'
             'bf7883203d9c8fe729131f1f9d82da799f33a1c3c3ebb22d2070ac77e337de8c'
-            'cca262f473ffe8763c43e447fcbd8ef17fd377ed87157943ccb51ebaed6f15d6'
+            '7afbb68632368209001773d3ebb37d46f39231ef80a80983e999b304f1f1e442'
             '5b059c4084940d31460a34ec579026fe9526f7cb9bdcc0b6d928271ab52f89db')
 
 pkgver() {
