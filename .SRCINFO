@@ -1,7 +1,7 @@
 pkgbase = millennium
 	pkgdesc = Millennium is an open-source low-code modding framework to create, manage and use themes/plugins for the desktop Steam Client without any low-level internal interaction or overhead.
 	pkgver = v2.17.2
-	pkgrel = 5
+	pkgrel = 6
 	url = https://github.com/shdwmtr/millennium
 	arch = x86_64
 	license = MIT
@@ -26,6 +26,7 @@ pkgbase = millennium
 	depends = git
 	options = !debug
 	source = git+https://github.com/shdwmtr/millennium.git
+	validpgpkeys = D4A49B8AB39D704F
 	sha256sums = SKIP
 
 pkgname = millennium
