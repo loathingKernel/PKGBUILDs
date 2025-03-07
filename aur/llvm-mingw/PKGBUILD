@@ -117,7 +117,7 @@ package() {
   cp -r "${srcdir}/${pkgname}/install/llvm-mingw" "${pkgdir}/opt/"
 
   install -d "${pkgdir}/etc/profile.d"
-  echo 'export PATH="${PATH}:/opt/${pkgname}/bin"' >"${pkgdir}/etc/profile.d/${pkgname}.sh"
+  echo 'export PATH="${PATH}:/opt/llvm-mingw/bin"' >"${pkgdir}/etc/profile.d/${pkgname}.sh"
 
   ## llvm-mingw license
   install -Dm644 "${srcdir}/${pkgname}/LICENSE.txt" \
