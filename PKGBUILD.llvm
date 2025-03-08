@@ -6,11 +6,11 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-cachyos-opt
-_srctag=9.0-20250227
+_srctag=9.0-20250307
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.1
-pkgrel=3
+pkgrel=1
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -27,7 +27,7 @@ source+=(
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
-pkgdesc="A compatibility layer for running Windows programs, with extra CachyOS flavor (installs under /opt)"
+pkgdesc="A compatibility layer for running Windows programs, with extra CachyOS flavour (installs under /opt)"
 url="https://github.com/CachyOS/wine-cachyos"
 arch=(x86_64 x86_64_v3)
 options=(!staticlibs !lto !debug)
