@@ -2,7 +2,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-cachyos
-_srctag=9.0-20250227
+_srctag=9.0-20250307
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
@@ -10,84 +10,96 @@ _monover=9.3.1
 _xaliaver=0.4.5
 pkgrel=1
 epoch=1
-pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour"
+pkgdesc="A compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour"
 url="https://github.com/cachyos/proton-cachyos"
 arch=(x86_64 x86_64_v3)
 options=(!staticlibs !lto !debug emptydirs)
 license=('custom')
-
 depends=(
-  attr             lib32-attr
-  fontconfig       lib32-fontconfig
-  libxcursor       lib32-libxcursor
-  libxrandr        lib32-libxrandr
-  libxi            lib32-libxi
-  gettext          lib32-gettext
-  freetype2        lib32-freetype2
-  gcc-libs         lib32-gcc-libs
-  libpcap          lib32-libpcap
-  lzo              lib32-lzo
-  libxkbcommon     lib32-libxkbcommon
-  libvpx           lib32-libvpx
-  sdl2             lib32-sdl2
-  libsoup          lib32-libsoup
-  libgudev         lib32-libgudev
-  blas             lib32-blas
-  lapack           lib32-lapack
-  speex            lib32-speex
-  desktop-file-utils
-  python
-  steam-native-runtime
+  attr            lib32-attr
+  blas            lib32-blas
   cabextract
+  desktop-file-utils
+  fontconfig      lib32-fontconfig
+  freetype2       lib32-freetype2
+  gcc-libs        lib32-gcc-libs
+  gettext         lib32-gettext
+  lapack          lib32-lapack
+  libgudev        lib32-libgudev
+  libpcap         lib32-libpcap
+  libsoup         lib32-libsoup
+  libvpx          lib32-libvpx
+  libxcursor      lib32-libxcursor
+  libxkbcommon    lib32-libxkbcommon
+  libxi           lib32-libxi
+  libxrandr       lib32-libxrandr
+  lzo             lib32-lzo
+  python
+  sdl2            lib32-sdl2
+  speex           lib32-speex
+  steam-native-runtime
 )
 depends+=(
-  wayland          lib32-wayland
+  wayland         lib32-wayland
 )
-
 makedepends=(autoconf bison perl flex mingw-w64-gcc
-  wget rsync unzip mingw-w64-tools lld nasm
-  meson cmake fontforge afdko python-pefile glib2-devel
-  glslang vulkan-headers
-  clang
-  giflib                lib32-giflib
-  gnutls                lib32-gnutls
-  libxinerama           lib32-libxinerama
-  libxcomposite         lib32-libxcomposite
-  libxxf86vm            lib32-libxxf86vm
-  v4l-utils             lib32-v4l-utils
+  git
+  afdko
   alsa-lib              lib32-alsa-lib
+  clang
+  cmake
+  ffmpeg
+  fontforge
+  giflib                lib32-giflib
+  glib2-devel
+  glslang 
+  gnutls                lib32-gnutls
+  gst-plugins-base-libs lib32-gst-plugins-base-libs
+  gtk3                  lib32-gtk3
+  libgphoto2
+  libpulse              lib32-libpulse
+  libva                 lib32-libva
   libxcomposite         lib32-libxcomposite
+  libxinerama           lib32-libxinerama
+  libxxf86vm            lib32-libxxf86vm
+  lld
   mesa                  lib32-mesa
   mesa-libgl            lib32-mesa-libgl
-  opencl-icd-loader     lib32-opencl-icd-loader
-  libpulse              lib32-libpulse
-  gtk3                  lib32-gtk3
-  gst-plugins-base-libs lib32-gst-plugins-base-libs
-  vulkan-icd-loader     lib32-vulkan-icd-loader
-  sdl2                  lib32-sdl2
-  rust                  lib32-rust-libs
-  libgphoto2
+  meson
+  mingw-w64-tools
+  nasm
   opencl-headers
-  git
-  wayland-protocols
+  opencl-icd-loader     lib32-opencl-icd-loader
+  rsync
+  rust                  lib32-rust-libs
+  python
+  python-pefile
+  sdl2                  lib32-sdl2
+  unzip
+  v4l-utils             lib32-v4l-utils
+  vulkan-headers
+  vulkan-icd-loader     lib32-vulkan-icd-loader
+  wget
 )
 makedepends+=(
+  wayland-protocols
 )
-
 optdepends=(
+  alsa-lib              lib32-alsa-lib
+  alsa-plugins          lib32-alsa-plugins
   giflib                lib32-giflib
   gnutls                lib32-gnutls
-  v4l-utils             lib32-v4l-utils
+  gst-plugins-base-libs lib32-gst-plugins-base-libs
+  gtk3                  lib32-gtk3
+  libgphoto2
   libpulse              lib32-libpulse
-  alsa-plugins          lib32-alsa-plugins
-  alsa-lib              lib32-alsa-lib
+  libva                 lib32-libva
   libxcomposite         lib32-libxcomposite
   libxinerama           lib32-libxinerama
   opencl-icd-loader     lib32-opencl-icd-loader
-  gtk3                  lib32-gtk3
-  gst-plugins-base-libs lib32-gst-plugins-base-libs
+  sdl2                  lib32-sdl2
+  v4l-utils             lib32-v4l-utils
   vulkan-icd-loader     lib32-vulkan-icd-loader
-  libgphoto2
 )
 
 provides=('proton')
@@ -246,7 +258,7 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('69396d29bc2ef2c3cd1d5ad3a27b0c2ff5678380f62cdcae29ff8e0f4a1dff14'
+sha256sums=('2b1408a69a8ef55fadc382ba1a86814c4129178ff130f46d6908ac3059846421'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '32eff652b96390f04fb52ee695fc3a6d197b1bb616ed2df7e25119fe5700c950'
