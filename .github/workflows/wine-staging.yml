@@ -25,11 +25,11 @@ jobs:
       matrix:
         include:
           - repository: public
-            pkgbuild: PKGBUILD
-            multilib: true
+            pkgbuild: PKGBUILD.wow64
+            multilib: false
           - repository: personal
-            pkgbuild: PKGBUILD
-            multilib: true
+            pkgbuild: PKGBUILD.wow64
+            multilib: false
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: multilib/wine-staging
