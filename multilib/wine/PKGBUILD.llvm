@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=10.3
-pkgrel=1
+pkgrel=2
 _tkg_commit=21d3c43e7c4d5e817657ad9f3e21616b2c5de52a
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -128,13 +128,9 @@ prepare() {
   patch -Np1 -i "$srcdir"/wine-ntsync.patch
 
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
-  #patch -Np1 -i "$_tkg_path"/proton/esync/esync-unix-mainline.patch
-  #patch -Np1 -i "$_tkg_path"/proton/fsync/fsync-unix-mainline.patch
-  #patch -Np1 -i "$_tkg_path"/proton/fsync/fsync_futex_waitv.patch
   patch -Np1 -i "$_tkg_path"/proton/LAA/LAA-unix.patch
   patch -Np1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
   patch -Np1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
-  #patch -Np1 -i "$_tkg_path"/proton/valve_proton_fullscreen_hack/FS_bypass_compositor.patch
 
   patch -Np1 -i "$srcdir"/wine-wmclass.patch
   patch -Np1 -i "$srcdir"/wine-isolate_home.patch
@@ -167,7 +163,7 @@ build() {
   export CXX="clang++"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   #STRIP_FLAGS="-s"
