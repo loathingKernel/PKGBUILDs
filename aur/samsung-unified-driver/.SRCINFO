@@ -1,0 +1,33 @@
+pkgbase = samsung-unified-driver
+	pkgdesc = Samsung Unified Linux Driver for printers and scanners.
+	pkgver = 1.00.39
+	pkgrel = 7
+	url = http://www.samsung.com
+	arch = i686
+	arch = x86_64
+	license = custom:samsung
+	options = !strip
+	source = http://downloadcenter.samsung.com/content/DR/201704/20170407143829533/uld_V1.00.39_01.17.tar.gz
+	source = xerox_mfp-smfp.conf
+	sha512sums = fccda77af20b31c9b46117b013d0c40333adc87679057c2b1e513d9bae97fc7267eca74030bc039feec50edee8e4cdfebe8761c77d653646f7ea4ac102c2643f
+	sha512sums = 325d2e3e42bf74663ba0ac3aa0fc3ee70ef5a5197d03c069fac6bc0f8da0d9e12d50e4b59feacef3000eff5a85d3db7f66834809013b18b31532cfea252460ef
+
+pkgname = samsung-unified-driver-common
+	pkgdesc = Samsung Unified Linux Driver (common files)
+
+pkgname = samsung-unified-driver-printer
+	pkgdesc = Samsung Unified Linux Driver for printers.
+	depends = samsung-unified-driver-common
+	depends = cups
+	depends = ghostscript
+
+pkgname = samsung-unified-driver-scanner
+	pkgdesc = Samsung Unified Linux Driver for scanners.
+	depends = samsung-unified-driver-common
+	depends = libxml2
+	depends = libusb-compat
+	depends = sane
+
+pkgname = samsung-unified-driver
+	depends = samsung-unified-driver-printer
+	depends = samsung-unified-driver-scanner
