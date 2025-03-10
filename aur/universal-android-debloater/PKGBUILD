@@ -1,17 +1,25 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=universal-android-debloater
-pkgver=1.1.0
+pkgver=1.1.1
 pkgrel=1
 pkgdesc="Cross-platform GUI written in Rust using ADB to debloat non-rooted Android devices"
 arch=('x86_64')
 url="https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation"
 license=('GPL-3.0-or-later')
-depends=('android-tools' 'gcc-libs')
-makedepends=('cargo' 'clang' 'cmake' 'mold')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
+depends=(
+  'android-tools'
+  'gcc-libs'
+)
+makedepends=(
+  'cargo'
+  'clang'
+  'cmake'
+  'mold'
+)
+source=("$pkgname-next-generation-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
         'uad-ng.desktop')
 conflicts=('universal-android-debloater-opengl')
-sha256sums=('d1c230ecef5b30a3753784f7e91725a31555df15a2b44b28d87029e17931eeee'
+sha256sums=('6f1119e3c2933537c523324292987bc122a5fa19ab2ab69e2accd85e0b433464'
             '8d5d790fffd35101af340792d081f8f75b61b1579bc8f89acab818f03f1071ea')
 
 prepare() {
@@ -25,7 +33,8 @@ build() {
   CFLAGS+=" -ffat-lto-objects"
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
-  cargo build --release --no-default-features --features wgpu,no-self-update
+  export CARGO_PROFILE_RELEASE_STRIP=false
+  cargo build --frozen --release --no-default-features --features wgpu,no-self-update
 }
 
 package() {
