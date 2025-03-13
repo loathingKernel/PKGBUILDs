@@ -8,7 +8,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.1
 _xaliaver=0.4.5
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="A compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour"
 url="https://github.com/cachyos/proton-cachyos"
@@ -110,6 +110,9 @@ source=(
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
     0001-proton-fix-logic-error-that-caused-proton-to-hang-on.patch
+    0002-proton-replace-junk-wayland-enablement-code-with-ups.patch
+    0001-Revert-proton-wait-for-process-to-exit-when-run-thro.patch
+    0001-explorer-Enable-the-Wayland-driver.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -169,6 +172,12 @@ prepare() {
 
     ./patches/apply.sh
     patch -Np1 -i "$srcdir"/0001-proton-fix-logic-error-that-caused-proton-to-hang-on.patch
+    patch -Np1 -i "$srcdir"/0002-proton-replace-junk-wayland-enablement-code-with-ups.patch
+    patch -Np1 -i "$srcdir"/0001-Revert-proton-wait-for-process-to-exit-when-run-thro.patch
+
+    pushd wine
+        patch -Np1 -i "$srcdir"/0001-explorer-Enable-the-Wayland-driver.patch
+    popd
 
     for rustlib in gst-plugins-rs; do
     pushd $rustlib
@@ -265,4 +274,7 @@ b2sums=('18c40da4d5405b9d11ad0391e30b5395a83962e1aca5c2b4ed669de9453ae2119e3a120
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         '5f4c2a07355a3d394086467f1b0c45698cd83731a4137b59975abdeda2d564f44922a67b1bec111e4209c4fe74247486076e95dffc84d88b5b7a02774efd070b'
         '5c3985080995a62c1c765244d430cea86cca82d187874a95d89b3fd9303c89a6944613ae5de7d31354053e5c91d2fc39842e57ee7866a87c529e9becc458ec49'
-        'bbfffa7e75b5ca20213b99a898c4929654f0a43b486899177326f6aaf5051ed9885a2d411adcff3dc75ca9800ae7c76a884daa85ef8df01075405f794fcf7bae')
+        '783cd2a1dd7ca96b431d084924a4a77579ab70731da1ad0cf32491158ee85ec78e43429b6334dd1976a511910e64fb28792e38166735e2b8a5fdebc5614c0cce'
+        '7a27b02d9c9637b862f6e0c182becad0521c17091e614eea92dfb8b17e00e78f467cf38d6a3e88110fac0448aa358bcf43a01961d17660eb927279f893f28bee'
+        '270c6fe54f3f988b7a5477bf2affb9364d3900eb50f58aea5c688f32c1a66b6c957c6f7578582c78afaa8ef74b92aa980ad1fcc67be6687c45d52ce6b2eaa69b'
+        'cf36bf091c607b8d08d89462bc5a4f10bd0293258ca4ebd15ecbb433df33e8bb787018a164dfaf52e20c64fb5e8a150343e789b566b40c1205f69652d27ee60d')
