@@ -1,8 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=protonplus
-_app_id=com.vysp3r.ProtonPlus
 pkgver=0.4.27
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple Wine and Proton-based compatiblity tools manager for GNOME"
 arch=('x86_64')
 url="https://github.com/Vysp3r/ProtonPlus"
@@ -32,5 +31,5 @@ check() {
 package() {
   meson install -C build --no-rebuild --destdir "$pkgdir"
 
-  ln -s "/usr/bin/${_app_id}" "$pkgdir/usr/bin/$pkgname"
+  ln -s /usr/bin/com.vysp3r.ProtonPlus "$pkgdir/usr/bin/$pkgname"
 }
