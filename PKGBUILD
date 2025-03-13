@@ -1,5 +1,6 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=protonplus
+_app_id=com.vysp3r.ProtonPlus
 pkgver=0.4.27
 pkgrel=1
 pkgdesc="A simple Wine and Proton-based compatiblity tools manager for GNOME"
