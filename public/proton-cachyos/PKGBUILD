@@ -8,7 +8,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=9.3.1
 _xaliaver=0.4.5
-pkgrel=3
+pkgrel=4
 epoch=1
 
 source=(
@@ -21,6 +21,7 @@ source=(
     0001-Revert-proton-wait-for-process-to-exit-when-run-thro.patch
     0001-build-disable-wine-display-drivers-when-building.patch
     0001-explorer-Enable-the-Wayland-driver.patch
+    0001-Revert-HACK-winegstreamer-Set-GST_GL_WINDOW-environm.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -181,6 +182,7 @@ prepare() {
 
     pushd wine
         patch -Np1 -i "$srcdir"/0001-explorer-Enable-the-Wayland-driver.patch
+        patch -Np1 -i "$srcdir"/0001-Revert-HACK-winegstreamer-Set-GST_GL_WINDOW-environm.patch
     popd
 
     for rustlib in gst-plugins-rs; do
@@ -282,4 +284,5 @@ b2sums=('18c40da4d5405b9d11ad0391e30b5395a83962e1aca5c2b4ed669de9453ae2119e3a120
         '65c69c53a54794aa67e3c469710d8271114f250646fa580dbb3398b669b70b1bfe8ca33ecb5219e97a17449e4c10c19f61b39db453646ad52e822b162657c180'
         '270c6fe54f3f988b7a5477bf2affb9364d3900eb50f58aea5c688f32c1a66b6c957c6f7578582c78afaa8ef74b92aa980ad1fcc67be6687c45d52ce6b2eaa69b'
         '375bdb818649b5e8f5e35362419869710d74f371e76f70a972b6127104930ca05c0d9660bc423d722bdc3425594b25f78d0c2d7e475b554243e44dc0f9edc9a7'
-        'cf36bf091c607b8d08d89462bc5a4f10bd0293258ca4ebd15ecbb433df33e8bb787018a164dfaf52e20c64fb5e8a150343e789b566b40c1205f69652d27ee60d')
+        'cf36bf091c607b8d08d89462bc5a4f10bd0293258ca4ebd15ecbb433df33e8bb787018a164dfaf52e20c64fb5e8a150343e789b566b40c1205f69652d27ee60d'
+        '094007808c97c97008b4be4d2e3c24afe636d4af189e22e3e4fbc86e06ef280d580d696940d9356f03c7813c9238e7ef70ee512b9c7df2a6dcaa29bc1f6c2ff3')
