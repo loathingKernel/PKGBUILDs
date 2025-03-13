@@ -1,15 +1,15 @@
-From 2cd79976b8b1818839b9942969c7ddc05e381516 Mon Sep 17 00:00:00 2001
+From 7cac6569939177706584bb0376b687bf3c812a27 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Thu, 13 Mar 2025 11:26:30 +0200
-Subject: [PATCH 2/2] proton: replace junk wayland enablement code with
- upstream wine patch
+Subject: [PATCH] proton: replace junk wayland enablement code with upstream
+ wine patch
 
 ---
  proton | 22 ++++++++--------------
  1 file changed, 8 insertions(+), 14 deletions(-)
 
 diff --git a/proton b/proton
-index 145423db..26ee39b7 100755
+index 145423db..3ef081d9 100755
 --- a/proton
 +++ b/proton
 @@ -848,6 +848,9 @@ class CompatData:
@@ -17,7 +17,7 @@ index 145423db..26ee39b7 100755
                  get_replace_reg_value(self.prefix_dir + "system.reg", "Software\\\\Microsoft\\\\Cryptography", "MachineGuid", machine_guid)
  
 +            # Fix broken prefixes by replacing any faulty values in registry
-+            get_replace_reg_value(self.prefix_dir + "user.reg", "Software\\\\Wine\\\\Drivers", "Graphics", "x11,wayland")
++            get_replace_reg_value(self.prefix_dir + "user.reg", "Software\\\\Wine\\\\Drivers", "Graphics", "\"x11,wayland\"")
 +
              self.migrate_user_paths()
  
