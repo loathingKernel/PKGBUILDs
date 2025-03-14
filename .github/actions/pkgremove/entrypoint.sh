@@ -76,7 +76,7 @@ fi
 
 for PKGNAME in "${PKGNAMES[@]}"; do
 	if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
-		sudo -u builder repo-remove "${INPUT_REPORELEASETAG:-}".db.tar.gz "$PKGNAME"
+		sudo -u builder repo-remove "${INPUT_REPORELEASETAG:-}".db.tar.gz "$PKGNAME" || true
 	else
 		echo "Skipping repository update for $RELPKGFILE"
 	fi
