@@ -154,9 +154,11 @@ uninstall() {
 setupWine() {
   # find wine executable
   export WINEDEBUG="${WINEDEBUG:-"-all"}"
-  # disable mscoree and mshtml to avoid downloading
-  # wine gecko and mono
-  export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-}${WINEDLLOVERRIDES:+";"}mscoree=;mshtml="
+  # disable mscoree and mshtml to avoid downloading wine gecko and mono
+  # and don't show "updating prefix" dialog
+  export DISPLAY=
+  export WAYLAND_DISPLAY=
+  export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-}${WINEDLLOVERRIDES:+";"}mscoree=;mshtml=;winex11.drv=;winewayland.drv="
 
   # try wine/wine64 or use the WINE env var for the wine binary
   wine="$(which "${WINE:-wine}" 2>/dev/null)" || wine="$(which "${WINE:-wine}64" 2>/dev/null)"
