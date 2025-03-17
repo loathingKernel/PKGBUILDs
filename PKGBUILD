@@ -6,7 +6,7 @@
 
 # shellcheck disable=SC2034
 pkgname=('dxvk-msvc-git')
-pkgver=2.6.r6.g2ad721b46
+pkgver=2.6.r8.g79d7b3720
 pkgrel=1
 pkgdesc="A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers Windows DLL version)"
 arch=('x86_64')
@@ -23,7 +23,7 @@ source=(
     "git+https://github.com/Joshua-Ashton/mingw-directx-headers.git"
     "git+https://github.com/KhronosGroup/Vulkan-Headers.git"
     "git+https://github.com/KhronosGroup/SPIRV-Headers.git"
-    "git+https://gitlab.freedesktop.org/JoshuaAshton/libdisplay-info.git#commit=275e645"
+    "git+https://github.com/doitsujin/libdisplay-info.git#commit=275e645"
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8caps.h"
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8types.h"
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8.h"
