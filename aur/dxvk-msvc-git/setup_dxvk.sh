@@ -1,214 +1,275 @@
 #!/usr/bin/env bash
 
+################################### Setup section ###################################
+
 # default directories
-dxvk_lib32=${dxvk_lib32:-"x32"}
-dxvk_lib64=${dxvk_lib64:-"x64"}
+dxvk_lib32="${dxvk_lib32:-"x32"}"
+dxvk_lib64="${dxvk_lib64:-"x64"}"
 
 # figure out where we are
-basedir="$(dirname "$(readlink -f "$0")")"
+basedir="$(dirname "$(readlink -f "${0}")")"
+
+# default command to copy with
+file_cmd="copyFile"
 
 # figure out which action to perform
-action="$1"
-
-case "$action" in
-install)
-  ;;
-uninstall)
-  ;;
-*)
-  echo "Unrecognized action: $action"
-  echo "Usage: $0 [install|uninstall] [--without-dxgi] [--symlink]"
-  exit 1
-esac
+action="install"
 
 # process arguments
-shift
-
-with_dxgi=true
-file_cmd="cp -v --reflink=auto"
-
-while (($# > 0)); do
-  case "$1" in
+while [[ $# -gt 0 ]]; do
+  case "${1}" in
+  "install") ;;
+  "uninstall")
+    action="uninstall"
+    with_dxgi="true"
+    ;;
   "--without-dxgi")
-    with_dxgi=false
+    [ "${action}" != "uninstall" ] && with_dxgi="false"
     ;;
   "--symlink")
-    file_cmd="ln -s -v"
+    file_cmd="linkFile"
+    ;;
+  *)
+    echo "Unrecognized argument: ${1}"
+    echo "Usage: ${0} [install|uninstall] [--without-dxgi] [--symlink]"
+    echo "The default action is 'install' if unspecified."
+    exit 1
     ;;
   esac
   shift
 done
 
-# check wine prefix before invoking wine, so that we
-# don't accidentally create one if the user screws up
-if [ -n "$WINEPREFIX" ] && ! [ -f "$WINEPREFIX/system.reg" ]; then
-  echo "$WINEPREFIX:"' Not a valid wine prefix.' >&2
-  exit 1
-fi
+################################# Helper functions ##################################
 
-# find wine executable
-export WINEDEBUG="${WINEDEBUG:--all}"
-# disable mscoree and mshtml to avoid downloading
-# wine gecko and mono
-export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-}${WINEDLLOVERRIDES:+,}mscoree,mshtml="
+copyFile() {
+  if [ -z "${1:-}" ] || [ -z "${2:-}" ]; then return 1; fi
+  echo -n "copying: "
+  cp -v --reflink=auto "${@}"
+  return $?
+}
 
-wine="$(which "${WINE:-wine}")"
-[ -z "$wine" ] && wine="$(which "${WINE:-wine}64")"
-
-# resolve 32-bit and 64-bit system32 path
-winever=$($wine --version | grep wine)
-if [ -z "$winever" ]; then
-    echo "$wine:"' Not a wine executable. Check your $wine.' >&2
-    exit 1
-fi
-
-wineboot="$wine wineboot"
-win64=true
-win32=true
-
-# ensure wine placeholder dlls are recreated
-# if they are missing
-$wineboot -u
-
-win64_sys_path="$($wine cmd /c '%SystemRoot%\system32\winepath.exe -u C:\windows\system32' 2>/dev/null)"
-win64_sys_path="${win64_sys_path/$'\r'/}"
-
-[ -z "$win64_sys_path" ] && win64=false
-
-if grep --quiet -e '#arch=win32' "${WINEPREFIX:-$HOME/.wine}/system.reg"; then
-  win32_sys_path=$win64_sys_path
-  win64=false
-  win32=true
-else
-  win32_sys_path="$($wine cmd /c '%SystemRoot%\syswow64\winepath.exe -u C:\windows\system32' 2>/dev/null)"
-  win32_sys_path="${win32_sys_path/$'\r'/}"
-
-  [ -z "$win32_sys_path" ] && win32=false
-fi
-
-if [ -z "$win32_sys_path" ] && [ -z "$win64_sys_path" ]; then
-  echo 'Failed to resolve C:\windows\system32.' >&2
-  exit 1
-fi
+linkFile() {
+  if [ -z "${1:-}" ] || [ -z "${2:-}" ]; then return 1; fi
+  echo -n "symlinking: "
+  ln -s -v "${@}"
+  return $?
+}
 
 # create native dll override
 overrideDll() {
-  $wine reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v $1 /d native /f >/dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo -e "Failed to add override for $1"
-    exit 1
-  fi
+  $wine reg add 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v "${1}" /d native /f >/dev/null 2>&1 || {
+    echo -e "Failed to add override for ${1}" >&2
+    return 1
+  }
+  return 0
 }
 
 # remove dll override
 restoreDll() {
-  $wine reg delete 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v $1 /f > /dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo "Failed to remove override for $1"
-  fi
+  # nothing to override
+  $wine reg query 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v "${1}" &>/dev/null || return 0
+
+  $wine reg delete 'HKEY_CURRENT_USER\Software\Wine\DllOverrides' /v "${1}" /f &>/dev/null || {
+    echo "Failed to remove override for ${1}" >&2
+    return 1
+  }
+  return 0
 }
 
 # copy or link dxvk dll, back up original file
 installFile() {
-  dstfile="${1}/${3}.dll"
-  srcfile="${basedir}/${2}/${3}.dll"
+  if [ -z "${1:-}" ] || [ -z "${2:-}" ] || [ -z "${3:-}" ]; then return 1; fi
+  local dstfile="${1:-}/${3:-}.dll"
+  local srcfile="${basedir}/${2:-}/${3:-}.dll"
 
-  if [ -f "${srcfile}.so" ]; then
-    srcfile="${srcfile}.so"
+  if [ -f "${srcfile:-}.so" ]; then
+    srcfile="${srcfile:-}.so"
   fi
 
-  if ! [ -f "${srcfile}" ]; then
-    echo "${srcfile}: File not found. Skipping." >&2
+  if ! [ -f "${srcfile:-}" ]; then
+    echo "${srcfile:-}: File not found. Skipping." >&2
     return 1
   fi
 
-  if [ -n "$1" ]; then
-    if [ -f "${dstfile}" ] || [ -h "${dstfile}" ]; then
-      if ! [ -f "${dstfile}.old" ]; then
-        mv -v "${dstfile}" "${dstfile}.old"
-      else
-        rm -v "${dstfile}"
-      fi
-      $file_cmd "${srcfile}" "${dstfile}"
+  if [ -f "${dstfile:-}" ] || [ -h "${dstfile:-}" ]; then
+    if ! [ -f "${dstfile:-}.old" ]; then
+      mv -v "${dstfile:-}" "${dstfile:-}.old"
     else
-      echo "${dstfile}: File not found in wine prefix" >&2
-      return 1
+      rm -v "${dstfile:-}"
     fi
+    $file_cmd "${srcfile:-}" "${dstfile:-}" || return 1
+  else
+    echo "${dstfile:-}: File not found in wine prefix. Nothing to do." >&2
+    return 1
   fi
   return 0
 }
 
 # remove dxvk dll, restore original file
 uninstallFile() {
-  dstfile="${1}/${3}.dll"
-  srcfile="${basedir}/${2}/${3}.dll"
+  if [ -z "${1:-}" ] || [ -z "${2:-}" ] || [ -z "${3:-}" ]; then return 1; fi
+  local dstfile="${1:-}/${3:-}.dll"
+  local srcfile="${basedir:-}/${2:-}/${3:-}.dll"
 
-  if [ -f "${srcfile}.so" ]; then
-    srcfile="${srcfile}.so"
+  if [ -f "${srcfile:-}.so" ]; then
+    srcfile="${srcfile:-}.so"
   fi
 
-  if ! [ -f "${srcfile}" ]; then
-    echo "${srcfile}: File not found. Skipping." >&2
+  if ! [ -f "${srcfile:-}" ]; then
+    echo "${srcfile:-}: File not found. Skipping." >&2
     return 1
   fi
 
-  if ! [ -f "${dstfile}" ] && ! [ -h "${dstfile}" ]; then
-    echo "${dstfile}: File not found. Skipping." >&2
+  if ! [ -f "${dstfile:-}" ] && ! [ -h "${dstfile:-}" ]; then
+    echo "${dstfile:-}: File not found. Skipping." >&2
     return 1
   fi
 
-  if [ -f "${dstfile}.old" ]; then
-    rm -v "${dstfile}"
-    mv -v "${dstfile}.old" "${dstfile}"
-    return 0
-  else
-    return 1
+  if [ -f "${dstfile:-}.old" ]; then
+    rm -v "${dstfile:-}"
+    mv -v "${dstfile:-}.old" "${dstfile:-}"
   fi
+
+  return 0
 }
 
 install() {
-  inst64_ret=-1
-  if [ $win64 = "true" ]; then
-    installFile "$win64_sys_path" "$dxvk_lib64" "$1"
-    inst64_ret="$?"
-  fi
+  declare -i ret=0;
+  [ -n "${win64_sys_path:-}" ] && installFile "${win64_sys_path}" "${dxvk_lib64}" "${1}" && ((ret++))
+  [ -n "${win32_sys_path:-}" ] && installFile "${win32_sys_path}" "${dxvk_lib32}" "${1}" && ((ret++))
 
-  inst32_ret=-1
-  if [ $win32 = "true" ]; then
-    installFile "$win32_sys_path" "$dxvk_lib32" "$1"
-    inst32_ret="$?"
-  fi
-
-  if (( ($inst32_ret == 0) || ($inst64_ret == 0) )); then
-    overrideDll "$1"
-  fi
+  ((ret)) && { overrideDll "${1}" || return 1 ; }
+  return 0
 }
 
 uninstall() {
-  uninst64_ret=-1
-  if [ $win64 = "true" ]; then
-    uninstallFile "$win64_sys_path" "$dxvk_lib64" "$1"
-    uninst64_ret="$?"
-  fi
+  declare -i ret=0;
+  [ -n "${win64_sys_path:-}" ] && uninstallFile "${win64_sys_path}" "${dxvk_lib64}" "${1}" && ((ret++))
+  [ -n "${win32_sys_path:-}" ] && uninstallFile "${win32_sys_path}" "${dxvk_lib32}" "${1}" && ((ret++))
 
-  uninst32_ret=-1
-  if [ $win32 = "true" ]; then
-    uninstallFile "$win32_sys_path" "$dxvk_lib32" "$1"
-    uninst32_ret="$?"
-  fi
-
-  if (( ($uninst32_ret == 0) || ($uninst64_ret == 0) )); then
-    restoreDll "$1"
-  fi
+  ((ret)) && { restoreDll "${1}" || return 1 ; }
+  return 0
 }
 
-# skip dxgi during install if not explicitly
-# enabled, but always try to uninstall it
-if $with_dxgi || [ "$action" == "uninstall" ]; then
-  $action dxgi
-fi
+setupWine() {
+  # find wine executable
+  export WINEDEBUG="${WINEDEBUG:-"-all"}"
+  # disable mscoree and mshtml to avoid downloading wine gecko and mono
+  # and don't show "updating prefix" dialog
+  export DISPLAY=
+  export WAYLAND_DISPLAY=
+  export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-}${WINEDLLOVERRIDES:+";"}mscoree=;mshtml=;winex11.drv=;winewayland.drv="
 
-$action d3d8
-$action d3d9
-$action d3d10core
-$action d3d11
+  # try wine/wine64 or use the WINE env var for the wine binary
+  wine="$(which "${WINE:-wine}" 2>/dev/null)" || wine="$(which "${WINE:-wine}64" 2>/dev/null)"
+
+  if [ ! -x "$wine" ]; then
+    echo "Can't find a valid wine=$wine executable in \$PATH""${WINE:+" or from the env var WINE=$WINE you set"}"'.' >&2
+    return 1
+  fi
+
+  # validate wine/wineprefix/registry, and ensure wine placeholder dlls are recreated if they are missing
+  # but don't create a new non-default wineprefix (by checking system.reg if WINEPREFIX is passed)
+  if ! { [ -n "${WINEPREFIX:-}" ] && [ ! -r "${WINEPREFIX:-}/system.reg" ] ; }; then
+    if ! { $wine wineboot -u ; }; then
+      echo "Error: $wine wineboot -u returned $?." >&2
+      return 1
+    fi
+
+    # if it wasn't specified, get the default WINEPREFIX from wine
+    if [ -z "${WINEPREFIX:-}" ]; then
+      WINEPREFIX="$($wine cmd /c 'winepath.exe -u %WINECONFIGDIR%' 2>/dev/null)" || {
+        echo "Couldn't determine the default wineprefix from $wine winepath.exe." >&2
+        return 1
+      }
+    fi
+  fi
+
+  export WINEPREFIX
+  local sysregfile="${WINEPREFIX}/system.reg"
+
+  if [ ! -r "${sysregfile:-}" ]; then
+    echo "The WINEPREFIX=$WINEPREFIX is broken/invalid/doesn't exist." >&2
+    return 1
+  fi
+
+  # get the winearch from the regfile
+  winearch="$(grep -e '#arch=win' "${sysregfile}" | head -n 1 | grep -oe "win.*")" || {
+    echo "Can't determine the prefix architecture from the $sysregfile registry file. Exiting." >&2
+    return 1
+  }
+
+  # resolve 32-bit and 64-bit system paths
+  # system32 will be 32-bit for WINEARCH=win32 and 64-bit for WINEARCH=win64
+  win64_sys_path="$($wine cmd /c '%SystemRoot%\system32\winepath.exe -u C:\windows\system32' 2>/dev/null)"
+  win64_sys_path="${win64_sys_path/$'\r'/}"
+
+  if [ "${winearch:-}" = "win32" ]; then # win32 (32-bit only) installation
+    win32_sys_path="${win64_sys_path}"
+    win64_sys_path=
+  else # win64 installation, check for 32-bit folder as well
+    win32_sys_path="$($wine cmd /c '%SystemRoot%\syswow64\winepath.exe -u C:\windows\system32' 2>/dev/null)"
+    win32_sys_path="${win32_sys_path/$'\r'/}"
+  fi
+
+  if [ -z "${win32_sys_path:-}" ] && [ -z "${win64_sys_path:-}" ]; then
+    echo 'Failed to resolve C:\windows\system32.' >&2
+    return 1
+  fi
+
+  return 0
+}
+
+dumpWineConfig() {
+  echo ""
+  echo "Wine info:" >&2
+  [ -n "${WINEDEBUG:-}" ] && echo "WINEDEBUG: ${WINEDEBUG}" >&2
+  [ -n "${WINEDLLOVERRIDES:-}" ] && echo "WINEDLLOVERRIDES: ${WINEDLLOVERRIDES}" >&2
+  [ -n "${WINEPREFIX:-}" ] && echo "WINEPREFIX: ${WINEPREFIX}" >&2
+  [ -n "${winearch:-}" ] && echo "Prefix architecture: ${winearch}" >&2
+  [ -x "${wine:-}" ] && {
+    { winever="$($wine --version | grep wine)" && echo "Wine version: $winever" >&2 ; } || \
+      echo "Invalid wine version (\$wine=$wine)." >&2
+  }
+
+  echo "win64_sys_path: ${win64_sys_path:-"N/A"}" >&2
+  echo "win32_sys_path: ${win32_sys_path:-"N/A"}" >&2
+
+  return
+}
+
+runActions() {
+  declare -a actions
+  actions=(d3d8 d3d9 d3d10core d3d11)
+  # always uninstall dxgi
+  [ "${with_dxgi:-}" != "false" ] && actions+=(dxgi)
+
+  declare -i actionret=0
+  for verb in "${actions[@]}"; do
+    $action "${verb}" || {
+        ((actionret++)) || true
+        continue
+      }
+  done
+
+  ((actionret)) && return 1
+  return 0
+}
+
+#################### Actually run the install/uninstall actions #####################
+
+# first, figure out what kind of wine installation we're dealing with
+setupWine || {
+  echo "Setting up wine failed." >&2
+  dumpWineConfig
+  exit 1
+}
+
+runActions || {
+  echo "Script finished with warnings/errors." >&2
+  dumpWineConfig
+  exit 1
+}
+
+echo "$action""ation complete."
+# exit 0
