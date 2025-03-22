@@ -242,18 +242,6 @@ pkgname = lib32-vulkan-intel
 	optdepends = lib32-vulkan-mesa-layers: additional vulkan layers
 	provides = lib32-vulkan-driver
 
-pkgname = lib32-vulkan-mesa-layers
-	pkgdesc = Mesa's Vulkan layers - 32-bit
-	depends = lib32-gcc-libs
-	depends = lib32-glibc
-	depends = lib32-libdrm
-	depends = lib32-libpng
-	depends = lib32-libxcb
-	depends = lib32-wayland
-	depends = vulkan-mesa-layers
-	conflicts = lib32-vulkan-mesa-layer
-	replaces = lib32-vulkan-mesa-layer
-
 pkgname = lib32-vulkan-nouveau
 	pkgdesc = Open-source Vulkan driver for Nvidia GPUs - 32-bit
 	depends = lib32-expat
@@ -337,3 +325,15 @@ pkgname = lib32-vulkan-virtio
 	depends = vulkan-virtio
 	optdepends = lib32-vulkan-mesa-layers: additional vulkan layers
 	provides = lib32-vulkan-driver
+
+pkgname = lib32-vulkan-mesa-layers
+	pkgdesc = Mesa's Vulkan layers - 32-bit
+	depends = lib32-gcc-libs
+	depends = lib32-glibc
+	depends = lib32-libdrm
+	depends = lib32-libpng
+	depends = lib32-libxcb
+	depends = lib32-wayland
+	depends = vulkan-mesa-layers
+	conflicts = lib32-vulkan-mesa-layer
+	replaces = lib32-vulkan-mesa-layer

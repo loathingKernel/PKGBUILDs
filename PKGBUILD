@@ -12,11 +12,11 @@ pkgname=(
   lib32-vulkan-dzn
   lib32-vulkan-gfxstream
   lib32-vulkan-intel
-  lib32-vulkan-mesa-layers
   lib32-vulkan-nouveau
   lib32-vulkan-radeon
   lib32-vulkan-swrast
   lib32-vulkan-virtio
+  lib32-vulkan-mesa-layers
 )
 pkgver=25.0.2
 pkgrel=2
