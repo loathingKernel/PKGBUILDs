@@ -1,7 +1,7 @@
 pkgbase = wine
 	pkgdesc = A compatibility layer for running Windows programs
-	pkgver = 10.3
-	pkgrel = 2
+	pkgver = 10.4
+	pkgrel = 1
 	url = https://www.winehq.org
 	install = wine.install
 	arch = x86_64
@@ -135,10 +135,10 @@ pkgbase = wine
 	optdepends = lib32-v4l-utils
 	optdepends = wine-gecko
 	optdepends = wine-mono
-	optdepends = ntsync-dkms
+	optdepends = NTSYNC-MODULE
 	options = !staticlibs
 	options = !lto
-	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-10.3
+	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-10.4
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
 	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=21d3c43e7c4d5e817657ad9f3e21616b2c5de52a
@@ -148,7 +148,7 @@ pkgbase = wine
 	source = wine-ntsync.patch
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = d3cdc9c798d7c3ebffc73de8000e7c79260b8ba3019b41bebed8b329293ed4283110b3404a7d71a8204416fda2045bb2778d5f260f1139fb991ea798a5166e27
+	sha512sums = 24f8c612b627f8aa4257b91f3fa1c51e8a4d8caf48df5d12e6f72b3477b708588fd53176da3856302d98ffcb5fefa01bcbfd650f5c811a0a20d2abf169c7e7c3
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
 	sha512sums = 2221d217bbff9e1b238ebd2954fa1bd3f20b742df599117526b098f806c609624b14cae0adf1ee131c0c699d89d2a98bb8d480e58567a614ec36a822bc4ca8a1
