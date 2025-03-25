@@ -21,14 +21,14 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - {subdir}/{pkgname}/.SRCINFO
+      - {subdir}/{pkgname}/.SRCINFO
 
 jobs:
   repository:
