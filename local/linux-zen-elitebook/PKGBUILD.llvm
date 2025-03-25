@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=6.13.4.zen1
+pkgver=6.13.8.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Elitebook LLVM'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -15,6 +15,9 @@ makedepends=(
   pahole
   perl
   python
+  rust
+  rust-bindgen
+  rust-src
   tar
   xz
 
@@ -38,18 +41,18 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('b80e0bc8efbc31e9ce5a84d1084dcccfa40e01bea8cc25afd06648b93d61339e'
+sha256sums=('259afa59d73d676bec2ae89beacd949e08d54d3f70a7f8b0a742315095751abb'
             'SKIP'
-            'e1c6382a9bc0664da5e344de07413d2773eadc8002db3aba260d0512d310cea9'
+            '05da663bb9b6ec9ffbbbad47dbab232e8071952fa9b22a212e2706d3ffc4f38f'
             'SKIP'
             '6d762ccc8ce1e88e2c63b9f15c5e7a7d563f7d48a6276d6b108626f506b20f9c'
-            '457681b58e2e6d67c8445784b5ba3bef652eed91865d77eebe097fbd5e2a29cd')
-b2sums=('2fe8e972e7de458fba6fbb18a08a01f17b49e4a2d31aa1368e50895a2698c6e1aaaf5137d0c0018860de3fe598e4ba425d6126ade7387ba227f690137111a66d'
+            '320fa5622189a00052022e950d69bfb2e7603e2ff8840e44d12540255de44881')
+b2sums=('c20916a44a07d355ba8337229f102cd507deae92c88576040965e909fa89c09f98611746a8c8f249bc3dcf492238ce3f08c48f523670ccad4bd7ec21622806af'
         'SKIP'
-        'eb14739a625f7d6ab4bf60fcaafd8d00ae2a060518c4d42fc7ce56b1037750211ccfae248cffa306352c1a1a6c4ce0640953e13b5a91c69adf820fc80a9b74e7'
+        '0228964c400369e8a81878e9707e5e2f62f8bcbdbbb2eb56c4576a742910e0422f66c01404fc7c5b58608eb01de7f5c98bb696971dcb525c679fcc19d9b76c77'
         'SKIP'
         'a8b108f62e6bcf95803f1b4a5fd3f9b578ac5be21e151645f1f466f83b7a9eb54a433f4a7773aee0f6a60e21b66f10544c6c1d5d321693278d9b4aded7e894fb'
-        '488bcd4d04d34ab7caf648889e6ce22ab751e4de2c71074062274bc6fb8b0e1a0330451b0ccab15f2a13e6aa9d4583732a06c76e10e0ec063b862e8af1c43855')
+        '0067e8fd597e0112a7a84ec5886f77cebff92a43b2c32f3f18c757476c6efd238ceae311844138cf6d6fdb87526269606a0d81230c88174206d773aef43d1304')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -241,6 +244,14 @@ _package-headers() {
 
   echo "Installing KConfig files..."
   find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
+
+  echo "Installing Rust files..."
+  install -Dt "$builddir/rust" -m644 rust/*.rmeta
+  install -Dt "$builddir/rust" rust/*.so
+
+  echo "Installing unstripped VDSO..."
+  make INSTALL_MOD_PATH="$pkgdir/usr" vdso_install \
+    link=  # Suppress build-id symlinks
 
   echo "Removing unneeded architectures..."
   local arch

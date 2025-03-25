@@ -10,14 +10,14 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - local/linux-zen-elitebook/.SRCINFO
+      - local/linux-zen-elitebook/.SRCINFO
 
 jobs:
   repository:
