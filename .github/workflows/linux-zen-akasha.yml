@@ -10,14 +10,14 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - local/linux-zen-akasha/.SRCINFO
+      - local/linux-zen-akasha/.SRCINFO
 
 jobs:
   repository:
