@@ -1,6 +1,6 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
-pkgver=3.0.2
+pkgver=3.1.0
 pkgrel=1
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
@@ -13,15 +13,12 @@ makedepends=('gettext' 'meson')
 checkdepends=('appstream' 'desktop-file-utils')
 options=('!strip' '!debug')
 source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('c2c8f90ca5feec1a3b9404d7d7647955105087993fd0238f2dd5c6dcfaf364d4')
+sha256sums=('f1c75acfc704e3baa84aeb88d9a4c0e69d0384ad323e43a5331c1f72a84e3343')
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	# Arch command doesn't seem to exist on arch linux so instead we can substitute it for 'uname' for now
 	sed -i "s/\(\['arch'\]\)/['uname', '-m']/g" src/AppDetails.py
-	# Fix an uncritical error that occurs exiting the program prematurely due to a difference in packages
-	# (https://github.com/mijorus/gearlever/pull/225#issue-2844151525)
-	sed -i "/cwd=dest_path/s/)/, return_stderr=True)/" src/providers/AppImageProvider.py
 }
 
 build() {
