@@ -2,12 +2,12 @@
 
 pkgname=pinta
 pkgver=2.1.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Drawing/editing program modeled after Paint.NET. It's goal is to provide a simplified alternative to GIMP for casual users"
 arch=(any)
 url="https://pinta-project.com"
 license=(MIT)
-depends=(dotnet-runtime-8.0 libadwaita hicolor-icon-theme webp-pixbuf-loader)
+depends=(dotnet-runtime libadwaita hicolor-icon-theme webp-pixbuf-loader)
 makedepends=(autoconf-archive intltool dotnet-sdk)
 provides=($pkgname)
 conflicts=($pkgname-git)
@@ -18,6 +18,8 @@ prepare() {
   cd "${srcdir}/Pinta-${pkgver}"
 
   sed -i '/^PINTA_BUILD_OPTS/ s/$/ -maxcpucount:1/' Makefile.am
+
+  sed -i 's/net8.0/net9.0/g' Directory.Build.props configure.ac
 
   ./autogen.sh --prefix=/usr --sysconfdir=/etc --localstatedir=/var
 }

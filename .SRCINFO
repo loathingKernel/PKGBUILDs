@@ -1,14 +1,14 @@
 pkgbase = pinta
 	pkgdesc = Drawing/editing program modeled after Paint.NET. It's goal is to provide a simplified alternative to GIMP for casual users
 	pkgver = 2.1.2
-	pkgrel = 1
+	pkgrel = 2
 	url = https://pinta-project.com
 	arch = any
 	license = MIT
 	makedepends = autoconf-archive
 	makedepends = intltool
 	makedepends = dotnet-sdk
-	depends = dotnet-runtime-8.0
+	depends = dotnet-runtime
 	depends = libadwaita
 	depends = hicolor-icon-theme
 	depends = webp-pixbuf-loader
