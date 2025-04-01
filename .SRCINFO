@@ -11,9 +11,11 @@ pkgbase = jstest-gtk-git
 	depends = gtkmm3
 	source = git+https://github.com/Grumbel/jstest-gtk.git
 	source = jstest-gtk.desktop
+	source = fix_cmake_min_version.patch
 	source = fix_datadir.patch
-	sha1sums = SKIP
-	sha1sums = 4a8a3f5ac41b509fdfc0aec7cf017447e58ec973
-	sha1sums = 1c1cdc1c2d98c18ce4b0523c53b8be8a08f4eeed
+	sha256sums = SKIP
+	sha256sums = 8063bdd1426bd772396929bc044de933db40a9888663bc72556ffc62a255c0fc
+	sha256sums = f79c68b9ac07410a44c34093472f00bdb744ba4d9fa8fea0eecb8bc49b09d881
+	sha256sums = 2aa59e55543db649bc0d1288ed22ec9b0702c824edd9f84913b8eadd029cac77
 
 pkgname = jstest-gtk-git

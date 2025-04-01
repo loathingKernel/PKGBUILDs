@@ -8,15 +8,19 @@ pkgrel=1
 pkgdesc="A simple GTK2-based joystick tester and calibrator"
 arch=('i686' 'x86_64')
 url="https://github.com/Grumbel/jstest-gtk"
-source=("git+$url.git" 'jstest-gtk.desktop' 'fix_datadir.patch')
+source=("git+$url.git"
+		'jstest-gtk.desktop'
+		'fix_cmake_min_version.patch'
+		'fix_datadir.patch')
 license=('GPL3')
 depends=('gtkmm3')
 makedepends=('git' 'cmake')
 _gitname="jstest-gtk"
 
-sha1sums=('SKIP'
-          '4a8a3f5ac41b509fdfc0aec7cf017447e58ec973'
-          '1c1cdc1c2d98c18ce4b0523c53b8be8a08f4eeed')
+sha256sums=('SKIP'
+			'8063bdd1426bd772396929bc044de933db40a9888663bc72556ffc62a255c0fc'
+			'f79c68b9ac07410a44c34093472f00bdb744ba4d9fa8fea0eecb8bc49b09d881'
+			'2aa59e55543db649bc0d1288ed22ec9b0702c824edd9f84913b8eadd029cac77')
 
 pkgver() {
   cd "$_gitname"
@@ -27,6 +31,7 @@ build() {
   cd "$_gitname"
 
   msg "Patching..."
+  patch -p1 < "../fix_cmake_min_version.patch"
   patch -p1 < "../fix_datadir.patch"
 
   if [[ ! -e 'build' ]]; then
@@ -46,7 +51,3 @@ package() {
   mkdir -p "${pkgdir}/usr/share/jstest-gtk"
   cp -r "../jstest-gtk/data" "${pkgdir}/usr/share/jstest-gtk/"
 }
-
-sha1sums=('SKIP'
-          '4a8a3f5ac41b509fdfc0aec7cf017447e58ec973'
-          '1c1cdc1c2d98c18ce4b0523c53b8be8a08f4eeed')
