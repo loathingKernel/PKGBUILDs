@@ -1,17 +1,20 @@
 pkgbase = pinta
 	pkgdesc = Drawing/editing program modeled after Paint.NET. It's goal is to provide a simplified alternative to GIMP for casual users
-	pkgver = 1.7
+	pkgver = 2.1.2
 	pkgrel = 1
-	url = https://pinta-project.com/
+	url = https://pinta-project.com
 	arch = any
 	license = MIT
+	makedepends = autoconf-archive
 	makedepends = intltool
-	depends = gtk-sharp-2
-	depends = mono-addins
-	source = https://github.com/PintaProject/Pinta/releases/download/1.7/pinta-1.7.tar.gz
-	source = pinta.appdata.xml
-	sha256sums = 678c0d5c6e41da77696180efc71476ccfda3238a3d68d7331198c8a431dbf96c
-	sha256sums = 7873caf68d056369a25185d2f61f108b30b1f42173f4bafa9ed0d4b5fe7e86de
+	makedepends = dotnet-sdk
+	depends = dotnet-runtime-8.0
+	depends = libadwaita
+	depends = hicolor-icon-theme
+	depends = webp-pixbuf-loader
+	provides = pinta
+	conflicts = pinta-git
+	source = Pinta-2.1.2.tar.gz::https://github.com/PintaProject/Pinta/archive/refs/tags/2.1.2.tar.gz
+	sha256sums = 51939b5ecf1cfd546189da4a4c54146616052710434e718136cf1fa3dee9d680
 
 pkgname = pinta
-
