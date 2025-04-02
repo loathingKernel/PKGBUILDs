@@ -10,7 +10,7 @@ depends=('7zip' 'binutils' 'dconf' 'fuse2' 'gdk-pixbuf2' 'glibc' 'glib2' 'gtk4' 
 	 'libadwaita' 'pango' 'python' 'python-dbus' 'python-gobject' 'python-pyxdg' 'python-requests'
 	 'zlib')
 makedepends=('gettext' 'meson')
-checkdepends=('appstream')
+checkdepends=('appstream' 'desktop-file-utils')
 options=('!strip' '!debug')
 source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('7d6768b08f1ee4070052419ce9ab39701a4aee7be8e2157f26b0414287a50098')
