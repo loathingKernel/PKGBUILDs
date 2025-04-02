@@ -1,7 +1,7 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
 pkgver=3.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
 url="https://mijorus.it/projects/gearlever/"
@@ -19,6 +19,10 @@ prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	# Arch command doesn't seem to exist on arch linux so instead we can substitute it for 'uname' for now
 	sed -i "s/\(\['arch'\]\)/['uname', '-m']/g" src/AppDetails.py
+	
+	# Fix an uncritical error that occurs exiting the program prematurely due to a difference in packages
+	# (https://github.com/mijorus/gearlever/pull/225#issue-2844151525)
+	sed -i "/cwd=dest_path/s/)/, return_stderr=True)/" src/providers/AppImageProvider.py
 }
 
 build() {
