@@ -1,6 +1,6 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
-pkgver=3.1.0
+pkgver=3.1.1
 pkgrel=1
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
@@ -13,7 +13,7 @@ makedepends=('gettext' 'meson')
 checkdepends=('appstream' 'desktop-file-utils')
 options=('!strip' '!debug')
 source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('f1c75acfc704e3baa84aeb88d9a4c0e69d0384ad323e43a5331c1f72a84e3343')
+sha256sums=('7d6768b08f1ee4070052419ce9ab39701a4aee7be8e2157f26b0414287a50098')
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
