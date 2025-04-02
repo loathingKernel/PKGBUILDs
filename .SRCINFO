@@ -1,7 +1,7 @@
 pkgbase = gearlever
 	pkgdesc = Manage AppImages with ease
 	pkgver = 3.1.1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://mijorus.it/projects/gearlever/
 	arch = x86_64
 	license = GPL-3.0-or-later
@@ -12,6 +12,7 @@ pkgbase = gearlever
 	depends = 7zip
 	depends = binutils
 	depends = dconf
+	depends = dwarfs-bin
 	depends = fuse2
 	depends = gdk-pixbuf2
 	depends = glibc

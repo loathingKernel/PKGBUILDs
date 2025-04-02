@@ -1,14 +1,14 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
 pkgver=3.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
 url="https://mijorus.it/projects/gearlever/"
 license=('GPL-3.0-or-later')
-depends=('7zip' 'binutils' 'dconf' 'fuse2' 'gdk-pixbuf2' 'glibc' 'glib2' 'gtk4' 'hicolor-icon-theme'
-	 'libadwaita' 'pango' 'python' 'python-dbus' 'python-gobject' 'python-pyxdg' 'python-requests'
-	 'zlib')
+depends=('7zip' 'binutils' 'dconf' 'dwarfs-bin' 'fuse2' 'gdk-pixbuf2' 'glibc' 'glib2' 'gtk4'
+	 'hicolor-icon-theme' 'libadwaita' 'pango' 'python' 'python-dbus' 'python-gobject' 'python-pyxdg'
+	 'python-requests' 'zlib')
 makedepends=('gettext' 'meson')
 checkdepends=('appstream' 'desktop-file-utils')
 options=('!strip' '!debug')
