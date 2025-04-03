@@ -1,6 +1,6 @@
 pkgbase = jstest-gtk-git
 	pkgdesc = A simple GTK2-based joystick tester and calibrator
-	pkgver = 0.1.0.r125.g60fe6eb
+	pkgver = 0.1.0.r127.g92bdf8e
 	pkgrel = 1
 	url = https://github.com/Grumbel/jstest-gtk
 	arch = i686
@@ -11,11 +11,9 @@ pkgbase = jstest-gtk-git
 	depends = gtkmm3
 	source = git+https://github.com/Grumbel/jstest-gtk.git
 	source = jstest-gtk.desktop
-	source = fix_cmake_min_version.patch
 	source = fix_datadir.patch
 	sha256sums = SKIP
 	sha256sums = 8063bdd1426bd772396929bc044de933db40a9888663bc72556ffc62a255c0fc
-	sha256sums = f79c68b9ac07410a44c34093472f00bdb744ba4d9fa8fea0eecb8bc49b09d881
 	sha256sums = 2aa59e55543db649bc0d1288ed22ec9b0702c824edd9f84913b8eadd029cac77
 
 pkgname = jstest-gtk-git
