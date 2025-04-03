@@ -53,6 +53,7 @@ pkgbase = proton-cachyos
 	makedepends = opencl-headers
 	makedepends = opencl-icd-loader
 	makedepends = lib32-opencl-icd-loader
+	makedepends = perl-json
 	makedepends = rsync
 	makedepends = rust
 	makedepends = lib32-rust-libs

@@ -84,6 +84,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   nasm
   opencl-headers
   opencl-icd-loader     lib32-opencl-icd-loader
+  perl-json
   rsync
   rust                  lib32-rust-libs
   python
