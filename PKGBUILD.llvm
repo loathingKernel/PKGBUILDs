@@ -111,8 +111,6 @@ prepare() {
   mkdir ${pkgname//-opt}-{32,64}-build
 
   pushd ${pkgname//-opt}
-      patch -Np1 -i "$srcdir"/0001-explorer-Enable-the-Wayland-driver.patch
-      patch -Np1 -i "$srcdir"/0001-Revert-HACK-winegstreamer-Set-GST_GL_WINDOW-environm.patch
       git config user.email "wine@cachyos.org"
       git config user.name "wine cachyos"
       git tag wine-9.0 --annotate -m "$pkgver" --force
