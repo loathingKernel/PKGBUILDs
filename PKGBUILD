@@ -187,13 +187,6 @@ prepare() {
 build() {
     export PATH="$(pwd)/wrappers:$PATH"
 
-    cd build
-    ROOTLESS_CONTAINER="" \
-    ../proton-cachyos/configure.sh \
-        --container-engine="none" \
-        --proton-sdk-image="" \
-        --build-name="${pkgname}"
-
     local -a split=($CFLAGS)
     local -A flags
     for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
@@ -211,6 +204,13 @@ build() {
     export CARGO_HOME="${SRCDEST}"/proton-cargo
     export WINEESYNC=0
     export WINEFSYNC=0
+
+    cd build
+    ROOTLESS_CONTAINER="" \
+    ../proton-cachyos/configure.sh \
+        --container-engine="none" \
+        --proton-sdk-image="" \
+        --build-name="${pkgname}"
 
     SUBJOBS=$([[ "$MAKEFLAGS" =~ -j\ *([1-9][0-9]*) ]] && echo "${BASH_REMATCH[1]}" || echo "$(nproc)") \
         make -j1 dist
