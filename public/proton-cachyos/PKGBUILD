@@ -17,6 +17,7 @@ source=(
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
     0001-build-add-policy-version-minimum-for-CMake.patch
+    0001-build-sanitize-environment-by-disabling-esync-fsync-.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -172,6 +173,7 @@ prepare() {
 
     ./patches/apply.sh
     patch -Np1 -i "$srcdir"/0001-build-add-policy-version-minimum-for-CMake.patch
+    patch -Np1 -i "$srcdir"/0001-build-sanitize-environment-by-disabling-esync-fsync-.patch
 
     for rustlib in gst-plugins-rs; do
     pushd $rustlib
@@ -202,8 +204,6 @@ build() {
 
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_HOME="${SRCDEST}"/proton-cargo
-    export WINEESYNC=0
-    export WINEFSYNC=0
 
     cd build
     ROOTLESS_CONTAINER="" \
@@ -267,4 +267,5 @@ b2sums=('c124fd78ddb05b6b575310428af144219e4d751cfb5dc1592c35a398e05cd4253d3d244
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         '5f4c2a07355a3d394086467f1b0c45698cd83731a4137b59975abdeda2d564f44922a67b1bec111e4209c4fe74247486076e95dffc84d88b5b7a02774efd070b'
         '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85'
-        '6c187c69844eb076e29fb2ccd0daa12ad24a91cbe0cf78d77343c238c5cc6e9a86dadb6b723f668ab0cd18e2822cabd0d55afbfb3ab7ab111d4aa8f7df57a12d')
+        '6c187c69844eb076e29fb2ccd0daa12ad24a91cbe0cf78d77343c238c5cc6e9a86dadb6b723f668ab0cd18e2822cabd0d55afbfb3ab7ab111d4aa8f7df57a12d'
+        '753dd4f3b6017969f301db05ab574364dbae1958743b7d8475bf65e27671c1443225215c967f1815aa105b7b640013e4e28caf10b5b7d4a71bfb537c334c50c4')
