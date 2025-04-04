@@ -23,7 +23,8 @@ optdepends=(
   'xdg-desktop-portal: portal support'
 )
 makedepends=(
-  'rust>=1.84.0'
+  cargo
+  cmake
   shaderc
 )
 options=(!lto)
@@ -32,11 +33,13 @@ sha512sums=('2e32bc5fa5be545f3875f8a2fb480806c81115c3c1cdeb0e6c2cf99c350a38a748d
 
 build() {
   cd $pkgname-$pkgver/
+  export RUSTUP_TOOLCHAIN=stable
   cargo build --release --locked
 }
 
 check() {
   cd $pkgname-$pkgver/
+  export RUSTUP_TOOLCHAIN=stable
   cargo test --release --locked
 }
 
