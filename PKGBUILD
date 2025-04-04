@@ -157,14 +157,11 @@ prepare() {
     fi
 
     # ccache handling
-    if [ -n "${BUILDENV}" ]; then for _env in "${BUILDENV[@]}"; do
-        if [ "${_env}" = "ccache" ]; then
-            for _arch in win32 win64; do
-                sed -i "s|c[p]*[p]* = \[|\0'ccache', |g" \
-                    "${srcdir}/dxvk/build-${_arch}.txt"
-            done
-        fi
-    done; fi
+    if [ -n "${BUILDENV}" ]; then
+        for _env in "${BUILDENV[@]}"; do
+            [ "${_env}" = "ccache" ] && ln -sf "$(command -v ccache)" "${srcdir}/clang-cl" && break
+        done
+    fi
 }
 
 build() {
@@ -172,8 +169,10 @@ build() {
     export DISPLAY=
     export WAYLAND_DISPLAY=
     export WINEDLLOVERRIDES="winex11.drv=;winewayland.drv="
+    export CCACHE_COMPILER="clang-cl"
+    export CCACHE_COMPILERTYPE="icx-cl"
 
-    export PATH="${_msvcpath}/x64:${_regpath}" && BIN="${_msvcpath}/x64" . "${srcdir}/msvc-wine/msvcenv-native.sh"
+    export PATH="${srcdir}:${_msvcpath}/x64:${_regpath}" && BIN="${_msvcpath}/x64" . "${srcdir}/msvc-wine/msvcenv-native.sh"
 
     export PKG_CONFIG="pkg-config"
     export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
@@ -191,7 +190,7 @@ build() {
         -Db_vscrt=static_from_buildtype
     ninja -C "build/x64"
 
-    export PATH="${_msvcpath}/x86:${_regpath}" && BIN="${_msvcpath}/x86" . "${srcdir}/msvc-wine/msvcenv-native.sh"
+    export PATH="${srcdir}:${_msvcpath}/x86:${_regpath}" && BIN="${_msvcpath}/x86" . "${srcdir}/msvc-wine/msvcenv-native.sh"
     export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
 
     # shellcheck disable=SC2086
@@ -211,12 +210,14 @@ package() {
     export DISPLAY=
     export WAYLAND_DISPLAY=
     export WINEDLLOVERRIDES="winex11.drv=;winewayland.drv="
+    export CCACHE_COMPILER="clang-cl"
+    export CCACHE_COMPILERTYPE="icx-cl"
 
-    export PATH="${_msvcpath}/x86:${_regpath}" && BIN="${_msvcpath}/x86" . "${srcdir}/msvc-wine/msvcenv-native.sh"
+    export PATH="${srcdir}:${_msvcpath}/x86:${_regpath}" && BIN="${_msvcpath}/x86" . "${srcdir}/msvc-wine/msvcenv-native.sh"
     # shellcheck disable=SC2154
     meson install -C "build/x32" --destdir="${pkgdir}" --no-rebuild --tags runtime
 
-    export PATH="${_msvcpath}/x64:${_regpath}" && BIN="${_msvcpath}/x64" . "${srcdir}/msvc-wine/msvcenv-native.sh"
+    export PATH="${srcdir}:${_msvcpath}/x64:${_regpath}" && BIN="${_msvcpath}/x64" . "${srcdir}/msvc-wine/msvcenv-native.sh"
     meson install -C "build/x64" --destdir="${pkgdir}" --no-rebuild --tags runtime
 
     install -Dm 644 setup_dxvk.sh "${pkgdir}/usr/share/dxvk/setup_dxvk.sh"
