@@ -34,8 +34,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Prepare Cache
-      uses: actions/cache@v4
+    - name: Restore Cache
+      id: ccache-restore
+      uses: actions/cache/restore@v4
       with:
         path: ./.ccache
         key: ${{ github.workflow }}-${{ inputs.release_tag }}-${{ github.run_id }}
@@ -53,6 +54,14 @@ jobs:
         multilib: ${{ inputs.multilib }}
         useCcacheExt: ${{ inputs.ccache_ext }}
         repoReleaseTag: ${{ inputs.release_tag }}
+
+    - name: Save Cache
+      id: ccache-save
+      if: always()
+      uses: actions/cache/save@v4
+      with:
+        path: ./.ccache
+        key: ${{ steps.ccache-restore.outputs.cache-primary-key }}
 
     - name: Print Package Files
       run: |
