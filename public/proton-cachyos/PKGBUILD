@@ -53,6 +53,7 @@ depends=(
   sdl2            lib32-sdl2
   speex           lib32-speex
   steam-native-runtime
+  unzip
 )
 depends+=(
   wayland         lib32-wayland
@@ -91,7 +92,6 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   python
   python-pefile
   sdl2                  lib32-sdl2
-  unzip
   v4l-utils             lib32-v4l-utils
   vulkan-headers
   vulkan-icd-loader     lib32-vulkan-icd-loader
