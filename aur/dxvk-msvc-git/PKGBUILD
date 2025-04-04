@@ -6,9 +6,9 @@
 
 # shellcheck disable=SC2034
 pkgname=('dxvk-msvc-git')
-pkgver=2.6.r8.g79d7b3720
+pkgver=2.6.r70.g76dd3443a
 pkgrel=1
-pkgdesc="A Vulkan-based compatibility layer for Direct3D 9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers Windows DLL version)"
+pkgdesc="A Vulkan-based compatibility layer for Direct3D 8/9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers DLL version)"
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
 license=('zlib/libpng' 'EULA')
@@ -41,7 +41,7 @@ sha256sums=('SKIP'
             'd06d0375a6976ccbf452bba2feb7d7e5db43c6631bd4d59ad563315e9c973ccb'
             'bf7883203d9c8fe729131f1f9d82da799f33a1c3c3ebb22d2070ac77e337de8c'
             'fb2bb15494d0ccf35452e8da98621264bcf4d44ac916db0ef5adbdf25f3790c8'
-            '5b059c4084940d31460a34ec579026fe9526f7cb9bdcc0b6d928271ab52f89db')
+            'f52ffb6fb278e6c333f72943094dd90533ef90d738aded6c79fc469212a116e0')
 
 pkgver() {
     # shellcheck disable=SC2154
@@ -124,9 +124,9 @@ prepare() {
     for opt in "${options[@]}"; do
         if [ "${opt}" = "debug" ]; then
             # this is schizo because meson sucks
-            sed -i "s|_DEPRECATION_WARNINGS'|\0, '-ggdb', '-gdwarf-4', '-gz=zstd'|g" \
+            sed -i "s|_DEPRECATION_WARNINGS'|\0, '-gdwarf', '/clang:-ggdb', '/clang:-gdwarf-4', '/clang:-gz=zstd'|g" \
                 "${srcdir}/dxvk/meson.build"
-            sed -i 's|OPT:ICF|\0,/DEBUG:DWARF|g' "${srcdir}/dxvk/meson.build"
+            sed -i "s|'/FILEALIGN|'/DEBUG:DWARF',\0|g" "${srcdir}/dxvk/meson.build"
             # don't strip + debug because it (meson) just doesn't integrate well with makepkg yet
             _strip=
             _debug=1
@@ -139,6 +139,7 @@ prepare() {
 
     if [ -z "${_debug}" ]; then
         echo "!!! This package won't have debug symbols. Consider adding 'debug' to your PKGBUILD options to allow for better support from the developers."
+
     else
         echo "!!! This package will have debug symbols, which substantially increases the size, but allows for better support from the developers."
     fi
@@ -156,14 +157,11 @@ prepare() {
     fi
 
     # ccache handling
-    if [ -n "${BUILDENV}" ]; then for _env in "${BUILDENV[@]}"; do
-        if [ "${_env}" = "ccache" ]; then
-            for arch in win32 win64; do
-                sed -i "s|'clang|'ccache', \0|g" \
-                    "${srcdir}/dxvk/build-${arch}.txt"
-            done
-        fi
-    done; fi
+    if [ -n "${BUILDENV}" ]; then
+        for _env in "${BUILDENV[@]}"; do
+            [ "${_env}" = "ccache" ] && ln -sf "$(command -v ccache)" "${srcdir}/clang-cl" && break
+        done
+    fi
 }
 
 build() {
@@ -171,11 +169,16 @@ build() {
     export DISPLAY=
     export WAYLAND_DISPLAY=
     export WINEDLLOVERRIDES="winex11.drv=;winewayland.drv="
+    export CCACHE_COMPILER="clang-cl"
+    export CCACHE_COMPILERTYPE="icx-cl"
 
-    export PATH="${_msvcpath}/x64:${_regpath}" && BIN="${_msvcpath}/x64" . "${srcdir}/msvc-wine/msvcenv-native.sh"
+    export PATH="${srcdir}:${_msvcpath}/x64:${_regpath}" && BIN="${_msvcpath}/x64" . "${srcdir}/msvc-wine/msvcenv-native.sh"
 
     export PKG_CONFIG="pkg-config"
     export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
+
+    buildtype="release"
+    #{ [ -n "${_debug}" ] && buildtype="debugoptimized"; }
 
     cd "${srcdir}"
     # shellcheck disable=SC2086
@@ -183,10 +186,11 @@ build() {
         --cross-file dxvk/build-win64.txt \
         --prefix "/usr/share/dxvk/x64" \
         --bindir "" --libdir "" \
-        --buildtype "release" ${_strip}
+        --buildtype ${buildtype} ${_strip} \
+        -Db_vscrt=static_from_buildtype
     ninja -C "build/x64"
 
-    export PATH="${_msvcpath}/x86:${_regpath}" && BIN="${_msvcpath}/x86" . "${srcdir}/msvc-wine/msvcenv-native.sh"
+    export PATH="${srcdir}:${_msvcpath}/x86:${_regpath}" && BIN="${_msvcpath}/x86" . "${srcdir}/msvc-wine/msvcenv-native.sh"
     export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
 
     # shellcheck disable=SC2086
@@ -194,7 +198,8 @@ build() {
         --cross-file dxvk/build-win32.txt \
         --prefix "/usr/share/dxvk/x32" \
         --bindir "" --libdir "" \
-        --buildtype "release" ${_strip}
+        --buildtype ${buildtype} ${_strip} \
+        -Db_vscrt=static_from_buildtype
     ninja -C "build/x32"
 
     export PATH="${_regpath}"
@@ -205,13 +210,15 @@ package() {
     export DISPLAY=
     export WAYLAND_DISPLAY=
     export WINEDLLOVERRIDES="winex11.drv=;winewayland.drv="
+    export CCACHE_COMPILER="clang-cl"
+    export CCACHE_COMPILERTYPE="icx-cl"
 
-    export PATH="${_msvcpath}/x86:${_regpath}" && BIN="${_msvcpath}/x86" . "${srcdir}/msvc-wine/msvcenv-native.sh"
+    export PATH="${srcdir}:${_msvcpath}/x86:${_regpath}" && BIN="${_msvcpath}/x86" . "${srcdir}/msvc-wine/msvcenv-native.sh"
     # shellcheck disable=SC2154
-    DESTDIR="${pkgdir}" ninja -C "build/x32" install
+    meson install -C "build/x32" --destdir="${pkgdir}" --no-rebuild --tags runtime
 
-    export PATH="${_msvcpath}/x64:${_regpath}" && BIN="${_msvcpath}/x64" . "${srcdir}/msvc-wine/msvcenv-native.sh"
-    DESTDIR="${pkgdir}" ninja -C "build/x64" install
+    export PATH="${srcdir}:${_msvcpath}/x64:${_regpath}" && BIN="${_msvcpath}/x64" . "${srcdir}/msvc-wine/msvcenv-native.sh"
+    meson install -C "build/x64" --destdir="${pkgdir}" --no-rebuild --tags runtime
 
     install -Dm 644 setup_dxvk.sh "${pkgdir}/usr/share/dxvk/setup_dxvk.sh"
     mkdir -p "${pkgdir}/usr/bin"
