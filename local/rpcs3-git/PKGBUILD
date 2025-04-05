@@ -29,7 +29,7 @@ depends=(
   qt6-declarative
   qt6-multimedia
   qt6-svg
-  sdl2
+  sdl3
   vulkan-icd-loader
   zlib
 # newer system flatbuffers is incompatible with the version RPCS3 depends on
@@ -87,6 +87,7 @@ build() {
   cmake -S rpcs3 -B build \
     -G Ninja \
     -Wno-dev \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
@@ -104,12 +105,13 @@ build() {
     -DUSE_SYSTEM_CURL=OFF \
     -DUSE_SYSTEM_FLATBUFFERS=OFF \
     -DUSE_SYSTEM_PUGIXML=OFF \
+    -DUSE_SYSTEM_OPENCV=OFF \
     -DUSE_SDL=ON \
     -DUSE_SYSTEM_SDL=ON \
     -DBUILD_LLVM=OFF \
     -DUSE_SYSTEM_WOLFSSL=OFF
 
-  ninja -C build -v
+  ninja -C build
 }
 
 package() {
