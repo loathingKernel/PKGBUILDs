@@ -17,7 +17,8 @@ source+=(
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
         wine-wmclass.patch
         wine-isolate_home.patch
-        0001-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
+        0001-win32u-Bump-AMD-driver-version.patch
+        0002-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
         0001-clang-fixup-lto.patch
         0002-makedep-add-per-source-cflags-and-per-program-ldflag.patch
         0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
@@ -29,11 +30,12 @@ sha512sums=('c98799aedb9fe32ca56dc96ac80b37c07b2805032732c174c47b7a4e3bdead85395
             '8e0238928e26bb4b13750cb70b369c4fdf9613326fa51cb1220e9c267bb83e59017ead956e92b9b1f16e73b01358493dba61cd258e90ac58d7e0fd8941309e20'
             '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
-            '785987b4eb881ecd0fcd217bc89315261c82fcbe33f39e3ddf4d87d05df3e94c3fff910dba8861a2269a1c184c9832f24db1603d9c7508892ba6488805ae6a83'
+            'ef08c0bdafe4738fa84ffea8f3f165a102fd4d92e33764108704afb622515d862dfae9070d4a82680a1ceddf34088e434d2163407a26037f13f1523bf28debf1'
+            '9c723337aef10c91c0e73a93dafe49078ff2571170e3277612dcdfde0fd2c25db00278f69dd8887e16385c125ea8cd857d1c5ff574aff3faf81ad484fb4a7d73'
             '8694685c4b4e8559b98286a11e39b662edc6c0ff1fa0446abd828af84f31d26fc6b8d18c00e3e3d273dcdad373dd6af8f01eeaa0d3de14ef28512494c756bdc4'
             '605f6f527fc0b25768a3fa7bd921506269c2e70edb17289042eac4f34a410da26bfc4e61d0ae6356258d5fc10be25b8baab9dcabbd7bed034e94560882be457f'
             '67d2e1e08d7f3bab2cd8d39d9bafd2451ab813fd4696ace70e3a310dd4d249112f3a88dedb7a2bcc0f4b85131a41cd1f20a6f21384ef92ec02ec66f07fd46a93'
-            'ed051bc5dd431cb3f8a252894ed43ab5097763d6022a32137de5c5ef91612c7fe3ad4be5df5e8247c78f47de6105b1f39b3f809592df4e1d77edcf092a2012fd')
+            '5352041ebf50fb852f3cecd7e1990ec5b56647d95cb529a94a43a41e6d7b94d68e6c64bc25d59ad63f6cae2318c07a9b0adc2422093d2644a74b4dad9da30fe2')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
@@ -133,7 +135,8 @@ prepare() {
 
   patch -Np1 -i "$srcdir"/wine-wmclass.patch
   patch -Np1 -i "$srcdir"/wine-isolate_home.patch
-  patch -Np1 -i "$srcdir"/0001-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
+  patch -Np1 -i "$srcdir"/0001-win32u-Bump-AMD-driver-version.patch
+  patch -Np1 -i "$srcdir"/0002-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
   patch -Np1 -i "$srcdir"/0001-clang-fixup-lto.patch
   patch -Np1 -i "$srcdir"/0002-makedep-add-per-source-cflags-and-per-program-ldflag.patch
   patch -Np1 -i "$srcdir"/0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
