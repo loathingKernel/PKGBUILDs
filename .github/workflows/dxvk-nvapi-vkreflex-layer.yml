@@ -1,5 +1,5 @@
 
-name: dxvk-nvapi-vkreflex-layer-git
+name: dxvk-nvapi-vkreflex-layer
 
 on:
   workflow_dispatch:
@@ -13,13 +13,11 @@ on:
           - 'build'
           - 'remove'
           - 'skip'
-  schedule:
-    - cron:  '0 3 */3 * *'
   push:
     branches:
       - master
     paths:
-      - public/dxvk-nvapi-vkreflex-layer-git/.SRCINFO
+      - public/dxvk-nvapi-vkreflex-layer/.SRCINFO
 
 jobs:
   repository:
@@ -28,6 +26,6 @@ jobs:
         repository: [public, personal]
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
-      pkgdir: public/dxvk-nvapi-vkreflex-layer-git
+      pkgdir: public/dxvk-nvapi-vkreflex-layer
       repository: ${{ matrix.repository }}
       action: ${{ inputs.action != '' && inputs.action || 'build' }}
