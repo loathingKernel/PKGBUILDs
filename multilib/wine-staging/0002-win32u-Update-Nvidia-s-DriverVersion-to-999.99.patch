@@ -1,0 +1,26 @@
+From 435881153b6bbce9a1b5e025dfcaeea340d65e51 Mon Sep 17 00:00:00 2001
+From: Arkadiusz Hiler <ahiler@codeweavers.com>
+Date: Thu, 23 May 2024 16:58:09 +0300
+Subject: [PATCH 2/2] win32u: Update Nvidia's DriverVersion to 999.99.
+
+To avoid periodic bumps... at lest for some time.
+---
+ dlls/win32u/sysparams.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dlls/win32u/sysparams.c b/dlls/win32u/sysparams.c
+index 8173031ae44..5d101075457 100644
+--- a/dlls/win32u/sysparams.c
++++ b/dlls/win32u/sysparams.c
+@@ -1233,7 +1233,7 @@ static BOOL write_gpu_to_registry( const struct gpu *gpu, const struct pci_id *p
+         break;
+     /* Nvidia */
+     case 0x10de:
+-        strcpy( buffer, "31.0.15.3625" );
++        strcpy( buffer, "31.0.19.9999" );
+         break;
+     /* Default value for any other vendor. */
+     default:
+-- 
+2.49.0
+
