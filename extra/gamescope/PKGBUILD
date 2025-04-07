@@ -4,7 +4,7 @@
 # Contributor: PedroHLC <root@pedrohlc.com>
 
 pkgname=gamescope
-pkgver=3.16.2
+pkgver=3.16.3
 pkgrel=1
 pkgdesc='SteamOS session compositing window manager'
 arch=(x86_64)
@@ -60,11 +60,13 @@ makedepends=(
   vulkan-headers
   wayland-protocols
 )
-_tag=2ccfa53b619d43d7a08f2457474f471552b7e6fb
+_tag=f1f105b3a95b4fec5c92e8a10e6927cbb76fe804
 source=(
   git+https://github.com/ValveSoftware/gamescope.git#tag=${_tag}
+  https://github.com/ValveSoftware/openvr/pull/1890.patch
 )
-b2sums=('26d3f61a98f28cd00c415694591bdfb80ec9c2fc429998d9fc82978e48d856eb4d0340c76ce3ff7e296a6de4f899676043583758b509c55bb8f858a78a8f177b')
+b2sums=('912d1b00acf2f826c0147d2b2be8c71d3f095eadecd5fff958fc7152cd35103f0a5aa09ef33f4051d1300f719951ad5e4acf6d38afac3f608f2bfcd68e906339'
+        'ca715d31473649b6e342d75f44c8cf22cb4c303d546718085a18f00afa2e32532f478261c8c150bd0799005b6742a993575c1914575f5da39ae551315f8cac31')
 
 prepare() {
   cd gamescope
@@ -74,6 +76,9 @@ prepare() {
   # Explicitly set origin URL for submodules using relative paths
   git remote set-url origin https://github.com/ValveSoftware/gamescope.git
   git submodule update --init --filter=tree:0 --recursive
+
+  cd subprojects/openvr
+  patch -Np1 -i ${srcdir}/1890.patch
 }
 
 pkgver() {
