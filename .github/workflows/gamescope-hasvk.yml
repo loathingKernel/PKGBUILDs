@@ -27,7 +27,7 @@ jobs:
           - repository: public
             pkgbuild: PKGBUILD
           - repository: personal
-            pkgbuild: PKGBUILD.vcs
+            pkgbuild: PKGBUILD
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: extra/gamescope-hasvk
