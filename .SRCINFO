@@ -6,12 +6,11 @@ pkgbase = lib32-yaml-cpp
 	arch = x86_64
 	license = MIT
 	makedepends = cmake
-	makedepends = ninja
 	makedepends = gcc-multilib
+	makedepends = ninja
 	depends = lib32-gcc-libs
 	depends = lib32-glibc
 	source = https://github.com/jbeder/yaml-cpp/archive/refs/tags/0.8.0.tar.gz
 	sha512sums = aae9d618f906117d620d63173e95572c738db518f4ff1901a06de2117d8deeb8045f554102ca0ba4735ac0c4d060153a938ef78da3e0da3406d27b8298e5f38e
 
 pkgname = lib32-yaml-cpp
-

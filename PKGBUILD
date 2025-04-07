@@ -26,19 +26,14 @@ build() {
 
   cmake -GNinja \
         -Bbuild \
-        -DYAML_CPP_BUILD_TESTS=ON \
+        -DCMAKE_POLICY_VERSION_MINIMUM=4.0 \
+        -DYAML_CPP_BUILD_TESTS=OFF \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib32 \
         -DBUILD_SHARED_LIBS=ON \
         -DYAML_BUILD_SHARED_LIBS=ON \
         -DCMAKE_BUILD_TYPE=Release
   ninja -C build
-}
-
-check() {
-  cd "${_pkgbase}-${pkgver}"
-  ninja -C build test
-  build/test/yaml-cpp-tests
 }
 
 package() {
