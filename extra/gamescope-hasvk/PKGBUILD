@@ -4,7 +4,7 @@
 # Contributor: PedroHLC <root@pedrohlc.com>
 
 pkgname=gamescope-hasvk
-pkgver=3.16.3
+pkgver=3.16.2
 pkgrel=1
 pkgdesc='SteamOS session compositing window manager'
 arch=(x86_64)
@@ -62,14 +62,14 @@ makedepends=(
 )
 provides=('gamescope')
 conflicts=('gamescope')
-_tag=f1f105b3a95b4fec5c92e8a10e6927cbb76fe804
+_tag=2ccfa53b619d43d7a08f2457474f471552b7e6fb
 source=(
   git+https://github.com/ValveSoftware/gamescope.git#tag=${_tag}
   https://github.com/ValveSoftware/openvr/pull/1890.patch
   gamescope-vk-1_2-comp-target.patch
   gamescope-xrgb-overlay-formats.patch
 )
-b2sums=('912d1b00acf2f826c0147d2b2be8c71d3f095eadecd5fff958fc7152cd35103f0a5aa09ef33f4051d1300f719951ad5e4acf6d38afac3f608f2bfcd68e906339'
+b2sums=('26d3f61a98f28cd00c415694591bdfb80ec9c2fc429998d9fc82978e48d856eb4d0340c76ce3ff7e296a6de4f899676043583758b509c55bb8f858a78a8f177b'
         'ca715d31473649b6e342d75f44c8cf22cb4c303d546718085a18f00afa2e32532f478261c8c150bd0799005b6742a993575c1914575f5da39ae551315f8cac31'
         'f05d33a496b23a3797038d8c0d1a301f669360b5c6fc0694e2f906fbee218eb1263456cadf9ebc3fb2f06e3e06988da0e5567836db3991aebe655e6483d75e18'
         '2a07482fa88186d5152599754a73e082f8bbfe0dd7fabc0ec7aac64be75c4579ebc184c88f99bd70301af3a6e6b748ef39b9756e823894f4d750915e81c93591')
