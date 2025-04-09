@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-akasha
-pkgver=6.13.8.zen1
+pkgver=6.14.1.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Akasha'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -40,18 +40,18 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('259afa59d73d676bec2ae89beacd949e08d54d3f70a7f8b0a742315095751abb'
+sha256sums=('5bf122d1879fd64fadf0cecfcd477957ebce1bc5931c14835ee0eda88463e407'
             'SKIP'
-            '05da663bb9b6ec9ffbbbad47dbab232e8071952fa9b22a212e2706d3ffc4f38f'
+            '67a79d156d3c01804ed9ac87c774aea50d3d0d5b6f82323b0e38a3e16f6a70ac'
             'SKIP'
             'fb171d143bd4ac2b4637622cc32f0d3f42effe6e44c5c03ccbe7a3b5b6dd0d53'
-            '320fa5622189a00052022e950d69bfb2e7603e2ff8840e44d12540255de44881')
-b2sums=('c20916a44a07d355ba8337229f102cd507deae92c88576040965e909fa89c09f98611746a8c8f249bc3dcf492238ce3f08c48f523670ccad4bd7ec21622806af'
+            '9b009d0562afd8d3a1bdff3579bbde39cfaa51fa31a5fa67c808b42640811e48')
+b2sums=('1aa584824d71cf7ac25d3b848aa8c00f7f172dc2491972cb0b4eeebdd491f0f5dc000c55f825da656f3447c3a38eb8d480c5f98927339811247f2cc8c82e3c50'
         'SKIP'
-        '0228964c400369e8a81878e9707e5e2f62f8bcbdbbb2eb56c4576a742910e0422f66c01404fc7c5b58608eb01de7f5c98bb696971dcb525c679fcc19d9b76c77'
+        'd304deb252ade9861a86ac6e4e356710a4e26af9d1f1081fec4a22e2fb0ee992b26e8d4784dd2e0c564a66a3a1a45271402dc78f1e711971a0f863df6f638de3'
         'SKIP'
         '940c50f07f2dbf553d02c4c2d69ee5eebb81e0fabcde694c4c0ec7aa8b663051cc4eaad72fd3bd24fc1a32063fef2aef2397d7bf82a4ac53d9f5dceee0ebca15'
-        '0067e8fd597e0112a7a84ec5886f77cebff92a43b2c32f3f18c757476c6efd238ceae311844138cf6d6fdb87526269606a0d81230c88174206d773aef43d1304')
+        '7db6b8810f0ff0070cee75845ca647a231091020e62f52a43ee8deeffbdf512d1b62768d5611e61eb69086b917ab5497f8f40acb121c8eddce4970f026982d2f')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -128,7 +128,6 @@ prepare() {
     scripts/config --disable CONFIG_PCIE_ECRC
 #    scripts/config --disable CONFIG_PCIEASPM_DEFAULT
 #    scripts/config --enable  CONFIG_PCIEASPM_PERFORMANCE
-    scripts/config --disable CONFIG_NTSYNC
     # Graphics support
     scripts/config --disable CONFIG_AGP
     scripts/config --set-val CONFIG_VGA_ARB_MAX_GPUS 4
@@ -243,10 +242,6 @@ _package-headers() {
 
   echo "Installing KConfig files..."
   find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
-
-  #echo "Installing Rust files..."
-  #install -Dt "$builddir/rust" -m644 rust/*.rmeta
-  #install -Dt "$builddir/rust" rust/*.so
 
   echo "Installing unstripped VDSO..."
   make INSTALL_MOD_PATH="$pkgdir/usr" vdso_install \
