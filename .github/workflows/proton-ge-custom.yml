@@ -23,7 +23,7 @@ jobs:
   repository:
     strategy:
       matrix:
-        repository: [public]
+        repository: [public, personal]
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: local/proton-ge-custom
