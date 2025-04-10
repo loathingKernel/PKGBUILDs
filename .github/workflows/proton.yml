@@ -1,12 +1,23 @@
+
 name: proton
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - local/proton/.SRCINFO
+      - local/proton/.SRCINFO
 
 jobs:
   repository:
@@ -17,4 +28,4 @@ jobs:
     with:
       pkgdir: local/proton
       repository: ${{ matrix.repository }}
-      multilib: true
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
