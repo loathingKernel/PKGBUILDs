@@ -1,20 +1,31 @@
+
 name: proton-ge-custom
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - local/proton-ge-custom/.SRCINFO
+      - local/proton-ge-custom/.SRCINFO
 
 jobs:
   repository:
     strategy:
       matrix:
-        repository: [public, personal]
+        repository: [public]
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: local/proton-ge-custom
       repository: ${{ matrix.repository }}
-      multilib: true
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
