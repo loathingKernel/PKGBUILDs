@@ -5,7 +5,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=2.3.175.r0.g20b1190d47
+pkgver=2.3.268.r1.gbbe5ef451a
 pkgrel=1
 pkgdesc='PlayStation 2 emulator'
 arch=(x86_64)
@@ -27,11 +27,12 @@ depends=(
     libxrandr
     qt6-base
     qt6-svg
-    sdl2
+    sdl3
     shaderc
     soundtouch
     wayland
     xcb-util-cursor
+    kddockwidgets-qt6
 )
 makedepends=(
     7zip
@@ -116,5 +117,7 @@ package() {
     install -Dm644 -t "${pkgdir}"/usr/share/PCSX2/resources/ patches.zip
 }
 
-b2sums=('SKIP'
-        'SKIP')
+b2sums=(
+    'SKIP'
+    'SKIP'
+)
