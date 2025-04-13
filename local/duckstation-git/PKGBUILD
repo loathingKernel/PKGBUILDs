@@ -11,22 +11,22 @@ depends=(
     sh
     glibc
     gcc-libs
-    sdl2
+    sdl3
     qt6-base
+    libbacktrace.so
     libwebp.so
     libjpeg.so
     libpng16.so
     libxrandr
     libx11
     freetype2 libfreetype.so
-    libzip.so
     libzstd.so
     libz.so
+    libzip.so
     libdbus-1.so
     libcurl.so
     systemd-libs libudev.so
     hicolor-icon-theme
-    ffmpeg
     libglvnd
     glslang
     spirv-tools
@@ -38,6 +38,7 @@ makedepends=(
     lld
     llvm
     extra-cmake-modules
+    ffmpeg
     qt6-tools
     qt6-wayland
     libdrm
@@ -56,6 +57,7 @@ optdepends=(
     'sndio: Small audio support'
     'alsa-lib: ALSA support'
     'jack: JACK support'
+    'ffmpeg: Video capture support'
 )
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
@@ -63,10 +65,18 @@ options=(!lto)
 
 source=(
     git+https://github.com/stenzek/duckstation.git
+    "https://github.com/duckstation/chtdb/releases/download/latest/cheats.zip"
+    "https://github.com/duckstation/chtdb/releases/download/latest/patches.zip"
+    duckstation-qt.sh
 )
-sha256sums=(
-    'SKIP'
+noextract=(
+    "cheats.zip"
+    "patches.zip"
 )
+sha256sums=('SKIP'
+            '9585bffb977df310d401db1c0cf216f7591e83aa2822a59fb362efba25b8ec19'
+            '10ed13cc3d786310efb931d54502f9fc0295b29a3e51eb553523dd2297565a0e'
+            '5ded08b875d83afa70526f05d1c4381d8c2991a3224618639210fd2273ad00a7')
 
 pkgver() {
     cd "${srcdir}/${pkgname%-git}"
@@ -75,6 +85,7 @@ pkgver() {
 
 prepare() {
     cd "${srcdir}/${pkgname%-git}"
+    cp "${srcdir}"/cheats.zip "${srcdir}"/patches.zip data/resources
 }
 
 build() {
@@ -82,7 +93,7 @@ build() {
     ./duckstation/scripts/deps/build-dependencies-linux.sh \
       -system-freetype -system-harfbuzz -system-libjpeg \
       -system-libpng -system-libwebp -system-libzip \
-      -system-zstd -system-qt \
+      -system-zlib -system-zstd -system-qt \
       "$PWD"/build-deps
 
     cmake -B build -S duckstation \
@@ -99,14 +110,20 @@ build() {
         -DALLOW_INSTALL=ON \
         -DINSTALL_SELF_CONTAINED=ON \
         -DCMAKE_INSTALL_PREFIX="${pkgdir}"/opt/duckstation
-    ninja -C build -v
+    ninja -C build
 }
 
 package() {
     ninja -C build install
-    install -Dm755 duckstation/scripts/packaging/duckstation-qt "${pkgdir}/usr/bin/duckstation-qt"
+
+    # install alias
+    install -Dm755 "${srcdir}"/duckstation-qt.sh "${pkgdir}/usr/bin/duckstation-qt"
+
+    # install desktop file and icon
     install -Dm644 duckstation/scripts/packaging/org.duckstation.DuckStation.desktop "${pkgdir}/usr/share/applications/org.duckstation.DuckStation.desktop"
     install -Dm644 duckstation/scripts/packaging/org.duckstation.DuckStation.png "${pkgdir}/usr/share/icons/hicolor/512x512/apps/org.duckstation.DuckStation.png"
+
+    # install license
     install -Dm644 duckstation/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
     install -Dm644 duckstation/data/resources/thirdparty.html "${pkgdir}/usr/share/licenses/${pkgname}/thirdparty.html"
 }
