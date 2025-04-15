@@ -10,16 +10,16 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   schedule:
     - cron:  '0 0 */7 * *'
   push:
     branches:
-     - master
+      - master
     paths:
-     - local/dolphin-emu-git/.SRCINFO
+      - local/dolphin-emu-git/.SRCINFO
 
 jobs:
   repository:
