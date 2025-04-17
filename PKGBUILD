@@ -8,7 +8,7 @@ pkgname=(
     'samsung-unified-driver'
 )
 pkgver=1.00.39
-pkgrel=9
+pkgrel=10
 
 pkgdesc='Samsung Unified Linux Driver for printers and scanners.'
 arch=('i686' 'x86_64')
@@ -52,8 +52,8 @@ package_samsung-unified-driver-printer()
     # rastertospl contains a hardcoded path to /opt/smfp-common/printer/lib
     mkdir -p "$pkgdir"/opt/smfp-common/printer/
     ln -s /usr/lib "$pkgdir"/opt/smfp-common/printer/lib
-    mkdir -p "$pkgdir"/opt/samsung/printer/share
-    ln -s /usr/share/ppd/suld "$pkgdir"/opt/samsung/printer/share/ppd
+    mkdir -p "$pkgdir"/usr/share/cups/model/
+    ln -s ../../ppd/suld "$pkgdir"/usr/share/cups/model/uld-samsung
 
     mkdir -p "$pkgdir"/usr/lib/cups/backend
     cp "$srcdir"/uld/$_arch/smfpnetdiscovery "$pkgdir"/usr/lib/cups/backend
