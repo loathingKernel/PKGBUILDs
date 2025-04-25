@@ -6,7 +6,7 @@
 
 # shellcheck disable=SC2034
 pkgname=('dxvk-msvc-git')
-pkgver=2.6.r70.g76dd3443a
+pkgver=2.6.1.r33.gcb446100e
 pkgrel=1
 pkgdesc="A Vulkan-based compatibility layer for Direct3D 8/9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers DLL version)"
 arch=('x86_64')
@@ -41,7 +41,7 @@ sha256sums=('SKIP'
             'd06d0375a6976ccbf452bba2feb7d7e5db43c6631bd4d59ad563315e9c973ccb'
             'bf7883203d9c8fe729131f1f9d82da799f33a1c3c3ebb22d2070ac77e337de8c'
             'fb2bb15494d0ccf35452e8da98621264bcf4d44ac916db0ef5adbdf25f3790c8'
-            'f52ffb6fb278e6c333f72943094dd90533ef90d738aded6c79fc469212a116e0')
+            '6dfed2a5ad51a23607f68a462de4af3a0effc199d5003a462c25e6a78fee778a')
 
 pkgver() {
     # shellcheck disable=SC2154
@@ -86,9 +86,9 @@ _prepare_msvc() {
     _msvcpath="${_topdir}/msvc/bin"
 }
 
-_strip=
-_debug=
-_lto=
+_strip="${_strip:-}"
+_debug="${_debug:-}"
+_lto="${_lto:-}"
 
 prepare() {
     if [ ! -d "${_tempprefix}" ]; then mkdir "${_tempprefix}"; fi
