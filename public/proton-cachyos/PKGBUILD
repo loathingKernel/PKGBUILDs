@@ -8,7 +8,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.0.0
 _xaliaver=0.4.6
-pkgrel=1
+pkgrel=2
 epoch=1
 
 source=(
@@ -16,6 +16,7 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
+    0001-build-apply-debug-flags.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -172,6 +173,7 @@ prepare() {
     git submodule update --init --filter=tree:0 --recursive
 
     ./patches/apply.sh
+    patch -Np1 -i "${srcdir}"/0001-build-apply-debug-flags.patch
 
     for rustlib in gst-plugins-rs; do
     pushd $rustlib
@@ -264,4 +266,5 @@ b2sums=('8bd201fc1dad1c00a17d8472cbc57e4a6e4afd7efae83105e4f80ad361ddcbd8c932444
         '2a73c12585b502ae11188482cbc9fb1f45f95bfe4383a7615011104b132f4845f9813d01fb40277e1934fab5f1b35ab40b4f4a66a9967463dd1d666a666904e9'
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         'a7efb7e9e3c03a92f3fc2c66172a2597ab4febfbf23a98c20d9ba46c48f0b96f568b21ea61f43cfa0cbbad2557cfafd665b63f3115611f0df9dd75ab358ecf43'
-        '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85')
+        '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85'
+        '4a8c6138f51da24f417a5c43ee0f0ae39f893a581a376be9d6242ebe0e1f9f1052f4fd15eee95dc16b6778cd61cb9060aea93fe9d9d6debaf2c66f85ac4ba88d')
