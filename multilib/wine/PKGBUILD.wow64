@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=10.6
-pkgrel=2
+pkgrel=3
 _tkg_commit=fbe68848ab162cf0b064d94337c61809fbd8858d
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -155,9 +155,10 @@ build() {
   # From Proton
   OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
+  DEBUG_FLAGS="-ffunction-sections -fdata-sections -fno-omit-frame-pointer"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   STRIP_FLAGS="-s"
-  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS $STRIP_FLAGS"
+  COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $DEBUG_FLAGS $WARNING_FLAGS $STRIP_FLAGS"
   #LTO_CFLAGS="-fuse-linker-plugin -fdevirtualize-at-ltrans -flto-partition=one -flto -Wl,-flto"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
