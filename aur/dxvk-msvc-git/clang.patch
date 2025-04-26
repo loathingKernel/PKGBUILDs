@@ -61,7 +61,7 @@ index 9d352e1ca..52eaed2da 100644
      link_args += [
 -      '/FILEALIGN:4096',
 -      '/DEBUG:FULL'
-+      '/FILEALIGN:4096','/OPT:REF','/OPT:ICF' # pdbs don't work well on Linux
++      '/NOIMPLIB', '/FILEALIGN:4096','/OPT:REF','/OPT:ICF' # pdbs don't work well on Linux
      ]
    endif
  
