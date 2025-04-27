@@ -34,7 +34,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Restore Cache
+    - name: Restore cache
       id: ccache-restore
       uses: actions/cache/restore@v4
       with:
@@ -55,7 +55,7 @@ jobs:
         useCcacheExt: ${{ inputs.ccache_ext }}
         repoReleaseTag: ${{ inputs.release_tag }}
 
-    - name: Save Cache
+    - name: Save cache
       id: ccache-save
       if: always()
       uses: actions/cache/save@v4
@@ -63,7 +63,7 @@ jobs:
         path: ./.ccache
         key: ${{ steps.ccache-restore.outputs.cache-primary-key }}
 
-    - name: Print Package Files
+    - name: Print package files
       run: |
         echo "* Successfully built package archives"
         for file in ${{ join(fromJSON(steps.pkgbuild.outputs.pkgfiles), ' ') }}; do echo "    $file"; done
