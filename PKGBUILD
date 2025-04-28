@@ -1,6 +1,6 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
-pkgver=3.2.2
+pkgver=3.2.3
 pkgrel=1
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
@@ -13,7 +13,7 @@ makedepends=('gettext' 'meson')
 checkdepends=('appstream' 'desktop-file-utils')
 options=('!strip' '!debug')
 source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('2beb95231ea4afb69b4514ac59533c84fcb1c3eb16b41e8b3f02c34f646cfbd1')
+sha256sums=('34562243e09f2111b79b11132e8a827049a7481a193d670644998f504b59cd33')
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
@@ -24,10 +24,7 @@ prepare() {
 	sed -i "s/7zz/7z/g" src/providers/AppImageProvider.py
 	
 	# Direct internally used script to its new location in lib
-	sed -i "s/get_appimage_offset/\/usr\/lib\/get_appimage_offset/g" src/providers/AppImageProvider.py
-	
-	# Fix misplaced comma
-	sed -i "s/get_path(, return_stderr/get_path(return_stderr/g" src/providers/AppImageProvider.py
+	sed -i "s/get_appimage_offset/\/usr\/lib\/gearlever\/get_appimage_offset/g" src/providers/AppImageProvider.py
 
 }
 
@@ -45,8 +42,8 @@ package() {
 	
 	cd "${srcdir}/${pkgname}-${pkgver}/"
 	install -Dm644 COPYING -t "${pkgdir}/usr/share/licenses/$pkgname/"
-	mkdir -p "${pkgdir}/usr/lib"
-	install -Dm755 "build-aux/get_appimage_offset.sh" "${pkgdir}/usr/lib/get_appimage_offset"
+	mkdir -p "${pkgdir}/usr/lib/gearlever"
+	install -Dm755 "build-aux/get_appimage_offset.sh" "${pkgdir}/usr/lib/gearlever/get_appimage_offset"
 	
 	cd "${pkgdir}"
 	rm -v "usr/share/icons/hicolor/scalable/actions/meson.build"
