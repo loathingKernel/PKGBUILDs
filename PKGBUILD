@@ -2,7 +2,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-cachyos
-_srctag=9.0-20250426
+_srctag=10.0-20250430
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
@@ -37,6 +37,7 @@ depends=(
   freetype2       lib32-freetype2
   gcc-libs        lib32-gcc-libs
   gettext         lib32-gettext
+  glib2           lib32-glib2
   lapack          lib32-lapack
   libgudev        lib32-libgudev
   libpcap         lib32-libpcap
@@ -224,15 +225,6 @@ package() {
     mkdir -p "$_compatdir/${pkgname}"
     rsync --delete -arx dist/* "$_compatdir/${pkgname}"
 
-    # For some unknown to me reason, 32bit vkd3d (not vkd3d-proton) always links
-    # to libgcc_s_dw2-1.dll no matter what linker options I tried.
-    # Copy the required dlls into the package, they will be copied later into the prefix
-    # by the patched proton script. Bundle them to not depend on mingw-w64-gcc being installed.
-    cp /usr/i686-w64-mingw32/bin/{libgcc_s_dw2-1.dll,libwinpthread-1.dll} \
-        "$_compatdir/${pkgname}"/files/lib/vkd3d/
-    cp /usr/x86_64-w64-mingw32/bin/{libgcc_s_seh-1.dll,libwinpthread-1.dll} \
-        "$_compatdir/${pkgname}"/files/lib64/vkd3d/
-
     mkdir -p "$pkgdir/usr/share/licenses/${pkgname}"
     mv "$_compatdir/${pkgname}"/LICENSE{,.OFL} \
         "$pkgdir/usr/share/licenses/${pkgname}"
@@ -260,7 +252,7 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-b2sums=('398a5e24a39b752a81066942e8d330d8dee71ecfacc185dfaa8261a7e395b4544ca239e7985276e3dcd7ded45737aba179e34842e9aaba8b7dc274a4380612c1'
+b2sums=('890c8615c6c7279021a9543c7bf3aba4ea4b9d64db705b45d8b4ea5eb41b0bae9b0cef67134f2aad14afcd754da7a475a4eaaa702b50e3f49123d0fac471d2d3'
         '2a73c12585b502ae11188482cbc9fb1f45f95bfe4383a7615011104b132f4845f9813d01fb40277e1934fab5f1b35ab40b4f4a66a9967463dd1d666a666904e9'
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         'a7efb7e9e3c03a92f3fc2c66172a2597ab4febfbf23a98c20d9ba46c48f0b96f568b21ea61f43cfa0cbbad2557cfafd665b63f3115611f0df9dd75ab358ecf43'
