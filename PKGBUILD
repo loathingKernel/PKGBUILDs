@@ -4,11 +4,11 @@
 # Contributor: David Runge <dvzrv@archlinux.org>
 # Contributor: Markus Martin <markus@archwyrm.net>
 
-# Uses master until upstream has been tagged: https://github.com/jbeder/yaml-cpp/issues/1356
+# Uses 2f86d13775d119edbb69af52e5f566fd65c6953b until upstream has been tagged: https://github.com/jbeder/yaml-cpp/issues/1356
 
 _pkgbase=yaml-cpp
 pkgname=lib32-yaml-cpp
-pkgver=master
+pkgver=2f86d13775d119edbb69af52e5f566fd65c6953b
 pkgrel=1
 pkgdesc="YAML parser and emitter in C++, written around the YAML 1.2 spec (32-bits)"
 url="https://github.com/jbeder/yaml-cpp"
@@ -16,8 +16,8 @@ arch=('x86_64')
 license=('MIT')
 depends=('lib32-gcc-libs' 'lib32-glibc')
 makedepends=('cmake' 'gcc-multilib' 'ninja')
-source=("https://github.com/jbeder/yaml-cpp/archive/refs/heads/master.tar.gz")
-sha512sums=('2551c3b228781460bbfede810bcd35e3cc34730f723cdf215ac8cd59304e8290d3e5230b114c352c6cc3636da28b940e12fed534260ab05dd0c30f3eb83b346c')
+source=("https://github.com/jbeder/yaml-cpp/archive/2f86d13775d119edbb69af52e5f566fd65c6953b.tar.gz")
+sha512sums=('d70e57d411e8e4e221fbb944486386055de40b5e7434c1a0178d92b733cfa43b01dc88e976adb199e557a3045d78e654b4531afd182bf2be0180e03f3f42f057')
 
 build() {
   cd "${_pkgbase}-${pkgver}"
