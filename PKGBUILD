@@ -77,6 +77,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   libva                 lib32-libva
   libxcomposite         lib32-libxcomposite
   libxinerama           lib32-libxinerama
+  libxml2-legacy
   libxxf86vm            lib32-libxxf86vm
   lld
   mesa                  lib32-mesa
@@ -97,6 +98,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   vulkan-headers
   vulkan-icd-loader     lib32-vulkan-icd-loader
   wget
+  xorg-util-macros
 )
 makedepends+=(
   wayland-protocols
@@ -192,7 +194,8 @@ build() {
     local -A flags
     for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
     local march="${flags["-march"]:-nocona}"
-    local mtune="${flags["-mtune"]:-core-avx2}"
+    #local mtune="${flags["-mtune"]:-core-avx2}"
+    local mtune="core-avx2"
 
     CFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
     CXXFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
@@ -230,10 +233,10 @@ package() {
         "$pkgdir/usr/share/licenses/${pkgname}"
 
     cd "$_compatdir/${pkgname}/files"
-    i686-w64-mingw32-strip --strip-unneeded \
-        $(find lib/wine \( -iname fakedlls -or -iname i386-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
-    x86_64-w64-mingw32-strip --strip-unneeded \
-        $(find lib64/wine \( -iname fakedlls -or -iname x86_64-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
+#    i686-w64-mingw32-strip --strip-unneeded \
+#        $(find lib/wine \( -iname fakedlls -or -iname i386-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
+#    x86_64-w64-mingw32-strip --strip-unneeded \
+#        $(find lib/wine \( -iname fakedlls -or -iname x86_64-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
 
     local _geckodir="share/wine/gecko/wine-gecko-${_geckover}"
     i686-w64-mingw32-strip --strip-unneeded \
@@ -252,7 +255,7 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-b2sums=('890c8615c6c7279021a9543c7bf3aba4ea4b9d64db705b45d8b4ea5eb41b0bae9b0cef67134f2aad14afcd754da7a475a4eaaa702b50e3f49123d0fac471d2d3'
+b2sums=('0c725bc61ebc001166d395f44397e70b6a66f1c1aabdae84679c7c24846eea481b097144f07d2e198f9024f68a8a3a870ac0e0cac3a65a263b46aa9390e9fe93'
         '2a73c12585b502ae11188482cbc9fb1f45f95bfe4383a7615011104b132f4845f9813d01fb40277e1934fab5f1b35ab40b4f4a66a9967463dd1d666a666904e9'
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         'a7efb7e9e3c03a92f3fc2c66172a2597ab4febfbf23a98c20d9ba46c48f0b96f568b21ea61f43cfa0cbbad2557cfafd665b63f3115611f0df9dd75ab358ecf43'
