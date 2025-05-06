@@ -27,7 +27,7 @@ optdepends=(
   "python-pywebview: embedded browser for logging in"
 )
 source=("git+https://github.com/RareDevs/Rare.git#tag=$pkgver")
-sha256sums=('64d8f9c0f0c9291ca10a5d40bcd96c39f03b1e650f216edbe212d977de078edc')
+sha256sums=('SKIP')
 
 build() {
   cd Rare
