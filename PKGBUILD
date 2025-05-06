@@ -1,7 +1,7 @@
 # Maintainer: Dummerle
 
 pkgname=rare
-pkgver=1.11.2
+pkgver=1.11.3
 pkgrel=1
 pkgdesc="Open source alternative for Epic Games Launcher, using Legendary"
 arch=('any')
