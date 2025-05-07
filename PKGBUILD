@@ -2,7 +2,7 @@
 
 pkgname="backrest"
 pkgver=1.8.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A web UI and orchestrator for restic backup."
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
 url="https://github.com/garethgeorge/${pkgname}"
@@ -10,9 +10,11 @@ license=("GPL-3.0-or-later")
 depends=("restic")
 makedepends=("npm" "go")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+        "${pkgname}.service"
         "${pkgname}@.service")
 sha256sums=('f78e4832e500764bf54d8d62cb86dc1e2249704301a161bb78ba486c6324fd88'
-            '54d7ceddc2d3abb1c00a3f45ff7dd43b5fdc05c6be1019ead7f7cbf4a40ab926')
+            'ce8ae2ce067b354cdc20676919efc8e9a0f7793e0cfa11b013a7b3cecabde425'
+            '957ffa5c171842fe0ded3705eb3755183c78a81d50124472d3f1dcda5ca5fc1d')
 
 build() {
     export BACKREST_BUILD_VERSION="${pkgver}"
@@ -29,6 +31,7 @@ build() {
 }
 
 package() {
+    install -Dm644 "${pkgname}.service"  -t "${pkgdir}/usr/lib/systemd/user"
     install -Dm644 "${pkgname}@.service" -t "${pkgdir}/usr/lib/systemd/system"
 
     cd "${pkgname}-${pkgver}"
