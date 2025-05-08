@@ -1,6 +1,6 @@
 pkgbase = gamescope
 	pkgdesc = SteamOS session compositing window manager
-	pkgver = 3.16.3
+	pkgver = 3.16.4
 	pkgrel = 1
 	url = https://github.com/ValveSoftware/gamescope
 	arch = x86_64
@@ -49,9 +49,11 @@ pkgbase = gamescope
 	depends = xcb-util-errors
 	depends = xcb-util-wm
 	depends = xorg-server-xwayland
-	source = git+https://github.com/ValveSoftware/gamescope.git#tag=f1f105b3a95b4fec5c92e8a10e6927cbb76fe804
+	source = git+https://github.com/ValveSoftware/gamescope.git#commit=3.16.4
 	source = https://github.com/ValveSoftware/openvr/pull/1890.patch
-	b2sums = 912d1b00acf2f826c0147d2b2be8c71d3f095eadecd5fff958fc7152cd35103f0a5aa09ef33f4051d1300f719951ad5e4acf6d38afac3f608f2bfcd68e906339
+	source = https://github.com/ValveSoftware/gamescope/commit/6a99868.patch
+	b2sums = e773a84decd8664f7f641a9cf43d75eefbe4d653d8b31dfbb136f73007e09799213597947a70454a6983d615a06813039fa455943b954c1e11a4da843e811b1a
 	b2sums = ca715d31473649b6e342d75f44c8cf22cb4c303d546718085a18f00afa2e32532f478261c8c150bd0799005b6742a993575c1914575f5da39ae551315f8cac31
+	b2sums = 9d667f65de94a75c7367bce03407faaefd0fbd4ecf670296e0ea3fae81f2152f5440c3e0c8e1be7890523d1f60c4b7ec2c624565616b7482505830378f428231
 
 pkgname = gamescope

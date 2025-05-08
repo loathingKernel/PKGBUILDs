@@ -4,7 +4,7 @@
 # Contributor: PedroHLC <root@pedrohlc.com>
 
 pkgname=gamescope
-pkgver=3.16.3
+pkgver=3.16.4
 pkgrel=1
 pkgdesc='SteamOS session compositing window manager'
 arch=(x86_64)
@@ -63,9 +63,11 @@ makedepends=(
 source=(
   git+https://github.com/ValveSoftware/gamescope.git
   https://github.com/ValveSoftware/openvr/pull/1890.patch
+  https://github.com/ValveSoftware/gamescope/commit/6a99868.patch
 )
 b2sums=('SKIP'
-        'ca715d31473649b6e342d75f44c8cf22cb4c303d546718085a18f00afa2e32532f478261c8c150bd0799005b6742a993575c1914575f5da39ae551315f8cac31')
+        'ca715d31473649b6e342d75f44c8cf22cb4c303d546718085a18f00afa2e32532f478261c8c150bd0799005b6742a993575c1914575f5da39ae551315f8cac31'
+        '9d667f65de94a75c7367bce03407faaefd0fbd4ecf670296e0ea3fae81f2152f5440c3e0c8e1be7890523d1f60c4b7ec2c624565616b7482505830378f428231')
 
 prepare() {
   cd gamescope
@@ -75,6 +77,9 @@ prepare() {
   # Explicitly set origin URL for submodules using relative paths
   git remote set-url origin https://github.com/ValveSoftware/gamescope.git
   git submodule update --init --filter=tree:0 --recursive
+
+  # Fix HDR: https://github.com/hyprwm/Hyprland/issues/9064#issuecomment-2849051937
+  patch -Np1 -R -i ${srcdir}/6a99868.patch
 
   cd subprojects/openvr
   patch -Np1 -i ${srcdir}/1890.patch
