@@ -1,14 +1,13 @@
 [Unit]
-Description=Backrest Service for %I.
+Description=Backrest Service (user)
 Wants=network-online.target
 After=network-online.target
 
 [Service]
 Type=simple
-User=%i
 Restart=on-failure
 Environment=BACKREST_RESTIC_COMMAND=/usr/bin/restic
 ExecStart=/usr/bin/backrest
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
