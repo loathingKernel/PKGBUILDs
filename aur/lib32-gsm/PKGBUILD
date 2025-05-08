@@ -6,7 +6,7 @@
 pkgname=lib32-gsm
 _pkgbase=gsm
 pkgver=1.0.22
-pkgrel=1
+pkgrel=2
 pkgdesc="Shared libraries for GSM 06.10 lossy speech compression"
 arch=('x86_64')
 url="http://www.quut.com/gsm/"
@@ -32,7 +32,7 @@ build() {
   CFLAGS="${CFLAGS} -fPIC"
   make \
     CC="gcc -m32" \
-    CCFLAGS="-c ${CFLAGS} -fPIC"
+    CCFLAGS="-c ${CFLAGS} -fPIC -Wno-error=incompatible-pointer-types"
 }
 
 package() {
