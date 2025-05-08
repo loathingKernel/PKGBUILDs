@@ -1,0 +1,31 @@
+
+name: umu-launcher
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+          - 'build'
+          - 'remove'
+          - 'skip'
+  push:
+    branches:
+      - master
+    paths:
+      - multilib/umu-launcher/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/_job_pkgrepo.yml
+    with:
+      pkgdir: multilib/umu-launcher
+      repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
