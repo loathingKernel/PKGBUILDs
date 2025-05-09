@@ -18,7 +18,7 @@ source=(
     https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
     glslang-renderdoc-1.36-gcc15-fix.patch
     openfst-18e94e63870ebcf79ebb42b7035cd3cb626ec090.patch
-    wine-0001-win32u-Don-t-use-bool-as-member-of-a-union-type.patch
+    wine-gcc15.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -178,10 +178,9 @@ prepare() {
     git submodule update --init --filter=tree:0 --recursive
 
     ./patches/apply.sh
-    
+    patch -Np1 -i "${srcdir}"/wine-gcc15.patch
     pushd glslang; patch -Np1 -i "${srcdir}"/glslang-renderdoc-1.36-gcc15-fix.patch; popd
     pushd openfst; patch -Np1 -i "${srcdir}"/openfst-18e94e63870ebcf79ebb42b7035cd3cb626ec090.patch; popd
-    pushd wine; patch -Np1 -i "${srcdir}"/wine-0001-win32u-Don-t-use-bool-as-member-of-a-union-type.patch; popd
 
     for rustlib in gst-plugins-rs; do
     pushd $rustlib
@@ -278,4 +277,4 @@ b2sums=('398a5e24a39b752a81066942e8d330d8dee71ecfacc185dfaa8261a7e395b4544ca239e
         '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85'
         '4cfff1bef00424b4f407f2f311c49f8ff0f91bdfc6e0fde39217500e497cf789698fadee50b480d157068cafa3481dfafb399bd11ff76af3035f7d8c53032e68'
         '9d723631965b392d6aa425e46a52bdb4781bd20c9f1a30274441c78c8955669f2907e47f7efff078e95774dfc686ba3edf625ac5b5bff9dab83c23e1e2ed9e12'
-        '41481d04b4900525346a986b3ed0ef9171fef0c09ee5d56fddeb57dd893262b0068335b5ff0b31fba44ec1d9dbb93423a4028d520759baefd604935517d09c8d')
+        '17c807bec411acf8202b609cb6c1db38a071858b55069ce24f153b601205842fc5b43d77e747476efe52b99dfad6395d63f630fe9ab642deb2a24ba006d50bca')
