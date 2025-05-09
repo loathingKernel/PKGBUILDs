@@ -11,7 +11,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.0.0
 _xaliaver=0.4.6
-pkgrel=1
+pkgrel=2
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -22,6 +22,7 @@ source=(wine-cachyos::git+https://github.com/CachyOS/wine-cachyos.git#tag=cachyo
         https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
         https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
         https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
+        wine-0001-win32u-Don-t-use-bool-as-member-of-a-union-type.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -114,6 +115,7 @@ prepare() {
       git config user.email "wine@cachyos.org"
       git config user.name "wine cachyos"
       git tag wine-9.0 --annotate -m "$pkgver" --force
+      patch -Np1 -i "${srcdir}"/wine-0001-win32u-Don-t-use-bool-as-member-of-a-union-type.patch
       ./tools/make_requests
       ./dlls/winevulkan/make_vulkan -x vk.xml
       ./tools/make_specfiles
@@ -236,5 +238,6 @@ b2sums=('baf3744cbdb2aae7973a3f89eca532e01c6712324abb223db72d3a9b139a7e646043007
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         'a7efb7e9e3c03a92f3fc2c66172a2597ab4febfbf23a98c20d9ba46c48f0b96f568b21ea61f43cfa0cbbad2557cfafd665b63f3115611f0df9dd75ab358ecf43'
         '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85'
+        '41481d04b4900525346a986b3ed0ef9171fef0c09ee5d56fddeb57dd893262b0068335b5ff0b31fba44ec1d9dbb93423a4028d520759baefd604935517d09c8d'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
         'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588')
