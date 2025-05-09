@@ -1,0 +1,107 @@
+From bab9a6161cd459ba8f38763cae9498920f170e4b Mon Sep 17 00:00:00 2001
+From: Gerald Pfeifer <gerald@pfeifer.com>
+Date: Fri, 22 Nov 2024 00:58:13 +0100
+Subject: [PATCH] win32u: Don't use bool as member of a union type.
+
+bool is a reserved identifier in C23 and would break with GCC 15
+moving to -std=gnu23 (based on C23).
+---
+ dlls/win32u/sysparams.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/dlls/win32u/sysparams.c b/dlls/win32u/sysparams.c
+index 10ebf0c0c76..347d8cd2df5 100644
+--- a/dlls/win32u/sysparams.c
++++ b/dlls/win32u/sysparams.c
+@@ -402,7 +402,7 @@ union sysparam_all_entry
+ {
+     struct sysparam_entry        hdr;
+     struct sysparam_uint_entry   uint;
+-    struct sysparam_bool_entry   bool;
++    struct sysparam_bool_entry   boolean;
+     struct sysparam_dword_entry  dword;
+     struct sysparam_rgb_entry    rgb;
+     struct sysparam_binary_entry bin;
+@@ -3983,9 +3983,9 @@ static BOOL get_bool_entry( union sysparam_all_entry *entry, UINT int_param, voi
+     if (!entry->hdr.loaded)
+     {
+         WCHAR buf[32];
+-        if (load_entry( &entry->hdr, buf, sizeof(buf) )) entry->bool.val = wcstol( buf, NULL, 10 ) != 0;
++        if (load_entry( &entry->hdr, buf, sizeof(buf) )) entry->boolean.val = wcstol( buf, NULL, 10 ) != 0;
+     }
+-    *(UINT *)ptr_param = entry->bool.val;
++    *(UINT *)ptr_param = entry->boolean.val;
+     return TRUE;
+ }
+ 
+@@ -3995,7 +3995,7 @@ static BOOL set_bool_entry( union sysparam_all_entry *entry, UINT int_param, voi
+     WCHAR buf[] = { int_param ? '1' : '0', 0 };
+ 
+     if (!save_entry_string( &entry->hdr, buf, flags )) return FALSE;
+-    entry->bool.val = int_param != 0;
++    entry->boolean.val = int_param != 0;
+     entry->hdr.loaded = TRUE;
+     return TRUE;
+ }
+@@ -4003,7 +4003,7 @@ static BOOL set_bool_entry( union sysparam_all_entry *entry, UINT int_param, voi
+ /* initialize a bool parameter */
+ static BOOL init_bool_entry( union sysparam_all_entry *entry )
+ {
+-    WCHAR buf[] = { entry->bool.val ? '1' : '0', 0 };
++    WCHAR buf[] = { entry->boolean.val ? '1' : '0', 0 };
+ 
+     return init_entry_string( &entry->hdr, buf );
+ }
+@@ -4016,9 +4016,9 @@ static BOOL get_yesno_entry( union sysparam_all_entry *entry, UINT int_param, vo
+     if (!entry->hdr.loaded)
+     {
+         WCHAR buf[32];
+-        if (load_entry( &entry->hdr, buf, sizeof(buf) )) entry->bool.val = !wcsicmp( yesW, buf );
++        if (load_entry( &entry->hdr, buf, sizeof(buf) )) entry->boolean.val = !wcsicmp( yesW, buf );
+     }
+-    *(UINT *)ptr_param = entry->bool.val;
++    *(UINT *)ptr_param = entry->boolean.val;
+     return TRUE;
+ }
+ 
+@@ -4028,7 +4028,7 @@ static BOOL set_yesno_entry( union sysparam_all_entry *entry, UINT int_param, vo
+     const WCHAR *str = int_param ? yesW : noW;
+ 
+     if (!save_entry_string( &entry->hdr, str, flags )) return FALSE;
+-    entry->bool.val = int_param != 0;
++    entry->boolean.val = int_param != 0;
+     entry->hdr.loaded = TRUE;
+     return TRUE;
+ }
+@@ -4036,7 +4036,7 @@ static BOOL set_yesno_entry( union sysparam_all_entry *entry, UINT int_param, vo
+ /* initialize a bool parameter using Yes/No strings */
+ static BOOL init_yesno_entry( union sysparam_all_entry *entry )
+ {
+-    return init_entry_string( &entry->hdr, entry->bool.val ? yesW : noW );
++    return init_entry_string( &entry->hdr, entry->boolean.val ? yesW : noW );
+ }
+ 
+ /* load a dword (binary) parameter from the registry */
+@@ -4471,16 +4471,16 @@ static BOOL set_entry( void *ptr, UINT int_param, void *ptr_param, UINT flags )
+     { .uint = { { get_uint_entry, set_int_entry, init_int_entry, base, reg }, (val) } }
+ 
+ #define BOOL_ENTRY(name,val,base,reg) union sysparam_all_entry entry_##name = \
+-    { .bool = { { get_bool_entry, set_bool_entry, init_bool_entry, base, reg }, (val) } }
++    { .boolean = { { get_bool_entry, set_bool_entry, init_bool_entry, base, reg }, (val) } }
+ 
+ #define BOOL_ENTRY_MIRROR(name,val,base,reg,mirror_base) union sysparam_all_entry entry_##name = \
+-    { .bool = { { get_bool_entry, set_bool_entry, init_bool_entry, base, reg, mirror_base, reg }, (val) } }
++    { .boolean = { { get_bool_entry, set_bool_entry, init_bool_entry, base, reg, mirror_base, reg }, (val) } }
+ 
+ #define TWIPS_ENTRY(name,val,base,reg) union sysparam_all_entry entry_##name = \
+     { .uint = { { get_twips_entry, set_twips_entry, init_int_entry, base, reg }, (val) } }
+ 
+ #define YESNO_ENTRY(name,val,base,reg) union sysparam_all_entry entry_##name = \
+-    { .bool = { { get_yesno_entry, set_yesno_entry, init_yesno_entry, base, reg }, (val) } }
++    { .boolean = { { get_yesno_entry, set_yesno_entry, init_yesno_entry, base, reg }, (val) } }
+ 
+ #define DWORD_ENTRY(name,val,base,reg) union sysparam_all_entry entry_##name = \
+     { .dword = { { get_dword_entry, set_dword_entry, init_dword_entry, base, reg }, (val) } }
+-- 
+2.49.0
+
