@@ -117,7 +117,7 @@ prepare() {
       git config user.email "wine@cachyos.org"
       git config user.name "wine cachyos"
       git tag wine-9.0 --annotate -m "$pkgver" --force
-      patch -Np1 -i wine-0001-win32u-Don-t-use-bool-as-member-of-a-union-type.patch
+      patch -Np1 -i "${srcdir}"/wine-0001-win32u-Don-t-use-bool-as-member-of-a-union-type.patch
       ./tools/make_requests
       ./dlls/winevulkan/make_vulkan -x vk.xml
       ./tools/make_specfiles
