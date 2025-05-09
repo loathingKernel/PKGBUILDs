@@ -179,9 +179,9 @@ prepare() {
 
     ./patches/apply.sh
     
-    pushd glslang; patch -Np1 -i glslang-renderdoc-1.36-gcc15-fix.patch; popd
-    pushd openfst; patch -Np1 -i openfst-18e94e63870ebcf79ebb42b7035cd3cb626ec090.patch; popd
-    pushd wine; patch -Np1 -i wine-0001-win32u-Don-t-use-bool-as-member-of-a-union-type.patch; popd
+    pushd glslang; patch -Np1 -i "${srcdir}"/glslang-renderdoc-1.36-gcc15-fix.patch; popd
+    pushd openfst; patch -Np1 -i "${srcdir}"/openfst-18e94e63870ebcf79ebb42b7035cd3cb626ec090.patch; popd
+    pushd wine; patch -Np1 -i "${srcdir}"/wine-0001-win32u-Don-t-use-bool-as-member-of-a-union-type.patch; popd
 
     for rustlib in gst-plugins-rs; do
     pushd $rustlib
