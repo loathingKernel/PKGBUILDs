@@ -173,9 +173,9 @@ build() {
   make
 
   echo "Building Wine-32..."
-  export CFLAGS="$COMMON_FLAGS -mstackrealign $LTO_CFLAGS"
+  export CFLAGS="$COMMON_FLAGS -mstackrealign -std=gnu17 $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17 $LTO_CFLAGS"
-  export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign"
+  export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign -std=gnu17"
   export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/$pkgname-32-build"
