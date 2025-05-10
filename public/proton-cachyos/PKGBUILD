@@ -202,8 +202,7 @@ build() {
     local -A flags
     for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
     local march="${flags["-march"]:-nocona}"
-    #local mtune="${flags["-mtune"]:-core-avx2}"
-    local mtune="core-avx2"
+    local mtune="${flags["-mtune"]:-core-avx2}"
 
     CFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
     CXXFLAGS="-O2 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
