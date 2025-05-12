@@ -48,6 +48,7 @@ jobs:
       uses: ./.github/actions/pkgbuild
       with:
         pkgdir: ${{ inputs.pkgdir }}
+        namcapDisable: true
         pacmanConf: ${{ inputs.pacman_conf }}
         makepkgConf: ${{ inputs.makepkg_conf }}
         makepkgArgs: ${{ inputs.makepkg_args }}
