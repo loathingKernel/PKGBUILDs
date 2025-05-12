@@ -50,7 +50,6 @@ pkgbase = wine
 	makedepends = vulkan-headers
 	makedepends = vulkan-icd-loader
 	makedepends = lib32-vulkan-icd-loader
-	makedepends = ntsync-header
 	makedepends = desktop-file-utils
 	makedepends = fontconfig
 	makedepends = lib32-fontconfig
