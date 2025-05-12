@@ -54,7 +54,6 @@ pkgbase = wine-staging
 	makedepends = lib32-v4l-utils
 	makedepends = vulkan-icd-loader
 	makedepends = lib32-vulkan-icd-loader
-	makedepends = ntsync-header
 	depends = attr
 	depends = lib32-attr
 	depends = desktop-file-utils
