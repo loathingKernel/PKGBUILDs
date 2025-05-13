@@ -117,7 +117,7 @@ pkgbase = wine-cachyos
 	optdepends = lib32-v4l-utils
 	optdepends = vulkan-icd-loader
 	optdepends = lib32-vulkan-icd-loader
-	provides = wine=9.0
+	provides = wine=10.0
 	provides = wine-mono
 	provides = wine-gecko
 	conflicts = wine
