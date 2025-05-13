@@ -138,9 +138,10 @@ prepare() {
   patch -Np1 -i "$srcdir"/0002-makedep-add-per-source-cflags-and-per-program-ldflag.patch
   patch -Np1 -i "$srcdir"/0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
   ./tools/make_requests
-  ./dlls/winevulkan/make_vulkan
   ./tools/make_specfiles
+  ./dlls/winevulkan/make_vulkan
   autoreconf -fiv
+  rm -rf autom4te.cache
 }
 
 build() {
