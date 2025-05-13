@@ -8,7 +8,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.0.0
 _xaliaver=0.4.6
-pkgrel=1
+pkgrel=2
 epoch=1
 
 source=(
@@ -225,6 +225,15 @@ package() {
     local _compatdir="$pkgdir/usr/share/steam/compatibilitytools.d"
     mkdir -p "$_compatdir/${pkgname}"
     rsync --delete -arx dist/* "$_compatdir/${pkgname}"
+
+    # For some unknown to me reason, 32bit vkd3d (not vkd3d-proton) always links
+    # to libgcc_s_dw2-1.dll no matter what linker options I tried.
+    # Copy the required dlls into the package, they will be copied later into the prefix
+    # by the patched proton script. Bundle them to not depend on mingw-w64-gcc being installed.
+    cp /usr/i686-w64-mingw32/bin/{libgcc_s_dw2-1.dll,libwinpthread-1.dll} \
+        "$_compatdir/${pkgname}"/files/lib/i386-windows/vkd3d/
+    cp /usr/x86_64-w64-mingw32/bin/{libgcc_s_seh-1.dll,libwinpthread-1.dll} \
+        "$_compatdir/${pkgname}"/files/lib/x86_64-windows/vkd3d/
 
     mkdir -p "$pkgdir/usr/share/licenses/${pkgname}"
     mv "$_compatdir/${pkgname}"/LICENSE{,.OFL} \
