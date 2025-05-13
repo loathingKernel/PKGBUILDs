@@ -103,7 +103,7 @@ optdepends=(
   vulkan-icd-loader     lib32-vulkan-icd-loader
 )
 
-provides=("wine=9.0" 'wine-mono' 'wine-gecko')
+provides=("wine=10.0" 'wine-mono' 'wine-gecko')
 conflicts=('wine' 'wine-mono' 'wine-gecko')
 install=wine.install
 
@@ -113,13 +113,14 @@ prepare() {
   mkdir $pkgname-{32,64}-build
 
   pushd $pkgname
-      git config user.email "wine@cachyos.org"
-      git config user.name "wine cachyos"
-      git tag wine-9.0 --annotate -m "$pkgver" --force
-      ./tools/make_requests
-      ./dlls/winevulkan/make_vulkan -x vk.xml
-      ./tools/make_specfiles
-      autoreconf -fiv
+  git config user.email "wine@cachyos.org"
+  git config user.name "wine cachyos"
+  git tag wine-10.0 --annotate -m "$pkgver" --force
+  ./tools/make_requests
+  ./tools/make_specfiles
+  ./dlls/winevulkan/make_vulkan -x vk.xml -X video.xml
+  autoreconf -fiv
+  rm -rf autom4te.cache
   popd
 }
 
@@ -168,7 +169,6 @@ build() {
     --without-oss \
     --disable-winemenubuilder \
     --disable-tests \
-    --with-xattr \
     --enable-win64
 
   make
@@ -192,7 +192,6 @@ build() {
     --without-oss \
     --disable-winemenubuilder \
     --disable-tests \
-    --with-xattr \
     --with-wine64="$srcdir/$pkgname-64-build"
 
   make
