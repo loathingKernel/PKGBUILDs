@@ -143,9 +143,10 @@ prepare() {
   patch -Np1 -i "$srcdir"/0001-win32u-Bump-AMD-driver-version.patch
   patch -Np1 -i "$srcdir"/0002-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
   ./tools/make_requests
-  ./dlls/winevulkan/make_vulkan
   ./tools/make_specfiles
+  ./dlls/winevulkan/make_vulkan
   autoreconf -fiv
+  rm -rf autom4te.cache
 }
 
 build() {
@@ -200,7 +201,6 @@ build() {
     --without-oss \
     --disable-winemenubuilder \
     --disable-tests \
-    --with-xattr \
     --enable-archs=x86_64,i386
 
   make
