@@ -226,24 +226,11 @@ package() {
     mkdir -p "$_compatdir/${pkgname}"
     rsync --delete -arx dist/* "$_compatdir/${pkgname}"
 
-    # For some unknown to me reason, 32bit vkd3d (not vkd3d-proton) always links
-    # to libgcc_s_dw2-1.dll no matter what linker options I tried.
-    # Copy the required dlls into the package, they will be copied later into the prefix
-    # by the patched proton script. Bundle them to not depend on mingw-w64-gcc being installed.
-    cp /usr/i686-w64-mingw32/bin/{libgcc_s_dw2-1.dll,libwinpthread-1.dll} \
-        "$_compatdir/${pkgname}"/files/lib/vkd3d/
-    cp /usr/x86_64-w64-mingw32/bin/{libgcc_s_seh-1.dll,libwinpthread-1.dll} \
-        "$_compatdir/${pkgname}"/files/lib64/vkd3d/
-
     mkdir -p "$pkgdir/usr/share/licenses/${pkgname}"
     mv "$_compatdir/${pkgname}"/LICENSE{,.OFL} \
         "$pkgdir/usr/share/licenses/${pkgname}"
 
     cd "$_compatdir/${pkgname}/files"
-    i686-w64-mingw32-strip --strip-unneeded \
-        $(find lib/wine \( -iname fakedlls -or -iname i386-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
-    x86_64-w64-mingw32-strip --strip-unneeded \
-        $(find lib64/wine \( -iname fakedlls -or -iname x86_64-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
 
     local _geckodir="share/wine/gecko/wine-gecko-${_geckover}"
     i686-w64-mingw32-strip --strip-unneeded \
