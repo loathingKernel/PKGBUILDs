@@ -8,7 +8,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.0.0
 _xaliaver=0.4.6
-pkgrel=3
+pkgrel=4
 epoch=1
 
 source=(
@@ -29,7 +29,7 @@ noextract=(
 pkgdesc="A compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour"
 url="https://github.com/cachyos/proton-cachyos"
 arch=(x86_64 x86_64_v3)
-options=(!staticlibs !lto !debug !strip emptydirs)
+options=(!staticlibs !lto !debug emptydirs)
 license=('custom')
 depends=(
   attr            lib32-attr
