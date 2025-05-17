@@ -63,8 +63,8 @@ prepare() {
         -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
         -e "s|@LDARGS@|\'${cross_ldflags// /\',\'}\'|g"
 
-    local cross_cflags="$CFLAGS -mstackrealign"
-    local cross_cxxflags="$CXXFLAGS -mstackrealign"
+    local cross_cflags="$CFLAGS -mstackrealign -mpreferred-stack-boundary=2"
+    local cross_cxxflags="$CXXFLAGS -mstackrealign -mpreferred-stack-boundary=2"
     sed -i build-win32.txt \
         -e "s|@CARGS@|\'${cross_cflags// /\',\'}\'|g" \
         -e "s|@CXXARGS@|\'${cross_cxxflags// /\',\'}\'|g" \
