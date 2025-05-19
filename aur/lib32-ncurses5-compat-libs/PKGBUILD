@@ -13,6 +13,9 @@ depends=(
   lib32-glibc
   lib32-$_name=$pkgver
 )
+makedepends=(
+  git
+)
 source=(
   $_name::git+https://github.com/ThomasDickey/ncurses-snapshots.git?signed#tag=v${pkgver/./_}
   $_name-6.3-libs.patch
