@@ -11,7 +11,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.0.0
 _xaliaver=0.4.6
-pkgrel=2
+pkgrel=3
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -22,6 +22,7 @@ source=(wine-cachyos::git+https://github.com/CachyOS/wine-cachyos.git#tag=cachyo
         https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
         https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
         https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
+        0001-kernelbase-add-wow64-specific-workarounds.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -114,6 +115,7 @@ prepare() {
   git config user.email "wine@cachyos.org"
   git config user.name "wine cachyos"
   git tag wine-10.0 --annotate -m "$pkgver" --force
+  patch -Np1 -i "$srcdir"/0001-kernelbase-add-wow64-specific-workarounds.patch
   ./tools/make_requests
   ./tools/make_specfiles
   ./dlls/winevulkan/make_vulkan -x vk.xml -X video.xml

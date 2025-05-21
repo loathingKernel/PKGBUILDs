@@ -1,7 +1,7 @@
 pkgbase = wine-cachyos-opt
 	pkgdesc = A compatibility layer for running Windows programs, with extra CachyOS flavour (installs under /opt)
 	pkgver = 10.0.20250520
-	pkgrel = 2
+	pkgrel = 3
 	epoch = 2
 	url = https://github.com/CachyOS/wine-cachyos
 	install = wine.install
@@ -126,6 +126,7 @@ pkgbase = wine-cachyos-opt
 	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86_64.tar.xz
 	source = https://github.com/madewokherd/wine-mono/releases/download/wine-mono-10.0.0/wine-mono-10.0.0-x86.tar.xz
 	source = https://github.com/madewokherd/xalia/releases/download/xalia-0.4.6/xalia-0.4.6-net48-mono.zip
+	source = 0001-kernelbase-add-wow64-specific-workarounds.patch
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
