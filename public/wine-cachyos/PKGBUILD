@@ -165,7 +165,7 @@ build() {
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
-    --without-ffmpeg \
+    --with-ffmpeg \
     --without-oss \
     --disable-winemenubuilder \
     --disable-tests \
@@ -188,7 +188,6 @@ build() {
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
-    --without-ffmpeg \
     --without-oss \
     --disable-winemenubuilder \
     --disable-tests \
