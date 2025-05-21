@@ -8,7 +8,7 @@ pkgname=(
     'samsung-unified-driver'
 )
 pkgver=1.00.39
-pkgrel=10
+pkgrel=11
 
 pkgdesc='Samsung Unified Linux Driver for printers and scanners.'
 arch=('i686' 'x86_64')
@@ -77,7 +77,7 @@ package_samsung-unified-driver-printer()
 package_samsung-unified-driver-scanner()
 {
     pkgdesc='Samsung Unified Linux Driver for scanners.'
-    depends=('samsung-unified-driver-common' 'libxml2' 'libusb-compat' 'sane')
+    depends=('samsung-unified-driver-common' 'libxml2-legacy' 'libusb-compat' 'sane')
 
     mkdir -p "$pkgdir"/usr/share
     cp -r "$srcdir"/uld/noarch/share/locale "$pkgdir"/usr/share
