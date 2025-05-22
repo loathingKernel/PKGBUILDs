@@ -7,7 +7,7 @@
 
 pkgname=wine-staging
 pkgver=10.8
-pkgrel=2
+pkgrel=3
 _tkg_commit=2c07bbced3328c361ff73782611b9c9ab796ed37
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -58,6 +58,7 @@ depends=(
   llvm-libs       lib32-llvm-libs
   gettext         lib32-gettext
   libpcap         lib32-libpcap
+  libunwind       lib32-libunwind
   libxcursor      lib32-libxcursor
   libxkbcommon    lib32-libxkbcommon
   libxi           lib32-libxi
@@ -84,11 +85,14 @@ makedepends=(autoconf bison perl flex clang llvm lld
   mesa-libgl            lib32-mesa-libgl
   opencl-headers
   opencl-icd-loader     lib32-opencl-icd-loader
+  pcsclite              lib32-pcsclite
   python
   samba
   sane
   sdl2                  lib32-sdl2
+  unixodbc
   v4l-utils             lib32-v4l-utils
+  vulkan-headers
   vulkan-icd-loader     lib32-vulkan-icd-loader
 )
 optdepends=(
@@ -99,8 +103,11 @@ optdepends=(
   ffmpeg
   giflib                lib32-giflib
   gnutls                lib32-gnutls
+  gst-plugins-bad
+  gst-plugins-base      lib32-gst-plugins-base
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   gst-plugins-good      lib32-gst-plugins-good
+  gst-plugins-ugly
   gtk3                  lib32-gtk3
   libgphoto2
   libpulse              lib32-libpulse
@@ -108,9 +115,11 @@ optdepends=(
   libxcomposite         lib32-libxcomposite
   libxinerama           lib32-libxinerama
   opencl-icd-loader     lib32-opencl-icd-loader
+  pcsclite              lib32-pcsclite
   samba
   sane
   sdl2                  lib32-sdl2
+  unixodbc
   v4l-utils             lib32-v4l-utils
   vulkan-icd-loader     lib32-vulkan-icd-loader
   wine-gecko
@@ -213,6 +222,7 @@ build() {
     --with-x \
     --with-wayland \
     --with-gstreamer \
+    --with-freetype \
     --with-mingw=clang \
     --with-alsa \
     --without-oss \
