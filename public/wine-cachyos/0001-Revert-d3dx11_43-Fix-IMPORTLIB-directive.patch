@@ -1,0 +1,25 @@
+From aec088608e77168f4ab5f7d97b94f91ff174ccb4 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Thu, 22 May 2025 22:37:28 +0300
+Subject: [PATCH] Revert "d3dx11_43: Fix IMPORTLIB directive"
+
+This reverts commit f1362ac4a1c2121cba1e85cb326f304cb974713c.
+---
+ dlls/d3dx11_43/Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dlls/d3dx11_43/Makefile.in b/dlls/d3dx11_43/Makefile.in
+index d617c4a6ae9..be0a311305e 100644
+--- a/dlls/d3dx11_43/Makefile.in
++++ b/dlls/d3dx11_43/Makefile.in
+@@ -1,6 +1,6 @@
+ EXTRADEFS = -DD3DX11_SDK_VERSION=43 -DD3DX_D3D_VERSION=11
+ MODULE = d3dx11_43.dll
+-IMPORTLIB = d3dx11_43
++IMPORTLIB = d3dx11
+ IMPORTS   = d3dcompiler ole32
+ PARENTSRC = ../d3dx9_36
+ DELAYIMPORTS = windowscodecs
+-- 
+2.49.0
+
