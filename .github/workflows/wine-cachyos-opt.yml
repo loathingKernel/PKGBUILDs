@@ -25,7 +25,7 @@ jobs:
       matrix:
         include:
           - repository: public
-            pkgbuild: PKGBUILD.llvm.wow64
+            pkgbuild: PKGBUILD.wow64
             multilib: false
           - repository: personal
             pkgbuild: PKGBUILD.llvm.wow64
