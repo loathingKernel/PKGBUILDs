@@ -221,6 +221,7 @@ build() {
     --with-x \
     --with-wayland \
     --with-gstreamer \
+    --with-freetype \
     --with-mingw=clang \
     --with-alsa \
     --without-oss \
