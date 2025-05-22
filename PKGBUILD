@@ -11,7 +11,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.0.0
 _xaliaver=0.4.6
-pkgrel=2
+pkgrel=3
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -22,6 +22,7 @@ source=(wine-cachyos::git+https://github.com/CachyOS/wine-cachyos.git#tag=cachyo
         https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
         https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
         https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
+        0001-kernelbase-add-wow64-specific-workarounds.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -45,6 +46,7 @@ depends=(
   gcc-libs        lib32-gcc-libs
   gettext         lib32-gettext
   libpcap         lib32-libpcap
+  libunwind       lib32-libunwind
   libxcursor      lib32-libxcursor
   libxkbcommon    lib32-libxkbcommon
   libxi           lib32-libxi
@@ -71,12 +73,15 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   mesa-libgl            lib32-mesa-libgl
   opencl-headers
   opencl-icd-loader     lib32-opencl-icd-loader
+  pcsclite              lib32-pcsclite
   python
   samba
   sane
   sdl2                  lib32-sdl2
+  unixodbc
   unzip
   v4l-utils             lib32-v4l-utils
+  vulkan-headers
   vulkan-icd-loader     lib32-vulkan-icd-loader
 )
 optdepends=(
@@ -87,8 +92,11 @@ optdepends=(
   ffmpeg
   giflib                lib32-giflib
   gnutls                lib32-gnutls
+  gst-plugins-bad
+  gst-plugins-base      lib32-gst-plugins-base
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   gst-plugins-good      lib32-gst-plugins-good
+  gst-plugins-ugly
   gtk3                  lib32-gtk3
   libgphoto2
   libpulse              lib32-libpulse
@@ -96,9 +104,11 @@ optdepends=(
   libxcomposite         lib32-libxcomposite
   libxinerama           lib32-libxinerama
   opencl-icd-loader     lib32-opencl-icd-loader
+  pcsclite              lib32-pcsclite
   samba
   sane
   sdl2                  lib32-sdl2
+  unixodbc
   v4l-utils             lib32-v4l-utils
   vulkan-icd-loader     lib32-vulkan-icd-loader
 )
@@ -116,6 +126,7 @@ prepare() {
   git config user.email "wine@cachyos.org"
   git config user.name "wine cachyos"
   git tag wine-10.0 --annotate -m "$pkgver" --force
+  patch -Np1 -i "$srcdir"/0001-kernelbase-add-wow64-specific-workarounds.patch
   ./tools/make_requests
   ./tools/make_specfiles
   ./dlls/winevulkan/make_vulkan -x vk.xml -X video.xml
@@ -163,6 +174,7 @@ build() {
     --with-x \
     --with-wayland \
     --with-gstreamer \
+    --with-freetype \
     --with-mingw \
     --with-alsa \
     --with-ffmpeg \
@@ -186,6 +198,7 @@ build() {
     --with-x \
     --with-wayland \
     --with-gstreamer \
+    --with-freetype \
     --with-mingw \
     --with-alsa \
     --without-oss \
@@ -243,5 +256,6 @@ b2sums=('d6a637c13a0776fc0110f4960476ca5af03d5aad7052c3f242788008cf30ecf2e65945b
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         'a7efb7e9e3c03a92f3fc2c66172a2597ab4febfbf23a98c20d9ba46c48f0b96f568b21ea61f43cfa0cbbad2557cfafd665b63f3115611f0df9dd75ab358ecf43'
         '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85'
+        'b5f0b411b6f910fd4d063780a6ec91807b64ff9a5d2b79be42af79c2a18496ad53d90c3fe96b12140012ff983e02066ade88edf39895b2fdf29e95d50a2b02ce'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
         'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588')
