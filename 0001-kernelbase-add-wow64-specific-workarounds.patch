@@ -1,4 +1,4 @@
-From 3527d281637b1847ff9ca5067cfa75105f3ae719 Mon Sep 17 00:00:00 2001
+From fb41f5fd22a98dc240b79ece4b5a162a892f3b46 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 21 May 2025 18:43:05 +0300
 Subject: [PATCH] kernelbase: add wow64 specific workarounds
@@ -9,7 +9,7 @@ Add black desert launcher workaround (`--disable-gpu --in-single-process`)
  1 file changed, 18 insertions(+)
 
 diff --git a/dlls/kernelbase/process.c b/dlls/kernelbase/process.c
-index ece61d6829f..d959929fdaf 100644
+index ece61d6829f..5f9b0c41d5a 100644
 --- a/dlls/kernelbase/process.c
 +++ b/dlls/kernelbase/process.c
 @@ -628,6 +628,10 @@ static const WCHAR *hack_append_command_line( const WCHAR *cmd )
@@ -27,7 +27,7 @@ index ece61d6829f..d959929fdaf 100644
          }
      }
  
-+    if ( is_wow64 && !is_old_wow64 )
++    if ( is_wow64 )
 +    {
 +        for (i = 0; i < ARRAY_SIZE(wow64_options); ++i)
 +        {
