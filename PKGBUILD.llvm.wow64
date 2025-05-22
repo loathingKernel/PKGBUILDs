@@ -23,6 +23,7 @@ source=(wine-cachyos::git+https://github.com/CachyOS/wine-cachyos.git#tag=cachyo
         https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
         https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
         0001-kernelbase-add-wow64-specific-workarounds.patch
+        0001-Revert-d3dx11_43-Fix-IMPORTLIB-directive.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -127,6 +128,7 @@ prepare() {
   git config user.name "wine cachyos"
   git tag wine-10.0 --annotate -m "$pkgver" --force
   patch -Np1 -i "$srcdir"/0001-kernelbase-add-wow64-specific-workarounds.patch
+  patch -Np1 -i "$srcdir"/0001-Revert-d3dx11_43-Fix-IMPORTLIB-directive.patch
   ./tools/make_requests
   ./tools/make_specfiles
   ./dlls/winevulkan/make_vulkan -x vk.xml -X video.xml
@@ -236,5 +238,6 @@ b2sums=('d6a637c13a0776fc0110f4960476ca5af03d5aad7052c3f242788008cf30ecf2e65945b
         'a7efb7e9e3c03a92f3fc2c66172a2597ab4febfbf23a98c20d9ba46c48f0b96f568b21ea61f43cfa0cbbad2557cfafd665b63f3115611f0df9dd75ab358ecf43'
         '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85'
         '8e324daaa9bd55d0d37898242b9ea9d062e97b4a2273760b5d6094c35a256178c7ebe40c175444a65c98326848aeeaf1169250b54a02e53f17d493e0ffbb2c44'
+        '0d2d36f5e002a1921e89f1d2c6bb900b8e763642c428c8ef5113aeb721de1a31b131b9032027f58d24c54a4687573e51afbee8b2d9a90aeed4dadfe88695838f'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
         'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588')
