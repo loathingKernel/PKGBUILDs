@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=10.8
-pkgrel=2
+pkgrel=3
 _tkg_commit=2c07bbced3328c361ff73782611b9c9ab796ed37
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -181,6 +181,7 @@ build() {
     --with-x \
     --with-wayland \
     --with-gstreamer \
+    --with-freetype \
     --with-mingw \
     --with-alsa \
     --without-oss \
