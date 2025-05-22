@@ -1,0 +1,49 @@
+From 502c1dc3c8c796c76b6338c6322cf76f843cdcea Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Wed, 21 May 2025 18:43:05 +0300
+Subject: [PATCH] kernelbase: add wow64 specific workarounds
+
+Add black desert launcher workaround (`--disable-gpu --in-single-process`)
+---
+ dlls/kernelbase/process.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/dlls/kernelbase/process.c b/dlls/kernelbase/process.c
+index ece61d6829f..525bd1331ec 100644
+--- a/dlls/kernelbase/process.c
++++ b/dlls/kernelbase/process.c
+@@ -628,6 +628,10 @@ static const WCHAR *hack_append_command_line( const WCHAR *cmd )
+         {L"RSI Launcher.exe", L" --in-process-gpu"}
+     };
+ 
++    static const struct option wow64_options[] = {
++        {L"BlackDesertLauncher.exe", L" --disable-gpu --in-single-process"}
++    }
++
+     unsigned int i;
+     char sgi[64] = {0};
+     char wayland_hack_enabled[64] = {0};
+@@ -663,6 +667,20 @@ static const WCHAR *hack_append_command_line( const WCHAR *cmd )
+         }
+     }
+ 
++    if ( is_wow64() && !is_old_wow64() )
++    {
++        for (i = 0; i < ARRAY_SIZE(wow64_options); ++i)
++        {
++            if (wcsstr( cmd, wow64_options[i].exe_name ))
++            {
++                if (wow64_options[i].steamgameid && strcmp( sgi, wow64_options[i].steamgameid ))
++                    continue;
++                FIXME( "HACK: appending %s to command line.\n", debugstr_w(wow64_options[i].append) );
++                return wow64_options[i].append;
++            }
++        }    
++    }
++
+     return NULL;
+ }
+ 
+-- 
+2.49.0
+
