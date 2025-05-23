@@ -1,7 +1,7 @@
 pkgbase = wine-cachyos-opt
 	pkgdesc = A compatibility layer for running Windows programs, with extra CachyOS flavour (installs under /opt)
 	pkgver = 10.0.20250520
-	pkgrel = 3
+	pkgrel = 4
 	epoch = 2
 	url = https://github.com/CachyOS/wine-cachyos
 	install = wine.install
