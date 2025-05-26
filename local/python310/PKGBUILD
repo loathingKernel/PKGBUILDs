@@ -8,8 +8,8 @@ shopt -s extglob
 
 pkgbase=python
 pkgname=(python310 python310-tests)
-pkgver=3.10.16
-pkgrel=3
+pkgver=3.10.17
+pkgrel=1
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="The Python programming language, version 3.10"
@@ -20,7 +20,7 @@ depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib' '
 makedepends=('tk' 'sqlite' 'bluez-libs' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-font')
 source=("https://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"{,.asc}
         EXTERNALLY-MANAGED)
-sha512sums=('a6b004974db93f21590f00b9b1a569dfd8c3e334f8c6a8eb8997dec5646fa4515cfc02a7dabea9e4f75f908938dc64333ce4899b9a26aff97f9ffcb027fa2bca'
+sha512sums=('11b1e647f8db05041bcafe110698af8bf5e9f7c8d23c0e9eb568a60544bb9a9e9c3ac94b34f0898f0d4e6c23da3cb81f844ae9d9c8b750058763502eaba39880'
             'SKIP'
             '62a6fbfbaeaa3ba7c54e109d9c3b7f67e73bb21986da4c1fcc5d28cca83d71e0fcae28e1fc70ee8ddce7dea8cd0b64e18d1031dae3a2eae5eaa379c53efd53a0')
 validpgpkeys=('0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D'  # Ned Deily (Python release signing key) <nad@python.org>
