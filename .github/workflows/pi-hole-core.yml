@@ -1,5 +1,5 @@
 
-name: pi-hole-server
+name: pi-hole-core
 
 on:
   workflow_dispatch:
@@ -10,14 +10,14 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - aur/pi-hole-server/.SRCINFO
+      - aur/pi-hole-core/.SRCINFO
 
 jobs:
   repository:
@@ -26,6 +26,6 @@ jobs:
         repository: [public]
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
-      pkgdir: aur/pi-hole-server
+      pkgdir: aur/pi-hole-core
       repository: ${{ matrix.repository }}
       action: ${{ inputs.action != '' && inputs.action || 'build' }}
