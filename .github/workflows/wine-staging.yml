@@ -10,14 +10,14 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - multilib/wine-staging/.SRCINFO
+      - multilib/wine-staging/.SRCINFO
 
 jobs:
   repository:

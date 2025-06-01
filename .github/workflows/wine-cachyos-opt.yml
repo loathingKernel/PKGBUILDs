@@ -10,14 +10,14 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - public/wine-cachyos-opt/.SRCINFO
+      - public/wine-cachyos-opt/.SRCINFO
 
 jobs:
   repository:
