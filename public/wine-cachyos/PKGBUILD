@@ -6,12 +6,12 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-cachyos
-_srctag=10.0-20250520
+_srctag=10.0-20250601
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.0.0
 _xaliaver=0.4.6
-pkgrel=4
+pkgrel=1
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -22,8 +22,6 @@ source=(wine-cachyos::git+https://github.com/CachyOS/wine-cachyos.git#tag=cachyo
         https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
         https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
         https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
-        0001-kernelbase-add-wow64-specific-workarounds.patch
-        0001-Revert-d3dx11_43-Fix-IMPORTLIB-directive.patch
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
@@ -127,8 +125,6 @@ prepare() {
   git config user.email "wine@cachyos.org"
   git config user.name "wine cachyos"
   git tag wine-10.0 --annotate -m "$pkgver" --force
-  patch -Np1 -i "$srcdir"/0001-kernelbase-add-wow64-specific-workarounds.patch
-  patch -Np1 -i "$srcdir"/0001-Revert-d3dx11_43-Fix-IMPORTLIB-directive.patch
   ./tools/make_requests
   ./tools/make_specfiles
   ./dlls/winevulkan/make_vulkan -x vk.xml -X video.xml
@@ -253,12 +249,10 @@ package() {
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
-b2sums=('d6a637c13a0776fc0110f4960476ca5af03d5aad7052c3f242788008cf30ecf2e65945b776d832cd85e4e570af0fee267279548939f02d86ddd0ba1215b66b18'
+b2sums=('45182fbe8bfb06eb3d955450fd31cf761da473547c9d3803be9e4bc79523c6e62402b9c20cebe6a9a500a59deded3341f82a1bf36719410c90a117642f08c1d8'
         '2a73c12585b502ae11188482cbc9fb1f45f95bfe4383a7615011104b132f4845f9813d01fb40277e1934fab5f1b35ab40b4f4a66a9967463dd1d666a666904e9'
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         'a7efb7e9e3c03a92f3fc2c66172a2597ab4febfbf23a98c20d9ba46c48f0b96f568b21ea61f43cfa0cbbad2557cfafd665b63f3115611f0df9dd75ab358ecf43'
         '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85'
-        '8e324daaa9bd55d0d37898242b9ea9d062e97b4a2273760b5d6094c35a256178c7ebe40c175444a65c98326848aeeaf1169250b54a02e53f17d493e0ffbb2c44'
-        '0d2d36f5e002a1921e89f1d2c6bb900b8e763642c428c8ef5113aeb721de1a31b131b9032027f58d24c54a4687573e51afbee8b2d9a90aeed4dadfe88695838f'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
         'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588')
