@@ -1,26 +1,26 @@
-From 435881153b6bbce9a1b5e025dfcaeea340d65e51 Mon Sep 17 00:00:00 2001
-From: Arkadiusz Hiler <ahiler@codeweavers.com>
-Date: Thu, 23 May 2024 16:58:09 +0300
-Subject: [PATCH 2/2] win32u: Update Nvidia's DriverVersion to 999.99.
+From 948b1437cedfe81d6b282988a119e973a473975f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bernhard=20K=C3=B6lbl?= <besentv@gmail.com>
+Date: Tue, 20 May 2025 20:14:23 +0200
+Subject: [PATCH] fixup! win32u: Provide more gpu device properties.
 
-To avoid periodic bumps... at lest for some time.
+CW-Bug-Id: #23941
 ---
  dlls/win32u/sysparams.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/dlls/win32u/sysparams.c b/dlls/win32u/sysparams.c
-index 8173031ae44..5d101075457 100644
+index 026403a1e06..dc39d2883db 100644
 --- a/dlls/win32u/sysparams.c
 +++ b/dlls/win32u/sysparams.c
-@@ -1233,7 +1233,7 @@ static BOOL write_gpu_to_registry( const struct gpu *gpu, const struct pci_id *p
-         break;
-     /* Nvidia */
-     case 0x10de:
--        strcpy( buffer, "31.0.15.3625" );
-+        strcpy( buffer, "31.0.19.9999" );
-         break;
-     /* Default value for any other vendor. */
-     default:
+@@ -1094,7 +1094,7 @@ static const char* driver_vendor_to_version( UINT16 vendor )
+     {
+     case 0x8086: /* Intel */    return "32.0.101.6314";
+     case 0x1002: /* AMD */      return "31.0.21921.1000";
+-    case 0x10de: /* Nvidia */   return "32.0.15.6094";
++    case 0x10de: /* Nvidia */   return "32.0.19.9999";
+     default:                    return "31.0.10.1000";
+     }
+ }
 -- 
 2.49.0
 
