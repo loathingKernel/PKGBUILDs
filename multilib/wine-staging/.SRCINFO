@@ -141,7 +141,6 @@ pkgbase = wine-staging
 	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=52b34a1220194b8bf5286284c14371e36cc5829e
 	source = wine-wmclass.patch
 	source = wine-isolate_home.patch
-	source = 0001-win32u-Bump-AMD-driver-version.patch
 	source = 0002-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
 	source = wine-ntsync.patch
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
@@ -153,8 +152,7 @@ pkgbase = wine-staging
 	sha512sums = 6e7a51f159ba7476b631ce3fdaf588482318dfe807ae9f5a9dfe5d610a498a14d77b72e309db264ba4651373f5a1b20570cb883a22f1e7f307f019e928c53737
 	sha512sums = 372be267e8099fbffbaee99e127032841e5ff42949e96822fb9299fadf8c41f9932bc42c19d25dec5b0b06f56f9db91e480391d3e2fc988bf8885a79e0c58144
 	sha512sums = 3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282
-	sha512sums = ef08c0bdafe4738fa84ffea8f3f165a102fd4d92e33764108704afb622515d862dfae9070d4a82680a1ceddf34088e434d2163407a26037f13f1523bf28debf1
-	sha512sums = 9c723337aef10c91c0e73a93dafe49078ff2571170e3277612dcdfde0fd2c25db00278f69dd8887e16385c125ea8cd857d1c5ff574aff3faf81ad484fb4a7d73
+	sha512sums = f43f4fe92c9f9b826e9c71d69360aa470333242df8c4e60be1fd4a23a311c971f6eee253bc2fb94adc00eddc99a09917de99286c8ab97bd9da1e551f6ff0f7b8
 	sha512sums = c73395b6b21e65c2a03aa25700a85c6daed7ec411e4694371d2941cc9e39ca7e0d5ab0626d4fb15cb0f0a67270b5e33fffde7ddcb51a2f1cca23471879d52ac5
 
 pkgname = wine-staging
