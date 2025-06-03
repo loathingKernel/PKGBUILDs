@@ -7,7 +7,7 @@ pkgname=readline6
 _basever=6.3
 _patchlevel=008
 pkgver=${_basever}.${_patchlevel}
-pkgrel=5
+pkgrel=6
 pkgdesc="GNU readline library. Provides libreadline.so.${_basever:0:1}"
 arch=('x86_64')
 url='http://tiswww.case.edu/php/chet/readline/rltop.html'
@@ -42,6 +42,9 @@ build() {
   # build with -fPIC for x86_64 (FS#15634)
   [[ $CARCH == "x86_64" ]] && CFLAGS="$CFLAGS -fPIC"
   CFLAGS+=" -Wno-implicit-function-declaration -ffat-lto-objects"
+
+  # https://aur.archlinux.org/packages/units#comment-1022121
+  CFLAGS+=" -std=gnu17"
 
   ./configure --prefix=/usr
   make SHLIB_LIBS=-lncurses
