@@ -18,8 +18,7 @@ sha256sums=('6aee11ce4867a847ecf75b04ef41737e0470c20d87466c7f0263ad354672517f')
 prepare() {
    cd "${srcdir}/${pkgname}-${pkgver}"
    # Arch command doesn't seem to exist on arch linux so instead we can substitute it for 'uname' for now
-   sed -i "s/\(\['arch'\]\)/['uname', '-m']/g" src/AppDetails.py
-   sed -i "s/\(\['arch'\]\)/['uname', '-m']/g" src/models/UpdateManager.py
+   sed -i "s/\(\['arch'\]\)/['uname', '-m']/g" src/AppDetails.py src/models/UpdateManager.py
 
    # Arch linux uses the 7z command instead of the 7zz included in gearlever (both official 7zip)
    sed -i "s/7zz/7z/g" src/providers/AppImageProvider.py
