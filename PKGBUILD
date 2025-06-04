@@ -11,6 +11,7 @@ depends=('7zip' 'binutils' 'dconf' 'dwarfs-bin' 'fuse2' 'gdk-pixbuf2' 'glibc' 'g
 	 'python-pyxdg' 'python-requests' 'zlib')
 makedepends=('gettext' 'meson')
 checkdepends=('appstream' 'desktop-file-utils')
+optdepends=('libxml2-legacy: required for LibreOffice appimage')
 options=('!strip' '!debug')
 source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('6aee11ce4867a847ecf75b04ef41737e0470c20d87466c7f0263ad354672517f')

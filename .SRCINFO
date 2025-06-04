@@ -28,6 +28,7 @@ pkgbase = gearlever
 	depends = python-pyxdg
 	depends = python-requests
 	depends = zlib
+	optdepends = libxml2-legacy: required for LibreOffice appimage
 	options = !strip
 	options = !debug
 	source = gearlever-3.3.0.tar.gz::https://github.com/mijorus/gearlever/archive/refs/tags/3.3.0.tar.gz
