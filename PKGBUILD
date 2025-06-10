@@ -1,6 +1,6 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
-pkgver=3.3.0
+pkgver=3.3.1
 pkgrel=1
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
@@ -14,7 +14,7 @@ checkdepends=('appstream' 'desktop-file-utils')
 optdepends=('libxml2-legacy: required for LibreOffice appimage')
 options=('!strip' '!debug')
 source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('6aee11ce4867a847ecf75b04ef41737e0470c20d87466c7f0263ad354672517f')
+sha256sums=('619c3a1770545a0f4475acbcd1239fd284504c7b2fa15eab03a37db62216b9c8')
 
 prepare() {
    cd "${srcdir}/${pkgname}-${pkgver}"
@@ -26,6 +26,9 @@ prepare() {
 
    # Direct internally used script to its new location in lib
    sed -i "s/get_appimage_offset/\/usr\/lib\/gearlever\/get_appimage_offset/g" src/providers/AppImageProvider.py
+   
+   # Fix missing positional argument
+   sed -i "s/create_list_element_from_file(file)/create_list_element_from_file(file, return_new_el=False)/g" src/AppDetails.py
 }
 
 build() {
