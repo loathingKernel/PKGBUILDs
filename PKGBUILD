@@ -26,9 +26,6 @@ prepare() {
 
    # Direct internally used script to its new location in lib
    sed -i "s/get_appimage_offset/\/usr\/lib\/gearlever\/get_appimage_offset/g" src/providers/AppImageProvider.py
-   
-   # Fix missing positional argument
-   #sed -i "s/create_list_element_from_file(file)/create_list_element_from_file(file, return_new_el=False)/g" src/AppDetails.py
 }
 
 build() {
