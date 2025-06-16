@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=10.10
-pkgrel=1
+pkgrel=2
 _tkg_commit=52b34a1220194b8bf5286284c14371e36cc5829e
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -18,6 +18,7 @@ source+=(
         wine-wmclass.patch
         wine-isolate_home.patch
         0002-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
+        8323.patch
         0001-clang-fixup-lto.patch
         0002-makedep-add-per-source-cflags-and-per-program-ldflag.patch
         0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
@@ -30,6 +31,7 @@ sha512sums=('baee24792d16348fac429764643d6819e0ed2eb333999c1e3d7bbe4850fd617910f
             '372be267e8099fbffbaee99e127032841e5ff42949e96822fb9299fadf8c41f9932bc42c19d25dec5b0b06f56f9db91e480391d3e2fc988bf8885a79e0c58144'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             'f43f4fe92c9f9b826e9c71d69360aa470333242df8c4e60be1fd4a23a311c971f6eee253bc2fb94adc00eddc99a09917de99286c8ab97bd9da1e551f6ff0f7b8'
+            'dbba8f7e47147c14cc38afd287252ced0b25458349a8d361bb1b1a173d0024dff641416f2be859ca92eb4cc5c3274f08aa93d1ee80c10af451ceb339857c9934'
             '8694685c4b4e8559b98286a11e39b662edc6c0ff1fa0446abd828af84f31d26fc6b8d18c00e3e3d273dcdad373dd6af8f01eeaa0d3de14ef28512494c756bdc4'
             '605f6f527fc0b25768a3fa7bd921506269c2e70edb17289042eac4f34a410da26bfc4e61d0ae6356258d5fc10be25b8baab9dcabbd7bed034e94560882be457f'
             '67d2e1e08d7f3bab2cd8d39d9bafd2451ab813fd4696ace70e3a310dd4d249112f3a88dedb7a2bcc0f4b85131a41cd1f20a6f21384ef92ec02ec66f07fd46a93'
@@ -122,6 +124,7 @@ prepare() {
   cd wine
 
   patch -Np1 -i "$srcdir"/wine-ntsync.patch
+  patch -Np1 -i "$srcdir"/8323.patch
 
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
   patch -Np1 -i "$_tkg_path"/proton/LAA/LAA-unix.patch
