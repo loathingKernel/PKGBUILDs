@@ -3,7 +3,7 @@ name: pcsx2-git
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 0 */7 * *'
+    - cron: '0 0 */7 * *'
   push:
     branches:
      - master

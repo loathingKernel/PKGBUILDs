@@ -3,7 +3,7 @@ name: rbdoom-3-bfg
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 7 */7 * *'
+    - cron: '0 7 */7 * *'
   push:
     branches:
      - master

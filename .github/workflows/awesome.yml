@@ -3,6 +3,18 @@ name: awesome
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+        - 'build'
+        - 'remove'
+        - 'skip'
+  schedule:
+    - cron: '0 12 * * 0'
   push:
     branches:
      - master
@@ -18,3 +30,4 @@ jobs:
     with:
       pkgdir: extra/awesome
       repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}

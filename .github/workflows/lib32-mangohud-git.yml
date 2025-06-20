@@ -3,7 +3,7 @@ name: lib32-mangohud-git
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 6 */3 * *'
+    - cron: '0 6 */3 * *'
   push:
     branches:
      - master

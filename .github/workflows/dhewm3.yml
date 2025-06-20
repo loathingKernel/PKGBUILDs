@@ -3,7 +3,7 @@ name: dhewm3
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 8 */7 * *'
+    - cron: '0 8 */7 * *'
   push:
     branches:
      - master
