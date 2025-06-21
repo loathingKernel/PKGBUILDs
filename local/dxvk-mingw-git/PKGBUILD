@@ -1,7 +1,7 @@
 # Maintainer: loathingkernel <loathingkernel @at gmail .dot com>
 
 pkgname=dxvk-mingw-git
-pkgver=2.6.1.r342.ge668e335e
+pkgver=2.6.1.r350.g6847d0038
 pkgrel=1
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
 arch=('x86_64')
@@ -43,8 +43,8 @@ prepare() {
     local march="${flags["-march"]:-nocona}"
     local mtune="${flags["-mtune"]:-core-avx2}"
 
-    CFLAGS="-O3 -march=$march -mtune=$mtune -pipe -mprefer-avx128"
-    CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe -mprefer-avx128"
+    CFLAGS="-O3 -march=$march -mtune=$mtune -pipe -mno-avx"
+    CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe -mno-avx"
     LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # These flags are taken from Proton
