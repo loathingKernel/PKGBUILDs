@@ -2,7 +2,7 @@
 
 pkgname=dxvk-mingw
 pkgver=2.6.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version'
 arch=('x86_64')
 url="https://github.com/doitsujin/dxvk"
@@ -38,8 +38,8 @@ prepare() {
     local march="${flags["-march"]:-nocona}"
     local mtune="${flags["-mtune"]:-core-avx2}"
 
-    CFLAGS="-O3 -march=$march -mtune=$mtune -pipe"
-    CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe"
+    CFLAGS="-O3 -march=$march -mtune=$mtune -pipe -mprefer-avx128"
+    CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe -mprefer-avx128"
     LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
 
     # These flags are taken from Proton
