@@ -55,7 +55,6 @@ depends=(
 makedepends=(
   alsa-lib
   ffmpeg
-  flex
   giflib
   git
   gnutls
