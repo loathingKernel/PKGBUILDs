@@ -56,10 +56,7 @@ depends=(
 )
 makedepends=(
   alsa-lib              lib32-alsa-lib
-  autoconf
-  bison
   ffmpeg
-  flex
   git
   gnutls                lib32-gnutls
   gst-plugins-base-libs lib32-gst-plugins-base-libs
@@ -158,7 +155,8 @@ build() {
   local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe"
+  OPTIMIZE_FLAGS+=" -mprefer-avx128 -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   DEBUG_FLAGS="-ffunction-sections -fdata-sections -fno-omit-frame-pointer"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
