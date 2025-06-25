@@ -35,7 +35,7 @@ validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 pkgdesc="A compatibility layer for running Windows programs, with extra CachyOS flavour"
 url="https://github.com/CachyOS/wine-cachyos"
 arch=(x86_64 x86_64_v3)
-options=(!staticlibs !lto)
+options=(!staticlibs !lto !debug)
 license=(LGPL-2.1-or-later)
 depends=(
   attr            lib32-attr

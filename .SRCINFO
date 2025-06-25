@@ -136,6 +136,7 @@ pkgbase = wine-cachyos
 	noextract = xalia-0.4.6-net48-mono.zip
 	options = !staticlibs
 	options = !lto
+	options = !debug
 	source = wine-cachyos::git+https://github.com/CachyOS/wine-cachyos.git#tag=cachyos-10.0-20250623-wine
 	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86.tar.xz
 	source = https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86_64.tar.xz
