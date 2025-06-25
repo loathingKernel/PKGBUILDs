@@ -24,7 +24,7 @@ noextract=(
 )
 
 pkgdesc="A compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour"
-url="https://github.com/cachyos/proton-cachyos"
+url="https://github.com/CachyOS/proton-cachyos"
 arch=(x86_64 x86_64_v3)
 options=(!staticlibs !lto !debug emptydirs)
 license=('custom')
@@ -42,6 +42,7 @@ depends=(
   libgudev        lib32-libgudev
   libpcap         lib32-libpcap
   libsoup         lib32-libsoup
+  libunwind       lib32-libunwind
   libvpx          lib32-libvpx
   libxcursor      lib32-libxcursor
   libxkbcommon    lib32-libxkbcommon
@@ -54,12 +55,9 @@ depends=(
   speex           lib32-speex
   steam-native-runtime
   unzip
-)
-depends+=(
   wayland         lib32-wayland
 )
-makedepends=(autoconf bison perl flex mingw-w64-gcc
-  git
+makedepends=(
   afdko
   alsa-lib              lib32-alsa-lib
   clang
@@ -67,6 +65,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   ffmpeg
   fontforge
   giflib                lib32-giflib
+  git
   glib2-devel
   glslang 
   gnutls                lib32-gnutls
@@ -83,10 +82,12 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   mesa                  lib32-mesa
   mesa-libgl            lib32-mesa-libgl
   meson
+  mingw-w64-gcc
   mingw-w64-tools
   nasm
   opencl-headers
   opencl-icd-loader     lib32-opencl-icd-loader
+  perl
   perl-json
   rsync
   rust                  lib32-rust-libs
@@ -97,11 +98,9 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   v4l-utils             lib32-v4l-utils
   vulkan-headers
   vulkan-icd-loader     lib32-vulkan-icd-loader
+  wayland-protocols
   wget
   xorg-util-macros
-)
-makedepends+=(
-  wayland-protocols
 )
 optdepends=(
   alsa-lib              lib32-alsa-lib
@@ -120,7 +119,6 @@ optdepends=(
   v4l-utils             lib32-v4l-utils
   vulkan-icd-loader     lib32-vulkan-icd-loader
 )
-
 provides=('proton')
 install=${pkgname}.install
 
