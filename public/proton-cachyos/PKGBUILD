@@ -170,7 +170,6 @@ prepare() {
 
     # Explicitly set origin URL for submodules using relative paths
     git remote set-url origin https://github.com/CachyOS/proton-cachyos.git
-    git config set url."https://github.com/".insteadOf "https://gitlab.freedesktop.org/"
     git submodule update --init --filter=tree:0 --recursive
 
     ./patches/apply.sh
@@ -179,6 +178,7 @@ prepare() {
     pushd $rustlib
         export RUSTUP_TOOLCHAIN=stable
         export CARGO_HOME="${SRCDEST}"/proton-cargo
+        export CARGO_NET_GIT_FETCH_WITH_CLI=true
         cargo update
         cargo fetch --locked --target i686-unknown-linux-gnu
         cargo fetch --locked --target x86_64-unknown-linux-gnu
