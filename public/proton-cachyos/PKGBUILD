@@ -90,8 +90,7 @@ makedepends=(
   perl
   perl-json
   rsync
-#  rust                  lib32-rust-libs
-  rustup
+  rust                  lib32-rust-libs
   python
   python-pefile
   python-setuptools-scm
@@ -171,6 +170,7 @@ prepare() {
 
     # Explicitly set origin URL for submodules using relative paths
     git remote set-url origin https://github.com/CachyOS/proton-cachyos.git
+    git config set url."https://github.com/".insteadOf "https://gitlab.freedesktop.org/"
     git submodule update --init --filter=tree:0 --recursive
 
     ./patches/apply.sh
@@ -180,8 +180,6 @@ prepare() {
         export RUSTUP_TOOLCHAIN=stable
         export CARGO_HOME="${SRCDEST}"/proton-cargo
         cargo update
-        rustup target add i686-unknown-linux-gnu
-        rustup target add x86_64-unknown-linux-gnu
         cargo fetch --locked --target i686-unknown-linux-gnu
         cargo fetch --locked --target x86_64-unknown-linux-gnu
     popd
