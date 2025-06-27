@@ -11,7 +11,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.0.0
 _xaliaver=0.4.6
-pkgrel=1
+pkgrel=2
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -142,7 +142,7 @@ build() {
 
   # From Proton
   OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe"
-  OPTIMIZE_FLAGS+=" -mprefer-avx128 -fno-semantic-interposition"
+  OPTIMIZE_FLAGS+=" -mno-avx"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   DEBUG_FLAGS="-ffunction-sections -fdata-sections -fno-omit-frame-pointer"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
