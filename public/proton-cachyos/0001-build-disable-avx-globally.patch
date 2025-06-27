@@ -1,0 +1,27 @@
+From 3f64e892810236088939fbf4ef256c385154bfad Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Fri, 27 Jun 2025 10:30:40 +0300
+Subject: [PATCH] build: disable avx globally
+
+---
+ Makefile.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index c4e64119..a557ef32 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -54,8 +54,8 @@ endif
+ OBJCOPY_FLAGS  := -p
+ 
+ HOST_CFLAGS    ?= -O2 -march=nocona -mtune=core-avx2
+-i386_CFLAGS    := -mstackrealign $(HOST_CFLAGS) -mprefer-avx128 -mno-avx512f -mfpmath=sse
+-x86_64_CFLAGS  := -mcmodel=small $(HOST_CFLAGS) -mprefer-avx128 -mno-avx512f -mfpmath=sse
++i386_CFLAGS    := -mstackrealign $(HOST_CFLAGS) -mno-avx -mno-avx512f -mfpmath=sse
++x86_64_CFLAGS  := -mcmodel=small $(HOST_CFLAGS) -mno-avx -mno-avx512f -mfpmath=sse
+ 
+ CFLAGS  = -fwrapv -fno-strict-aliasing
+ CFLAGS += -s -ffunction-sections -fdata-sections -fno-omit-frame-pointer
+-- 
+2.50.0
+
