@@ -76,7 +76,6 @@ makedepends=(
   lld
   llvm
   mesa                  lib32-mesa
-  mesa-libgl            lib32-mesa-libgl
   opencl-headers
   opencl-icd-loader     lib32-opencl-icd-loader
   pcsclite              lib32-pcsclite
@@ -151,9 +150,6 @@ prepare() {
 }
 
 build() {
-  # Doesn't compile without remove these flags as of 4.10
-  export CFLAGS="$CFLAGS -ffat-lto-objects"
-
   # Apply flags for cross-compilation
   export CROSSCFLAGS="-O2 -pipe -g"
   export CROSSCXXFLAGS="-O2 -pipe -g"
@@ -191,7 +187,6 @@ build() {
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
   export CROSSLDFLAGS="-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF"
 
-  echo "Building Wine-64..."
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
@@ -214,7 +209,6 @@ build() {
 
   make
 
-  echo "Building Wine-32..."
   export CFLAGS="$COMMON_FLAGS -mstackrealign $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign"
@@ -239,13 +233,11 @@ build() {
 }
 
 package() {
-  echo "Packaging Wine-32..."
   cd "$srcdir/$pkgname-32-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
     dlldir="$pkgdir/usr/lib/wine" install-lib
 
-  echo "Packaging Wine-64..."
   cd "$srcdir/$pkgname-64-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
