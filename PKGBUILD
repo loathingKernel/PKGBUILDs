@@ -55,11 +55,9 @@ depends=(
 makedepends=(
   alsa-lib              lib32-alsa-lib
   ffmpeg
-  giflib                lib32-giflib
   git
   gnutls                lib32-gnutls
   gst-plugins-base-libs lib32-gst-plugins-base-libs
-  gst-plugins-good      lib32-gst-plugins-good
   gtk3                  lib32-gtk3
   libcups               lib32-libcups
   libgphoto2
@@ -69,7 +67,6 @@ makedepends=(
   libxinerama           lib32-libxinerama
   libxxf86vm            lib32-libxxf86vm
   mesa                  lib32-mesa
-  mesa-libgl            lib32-mesa-libgl
   mingw-w64-gcc
   opencl-headers
   opencl-icd-loader     lib32-opencl-icd-loader
@@ -91,7 +88,6 @@ optdepends=(
   cups                  lib32-libcups
   dosbox
   ffmpeg
-  giflib                lib32-giflib
   gnutls                lib32-gnutls
   gst-plugins-bad
   gst-plugins-base      lib32-gst-plugins-base
@@ -159,7 +155,6 @@ build() {
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
   export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
 
-  echo "Building Wine-64..."
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
@@ -183,7 +178,6 @@ build() {
 
   make
 
-  echo "Building Wine-32..."
   export CFLAGS="$COMMON_FLAGS -mstackrealign $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign"
@@ -209,13 +203,11 @@ build() {
 }
 
 package() {
-  echo "Packaging Wine-32..."
   cd "$srcdir/${pkgname//-opt}-32-build"
   make prefix="$pkgdir/opt/${pkgname//-opt}" \
     libdir="$pkgdir/opt/${pkgname//-opt}/lib" \
     dlldir="$pkgdir/opt/${pkgname//-opt}/lib/wine" install-lib
 
-  echo "Packaging Wine-64..."
   cd "$srcdir/${pkgname//-opt}-64-build"
   make prefix="$pkgdir/opt/${pkgname//-opt}" \
     libdir="$pkgdir/opt/${pkgname//-opt}/lib" \
