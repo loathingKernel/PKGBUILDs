@@ -56,11 +56,9 @@ makedepends=(
   alsa-lib
   clang
   ffmpeg
-  giflib
   git
   gnutls
   gst-plugins-base-libs
-  gst-plugins-good
   gtk3
   libcups
   libgphoto2
@@ -72,7 +70,6 @@ makedepends=(
   lld
   llvm
   mesa
-  mesa-libgl
   opencl-headers
   opencl-icd-loader
   pcsclite
@@ -93,7 +90,6 @@ optdepends=(
   cups
   dosbox
   ffmpeg
-  giflib
   gnutls
   gst-plugins-bad
   gst-plugins-base
@@ -170,7 +166,6 @@ build() {
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
   export CROSSLDFLAGS="-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF"
 
-  echo "Building Wine-64..."
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS"
@@ -196,7 +191,6 @@ build() {
 }
 
 package() {
-  echo "Packaging Wine-64..."
   cd "$srcdir/$pkgname-64-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
