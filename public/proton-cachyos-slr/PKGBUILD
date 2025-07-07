@@ -4,7 +4,7 @@
 pkgname=proton-cachyos-slr
 _srctag=10.0-20250702
 pkgver=${_srctag//-/.}
-pkgrel=1
+pkgrel=2
 epoch=1
 
 source=(
@@ -76,7 +76,7 @@ install=${pkgname}.install
 
 build() {
   cd proton-cachyos-${_srctag}-slr-x86_64/
-  sed -i -r 's|"proton-cachyos-*"|"proton-cachyos-slr"|' compatibilitytool.vdf
+  sed -i "s|proton-cachyos-${_srctag}-slr-x86_64|proton-cachyos-slr|g" compatibilitytool.vdf
   patch -Np1 -i "${srcdir}"/proton-cachyos-slr-remove-lock.patch
   rm proton.orig || true
 }
