@@ -227,7 +227,7 @@ package() {
     rsync --delete -arx dist/* "$_compatdir/${pkgname}"
 
     mkdir -p "$pkgdir/usr/share/licenses/${pkgname}"
-    mv "$_compatdir/${pkgname}"/LICENSE{,.OFL} \
+    mv "$_compatdir/${pkgname}"/{PATENTS.AV1,LICENSE{,.OFL}} \
         "$pkgdir/usr/share/licenses/${pkgname}"
 
     cd "$_compatdir/${pkgname}/files"
