@@ -1,4 +1,4 @@
-From 6034fc9be90f2be959bbb43fb0dbc660a6503df7 Mon Sep 17 00:00:00 2001
+From 523b73e6ab0f9c335490e551b6cb4223b9fb010b Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 8 Jul 2025 15:27:08 +0300
 Subject: [PATCH] HACK: kernelbase: allow overriding dlls for DLSS and FSR4
@@ -10,10 +10,10 @@ Subject: [PATCH] HACK: kernelbase: allow overriding dlls for DLSS and FSR4
  1 file changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index b67903c4e57..564866e2bb7 100644
+index f6347c1cc9c..31d1a3fb6ac 100644
 --- a/dlls/kernelbase/loader.c
 +++ b/dlls/kernelbase/loader.c
-@@ -553,6 +553,7 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+@@ -553,17 +553,35 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
  {
      UNICODE_STRING str;
      HMODULE module;
@@ -21,10 +21,9 @@ index b67903c4e57..564866e2bb7 100644
  
      if (!name)
      {
-@@ -567,11 +568,28 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
-         flags = 0;
+         SetLastError( ERROR_INVALID_PARAMETER );
+         return 0;
      }
- 
 -    RtlInitUnicodeString( &str, name );
 +    if ( GetEnvironmentVariableW( L"WINE_LOADDLL_REPLACE", envW, sizeof(envW)) )
 +    {
