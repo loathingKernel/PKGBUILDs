@@ -64,8 +64,8 @@ pkgbase = duckstation-git
 	source = https://github.com/duckstation/chtdb/releases/download/latest/patches.zip
 	source = duckstation-qt.sh
 	sha256sums = SKIP
-	sha256sums = 9585bffb977df310d401db1c0cf216f7591e83aa2822a59fb362efba25b8ec19
-	sha256sums = 10ed13cc3d786310efb931d54502f9fc0295b29a3e51eb553523dd2297565a0e
+	sha256sums = b790d1cdcdd547700359c4bb0cde6a84dd6da5dec12b246268c81178c2edec40
+	sha256sums = 781b7a30d38a23e3633a85eeb63aff73142a2c103b26b2287e262a3cc6bf20d3
 	sha256sums = 5ded08b875d83afa70526f05d1c4381d8c2991a3224618639210fd2273ad00a7
 
 pkgname = duckstation-git
