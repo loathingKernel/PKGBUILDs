@@ -1,4 +1,4 @@
-From 523b73e6ab0f9c335490e551b6cb4223b9fb010b Mon Sep 17 00:00:00 2001
+From 231cf4d88e368e5f3f42377c865916190534dcf1 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 8 Jul 2025 15:27:08 +0300
 Subject: [PATCH] HACK: kernelbase: allow overriding dlls for DLSS and FSR4
@@ -10,10 +10,10 @@ Subject: [PATCH] HACK: kernelbase: allow overriding dlls for DLSS and FSR4
  1 file changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index f6347c1cc9c..31d1a3fb6ac 100644
+index 7afbe0460eb..6753f706a65 100644
 --- a/dlls/kernelbase/loader.c
 +++ b/dlls/kernelbase/loader.c
-@@ -553,17 +553,35 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+@@ -546,17 +546,35 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
  {
      UNICODE_STRING str;
      HMODULE module;
@@ -43,7 +43,7 @@ index f6347c1cc9c..31d1a3fb6ac 100644
 +    }
 +
 +    RtlInitUnicodeString( &str, overrideW[0] ? overrideW : name );
-     if (str.Length && str.Buffer[str.Length/sizeof(WCHAR) - 1] != ' ') return load_library( &str, flags );
+     if (str.Buffer[str.Length/sizeof(WCHAR) - 1] != ' ') return load_library( &str, flags );
  
      /* library name has trailing spaces */
 -    RtlCreateUnicodeString( &str, name );
