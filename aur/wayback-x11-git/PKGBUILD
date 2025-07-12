@@ -1,15 +1,17 @@
 # Maintainer: Coraline Shuryn <coraline.shuryn@gmail.com>
 pkgname=wayback-x11-git
 _pkgname=wayback
-pkgver=r14.8be8101
+pkgver=r73.7995c2e
 pkgrel=1
 pkgdesc="An experimental X compatibility layer for Wayland."
 arch=('x86_64')
 url="https://github.com/kaniini/wayback"
 license=('MIT')
-depends=('wayland' 'libxkbcommon' 'wlroots0.19' 'glibc')
+depends=(
+    'wayland' 'libxkbcommon' 'wlroots0.19' 'glibc' 'xorg-xwayland'
+)
 makedepends=('git' 'meson' 'wayland-protocols')
-source=("git+https://github.com/kaniini/wayback.git")
+source=("git+https://gitlab.freedesktop.org/wayback/wayback.git")
 sha256sums=('SKIP')
 
 pkgver() {
