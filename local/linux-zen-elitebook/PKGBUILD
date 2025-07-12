@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=6.14.6.zen1
+pkgver=6.15.6.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Elitebook'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -40,18 +40,18 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('21817f1998e2230f81f7e4f605fa6fdcb040e14fa27d99c27ddb16ce749797a9'
+sha256sums=('2bb586c954277d070c8fdf6d7275faa93b4807d9bf3353b491d8149cca02b4fc'
             'SKIP'
-            'c6393d94764fb35f2e5f2b0aef8c2ab75e7a28e400bbd70cbeee81c54610e915'
+            'c4d9bf6a6637578b89589d606ff9902659507a93bc4aa0443213bff2cf4b6b0b'
             'SKIP'
             '6d762ccc8ce1e88e2c63b9f15c5e7a7d563f7d48a6276d6b108626f506b20f9c'
-            '812c5d953b1391d7ac84bf60fedb601d6f49a451d992eaa8abfd86faef5b333d')
-b2sums=('dedcadc0b7506f620da3ac849446539e83d694f0955d5417e063b6680d53ef8993eeef40562ae8dae9249a21bea9746093f8873a360dd74f6b139fbafdd7b9ac'
+            'efef1cfb9e0ea74499f5185118714bdb3aa35b8dc1fb1d73c38611d62d586eed')
+b2sums=('34301ec451141cab53c6017445fb78c6a681095604387b20060e8b2102d9677cf25a3af9f3db56a0b88772434179f730842bce67b718cd28998e5c56178c748a'
         'SKIP'
-        '0bf1690cfa6548a676cc36292cd8cedc77bf818e0d055f9d4fde7008f0b3bc3e331970ca9df5fcba1be71ed1c9657af06f33163ad9aa0463409ff11e2ccf3d90'
+        '9e18d6b49ebe0f41e44e1a03e9d427fcabad757eae577f0f894b8c9b75f084cfc17b095c616b20cd1823c2972bdd55589d6c5a8a2e1abca95e5432d2b7197ff2'
         'SKIP'
         'a8b108f62e6bcf95803f1b4a5fd3f9b578ac5be21e151645f1f466f83b7a9eb54a433f4a7773aee0f6a60e21b66f10544c6c1d5d321693278d9b4aded7e894fb'
-        '0cb4995c89aa1e348d1792b85b70ed6651980ed7184cda17f38b1c5725ef7b22eaa8b04f2265c08d56e717245b55323f02910e29a610a065afc0732c211b9857')
+        '030c3fc0727afabd3c864cf431bb15dc358a2cf32592c6f8f29b4230e25fec27486875113447d149e8fe5e1bc3ee13160f63be6ba1107fc0e6baa17cd0b79093')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -173,7 +173,7 @@ _package() {
   )
   provides=(
     KSMBD-MODULE
-    UKSMD-BUILTIN
+    NTSYNC-MODULE
     VHBA-MODULE
     VIRTUALBOX-GUEST-MODULES
     WIREGUARD-MODULE
