@@ -14,7 +14,7 @@ checkdepends=('appstream' 'desktop-file-utils')
 optdepends=('libxml2-legacy: required for LibreOffice appimage')
 options=('!strip' '!debug')
 source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/mijorus/gearlever/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('543d27d87ee77ec0f03559e4e8fe37e2d0689b4d09e5466da75bd9ebc501d6a8')
+sha256sums=('461600fb82a2566de292ffa011a8f60dd57c7104f0979ea4e83e5f917e0ff99b')
 
 prepare() {
    cd "${srcdir}/${pkgname}-${pkgver}"
