@@ -1,7 +1,7 @@
 # Maintainer: Luke Featherston <lukefeatherston1223 at gmail dot com>
 pkgname=gearlever
 pkgver=3.3.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Manage AppImages with ease"
 arch=('x86_64')
 url="https://mijorus.it/projects/gearlever/"
