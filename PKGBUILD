@@ -1,15 +1,15 @@
 # Maintainer: Coraline Shuryn <coraline.shuryn@gmail.com>
 pkgname=wayback-x11-git
 _pkgname=wayback
-pkgver=r14.8be8101
+pkgver=r121.a99951a
 pkgrel=1
-pkgdesc="An experimental X compatibility layer for Wayland."
+pkgdesc="An experimental X compatibility layer for Wayland. (git version)"
 arch=('x86_64')
-url="https://github.com/kaniini/wayback"
+url="https://wayback.freedesktop.org/"
 license=('MIT')
-depends=('wayland' 'libxkbcommon' 'wlroots0.19' 'glibc')
+depends=('wayland' 'libxkbcommon' 'wlroots0.19' 'glibc' 'xorg-xwayland' 'scdoc')
 makedepends=('git' 'meson' 'wayland-protocols')
-source=("git+https://github.com/kaniini/wayback.git")
+source=("git+https://gitlab.freedesktop.org/wayback/wayback.git")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -19,7 +19,7 @@ pkgver() {
 
 build() {
   cd "$_pkgname"
-  meson setup _build -Dprefix=/usr
+  meson setup _build -Dprefix=/usr -Dlibexecdir="lib/$_pkgname"
   cd _build
   meson compile
 }
