@@ -6,12 +6,12 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-cachyos-opt
-_srctag=10.0-20250702
+_srctag=10.0-20250714
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.0.0
 _xaliaver=0.4.6
-pkgrel=2
+pkgrel=1
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -25,7 +25,6 @@ source=(wine-cachyos::git+https://github.com/CachyOS/wine-cachyos.git#tag=cachyo
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
-        0001-HACK-kernelbase-allow-overriding-dlls-for-DLSS-and-F.patch
 )
 noextract=(
     xalia-${_xaliaver}-net48-mono.zip
@@ -121,7 +120,6 @@ prepare() {
   git config user.email "wine@cachyos.org"
   git config user.name "wine cachyos"
   git tag wine-10.0 --annotate -m "$pkgver" --force
-  patch -Np1 -i "${srcdir}"/0001-HACK-kernelbase-allow-overriding-dlls-for-DLSS-and-F.patch
   ./tools/make_requests
   ./tools/make_specfiles
   ./dlls/winevulkan/make_vulkan -x vk.xml -X video.xml
@@ -239,11 +237,10 @@ package() {
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
-b2sums=('35c24cd3c4e13b4c245de2c4f92468b5c2e1f75fac0b9b48a648d6a425553e849502375db7708dac398c048dfba619f534777e97688acd416c741e07c5bd0552'
+b2sums=('49ef0dc801f44738044896360cdb31b82be689cfe503f81552cc04a2252fa6dcb2c1fdec017ae3ca30b8c059af0e289925a38b19254a5ffef96b019c5675fdb1'
         '2a73c12585b502ae11188482cbc9fb1f45f95bfe4383a7615011104b132f4845f9813d01fb40277e1934fab5f1b35ab40b4f4a66a9967463dd1d666a666904e9'
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         'a7efb7e9e3c03a92f3fc2c66172a2597ab4febfbf23a98c20d9ba46c48f0b96f568b21ea61f43cfa0cbbad2557cfafd665b63f3115611f0df9dd75ab358ecf43'
         '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
-        'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588'
-        'f4f9a586bba06f2080763280ddddc32597c91040c4a25d18460fa9562070343f25e65e637373d92d3db265146a9a1c28c083e6e66dbf862ed1f37cdc495c9e4d')
+        'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588')
