@@ -3,7 +3,7 @@
 _name=ncurses
 pkgname=lib32-${_name}5-compat-libs
 pkgver=6.5
-pkgrel=2
+pkgrel=3
 pkgdesc="System V Release 4.0 curses emulation library (32-bit), ABI 5"
 arch=(x86_64)
 url=https://invisible-island.net/ncurses/ncurses.html
@@ -12,6 +12,9 @@ depends=(
   lib32-gcc-libs
   lib32-glibc
   lib32-$_name=$pkgver
+)
+makedepends=(
+  git
 )
 source=(
   $_name::git+https://github.com/ThomasDickey/ncurses-snapshots.git?signed#tag=v${pkgver/./_}

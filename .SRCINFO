@@ -1,10 +1,11 @@
 pkgbase = lib32-ncurses5-compat-libs
 	pkgdesc = System V Release 4.0 curses emulation library (32-bit), ABI 5
 	pkgver = 6.5
-	pkgrel = 2
+	pkgrel = 3
 	url = https://invisible-island.net/ncurses/ncurses.html
 	arch = x86_64
 	license = MIT
+	makedepends = git
 	depends = lib32-gcc-libs
 	depends = lib32-glibc
 	depends = lib32-ncurses=6.5
