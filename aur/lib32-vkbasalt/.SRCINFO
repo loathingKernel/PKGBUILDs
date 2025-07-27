@@ -5,16 +5,17 @@ pkgbase = lib32-vkbasalt
 	url = https://github.com/DadSchoorse/vkBasalt
 	arch = x86_64
 	license = zlib
+	makedepends = git
 	makedepends = meson
 	makedepends = ninja
-	makedepends = glslang
 	makedepends = spirv-headers
 	makedepends = vulkan-headers
-	depends = lib32-glibc
 	depends = lib32-gcc-libs
+	depends = glslang
 	depends = lib32-libx11
+	depends = lib32-glibc
 	depends = vkbasalt
-	source = https://github.com/DadSchoorse/vkBasalt/releases/download/v0.3.2.10/vkBasalt-0.3.2.10.tar.gz
-	sha256sums = eb196ff446fa36ec0ca99c4406d753c1fa210afddeec5e7a76e1c2e74ed605e3
+	source = git+https://github.com/DadSchoorse/vkBasalt.git#tag=v0.3.2.10
+	sha256sums = 9ff099c515e29d2acfbd5d328c5abedf56fd53d50b9b1380d41b41e3be8504fc
 
 pkgname = lib32-vkbasalt

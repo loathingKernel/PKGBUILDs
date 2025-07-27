@@ -7,18 +7,26 @@ pkgdesc='A Vulkan post-processing layer. Some of the effects are CAS, FXAA, SMAA
 arch=('x86_64')
 url='https://github.com/DadSchoorse/vkBasalt'
 license=('zlib')
-depends=('lib32-glibc' 'lib32-gcc-libs' 'lib32-libx11' 'vkbasalt')
-makedepends=('meson' 'ninja' 'glslang' 'spirv-headers' 'vulkan-headers')
-source=("${url}/releases/download/v${pkgver}/vkBasalt-${pkgver}.tar.gz")
-sha256sums=('eb196ff446fa36ec0ca99c4406d753c1fa210afddeec5e7a76e1c2e74ed605e3')
+depends=('lib32-gcc-libs' 'glslang' 'lib32-libx11' 'lib32-glibc' 'vkbasalt')
+makedepends=('git' 'meson' 'ninja' 'spirv-headers' 'vulkan-headers')
+source=("git+https://github.com/DadSchoorse/vkBasalt.git#tag=v${pkgver}")
+sha256sums=('9ff099c515e29d2acfbd5d328c5abedf56fd53d50b9b1380d41b41e3be8504fc')
+
+prepare() {
+  cd ${srcdir}/vkBasalt
+  sed -i 's|/path/to/reshade-shaders/Textures|/opt/reshade/textures|g' \
+    "config/vkBasalt.conf"
+  sed -i 's|/path/to/reshade-shaders/Shaders|/opt/reshade/shaders|g' \
+    "config/vkBasalt.conf"
+}
 
 build() {
-  cd ${srcdir}/vkBasalt-${pkgver}
+  cd ${srcdir}/vkBasalt
 
   ASFLAGS+=" --32" \
   CFLAGS+=" -m32" \
   CXXFLAGS+=" -m32" \
-  LDFLAGS+=" -m32"
+  LDFLAGS+=" -m32" \
   PKG_CONFIG_PATH=/usr/lib32/pkgconfig \
   arch-meson \
     --buildtype=release \
@@ -29,7 +37,7 @@ build() {
 }
 
 package() {
-  cd ${srcdir}/vkBasalt-${pkgver}
+  cd ${srcdir}/vkBasalt
 
   DESTDIR="${pkgdir}" ninja -C build install
   mv "${pkgdir}/usr/share/vulkan/implicit_layer.d/vkBasalt.json" "${pkgdir}/usr/share/vulkan/implicit_layer.d/vkBasalt.x86.json"
