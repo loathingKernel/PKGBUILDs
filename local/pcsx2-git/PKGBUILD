@@ -18,6 +18,7 @@ depends=(
     alsa-lib
     ffmpeg
     hicolor-icon-theme
+    kddockwidgets-qt6
     libaio
     libbacktrace
     libglvnd
@@ -25,6 +26,8 @@ depends=(
     libpng
     libxi
     libxrandr
+    plutosvg
+    plutovg
     qt6-base
     qt6-svg
     sdl3
@@ -32,7 +35,6 @@ depends=(
     soundtouch
     wayland
     xcb-util-cursor
-    kddockwidgets-qt6
 )
 makedepends=(
     7zip
@@ -117,7 +119,5 @@ package() {
     install -Dm644 -t "${pkgdir}"/usr/share/PCSX2/resources/ patches.zip
 }
 
-b2sums=(
-    'SKIP'
-    'SKIP'
-)
+b2sums=('SKIP'
+        'SKIP')
