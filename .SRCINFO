@@ -1,7 +1,7 @@
 pkgbase = simplescreenrecorder
 	pkgdesc = A feature-rich screen recorder that supports X11 and OpenGL.
 	pkgver = 0.4.4
-	pkgrel = 3
+	pkgrel = 4
 	url = https://www.maartenbaert.be/simplescreenrecorder/
 	install = simplescreenrecorder.install
 	arch = x86_64
