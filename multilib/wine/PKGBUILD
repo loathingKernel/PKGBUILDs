@@ -5,7 +5,7 @@
 
 pkgname=wine
 pkgver=10.10
-pkgrel=9
+pkgrel=8
 _tkg_commit=ec08911b27dfdf141d75563d5ce61069dac581a9
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -18,9 +18,9 @@ source+=(
         wine-wmclass.patch
         wine-isolate_home.patch
         0002-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
+        0001-HACK-kernelbase-allow-overriding-dlls-for-DLSS-and-F.patch
         7064.patch
         8323.patch
-        0001-mscoree-Update-Wine-Mono-to-10.1.0.patch
         wine-ntsync.patch
 )
 sha512sums=('baee24792d16348fac429764643d6819e0ed2eb333999c1e3d7bbe4850fd617910f3b525e55d0ba13b62c8612ffd30dbc0ac69f78e8907b64dc42a1add96ba9b'
@@ -30,9 +30,9 @@ sha512sums=('baee24792d16348fac429764643d6819e0ed2eb333999c1e3d7bbe4850fd617910f
             '372be267e8099fbffbaee99e127032841e5ff42949e96822fb9299fadf8c41f9932bc42c19d25dec5b0b06f56f9db91e480391d3e2fc988bf8885a79e0c58144'
             '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
             'f43f4fe92c9f9b826e9c71d69360aa470333242df8c4e60be1fd4a23a311c971f6eee253bc2fb94adc00eddc99a09917de99286c8ab97bd9da1e551f6ff0f7b8'
+            '409dc81654f83f2a24ce32e35225d6442e6c399fffcecddbcd9c54e723bcf7aac7cfc3e674edf9172fb1dc9457da2a804fb161100258c2093b2dda6d249aae7e'
             '21ba0ec8e0a479cd520096417b7f152112e3fa8e8cc8ecf3b43cb748025723047fc8629821f1b94e3092e763b4a65c033423eb4efb05322e358121cf85803bda'
             'dbba8f7e47147c14cc38afd287252ced0b25458349a8d361bb1b1a173d0024dff641416f2be859ca92eb4cc5c3274f08aa93d1ee80c10af451ceb339857c9934'
-            '88c8858be37c6e542dfbc5bad5085be807b468b9b437448517f45446bd5b02c0cf6eddba1aec223b60b20e5f914e7be003b7a9e3aa2f69c72e5dbedad5f0484a'
             'c73395b6b21e65c2a03aa25700a85c6daed7ec411e4694371d2941cc9e39ca7e0d5ab0626d4fb15cb0f0a67270b5e33fffde7ddcb51a2f1cca23471879d52ac5')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -121,7 +121,6 @@ prepare() {
 
   cd wine
 
-  patch -Np1 -i "$srcdir"/0001-mscoree-Update-Wine-Mono-to-10.1.0.patch
   patch -Np1 -i "$srcdir"/wine-ntsync.patch
   patch -Np1 -i "$srcdir"/7064.patch
   patch -Np1 -i "$srcdir"/8323.patch
@@ -134,6 +133,7 @@ prepare() {
   patch -Np1 -i "$srcdir"/wine-wmclass.patch
   patch -Np1 -i "$srcdir"/wine-isolate_home.patch
   patch -Np1 -i "$srcdir"/0002-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
+  patch -Np1 -i "$srcdir"/0001-HACK-kernelbase-allow-overriding-dlls-for-DLSS-and-F.patch
   ./tools/make_requests
   ./tools/make_specfiles
   ./dlls/winevulkan/make_vulkan
