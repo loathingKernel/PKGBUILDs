@@ -9,7 +9,7 @@ shopt -s extglob
 pkgbase=python
 pkgname=(python310 python310-tests)
 pkgver=3.10.18
-pkgrel=1
+pkgrel=2
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="The Python programming language, version 3.10"
