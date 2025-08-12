@@ -3,7 +3,7 @@
 
 pkgname=simplescreenrecorder
 pkgver=0.4.4
-pkgrel=3
+pkgrel=4
 pkgdesc="A feature-rich screen recorder that supports X11 and OpenGL."
 arch=("x86_64")
 url="https://www.maartenbaert.be/simplescreenrecorder/"
@@ -30,6 +30,7 @@ prepare() {
 
 build() {
   cd ssr/build
+  export CMAKE_POLICY_VERSION_MINIMUM=3.5
   # fPIC is only required for qt5 + gcc5
   #CXXFLAGS="$CXXFLAGS -fPIC"
   #./configure --prefix=/usr --disable-assert --with-qt5
