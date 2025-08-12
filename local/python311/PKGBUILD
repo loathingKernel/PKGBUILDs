@@ -10,7 +10,7 @@ shopt -s extglob
 pkgbase=python
 pkgname=(python311 python311-tests)
 pkgver=3.11.13
-pkgrel=1
+pkgrel=2
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="The Python programming language, version 3.11"
