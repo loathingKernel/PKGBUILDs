@@ -4,7 +4,7 @@
 pkgname=proton-cachyos-slr
 _srctag=10.0-20250807
 pkgver=${_srctag//-/.}
-pkgrel=1
+pkgrel=2
 epoch=1
 
 source=(
@@ -74,8 +74,9 @@ install=${pkgname}.install
 
 build() {
   _package_name="proton-cachyos-${_srctag}-slr-x86_64"
-  cd "$_package_name"/
-  sed -i "s|${_package_name}|proton-cachyos (steam linux runtime package)|g" compatibilitytool.vdf
+  cd "${_package_name}"/
+  sed -e "0,/${_package_name}/ s|${_package_name}|proton-cachyos-slr|" -i compatibilitytool.vdf
+  sed -e "s|${_package_name}|proton-cachyos (steam linux runtime package)|g" -i compatibilitytool.vdf
 }
 
 package() {
