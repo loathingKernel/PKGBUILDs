@@ -2,15 +2,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-cachyos-slr
-_srctag=10.0-20250714
+_srctag=10.0-20250807
 pkgver=${_srctag//-/.}
-pkgrel=2
+pkgrel=1
 epoch=1
 
 source=(
   https://github.com/CachyOS/proton-cachyos/releases/download/cachyos-${_srctag}-slr/proton-cachyos-${_srctag}-slr-x86_64.tar.xz
-)
-source+=(
 )
 
 pkgdesc="A compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour (Steam Linux Runtime build)"
@@ -74,8 +72,9 @@ provides=('proton')
 install=${pkgname}.install
 
 build() {
-  cd proton-cachyos-${_srctag}-slr-x86_64/
-  sed -i "s|proton-cachyos-${_srctag}-slr-x86_64|proton-cachyos (steam linux runtime package)|g" compatibilitytool.vdf
+  _package_name="proton-cachyos-${_srctag}-slr-x86_64"
+  cd "$_package_name"/
+  sed -i "s|${_package_name}|proton-cachyos (steam linux runtime package)|g" compatibilitytool.vdf
 }
 
 package() {
@@ -88,4 +87,4 @@ package() {
         "$pkgdir/usr/share/licenses/${pkgname}"
 }
 
-b2sums=('def38101f55d61bdbb93617f68e47ad65eb2e1a2a732d13c4c90109db8bd3d6d27e0f86dfc681d8b63c285e6f7aadbdf160cfe9e672c3d90648f59549deebeca')
+sha256sums=('ebb95fa090f7b957b9640b14256ec8e0ec807d1c2a51c5d2b780cdfd79c129cf')
