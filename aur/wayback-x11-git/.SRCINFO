@@ -1,6 +1,6 @@
 pkgbase = wayback-x11-git
-	pkgdesc = An experimental X compatibility layer for Wayland. (git version)
-	pkgver = r121.a99951a
+	pkgdesc = An experimental X compatibility layer for Wayland.
+	pkgver = 0.2.r10.cfb2e83
 	pkgrel = 1
 	url = https://wayback.freedesktop.org/
 	arch = x86_64

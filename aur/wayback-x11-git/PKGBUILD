@@ -1,7 +1,7 @@
 # Maintainer: Coraline Shuryn <coraline.shuryn@gmail.com>
 pkgname=wayback-x11-git
 _pkgname=wayback
-pkgver=0.1.r2.d1642f0
+pkgver=0.2.r10.cfb2e83
 pkgrel=1
 pkgdesc="An experimental X compatibility layer for Wayland."
 arch=('x86_64')
