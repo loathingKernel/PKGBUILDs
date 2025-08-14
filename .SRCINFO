@@ -13,6 +13,7 @@ pkgbase = proton-cachyos-slr
 	license = MIT
 	license = MPL
 	license = custom
+	makedepends = rsync
 	depends = bash
 	depends = coreutils
 	depends = curl
