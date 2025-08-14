@@ -1,0 +1,31 @@
+
+name: proton-cachyos-slr
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+          - 'build'
+          - 'remove'
+          - 'skip'
+  push:
+    branches:
+      - master
+    paths:
+      - public/proton-cachyos-slr/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        repository: [public]
+    uses: ./.github/workflows/_job_pkgrepo.yml
+    with:
+      pkgdir: public/proton-cachyos-slr
+      repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
