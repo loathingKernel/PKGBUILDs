@@ -64,6 +64,7 @@ depends_x86_64=(
   lib32-vulkan-driver
   lib32-vulkan-icd-loader
 )
+makedepends=(rsync)
 optdepends=(
   steam
   umu-launcher
