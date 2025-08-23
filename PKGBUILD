@@ -2,13 +2,15 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-cachyos-slr
-_srctag=10.0-20250807
+_srctag=10.0-20250819
 pkgver=${_srctag//-/.}
-pkgrel=2
+pkgrel=1
 epoch=1
 
+_package_name="proton-cachyos-${_srctag}-slr-x86_64"
+sha256sums=('192ea0a205c8cc665b6ab17312c8bd52b52870e6705e53d109e4b73f95abbebf')
 source=(
-  https://github.com/CachyOS/proton-cachyos/releases/download/cachyos-${_srctag}-slr/proton-cachyos-${_srctag}-slr-x86_64.tar.xz
+  "https://github.com/CachyOS/proton-cachyos/releases/download/cachyos-${_srctag}-slr/${_package_name}.tar.xz"
 )
 
 pkgdesc="A compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour (Steam Linux Runtime build)"
@@ -73,20 +75,18 @@ provides=('proton')
 install=${pkgname}.install
 
 build() {
-  _package_name="proton-cachyos-${_srctag}-slr-x86_64"
-  cd "${_package_name}"/
-  sed -e "0,/${_package_name}/ s|${_package_name}|proton-cachyos-slr|" -i compatibilitytool.vdf
-  sed -e "s|${_package_name}|proton-cachyos (steam linux runtime package)|g" -i compatibilitytool.vdf
+    cd "${_package_name}"
+    sed -e "0,/${_package_name}/ s|${_package_name}|proton-cachyos-slr|" -i compatibilitytool.vdf
+    sed -e "s|${_package_name}|proton-cachyos (steam linux runtime package)|g" -i compatibilitytool.vdf
 }
 
 package() {
-    local _compatdir="$pkgdir/usr/share/steam/compatibilitytools.d"
-    mkdir -p "$_compatdir/${pkgname}"
-    rsync --delete -arx proton-cachyos-${_srctag}-slr-x86_64/* "$_compatdir/${pkgname}"
+    local _compatdir="${pkgdir}/usr/share/steam/compatibilitytools.d"
+    mkdir -p "${_compatdir}/${pkgname}"
+    rsync --delete -arx "${_package_name}"/* "${_compatdir}/${pkgname}"
 
-    mkdir -p "$pkgdir/usr/share/licenses/${pkgname}"
-    mv "$_compatdir/${pkgname}"/{PATENTS.AV1,LICENSE{,.OFL}} \
-        "$pkgdir/usr/share/licenses/${pkgname}"
+    mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
+    mv "${_compatdir}/${pkgname}"/{PATENTS.AV1,LICENSE{,.OFL}} \
+        "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 
-sha256sums=('ebb95fa090f7b957b9640b14256ec8e0ec807d1c2a51c5d2b780cdfd79c129cf')
