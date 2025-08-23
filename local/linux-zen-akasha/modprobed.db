@@ -13,6 +13,7 @@ blake2s_x86_64
 bridge
 br_netfilter
 btrfs
+cdc_ether
 cdrom
 cec
 cfg80211
@@ -27,6 +28,7 @@ crc32_pclmul
 crc_itu_t
 crct10dif_pclmul
 cryptd
+crypto_lz4
 crypto_simd
 crypto_user
 curve25519_x86_64
@@ -65,6 +67,7 @@ ib_cm
 ib_core
 intel_cstate
 intel_gtt
+intel_oc_wdt
 intel_pmc_bxt
 intel_powerclamp
 intel_rapl_common
@@ -111,6 +114,7 @@ mei
 mei_hdcp
 mei_me
 mei_pxp
+mii
 msdos
 mxm_wmi
 nct6775
@@ -161,6 +165,7 @@ raid6_pq
 rapl
 rdma_cm
 rfkill
+rndis_host
 rng_core
 sg
 sha1_ssse3
@@ -208,6 +213,7 @@ udp_tunnel
 usbhid
 usbip_core
 usbip_host
+usbnet
 usb_storage
 veth
 vfat

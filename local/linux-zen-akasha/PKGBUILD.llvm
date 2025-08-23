@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-akasha
-pkgver=6.15.6.zen1
+pkgver=6.16.3.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Akasha LLVM'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -41,18 +41,18 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('2bb586c954277d070c8fdf6d7275faa93b4807d9bf3353b491d8149cca02b4fc'
+sha256sums=('80439ba055c12f541abf44b8fc3c9b825a8f42fc25ce67462ec7e556c5790b85'
             'SKIP'
-            'c4d9bf6a6637578b89589d606ff9902659507a93bc4aa0443213bff2cf4b6b0b'
+            'eaa128ab9998cf55e65879a4d814dcd0041574050e0232a1eb1db8ef86e4c67d'
             'SKIP'
-            'fb171d143bd4ac2b4637622cc32f0d3f42effe6e44c5c03ccbe7a3b5b6dd0d53'
-            'efef1cfb9e0ea74499f5185118714bdb3aa35b8dc1fb1d73c38611d62d586eed')
-b2sums=('34301ec451141cab53c6017445fb78c6a681095604387b20060e8b2102d9677cf25a3af9f3db56a0b88772434179f730842bce67b718cd28998e5c56178c748a'
+            '90e83af8758459a6ad6a2e2346e82b25936a8bf1d12b3d4162514b9bdb93d33f'
+            '4e21fd0befad59963779b81faf4f394ae2bfc217c8046a2bb0ee1e73a3a081b8')
+b2sums=('3053226fdec6b69c3bb0a4c9cae0a2595c05a74e99a78d5a0fd9f5d016d192a3b057e72b8cb8471e5f4d021d7a1887bcd7713d33b00ba02ea7eee5f6a981db19'
         'SKIP'
-        '9e18d6b49ebe0f41e44e1a03e9d427fcabad757eae577f0f894b8c9b75f084cfc17b095c616b20cd1823c2972bdd55589d6c5a8a2e1abca95e5432d2b7197ff2'
+        '9f4148fad52a149fc061254b379a1508df68e4500e50dd18cda5f7a26e063a4367da2bdf38441191eb1faff78339b4786a41a75c84ddb9c52f1eddfdda3ac0a3'
         'SKIP'
-        '940c50f07f2dbf553d02c4c2d69ee5eebb81e0fabcde694c4c0ec7aa8b663051cc4eaad72fd3bd24fc1a32063fef2aef2397d7bf82a4ac53d9f5dceee0ebca15'
-        '030c3fc0727afabd3c864cf431bb15dc358a2cf32592c6f8f29b4230e25fec27486875113447d149e8fe5e1bc3ee13160f63be6ba1107fc0e6baa17cd0b79093')
+        'f326a19a9c21047f5ca96a8c190b51b6e7861b5e7897224330380c8d325bfb5f4af3a5032d6465f74ae127593e12bc25a39e613186d2e453f8e2818c3f1534fd'
+        '7850624eb25302015d092d58f0b7d8d85e19f75c65871aa2cfd8ef28c52b79b15651956fe9e6da90fd7967345db1bc4363a48d0dbcc88954f57a05e2688d294f')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
