@@ -1,6 +1,6 @@
 pkgbase = duckstation-git
 	pkgdesc = A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)
-	pkgver = 0.1.r9421.g690f843
+	pkgver = 0.1.r9584.gc1bb183
 	pkgrel = 1
 	url = https://github.com/stenzek/duckstation
 	arch = x86_64
@@ -64,8 +64,8 @@ pkgbase = duckstation-git
 	source = https://github.com/duckstation/chtdb/releases/download/latest/patches.zip
 	source = duckstation-qt.sh
 	sha256sums = SKIP
-	sha256sums = 8cce0a0697095e719c85f149c2798b548354bdaf7d9f5b142dd3090cc9cfef9a
-	sha256sums = 5a8907df87e4a515fb439edca0b9b4e249db975372af4f9ca79fdb38b4e94dfc
+	sha256sums = 46bfe7774f0c93645ea1cffcb259340f72eb2217f8b9479aa3b69a2effd450e4
+	sha256sums = b054de365ae4ec5ebd633d473b7790227f91f751997296ee6422bdff46531f04
 	sha256sums = 5ded08b875d83afa70526f05d1c4381d8c2991a3224618639210fd2273ad00a7
 
 pkgname = duckstation-git
