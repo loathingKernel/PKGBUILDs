@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-akasha
-pkgver=6.16.4.zen1
+pkgver=6.15.9.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Akasha LLVM'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -41,18 +41,18 @@ validpgpkeys=(
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('d6a5e3c71a10b533a756251387cc8bf48bbd5c76d842ba5e957d8b1c316ab622'
+sha256sums=('e94f3af85492302f7a819441458f80bca0ad9912e5a4c83c699ff3c63c52957d'
             'SKIP'
-            'f9d0edc894123be42d26d8903262db1b0a54851f85e88f1b8e3a021bdebe0cfe'
+            '5981d30c31fb3f49696598e1a2854fde51a95fc4d9b0686891b957c2ac335fa0'
             'SKIP'
             '90e83af8758459a6ad6a2e2346e82b25936a8bf1d12b3d4162514b9bdb93d33f'
-            '819493258ff78ec52da598afa3eb4afd508031a37c419a2328469ec986ed9bf3')
-b2sums=('251feef2f995c155850eac2fce5b89f37f39e9f13b6a4e6873370fdc69654692c6bf6c92f04ca7c0b5fd6088d74442afb68db71d2cc18691e23c61b0be714f34'
+            'e64c68057953189867e1857103004672ad6aaa5eba1cde67f35ff6cbb2aa2e82')
+b2sums=('9818201a76f2e4cdde00a67245764cd971b0cc17ca7c6147cd53d7397eaf54036ec606a86d64b467e8973fa9650cfc83b8389de828b06860f2ee3b0164b2942e'
         'SKIP'
-        '30301a215aa9c08a2f6b5dd5337d48faac4c4f6c7d0037ff40f15dd14c30362dc99e02ad7042ce4eec889fb14aba0759cdb2ade15f2e17ead4ced2df001207eb'
+        '1da35bd475bee8b4edbd09bdc26051bcf5d12134b5746d46aafae685b15c0fb3fe1295f7a22e32a5f889dcf0cf02eae554f5be678f2eb12bdc1cdb449ee7bd63'
         'SKIP'
         'f326a19a9c21047f5ca96a8c190b51b6e7861b5e7897224330380c8d325bfb5f4af3a5032d6465f74ae127593e12bc25a39e613186d2e453f8e2818c3f1534fd'
-        'f164ed592d9ca11985adbbdd1abc125b62ea033611b61fd369f9930d5ecd9690d0bbc3ef3a7e9d93e3451049c6ca06794b7a7cbd9a1d20140fec40d46709d971')
+        '362ce82a3b942bc60cc61fa2a7063e2114c94e515b7b06d9b71661b544a9f6cf97d66770b097b77e601bb975d6c20303c80e8508aba8491ec70b67a52ecbe96c')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
