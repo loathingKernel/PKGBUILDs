@@ -1,0 +1,48 @@
+# Maintainer: Pieter Goetschalckx <3.14.e.ter at gmail dot com>
+
+pkgname=numix-folders
+pkgver=0.r420.24e5f6c66
+pkgrel=1
+pkgdesc='Alternate folders for use with the Numix base icon theme.'
+arch=('any')
+url='https://github.com/numixproject/numix-folders'
+license=('GPL3')
+depends=('numix-icon-theme')
+optdepends=('python-gobject: GUI support'
+            'gksu: GUI support')
+makedepends=('git')
+options=('!emptydirs' '!strip')
+install=numix-folders.install
+source=("${pkgname}::git+https://github.com/numixproject/${pkgname}.git"
+        "$pkgname.hook")
+sha256sums=('SKIP'
+            '7b08a406f849cbc775c5df6a8e64c00cda0ba4760bb72154d1f384df1ba6594a')
+
+pkgver() {
+  cd "$pkgname"
+
+  ( set -o pipefail
+    git describe --long --tags 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "0.r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+prepare() {
+  cd "$pkgname"
+  echo "TryExec=gksudo" >> "$pkgname.desktop"
+}
+
+package() {
+  install -Dm 644 "$pkgname.hook" "$pkgdir/usr/share/libalpm/hooks/$pkgname.hook"
+
+  cd "$pkgname"
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+  install -dm 755 "$pkgdir/usr/bin"
+
+  install -Dm 644 "$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+  rm "$pkgname.desktop"
+
+  cp -dr --no-preserve='ownership' * "$pkgdir/usr/share/$pkgname/"
+  ln -s "/usr/share/$_pkgname/$pkgname" "$pkgdir/usr/bin/$pkgname"
+}
