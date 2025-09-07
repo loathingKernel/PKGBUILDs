@@ -1,0 +1,48 @@
+# Maintainer: Jonathon Fernyhough <jonathon+at+manjaro dotorg>
+# Contributor: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: Diego <cdprincipe@gmail.com>
+
+pkgname=numix-gtk-theme
+pkgver=2.6.7
+pkgrel=2
+pkgdesc='A flat and light theme with a modern look (GNOME, Openbox, Unity, Xfce)'
+arch=('any')
+url='https://github.com/numixproject/numix-gtk-theme'
+license=('GPL3')
+makedepends=('gdk-pixbuf2' 'glib2' 'libxml2' 'sassc')
+optdepends=('gtk-engine-murrine: for gtk2 theme')
+replaces=('numix-themes')
+source=("$pkgname::git+$url.git"
+        "css_warnings.patch"
+        "dark-gtk2.patch")
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP')
+
+pkgver() {
+  cd $pkgname
+  #git describe --long --tags | sed 's/^v//; s/-/.r/; s/-g/./'
+  echo $pkgver
+}
+
+prepare() {
+  cd $pkgname
+  patch -p1 -i "$srcdir"/css_warnings.patch
+  patch -p1 -i "$srcdir"/dark-gtk2.patch
+
+  # Change highlight colors
+  grep -rl "#f0544c" . | xargs sed -e 's/#f0544c/#673556/g' -i
+  grep -rl "#f06860" . | xargs sed -e 's/#f06860/#674E5F/g' -i
+}
+
+build() {
+  cd $pkgname
+  make -j1
+}
+
+package() {
+  cd $pkgname
+  make -j1 DESTDIR="$pkgdir" install
+}
+
+# vim: ts=2 sw=2 et:

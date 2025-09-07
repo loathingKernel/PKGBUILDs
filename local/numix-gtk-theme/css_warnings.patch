@@ -1,0 +1,26 @@
+diff --git a/src/gtk-3.0/scss/apps/_thunar.scss b/src/gtk-3.0/scss/apps/_thunar.scss
+index bf91942..e2581c5 100644
+--- a/src/gtk-3.0/scss/apps/_thunar.scss
++++ b/src/gtk-3.0/scss/apps/_thunar.scss
+@@ -11,7 +11,7 @@
+   }
+ 
+   scrolledwindow.shortcuts-pane {
+-    border-top-width: 1;
++    border-top-width: 1px;
+   }
+  }
+ }
+diff --git a/src/gtk-3.20/scss/apps/_thunar.scss b/src/gtk-3.20/scss/apps/_thunar.scss
+index bf91942..e2581c5 100644
+--- a/src/gtk-3.20/scss/apps/_thunar.scss
++++ b/src/gtk-3.20/scss/apps/_thunar.scss
+@@ -11,7 +11,7 @@
+   }
+ 
+   scrolledwindow.shortcuts-pane {
+-    border-top-width: 1;
++    border-top-width: 1px;
+   }
+  }
+ }
