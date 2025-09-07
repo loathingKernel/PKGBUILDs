@@ -1,0 +1,20 @@
+
+pkgname=numix-circle-icon-theme
+pkgver=20.09.19
+pkgrel=1
+pkgdesc='Circle icon theme from the Numix project'
+arch=('any')
+url='https://github.com/numixproject/numix-icon-theme-circle'
+license=('GPL3')
+depends=('numix-icon-theme')
+makedepends=('git')
+options=('!strip')
+source=("$pkgname::git+$url.git#tag=$pkgver")
+sha256sums=('SKIP')
+
+
+package() {
+  cd "$pkgname"
+  install -dm 755 "${pkgdir}"/usr/share/icons
+  cp -dr --no-preserve='ownership' Numix-Circle{,-Light} "${pkgdir}"/usr/share/icons/
+}
