@@ -6,7 +6,7 @@
 
 # shellcheck disable=SC2034
 pkgname=('dxvk-msvc-git')
-pkgver=2.6.1.r33.gcb446100e
+pkgver=2.7.1.r67.g49c507888
 pkgrel=1
 pkgdesc="A Vulkan-based compatibility layer for Direct3D 8/9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers DLL version)"
 arch=('x86_64')
@@ -28,6 +28,7 @@ source=(
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8types.h"
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8.h"
     "git+https://github.com/mstorsjo/msvc-wine.git#commit=49ae4b6"
+    "git+https://github.com/doitsujin/dxbc-spirv.git#commit=71f34c7"
     "setup_dxvk.sh"
     "clang.patch" # contains the clang-msvc build changes
 )
@@ -40,6 +41,7 @@ sha256sums=('SKIP'
             '6c03f80228539ad1a78390186ae9ebeae40d5c02559a39b58ed8ec4738a7b957'
             'd06d0375a6976ccbf452bba2feb7d7e5db43c6631bd4d59ad563315e9c973ccb'
             'bf7883203d9c8fe729131f1f9d82da799f33a1c3c3ebb22d2070ac77e337de8c'
+            '0e7202a982635e591f66994311872bde80a97b14c801fcfc340e8ee95594f57c'
             'fb2bb15494d0ccf35452e8da98621264bcf4d44ac916db0ef5adbdf25f3790c8'
             '6dfed2a5ad51a23607f68a462de4af3a0effc199d5003a462c25e6a78fee778a')
 
@@ -102,16 +104,29 @@ prepare() {
 
     cd "${srcdir}/dxvk"
 
-    git submodule init include/{native/directx,vulkan,spirv} subprojects/libdisplay-info
+    git submodule init include/{native/directx,vulkan,spirv} subprojects/{libdisplay-info,dxbc-spirv}
     git config submodule.include/native/directx.url "${srcdir}/mingw-directx-headers"
     git config submodule.include/vulkan.url "${srcdir}/Vulkan-Headers"
     git config submodule.include/spirv.url "${srcdir}/SPIRV-Headers"
+    git config submodule.subprojects/dxbc-spirv.url "${srcdir}/dxbc-spirv"
     git config submodule.subprojects/libdisplay-info.url "${srcdir}/libdisplay-info"
-    git -c protocol.file.allow=always submodule update include/{native/directx,vulkan,spirv} subprojects/libdisplay-info
+    git -c protocol.file.allow=always submodule update include/{native/directx,vulkan,spirv} subprojects/{libdisplay-info,dxbc-spirv}
 
     git -C subprojects/libdisplay-info reset --hard
+    git -C subprojects/dxbc-spirv reset --hard
 
     cp -r --update "${srcdir}/d3d8"{,types,caps}.h "${srcdir}/dxvk/include/"
+
+    cd "${srcdir}/dxvk/subprojects/dxbc-spirv"
+
+    git submodule init submodules/spirv_headers
+    git config submodule.submodules/spirv_headers.url "${srcdir}/SPIRV-Headers"
+
+    git -c protocol.file.allow=always submodule update submodules/spirv_headers
+
+    git -C submodules/spirv_headers reset --hard
+
+    cd "${srcdir}/dxvk"
 
     # patch the build system a bit
     mapfile -t patchlist < <(find "${srcdir}" '(' -type f -o -type l ')' -regex ".*\.patch" | LC_ALL=C sort -f)
