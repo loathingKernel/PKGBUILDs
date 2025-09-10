@@ -1,0 +1,31 @@
+pkgbase = dxvk-sarek-async-mingw-git
+	pkgdesc = Vulkan-based implementation of D3D9, D3D10 and D3D11 for Linux / Wine, MingW version
+	pkgver = 1.10.x.r212.geb07917c
+	pkgrel = 1
+	url = https://github.com/pythonlover02/DXVK-Sarek
+	arch = x86_64
+	license = zlib/libpng
+	makedepends = ninja
+	makedepends = meson>=0.43
+	makedepends = glslang
+	makedepends = git
+	makedepends = mingw-w64-gcc
+	provides = dxvk
+	provides = dxvk=1.10.x.r212.geb07917c
+	conflicts = dxvk
+	options = !lto
+	options = !staticlibs
+	source = dxvk-sarek::git+https://github.com/pythonlover02/DXVK-Sarek.git#branch=async
+	source = dxvk-extraopts.patch
+	source = setup_dxvk.sh
+	source = setup_dxvk
+	sha256sums = SKIP
+	sha256sums = bcc15521e4c7f966a0192a1dabb7fb4935b33db39344ab5b861f9d81486f1362
+	sha256sums = b562e8dc9539ef3cd1554c6679eef10aacf21103403d7390a141a41ae146b7a6
+	sha256sums = c1f6a18b03d1612b60f8081428f00cfac5e66315fe9d42719f01cf5564deeeff
+
+pkgname = dxvk-sarek-async-mingw-git
+	depends = vulkan-icd-loader
+	depends = lib32-vulkan-icd-loader
+	depends = wine
+	depends = bash
