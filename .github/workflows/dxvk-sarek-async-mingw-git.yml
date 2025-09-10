@@ -14,7 +14,7 @@ on:
           - 'remove'
           - 'skip'
   schedule:
-    - cron: '0 0 */5 * *'
+    - cron: '00 1 */5 * *'
   push:
     branches:
       - master

@@ -10,16 +10,16 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   schedule:
-    - cron: '0 3 */3 * *'
+    - cron: '00 3 */3 * *'
   push:
     branches:
-     - master
+      - master
     paths:
-     - public/dxvk-nvapi-mingw-git/.SRCINFO
+      - public/dxvk-nvapi-mingw-git/.SRCINFO
 
 jobs:
   repository:
