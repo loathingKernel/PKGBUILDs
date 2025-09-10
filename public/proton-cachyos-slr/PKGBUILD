@@ -2,13 +2,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-cachyos-slr
-_srctag=10.0-20250905
+_srctag=10.0-20250906
 pkgver=${_srctag//-/.}
 pkgrel=1
 epoch=1
 
 _package_name="proton-cachyos-${_srctag}-slr-x86_64"
-sha256sums=('51165d0352bba4cac359cec54ecc3225277ffb9b12e445b97b62e2d17c8b9d39')
+sha256sums=('e78a88b648bb20cbda90a16f5f2dde05f744e90de561c5d4c5fac6bfca924e33')
 source=(
   "https://github.com/CachyOS/proton-cachyos/releases/download/cachyos-${_srctag}-slr/${_package_name}.tar.xz"
 )
@@ -70,6 +70,10 @@ makedepends=(rsync)
 optdepends=(
   steam
   umu-launcher
+)
+optdepends+=(
+  ntsync-common
+  NTSYNC-MODULE
 )
 provides=('proton')
 install=${pkgname}.install
