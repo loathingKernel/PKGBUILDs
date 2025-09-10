@@ -6,24 +6,23 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-ge-custom-opt
-_srctag=GE-Proton8-26
-_commit=21f5f463cb761b94bcd00553f924f55516389f5b
+_srctag=GE-Proton9-25
 pkgver=${_srctag//-/.}
-pkgrel=8
+_geckover=2.47.4
+_monover=9.3.1
+pkgrel=1
 epoch=1
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
 #_winever=${_pkgbasever%.*}
 
-source=(wine-ge-custom::git+https://github.com/GloriousEggroll/wine-ge-custom.git#commit=${_commit}
+source=(wine-ge-custom::git+https://github.com/loathingKernel/wine-ge-custom.git#tag=${_srctag}
+        https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
+        https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
         30-win32-aliases.conf
         wine-binfmt.conf)
 source+=(
-        0001-fshack-fix-image-corruption-on-ANV-and-HD-Graphics-6.patch
-        0002-fshack-mark-monitor-mode-structs-and-fsr-ratio-float.patch
-        wine-wmclass.patch
-        wine-isolate_home.patch
 )
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -46,9 +45,12 @@ depends=(
   libpcap          lib32-libpcap
   desktop-file-utils
 )
+depends+=(
+  libxkbcommon     lib32-libxkbcommon
+  wayland          lib32-wayland
+)
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
-  git
   python
   giflib                lib32-giflib
   gnutls                lib32-gnutls
@@ -74,6 +76,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   ffmpeg
   samba
   opencl-headers
+  git
 )
 
 optdepends=(
@@ -110,16 +113,13 @@ prepare() {
   mkdir ${pkgname//-opt}-{32,64}-build
 
   pushd ${pkgname//-opt}
-    git remote set-url origin https://github.com/gloriouseggroll/wine-ge-custom.git
-    git submodule update --init --filter=tree:0 --recursive proton-wine
-    pushd proton-wine
-      patch -p1 -i "$srcdir"/0001-fshack-fix-image-corruption-on-ANV-and-HD-Graphics-6.patch
-      patch -p1 -i "$srcdir"/0002-fshack-mark-monitor-mode-structs-and-fsr-ratio-float.patch
-      patch -p1 -i "$srcdir"/wine-wmclass.patch
-      patch -p1 -i "$srcdir"/wine-isolate_home.patch
+    git remote set-url origin https://github.com/loathingKernel/wine-ge-custom.git
+    git submodule update --init --filter=tree:0 --recursive wine wine-staging
+    ./patches/protonprep-valve-staging.sh
+    pushd wine
       git config user.email "makepkg@aur.not"
       git config user.name "makepkg aur"
-      git tag wine-ge-8.0 --annotate -m "$pkgver"
+      git tag wine-9.0 --annotate -m "$pkgver" --force
       ./tools/make_requests
       ./dlls/winevulkan/make_vulkan -x vk.xml
       ./tools/make_specfiles
@@ -139,12 +139,14 @@ build() {
   local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
+  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fno-semantic-interposition"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $WARNING_FLAGS -s"
+  #LTO_CFLAGS="-fuse-linker-plugin -fdevirtualize-at-ltrans -flto-partition=one -flto -Wl,-flto"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
+  #LTO_LDFLAGS="$LTO_CFLAGS"
 
   # Disable assertions
   #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
@@ -156,16 +158,17 @@ build() {
 
   msg2 "Building Wine-64..."
 
-  export CFLAGS="$COMMON_FLAGS -mcmodel=small"
-  export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
+  export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
+  export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
   export CROSSCFLAGS="$COMMON_FLAGS -mcmodel=small"
   export CROSSCXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/${pkgname//-opt}-64-build"
-  ../${pkgname//-opt}/proton-wine/configure \
+  ../${pkgname//-opt}/wine/configure \
     --prefix=/opt/"${pkgname//-opt}" \
     --libdir=/opt/"${pkgname//-opt}"/lib \
     --with-x \
+    --with-wayland \
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
@@ -180,15 +183,16 @@ build() {
   msg2 "Building Wine-32..."
 
   # Disable AVX instead of using 02, for 32bit
-  export CFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
-  export CXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
-  export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx"
-  export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -mno-avx -std=c++17"
+  export CFLAGS="$COMMON_FLAGS -mstackrealign $LTO_CFLAGS"
+  export CXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17 $LTO_CFLAGS"
+  export CROSSCFLAGS="$COMMON_FLAGS -mstackrealign"
+  export CROSSCXXFLAGS="$COMMON_FLAGS -mstackrealign -std=c++17"
   export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
   cd "$srcdir/${pkgname//-opt}-32-build"
-  ../${pkgname//-opt}/proton-wine/configure \
+  ../${pkgname//-opt}/wine/configure \
     --prefix=/opt/"${pkgname//-opt}" \
     --with-x \
+    --with-wayland \
     --with-gstreamer \
     --with-mingw \
     --with-alsa \
@@ -205,7 +209,6 @@ build() {
 package() {
   msg2 "Packaging Wine-32..."
   cd "$srcdir/${pkgname//-opt}-32-build"
-
   make prefix="$pkgdir/opt/${pkgname//-opt}" \
     libdir="$pkgdir/opt/${pkgname//-opt}/lib32" \
     dlldir="$pkgdir/opt/${pkgname//-opt}/lib32/wine" install-lib
@@ -222,13 +225,22 @@ package() {
 
   find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.a" -delete
   find "$pkgdir"/opt/"${pkgname//-opt}"/lib{,32}/wine -iname "*.def" -delete
+
+  # Install wine-gecko
+  cd "$srcdir"
+  install -d -m755 "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/gecko/
+  cp -dr --no-preserve='ownership' wine-gecko-${_geckover}-x86{,_64} "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/gecko/
+
+  # Install wine-mono
+  cd "$srcdir"
+  install -d -m755 "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/mono
+  cp -r -a --no-preserve='ownership' wine-mono-${_monover} "$pkgdir"/opt/"${pkgname//-opt}"/share/wine/mono
 }
 
 # vim:set ts=8 sts=2 sw=2 et:
-sha512sums=('f136761fc72ce7abcda5ed195c6757db6a3fe0b028c657a588f95aa503bb4528504342b61d93aa3b56c9d3b282c400cdb63b09bbc57e811494de87f7a8695558'
+sha512sums=('ded341ea3237679754ce29419268d70289f540df713d43d2f17883a523d323071a633c7fbad2d2bda75e87e9c52ea2c59bc747a14db25d85550945885def00ad'
+            '1279456eca4439e9adc3c97678fabeca42cc89f683246805ca14f85fc104bf4ba970fb6490f4ebd0938fc8e0a0ca372b000fdd5165f900070eeee30a1aeec117'
+            '1defbbc1fb5029bf43872a4e1c49995b61e0f106b1fcc4c99159bf4788226981b9ba8a25a2296d3a9312dbfa7e27b469ca27c0867afb218990d45f68705dbfbe'
+            'cc4faff237b46d870e1afeb99be1e77f8f0d599c8567dfc365256558b4ec533efee3d5324bfe1bd5bc7f318112899dd800e3e2ef9cbc6d50063f47fc7039c879'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
-            'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
-            '8d760b5b98d251638a397554405acd665df9926b3691afac96edc01442a571b626e463e66ce1cf0629f7a590c2178ea3ea8e749ab6f9840ae527831d76229ae5'
-            '2e337093ff4d8065e51f9329b7008ebf797a32a1dee2755fbe723a24563437a7bca6664ad5f107c3c174a678332a87225b2a36f0d8fcbf72a8f15902095923b3'
-            '30437d8ee92c5741fa50a7fe346ccfc48ba809dad0d740903a05a67781d23ea38a5094038a070a253e3fdd8046783b46a5420df6361bdd30cb229d3d88107569'
-            '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282')
+            'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
