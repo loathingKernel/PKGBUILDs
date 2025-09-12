@@ -3,7 +3,7 @@
 
 _pkgname=libinput-config
 pkgname="$_pkgname-git"
-pkgver=r79.1d649f7
+pkgver=r86.185c6cb
 pkgrel=1
 pkgdesc="Configuration system for libinput"
 arch=(x86_64)
