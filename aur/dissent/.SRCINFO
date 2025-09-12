@@ -1,6 +1,6 @@
 pkgbase = dissent
 	pkgdesc = Discord client written in go and gtk4
-	pkgver = 0.0.35
+	pkgver = 0.0.37
 	pkgrel = 1
 	url = https://github.com/diamondburned/dissent
 	arch = x86_64
@@ -22,7 +22,7 @@ pkgbase = dissent
 	depends = libspelling
 	depends = pango
 	options = !ccache
-	source = git+https://github.com/diamondburned/dissent#tag=v0.0.35
-	sha256sums = 84c0948148176b241aa5740e57f632a2896c0adb5c38495d06601e039098cad4
+	source = git+https://github.com/diamondburned/dissent#tag=v0.0.37
+	sha256sums = 320cd5c176f727c6dd36de0ef2ae6df15a41dba4ef3045fb18b2694776fbec50
 
 pkgname = dissent
