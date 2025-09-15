@@ -1,7 +1,7 @@
 # Contributor: katt <magunasu.b97@gmail.com>
 
 pkgname=duckstation-git
-pkgver=0.1.r9584.gc1bb183
+pkgver=0.1.r9727.g66bef3e
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
 pkgrel=1
 arch=(x86_64 aarch64)
@@ -85,6 +85,8 @@ pkgver() {
 
 prepare() {
     cd "${srcdir}/${pkgname%-git}"
+    git revert -n 84c6be74d3f1e2a7e75c037dbb4a4cca79e23e4a
+    git revert -n 6126209a25c279c6b3cffab012e9a52c84113d92
     cp "${srcdir}"/cheats.zip "${srcdir}"/patches.zip data/resources
 }
 
