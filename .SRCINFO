@@ -1,7 +1,7 @@
 pkgbase = protontricks
-	pkgdesc = A simple wrapper that does winetricks things for Proton enabled games.
+	pkgdesc = Run Winetricks commands for Steam Play/Proton games among other common Wine features
 	pkgver = 1.13.0
-	pkgrel = 2
+	pkgrel = 3
 	url = https://github.com/Matoking/protontricks
 	arch = any
 	license = GPL-3.0-or-later
@@ -20,6 +20,10 @@ pkgbase = protontricks
 	provides = protontricks
 	conflicts = protontricks-git
 	source = protontricks-1.13.0::git+https://github.com/Matoking/protontricks.git#tag=1.13.0
+	source = protontricks.desktop
+	source = protontricks.png
 	sha512sums = SKIP
+	sha512sums = 79490d897c4199b93af13206ba43f2403d78d3a0a340c5fa437b9523af5dab84f2e3059472bb22ec4452534649217263fcd32a4ce6c47766ee9f62d228858b23
+	sha512sums = d95ce89ed1e4c6d2f55b89bac8af1052c4cd371ceabd9e93311126a256f8d2e8885733ba7513651b11cf3c0eedfb8048b45782c25ab843772e2b8d73a8094edd
 
 pkgname = protontricks
