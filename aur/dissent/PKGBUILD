@@ -26,7 +26,6 @@ depends=(
 makedepends=(git 'go>=1.20.3')
 source=("git+https://github.com/diamondburned/dissent#tag=v${pkgver}")
 sha256sums=('320cd5c176f727c6dd36de0ef2ae6df15a41dba4ef3045fb18b2694776fbec50')
-options=(!ccache)
 
 prepare() {
   cd "${pkgname}"

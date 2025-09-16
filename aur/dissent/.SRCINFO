@@ -21,7 +21,6 @@ pkgbase = dissent
 	depends = libadwaita
 	depends = libspelling
 	depends = pango
-	options = !ccache
 	source = git+https://github.com/diamondburned/dissent#tag=v0.0.37
 	sha256sums = 320cd5c176f727c6dd36de0ef2ae6df15a41dba4ef3045fb18b2694776fbec50
 
