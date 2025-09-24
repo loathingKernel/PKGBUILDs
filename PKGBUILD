@@ -143,8 +143,8 @@ build() {
   local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fipa-pta"
-  OPTIMIZE_FLAGS+=" -mprefer-avx128 -fvect-cost-model=cheap"
+  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe"
+  OPTIMIZE_FLAGS+=" -mprefer-avx128 -fvect-cost-model=cheap -fipa-pta"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64"
   DEBUG_FLAGS="-ffunction-sections -fdata-sections -fno-omit-frame-pointer"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"

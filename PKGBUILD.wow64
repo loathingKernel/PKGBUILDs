@@ -125,7 +125,7 @@ prepare() {
   pushd $pkgname
   git config user.email "wine@cachyos.org"
   git config user.name "wine cachyos"
-  git tag wine-10.0 --annotate -m "$pkgver" --force
+  git tag wine-${_srctag} --annotate -m "$pkgver" --force
   ./tools/make_requests
   ./tools/make_specfiles
   ./dlls/winevulkan/make_vulkan -x vk.xml -X video.xml
@@ -143,8 +143,8 @@ build() {
   local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe -fipa-pta"
-  OPTIMIZE_FLAGS+=" -mprefer-avx128 -fvect-cost-model=cheap"
+  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe"
+  OPTIMIZE_FLAGS+=" -mprefer-avx128 -fvect-cost-model=cheap -fipa-pta"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64"
   DEBUG_FLAGS="-ffunction-sections -fdata-sections -fno-omit-frame-pointer"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
