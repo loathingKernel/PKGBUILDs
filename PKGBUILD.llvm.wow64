@@ -11,7 +11,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.2.0
 _xaliaver=0.4.6
-pkgrel=2
+pkgrel=3
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -56,6 +56,7 @@ makedepends=(
   alsa-lib
   clang
   ffmpeg
+  giflib
   git
   gnutls
   gst-plugins-base-libs
@@ -90,6 +91,7 @@ optdepends=(
   cups
   dosbox
   ffmpeg
+  giflib
   gnutls
   gst-plugins-bad
   gst-plugins-base
