@@ -34,6 +34,7 @@ cryptd
 crypto_lz4
 crypto_simd
 crypto_user
+curve25519_x86_64
 dm_mod
 drm
 drm_buddy
@@ -81,6 +82,7 @@ ip6table_nat
 ip6table_raw
 ip6_tables
 ip6table_security
+ip6_udp_tunnel
 ipmi_devintf
 ipmi_msghandler
 iptable_filter
@@ -103,6 +105,7 @@ kvm_intel
 ledtrig_audio
 libarc4
 libcrc32c
+libcurve25519_generic
 libps2
 lis3lv02d
 llc
@@ -157,6 +160,7 @@ nft_reject_ipv4
 ntfs3
 ntsync
 overlay
+pkcs8_key_parser
 pktcdvd
 platform_profile
 polyval_clmulni
@@ -224,6 +228,7 @@ ttm
 tun
 uas
 udf
+udp_tunnel
 uinput
 usbhid
 usbip_core
