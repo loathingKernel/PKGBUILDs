@@ -1,12 +1,13 @@
-# Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Maintainer: Peter Jung <ptr1337@archlinux.org>
+# Contributor: Sven-Hendrik Haase <svenstaro@archlinux.org>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 # Contributor: Eduardo Romero <eduardo@archlinux.org>
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=10.10
-pkgrel=8
-_tkg_commit=ec08911b27dfdf141d75563d5ce61069dac581a9
+pkgver=10.16
+pkgrel=1
+_tkg_commit=22dc4c45deb162cb05298381e0f115f4d4253306
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -15,40 +16,23 @@ source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbaseve
         wine-binfmt.conf)
 source+=(
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
-        wine-wmclass.patch
-        wine-isolate_home.patch
-        0002-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
-        0001-HACK-kernelbase-allow-overriding-dlls-for-DLSS-and-F.patch
-        7064.patch
-        8323.patch
-        0001-clang-fixup-lto.patch
-        0002-makedep-add-per-source-cflags-and-per-program-ldflag.patch
-        0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
-        wine-ntsync.patch
+        wine-sauce.patch
 )
-sha512sums=('baee24792d16348fac429764643d6819e0ed2eb333999c1e3d7bbe4850fd617910f3b525e55d0ba13b62c8612ffd30dbc0ac69f78e8907b64dc42a1add96ba9b'
+sha512sums=('4976e467d85ebeafdfc844e7f56833cccd35a9f435c13acc9053844dee95ad85043b30a12ffc8436c422201107c816e9b086d97fe1bd203b800e14129e2575ab'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
-            '43491057649e797f0152ef07a96b4547e506699d6a69facfbcd60a90da2014cc3b7847f0f093ecead218287a14d08fdab4f6ee1a184d80dda1836e006bf3e1b5'
-            '372be267e8099fbffbaee99e127032841e5ff42949e96822fb9299fadf8c41f9932bc42c19d25dec5b0b06f56f9db91e480391d3e2fc988bf8885a79e0c58144'
-            '3dcdbd523fcbe79b9e9e9b026b9d0a5edf296514c7b48bd465d2dc05a8ca08e23ba8817e2de08edfe52286a2a2f81db42b65f71254cabe496752b9d45131d282'
-            'f43f4fe92c9f9b826e9c71d69360aa470333242df8c4e60be1fd4a23a311c971f6eee253bc2fb94adc00eddc99a09917de99286c8ab97bd9da1e551f6ff0f7b8'
-            '409dc81654f83f2a24ce32e35225d6442e6c399fffcecddbcd9c54e723bcf7aac7cfc3e674edf9172fb1dc9457da2a804fb161100258c2093b2dda6d249aae7e'
-            '21ba0ec8e0a479cd520096417b7f152112e3fa8e8cc8ecf3b43cb748025723047fc8629821f1b94e3092e763b4a65c033423eb4efb05322e358121cf85803bda'
-            'dbba8f7e47147c14cc38afd287252ced0b25458349a8d361bb1b1a173d0024dff641416f2be859ca92eb4cc5c3274f08aa93d1ee80c10af451ceb339857c9934'
-            '8694685c4b4e8559b98286a11e39b662edc6c0ff1fa0446abd828af84f31d26fc6b8d18c00e3e3d273dcdad373dd6af8f01eeaa0d3de14ef28512494c756bdc4'
-            '605f6f527fc0b25768a3fa7bd921506269c2e70edb17289042eac4f34a410da26bfc4e61d0ae6356258d5fc10be25b8baab9dcabbd7bed034e94560882be457f'
-            '67d2e1e08d7f3bab2cd8d39d9bafd2451ab813fd4696ace70e3a310dd4d249112f3a88dedb7a2bcc0f4b85131a41cd1f20a6f21384ef92ec02ec66f07fd46a93'
-            'c73395b6b21e65c2a03aa25700a85c6daed7ec411e4694371d2941cc9e39ca7e0d5ab0626d4fb15cb0f0a67270b5e33fffde7ddcb51a2f1cca23471879d52ac5')
+            '9792febbe757636d4636ac933187f3ba47b0cfeeb36de6130a721ddb0cf8983c02f2c7565fbb48df6a61b966c2f49ed7741bfb67c921ab9d7bfd4e1dd85db5fa'
+            'ac6a4ec84ba28e800c95f53377936a1f95a7bfc1ce0ff20a4a61f010173b83815ca28b08e37a8889d7fa71f477cd552fd05b36a245ea2770c5d1b89a60cb2653')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
 pkgdesc="A compatibility layer for running Windows programs"
 url="https://www.winehq.org"
 arch=(x86_64)
-options=(!staticlibs !lto)
+options=(!staticlibs !lto !debug)
 license=(LGPL-2.1-or-later)
 depends=(
+  attr
   desktop-file-utils
   fontconfig
   freetype2
@@ -66,12 +50,15 @@ makedepends=(
   alsa-lib
   clang
   ffmpeg
+  giflib
   git
   gnutls
   gst-plugins-base-libs
+  gtk3
   libcups
   libgphoto2
   libpulse
+  libva
   libxcomposite
   libxinerama
   libxxf86vm
@@ -97,14 +84,17 @@ optdepends=(
   cups
   dosbox
   ffmpeg
+  giflib
   gnutls
   gst-plugins-bad
   gst-plugins-base
   gst-plugins-base-libs
   gst-plugins-good
   gst-plugins-ugly
+  gtk3
   libgphoto2
   libpulse
+  libva
   libxcomposite
   libxinerama
   opencl-icd-loader
@@ -114,10 +104,12 @@ optdepends=(
   sdl2
   unixodbc
   v4l-utils
+  vulkan-icd-loader
   wine-gecko
   wine-mono
 )
 optdepends+=(
+  ntsync-common
   NTSYNC-MODULE
 )
 install=wine.install
@@ -127,29 +119,18 @@ prepare() {
   rm -rf $pkgname-64-build
   mkdir $pkgname-64-build
 
-  cd wine
-
-  patch -Np1 -i "$srcdir"/wine-ntsync.patch
-  patch -Np1 -i "$srcdir"/7064.patch
-  patch -Np1 -i "$srcdir"/8323.patch
-
+  pushd wine
+  patch -Np1 -i "$srcdir"/wine-sauce.patch
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
   patch -Np1 -i "$_tkg_path"/proton/LAA/LAA-unix-wow64.patch
   patch -Np1 -i "$_tkg_path"/proton/msvcrt_nativebuiltin/msvcrt_nativebuiltin_mainline.patch
   patch -Np1 -i "$_tkg_path"/proton/proton-win10-default/proton-win10-default.patch
-
-  patch -Np1 -i "$srcdir"/wine-wmclass.patch
-  patch -Np1 -i "$srcdir"/wine-isolate_home.patch
-  patch -Np1 -i "$srcdir"/0002-win32u-Update-Nvidia-s-DriverVersion-to-999.99.patch
-  patch -Np1 -i "$srcdir"/0001-HACK-kernelbase-allow-overriding-dlls-for-DLSS-and-F.patch
-  patch -Np1 -i "$srcdir"/0001-clang-fixup-lto.patch
-  patch -Np1 -i "$srcdir"/0002-makedep-add-per-source-cflags-and-per-program-ldflag.patch
-  patch -Np1 -i "$srcdir"/0003-configure-Enforce-4-byte-stack-alignment-on-clang-fo.patch
   ./tools/make_requests
   ./tools/make_specfiles
   ./dlls/winevulkan/make_vulkan
   autoreconf -fiv
   rm -rf autom4te.cache
+  popd
 }
 
 build() {
@@ -169,20 +150,20 @@ build() {
 
   # From Proton
   OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe"
-  SANITY_FLAGS="-fwrapv -fno-strict-aliasing"
+  SANITY_FLAGS="-fwrapv -fno-strict-aliasing -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64"
   DEBUG_FLAGS="-ffunction-sections -fdata-sections -fno-omit-frame-pointer"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
   #STRIP_FLAGS="-s"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $DEBUG_FLAGS $WARNING_FLAGS $STRIP_FLAGS"
-  LTO_CFLAGS="-flto=thin -D__LLD_LTO__"
+  #LTO_CFLAGS="-flto=thin -D__LLD_LTO__"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-  LTO_LDFLAGS="-flto=thin -fuse-ld=lld"
+  #LTO_LDFLAGS="-flto=thin -fuse-ld=lld"
 
   # Per component CFLAGS and LDFlAGS (requires makedep patch)
-  export preloader_CFLAGS=" -fno-lto -Wl,--no-relax"
-  export wine64_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
-  export wine_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
+  #export preloader_CFLAGS=" -fno-lto -Wl,--no-relax"
+  #export wine64_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
+  #export wine_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
 
   # Disable assertions
   #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
@@ -205,6 +186,7 @@ build() {
     --with-freetype \
     --with-mingw=clang \
     --with-alsa \
+    --with-ffmpeg \
     --without-oss \
     --disable-winemenubuilder \
     --disable-tests \
