@@ -25,7 +25,7 @@ jobs:
       matrix:
         include:
           - repository: personal
-            pkgbuild: PKGBUILD.llvm.lto
+            pkgbuild: PKGBUILD
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: local/linux-zen-akasha
