@@ -1,0 +1,418 @@
+From 3c91fa967bb31fe261db1f2cdb2d479f49bc0397 Mon Sep 17 00:00:00 2001
+From: William Horvath <william@horvath.blog>
+Date: Thu, 14 Nov 2024 02:29:41 -0800
+Subject: [PATCH 01/10] clang: fixup lto
+
+---
+ loader/preloader.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/loader/preloader.c b/loader/preloader.c
+index ce82a9f296f..385dbf50b67 100644
+--- a/loader/preloader.c
++++ b/loader/preloader.c
+@@ -89,7 +89,9 @@
+ #include "wine/asm.h"
+ #include "main.h"
+ 
++#if !defined(__LLD_LTO__)
+ #pragma GCC visibility push(hidden)
++#endif
+ 
+ /* ELF definitions */
+ #define ELF_PREFERRED_ADDRESS(loader, maplength, mapstartpref) (mapstartpref)
+@@ -1523,6 +1525,8 @@ void* wld_start( void **stack )
+     return (void *)ld_so_map.l_entry;
+ }
+ 
++#if !defined(__LLD_LTO__)
+ #pragma GCC visibility pop
++#endif
+ 
+ #endif /* __linux__ */
+-- 
+2.51.0
+
+
+From 944c2bda830eaa42bdee2e3f8c59222a5020e8a4 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Tue, 8 Jul 2025 15:27:08 +0300
+Subject: [PATCH 02/10] HACK: kernelbase: allow overriding dlls for DLSS, XeSS,
+ FSR4 and FSR3
+
+`WINE_LOADDLL_REPLACE=fsr4` will force Wine to load c:\windows\system32\amdxcffx64.dll
+`WINE_LOADDLL_REPLACE=dlss` will force Wine to load c:\windows\system32\nvngx_dlss{,d,g}.dll
+
+* HACK: kernelbase: allow overriding dlls for XeSS
+* HACK: kernelbase: elevate debug output for replacement dlls from TRACE to FIXME
+* HACK: kernelbase: allow overriding dlls for FSR3
+* HACK: kernelbase: allow multiple options to be enabled for WINE_LOADDLL_REPLACE
+* HACK: kernelbase: don't override nvngx_dlssg.dll from the Nvidia Linux driver
+---
+ dlls/kernelbase/loader.c | 37 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 35 insertions(+), 2 deletions(-)
+
+diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
+index f6347c1cc9c..817e2ce2f87 100644
+--- a/dlls/kernelbase/loader.c
++++ b/dlls/kernelbase/loader.c
+@@ -553,17 +553,50 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+ {
+     UNICODE_STRING str;
+     HMODULE module;
++    WCHAR overrideW[MAX_PATH] = {0}, envW[40] = {0};
+ 
+     if (!name)
+     {
+         SetLastError( ERROR_INVALID_PARAMETER );
+         return 0;
+     }
+-    RtlInitUnicodeString( &str, name );
++
++    if ( GetEnvironmentVariableW( L"WINE_LOADDLL_REPLACE", envW, sizeof(envW)) )
++    {
++        if ( wcsstr( envW, L"fsr3" ) )
++        {
++            /* HACK: override amd_fidelityfx_*.dll path to a non-standard location for FSR3 upgrade */
++            if (wcsstr( name, L"amd_fidelityfx_vk.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_vk.dll" );
++            if (wcsstr( name, L"amd_fidelityfx_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_dx12.dll" );
++        }
++        if ( wcsstr( envW, L"fsr4" ) )
++        {
++            /* HACK: override amdxcffx64.dll path to a non-standard location for FSR4 upgrade */
++            if (wcsstr( name, L"amdxcffx64.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amdxcffx64.dll" );
++        }
++        if ( wcsstr( envW, L"dlss" ) )
++        {
++            /* HACK: override nvngx_dlss*.dll paths to a non-standard location for DLSS upgrade */
++            if (wcsstr( name, L"nvngx_dlss.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\nvngx_dlss.dll" );
++            if (wcsstr( name, L"nvngx_dlssd.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\nvngx_dlssd.dll" );
++            if (wcsstr( name, L"nvngx_dlssg.dll" ) && !wcsstr( name, L"nvidia/wine/nvngx_dlssg.dll" ))
++                wcscpy( overrideW, L"c:\\windows\\system32\\nvngx_dlssg.dll" );
++        }
++        if ( wcsstr( envW, L"xess" ) )
++        {
++            /* HACK: override libxe*.dll paths to a non-standard location for XeSS upgrade */
++            if (wcsstr( name, L"libxess.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxess.dll" );
++            if (wcsstr( name, L"libxell.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxell.dll" );
++            if (wcsstr( name, L"libxess_fg.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxess_fg.dll" );
++        }
++        if ( overrideW[0] ) FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
++    }
++
++    RtlInitUnicodeString( &str, overrideW[0] ? overrideW : name );
+     if (str.Length && str.Buffer[str.Length/sizeof(WCHAR) - 1] != ' ') return load_library( &str, flags );
+ 
+     /* library name has trailing spaces */
+-    RtlCreateUnicodeString( &str, name );
++    RtlCreateUnicodeString( &str, overrideW[0] ? overrideW : name );
+     while (str.Length > sizeof(WCHAR) && str.Buffer[str.Length/sizeof(WCHAR) - 1] == ' ')
+         str.Length -= sizeof(WCHAR);
+ 
+-- 
+2.51.0
+
+
+From 5787cf3aa95f2b8055da1691da07ac50ce5a756b Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Tue, 26 Aug 2025 18:23:50 +0300
+Subject: [PATCH 03/10] HACK: kernelbase: allow overriding dlls for FSR SDK 2.0
+ (wip)
+
+---
+ dlls/kernelbase/loader.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
+index 817e2ce2f87..aa230a09c5c 100644
+--- a/dlls/kernelbase/loader.c
++++ b/dlls/kernelbase/loader.c
+@@ -574,6 +574,13 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+             /* HACK: override amdxcffx64.dll path to a non-standard location for FSR4 upgrade */
+             if (wcsstr( name, L"amdxcffx64.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amdxcffx64.dll" );
+         }
++        if ( wcsstr( envW, L"fsr_sdk2" ) )
++        {
++            /* HACK: override amd_fidelityfx_dx12.dll to load amd_fidelityfx_loader_dx12 instead for FSR2/3/4 upgrade */
++            if (wcsstr( name, L"amd_fidelityfx_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_loader_dx12.dll" );
++            /* HACK: override amd_fidelityfx_loader_*.dll path to a non-standard location for FSR2/3/4 upgrade */
++            if (wcsstr( name, L"amd_fidelityfx_loader_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_loader_dx12.dll" );
++        }
+         if ( wcsstr( envW, L"dlss" ) )
+         {
+             /* HACK: override nvngx_dlss*.dll paths to a non-standard location for DLSS upgrade */
+-- 
+2.51.0
+
+
+From 330c392a137513e51a306a57cba26cb4d7c42363 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Fri, 5 Sep 2025 16:45:14 +0300
+Subject: [PATCH 04/10] Revert "HACK: kernelbase: allow overriding dlls for FSR
+ SDK 2.0 (wip)"
+
+This reverts commit bdaa80a85304a61c74648e3bc97ee282a8c3e775.
+---
+ dlls/kernelbase/loader.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
+index aa230a09c5c..817e2ce2f87 100644
+--- a/dlls/kernelbase/loader.c
++++ b/dlls/kernelbase/loader.c
+@@ -574,13 +574,6 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+             /* HACK: override amdxcffx64.dll path to a non-standard location for FSR4 upgrade */
+             if (wcsstr( name, L"amdxcffx64.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amdxcffx64.dll" );
+         }
+-        if ( wcsstr( envW, L"fsr_sdk2" ) )
+-        {
+-            /* HACK: override amd_fidelityfx_dx12.dll to load amd_fidelityfx_loader_dx12 instead for FSR2/3/4 upgrade */
+-            if (wcsstr( name, L"amd_fidelityfx_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_loader_dx12.dll" );
+-            /* HACK: override amd_fidelityfx_loader_*.dll path to a non-standard location for FSR2/3/4 upgrade */
+-            if (wcsstr( name, L"amd_fidelityfx_loader_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_loader_dx12.dll" );
+-        }
+         if ( wcsstr( envW, L"dlss" ) )
+         {
+             /* HACK: override nvngx_dlss*.dll paths to a non-standard location for DLSS upgrade */
+-- 
+2.51.0
+
+
+From 8ca2e0b1c7c5c76c221770ffd99e506c01f2a65f Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Thu, 21 Nov 2024 00:59:01 +0200
+Subject: [PATCH 05/10] makedep: add per-source cflags and per-program ldflags
+ variables
+
+Co-authored-by: William Horvath <william@horvath.blog>
+---
+ tools/makedep.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/tools/makedep.c b/tools/makedep.c
+index 7e33df2432a..280357415de 100644
+--- a/tools/makedep.c
++++ b/tools/makedep.c
+@@ -486,6 +486,19 @@ static const char *get_base_name( const char *name )
+     return base;
+ }
+ 
++/*******************************************************************
++ *         replace_char
++ */
++char* replace_char(char* str, char find, char replace)
++{
++    char *current_pos;
++    current_pos = strchr(str, find);
++    while (current_pos) {
++        *current_pos = replace;
++        current_pos = strchr(current_pos + 1, find);
++    };
++    return str;
++}
+ 
+ /*******************************************************************
+  *         replace_filename
+@@ -3338,6 +3351,7 @@ static void output_source_one_arch( struct makefile *make, struct incl_file *sou
+                                     unsigned int arch )
+ {
+     const char *obj_name, *var_cc, *var_cflags;
++    char obj2[256] = {0};
+     struct compile_command *cmd;
+     struct strarray cflags = empty_strarray;
+ 
+@@ -3417,6 +3431,11 @@ static void output_source_one_arch( struct makefile *make, struct incl_file *sou
+     output_filenames( defines );
+     output_filenames( cflags );
+     output_filename( var_cflags );
++    strncpy( obj2, obj, sizeof( obj2 ) );
++    obj2[ sizeof( obj2 ) - 1] = '\0';
++    replace_char( obj2, '-', '_' );
++    replace_char( obj2, '.', '_' );
++    output_filename( arch_make_variable( strmake( "%s_CFLAGS", basename( obj2 ) ), arch ));
+     output( "\n" );
+ 
+     if (make->testdll && strendswith( source->name, ".c" ) &&
+@@ -3846,6 +3865,7 @@ static void output_programs( struct makefile *make )
+ {
+     unsigned int i, j;
+     unsigned int arch = 0;  /* programs are always native */
++    char program2[256] = {0};
+ 
+     for (i = 0; i < make->programs.count; i++)
+     {
+@@ -3871,6 +3891,10 @@ static void output_programs( struct makefile *make )
+         output_filenames_obj_dir( make, objs );
+         output_filenames( all_libs );
+         output_filename( "$(LDFLAGS)" );
++        strncpy( program2, program, sizeof( program2 ) );
++        program2[ sizeof( program2 ) - 1] = '\0';
++        replace_char( program2, '-', '_' );
++        output_filename( arch_make_variable( strmake( "%s_LDFLAGS", basename( program2 ) ), arch ));
+         output( "\n" );
+         strarray_add( &make->all_targets[arch], program );
+ 
+-- 
+2.51.0
+
+
+From 53bf196889787eed0e03bf5940429e022d85bb05 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Bernhard=20K=C3=B6lbl?= <besentv@gmail.com>
+Date: Tue, 20 May 2025 20:14:23 +0200
+Subject: [PATCH 06/10] fixup! win32u: Provide more gpu device properties.
+
+CW-Bug-Id: #23941
+---
+ dlls/win32u/sysparams.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dlls/win32u/sysparams.c b/dlls/win32u/sysparams.c
+index 6b8e6ea8c1a..cdb6d044507 100644
+--- a/dlls/win32u/sysparams.c
++++ b/dlls/win32u/sysparams.c
+@@ -1094,7 +1094,7 @@ static const char* driver_vendor_to_version( UINT16 vendor )
+     {
+     case 0x8086: /* Intel */    return "32.0.101.6314";
+     case 0x1002: /* AMD */      return "32.0.21025.1024";
+-    case 0x10de: /* Nvidia */   return "32.0.15.6094";
++    case 0x10de: /* Nvidia */   return "32.0.19.9999";
+     default:                    return "31.0.10.1000";
+     }
+ }
+-- 
+2.51.0
+
+
+From 065c1fd9fb33c7d58b2cf7c0799c635375481d57 Mon Sep 17 00:00:00 2001
+From: William Horvath <william@horvath.blog>
+Date: Fri, 22 Nov 2024 10:31:07 -0800
+Subject: [PATCH 07/10] configure: Enforce 4-byte stack alignment on clang for
+ PE builds.
+
+Same as -mpreferred-stack-boundary=2 for gcc.
+Clang interprets this as "n" bytes, while gcc uses "2^n" bytes.
+https://linux.kernel.narkive.com/y7hAplfS/patch-x86-build-specify-stack-alignment-for-clang
+---
+ configure.ac | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configure.ac b/configure.ac
+index 51572bdae66..37540063389 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -578,6 +578,7 @@ This is an error since --enable-archs=$wine_arch was requested.])])
+ 
+     case $wine_arch in
+       i386) WINE_TRY_PE_CFLAGS([-fno-omit-frame-pointer])
++            WINE_TRY_PE_CFLAGS([-mstack-alignment=4])
+             WINE_TRY_PE_CFLAGS([-mpreferred-stack-boundary=2])
+             WINE_TRY_PE_CFLAGS([-Wl,--disable-stdcall-fixup],
+                                [AS_VAR_APPEND([${wine_arch}_LDFLAGS],[" -Wl,--disable-stdcall-fixup"])]) ;;
+-- 
+2.51.0
+
+
+From 6f748f32a7ba0916551f550dffd93a525fb323e0 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Sat, 25 May 2024 15:35:25 +0300
+Subject: [PATCH 08/10] HACK: shell32: Add WINEUSERSANDBOX environment variable
+
+Setting 'WINEUSERSANDBOX=1' stops Wine from creating
+links to the $HOME folders from the respective Wine folders.
+---
+ dlls/shell32/shellpath.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/dlls/shell32/shellpath.c b/dlls/shell32/shellpath.c
+index 2c1072cc8a2..2742c2a09f5 100644
+--- a/dlls/shell32/shellpath.c
++++ b/dlls/shell32/shellpath.c
+@@ -3020,7 +3020,12 @@ HRESULT WINAPI SHGetFolderPathAndSubDirW(
+ 
+     /* create symbolic links rather than directories for specific
+      * user shell folders */
++    const WCHAR *sandbox = _wgetenv( L"WINEUSERSANDBOX" );
++    int isolate = 0;
++    isolate = sandbox && !wcscmp(sandbox, L"1");
++    if(!isolate) {
+     _SHCreateSymbolicLink(folder, szBuildPath);
++    }
+ 
+     /* create directory/directories */
+     ret = SHCreateDirectoryExW(hwndOwner, szBuildPath, NULL);
+-- 
+2.51.0
+
+
+From da9023890272b38df7106831e6c86d3b6ef0973c Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Sat, 25 May 2024 15:38:24 +0300
+Subject: [PATCH 09/10] HACK: winex11.drv: Allow custom window wmclass to set
+ through the environment
+
+Wine's wmclass can be controlled through the WINE_WMCLASS environment
+variable.
+---
+ dlls/winex11.drv/window.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/dlls/winex11.drv/window.c b/dlls/winex11.drv/window.c
+index 2e6f13eec53..8ab8f51daa6 100644
+--- a/dlls/winex11.drv/window.c
++++ b/dlls/winex11.drv/window.c
+@@ -1111,8 +1111,17 @@ static void set_initial_wm_hints( Display *display, Window window )
+     /* class hints */
+     if ((class_hints = XAllocClassHint()))
+     {
++        const char *wine_wmclass = getenv("WINE_WMCLASS");
++        char window_class[128];
++
++        if (wine_wmclass && *wine_wmclass){
++            snprintf(window_class, sizeof(window_class), "%s", wine_wmclass);
++            class_hints->res_name = window_class;
++            class_hints->res_class = window_class;
++        } else {
+         class_hints->res_name = process_name;
+         class_hints->res_class = process_name;
++        }
+         XSetClassHint( display, window, class_hints );
+         XFree( class_hints );
+     }
+-- 
+2.51.0
+
+
+From 2092a76c3ef72d9b008286998f499be50d7a6a99 Mon Sep 17 00:00:00 2001
+From: Zebra2711 <zebra2711@users.noreply.github.com>
+Date: Mon, 28 Apr 2025 16:21:24 +0300
+Subject: [PATCH 10/10] HACK: winewayland.drv: Also use WINE_WMCLASS
+ environment variable under Wayland
+
+---
+ dlls/winewayland.drv/wayland_surface.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/dlls/winewayland.drv/wayland_surface.c b/dlls/winewayland.drv/wayland_surface.c
+index 7da7c4212f6..f9b523082cd 100644
+--- a/dlls/winewayland.drv/wayland_surface.c
++++ b/dlls/winewayland.drv/wayland_surface.c
+@@ -255,8 +255,16 @@ void wayland_surface_make_toplevel(struct wayland_surface *surface)
+     if (!surface->xdg_toplevel) goto err;
+     xdg_toplevel_add_listener(surface->xdg_toplevel, &xdg_toplevel_listener, surface->hwnd);
+ 
++    const char *wine_wmclass = getenv("WINE_WMCLASS");
++    char window_class[128];
++
++    if (wine_wmclass && *wine_wmclass) {
++        snprintf(window_class, sizeof(window_class), "%s", wine_wmclass);
++        xdg_toplevel_set_app_id(surface->xdg_toplevel, window_class);
++    } else {
+     if (process_name)
+         xdg_toplevel_set_app_id(surface->xdg_toplevel, process_name);
++    }
+ 
+     wl_surface_commit(surface->wl_surface);
+     wl_display_flush(process_wayland.wl_display);
+-- 
+2.51.0
+
