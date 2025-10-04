@@ -2,8 +2,8 @@
 # Contributor: Leonidas P. <jpegxguy at outlook dot com>
 
 pkgname=ksmbd-tools
-pkgver=3.5.3
-pkgrel=2
+pkgver=3.5.4
+pkgrel=1
 pkgdesc="Userspace tools for the ksmbd kernel SMB server"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h' 'armv6h')
 url="https://github.com/cifsd-team/ksmbd-tools"
@@ -12,11 +12,11 @@ depends=('KSMBD-MODULE' 'libnl')
 provides=('samba')
 makedepends=('meson' 'ninja')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=("2b0a9c117d8e66f1e9ad819f1a1925af2f54e3940cf19f67eba86b2ee9171d4d")
+sha256sums=('465ac06b75b47523953d979d9d3d831acca2b3c6b8ee3e69bcded5787bc075f9')
 
 build() {
   cd "${pkgname}-${pkgver}"
-  meson setup build --prefix=/usr --sbindir=/usr/bin --libexecdir=/usr/lib/${pkgname} --sysconfdir=/etc -Drundir=/run
+  arch-meson build --prefix=/usr --sbindir=/usr/bin --libexecdir=/usr/lib/${pkgname} --sysconfdir=/etc -Drundir=/run
   meson compile -C build
 }
 
