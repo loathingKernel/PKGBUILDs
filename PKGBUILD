@@ -1,6 +1,6 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
-# Contributor: Felix Yan <felixonmars@archlinux.org>
-# Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Maintainer: Peter Jung <ptr1337@archlinux.org>
+# Contributor: Sven-Hendrik Haase <svenstaro@archlinux.org>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 # Contributor: Eduardo Romero <eduardo@archlinux.org>
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
@@ -11,7 +11,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.2.0
 _xaliaver=0.4.6
-pkgrel=3
+pkgrel=4
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -55,11 +55,9 @@ depends=(
 makedepends=(
   alsa-lib              lib32-alsa-lib
   ffmpeg
-  giflib                lib32-giflib
   git
   gnutls                lib32-gnutls
   gst-plugins-base-libs lib32-gst-plugins-base-libs
-  gtk3                  lib32-gtk3
   libcups               lib32-libcups
   libgphoto2
   libpulse              lib32-libpulse
@@ -89,14 +87,12 @@ optdepends=(
   cups                  lib32-libcups
   dosbox
   ffmpeg
-  giflib                lib32-giflib
   gnutls                lib32-gnutls
   gst-plugins-bad
   gst-plugins-base      lib32-gst-plugins-base
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   gst-plugins-good      lib32-gst-plugins-good
   gst-plugins-ugly
-  gtk3                  lib32-gtk3
   libgphoto2
   libpulse              lib32-libpulse
   libva                 lib32-libva
@@ -122,7 +118,7 @@ prepare() {
   rm -rf ${pkgname//-opt}-{32,64}-build
   mkdir ${pkgname//-opt}-{32,64}-build
 
-  pushd ${pkgname//-opt}
+  cd ${pkgname//-opt}
   git config user.email "wine@cachyos.org"
   git config user.name "wine cachyos"
   git tag wine-${_srctag} --annotate -m "$pkgver" --force
@@ -131,7 +127,6 @@ prepare() {
   ./dlls/winevulkan/make_vulkan -x vk.xml -X video.xml
   autoreconf -fiv
   rm -rf autom4te.cache
-  popd
 }
 
 build() {
