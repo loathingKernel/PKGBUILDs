@@ -6,7 +6,7 @@
 
 pkgname=wine
 pkgver=10.16
-pkgrel=1
+pkgrel=2
 _tkg_commit=22dc4c45deb162cb05298381e0f115f4d4253306
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -50,11 +50,9 @@ makedepends=(
   alsa-lib              lib32-alsa-lib
   clang
   ffmpeg
-  giflib                lib32-giflib
   git
   gnutls                lib32-gnutls
   gst-plugins-base-libs lib32-gst-plugins-base-libs
-  gtk3                  lib32-gtk3
   libcups               lib32-libcups
   libgphoto2
   libpulse              lib32-libpulse
@@ -84,14 +82,12 @@ optdepends=(
   cups                  lib32-libcups
   dosbox
   ffmpeg
-  giflib                lib32-giflib
   gnutls                lib32-gnutls
   gst-plugins-bad
   gst-plugins-base      lib32-gst-plugins-base
   gst-plugins-base-libs lib32-gst-plugins-base-libs
   gst-plugins-good      lib32-gst-plugins-good
   gst-plugins-ugly
-  gtk3                  lib32-gtk3
   libgphoto2
   libpulse              lib32-libpulse
   libva                 lib32-libva
@@ -119,7 +115,7 @@ prepare() {
   rm -rf $pkgname-{32,64}-build
   mkdir $pkgname-{32,64}-build
 
-  pushd wine
+  cd wine
   patch -Np1 -i "$srcdir"/wine-sauce.patch
   _tkg_path="$srcdir"/wine-tkg-git/wine-tkg-git/wine-tkg-patches
   patch -Np1 -i "$_tkg_path"/proton/LAA/LAA-unix.patch
@@ -130,7 +126,6 @@ prepare() {
   ./dlls/winevulkan/make_vulkan
   autoreconf -fiv
   rm -rf autom4te.cache
-  popd
 }
 
 build() {
