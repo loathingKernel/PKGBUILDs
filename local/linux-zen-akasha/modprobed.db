@@ -28,7 +28,6 @@ crc32_pclmul
 crc_itu_t
 crct10dif_pclmul
 cryptd
-crypto_lz4
 crypto_simd
 crypto_user
 curve25519_x86_64
