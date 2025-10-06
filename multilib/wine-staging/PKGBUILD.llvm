@@ -7,7 +7,7 @@
 
 pkgname=wine-staging
 pkgver=10.16
-pkgrel=2
+pkgrel=3
 _tkg_commit=22dc4c45deb162cb05298381e0f115f4d4253306
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -193,7 +193,6 @@ build() {
     --with-alsa \
     --with-ffmpeg \
     --without-oss \
-    --disable-winemenubuilder \
     --disable-tests \
     --enable-win64
 
@@ -216,7 +215,6 @@ build() {
     --with-alsa \
     --without-ffmpeg \
     --without-oss \
-    --disable-winemenubuilder \
     --disable-tests \
     --with-wine64="$srcdir/$pkgname-64-build"
 
