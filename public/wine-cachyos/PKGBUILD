@@ -11,7 +11,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.2.0
 _xaliaver=0.4.6
-pkgrel=4
+pkgrel=5
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -175,7 +175,6 @@ build() {
     --with-alsa \
     --with-ffmpeg \
     --without-oss \
-    --disable-winemenubuilder \
     --disable-tests \
     --enable-win64
 
@@ -198,7 +197,6 @@ build() {
     --with-alsa \
     --without-ffmpeg \
     --without-oss \
-    --disable-winemenubuilder \
     --disable-tests \
     --with-wine64="$srcdir/$pkgname-64-build"
 
