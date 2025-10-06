@@ -11,7 +11,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.2.0
 _xaliaver=0.4.6
-pkgrel=4
+pkgrel=5
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -182,7 +182,6 @@ build() {
     --with-alsa \
     --with-ffmpeg \
     --without-oss \
-    --disable-winemenubuilder \
     --disable-tests \
     --enable-archs=x86_64,i386
 
