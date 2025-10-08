@@ -47,10 +47,8 @@ pkgbase = dolphin-emu-git
 	options = !emptydirs
 	options = !lto
 	source = dolphin-emu::git+https://github.com/dolphin-emu/dolphin.git
-	source = cmake-discord-rpc.diff
 	source = cmake-mgba.diff
 	b2sums = SKIP
-	b2sums = 7db29101fc7496355776eee0701ddb971147aea096828f73dc02501d8981a8f1105f16e206a24f3ab94d169dc7ea0443c37b664c25ba064533b7cdcc644bd6f4
 	b2sums = 442983a8887078ead6b503aa92f8d93a5d07e747792003775d15a4abe3e394a914e45abe25d00c39b7ad9a6d3f982af5d8a7055a15e95fa3b53d040b5167b217
 
 pkgname = dolphin-emu-git
