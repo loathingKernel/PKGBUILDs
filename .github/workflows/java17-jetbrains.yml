@@ -1,12 +1,23 @@
+
 name: java17-jetbrains
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - aur/java17-jetbrains/.SRCINFO
+      - aur/java17-jetbrains/.SRCINFO
 
 jobs:
   repository:
@@ -17,3 +28,4 @@ jobs:
     with:
       pkgdir: aur/java17-jetbrains
       repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
