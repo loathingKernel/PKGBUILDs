@@ -59,7 +59,7 @@ chown -R builder .
 # shellcheck disable=SC2086
 # shellcheck disable=SC2154
 # shellcheck disable=SC2001
-mapfile -t PKGNAMES < <(source PKGBUILD && echo "${pkgname[@]}" | sed 's/ /\n/g' )
+mapfile -t PKGNAMES < <(bash -c 'source PKGBUILD && echo "${pkgname[@]}"' | sed 's/ /\n/g' )
 echo "Package name(s): ${PKGNAMES[*]}"
 
 # Install jq to create json arrays from bash arrays
@@ -76,16 +76,14 @@ fi
 
 for PKGNAME in "${PKGNAMES[@]}"; do
 	if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
-		sudo -u builder repo-remove "${INPUT_REPORELEASETAG:-}".db.tar.gz "$PKGNAME" || true
-	else
-		echo "Skipping repository update for $RELPKGFILE"
+		sudo -u builder repo-remove "${INPUT_REPORELEASETAG:-}".db.tar.gz "$PKGNAME"
 	fi
 done
 
 
 if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	# Delete the `<repo_name>.db` and `repo_name.files` symlinks
-	rm "${INPUT_REPORELEASETAG:-}".{db,files} || true
+	rm "${INPUT_REPORELEASETAG:-}".{db,files}
 	# Copy repo archives to their suffix-less symlinks because symlinks are not uploaded to GitHub releases
 	cp "${INPUT_REPORELEASETAG:-}".db{.tar.gz,}
 	cp "${INPUT_REPORELEASETAG:-}".files{.tar.gz,}
