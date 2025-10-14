@@ -85,7 +85,7 @@ done
 
 if [ -n "${INPUT_REPORELEASETAG:-}" ]; then
 	# Delete the `<repo_name>.db` and `repo_name.files` symlinks
-	rm "${INPUT_REPORELEASETAG:-}".{db,files}
+	rm "${INPUT_REPORELEASETAG:-}".{db,files} || true
 	# Copy repo archives to their suffix-less symlinks because symlinks are not uploaded to GitHub releases
 	cp "${INPUT_REPORELEASETAG:-}".db{.tar.gz,}
 	cp "${INPUT_REPORELEASETAG:-}".files{.tar.gz,}
