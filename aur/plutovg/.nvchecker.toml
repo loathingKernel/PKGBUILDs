@@ -1,4 +1,0 @@
-[plutovg]
-source = "git"
-git = "https://github.com/sammycage/plutovg.git"
-prefix = "v"
