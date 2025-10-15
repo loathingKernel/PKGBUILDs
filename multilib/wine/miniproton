@@ -1,0 +1,29 @@
+#!/bin/sh
+
+export WINEPREFIX="$STEAM_COMPAT_DATA_PATH/pfx"
+
+mkdir -p "$STEAM_COMPAT_DATA_PATH/pfx/drive_c/Program Files (x86)/Steam/"
+
+for file in steamclient.dll steamclient64.dll; do
+    cp "$STEAM_COMPAT_CLIENT_INSTALL_PATH/$file" "$STEAM_COMPAT_DATA_PATH/pfx/drive_c/Program Files (x86)/Steam/"
+done
+
+if [ "$1" != "waitforexitandrun" ]; then
+    echo "Unknown verb $1."
+    exit 1
+fi
+shift
+
+_winedlloverrides=(
+    "d3d8=n,b;"
+    "d3d9=n,b;"
+    "dxgi=n,b;"
+    "d3d10core=n,b;"
+    "d3d11=n,b;"
+    "d3d12=n,b;"
+    "d3d12core=n,b;"
+)
+WINEDLLOVERRIDES="$(printf %s "${_winedlloverrides[@]}")"
+export WINEDLLOVERRIDES
+
+exec "$STEAM_RUNTIME/scripts/switch-runtime.sh" --runtime="" -- /usr/bin/wine "$@"

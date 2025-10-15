@@ -1,7 +1,7 @@
 pkgbase = wine
 	pkgdesc = A compatibility layer for running Windows programs
 	pkgver = 10.16
-	pkgrel = 4
+	pkgrel = 5
 	url = https://www.winehq.org
 	install = wine.install
 	arch = x86_64
@@ -120,6 +120,9 @@ pkgbase = wine
 	options = !lto
 	options = !debug
 	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-10.16
+	source = compatibilitytool.vdf
+	source = toolmanifest.vdf
+	source = miniproton
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
 	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=22dc4c45deb162cb05298381e0f115f4d4253306
@@ -127,6 +130,9 @@ pkgbase = wine
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
 	sha512sums = 4976e467d85ebeafdfc844e7f56833cccd35a9f435c13acc9053844dee95ad85043b30a12ffc8436c422201107c816e9b086d97fe1bd203b800e14129e2575ab
+	sha512sums = 14a97ee7c9a023cf8b7cf8392325540ccc2e22673dd624d3add8e759c06ae98373fd3904835980803d661a174febfc2a3ad05e9e574b80435ebdcb7cc217fa31
+	sha512sums = 61e0176986a9794855eb89367b123413039c5c4a8a16ce9bdc65abc7668ae48e7d4fd9feeeb4d300888998d44bb5c457f19a8defb482edefd719a7dfdced3235
+	sha512sums = 244e6ca6321a322508786434789e096fb4e25c37e7f600dd11c33b93adf0685c804730641e90e4348e5ba756a030c26532f44ba22950e3c2766b44628db00030
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
 	sha512sums = 9792febbe757636d4636ac933187f3ba47b0cfeeb36de6130a721ddb0cf8983c02f2c7565fbb48df6a61b966c2f49ed7741bfb67c921ab9d7bfd4e1dd85db5fa
