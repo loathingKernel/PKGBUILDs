@@ -1,14 +1,23 @@
+
 name: pcsx2-git
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 */7 * *'
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - local/pcsx2-git/.SRCINFO
+      - local/pcsx2-git/.SRCINFO
 
 jobs:
   repository:
@@ -19,3 +28,4 @@ jobs:
     with:
       pkgdir: local/pcsx2-git
       repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
