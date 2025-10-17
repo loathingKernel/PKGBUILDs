@@ -8,7 +8,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.2.0
 _xaliaver=0.4.6
-pkgrel=1
+pkgrel=2
 epoch=1
 
 source=(
@@ -16,6 +16,7 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
+  compatibilitytool.vdf.template
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -219,6 +220,12 @@ build() {
 
     SUBJOBS=$([[ "$MAKEFLAGS" =~ -j\ *([1-9][0-9]*) ]] && echo "${BASH_REMATCH[1]}" || echo "$(nproc)") \
         make -j1 dist
+
+    cd dist
+    sed -r \
+      -e "s|##BUILD_NAME##|proton-cachyos-${_srctag} (native)|" \
+      -e "s|##INTERNAL_TOOL_NAME##|${pkgname}|" \
+      "${srcdir}/compatibilitytool.vdf.template" > compatibilitytool.vdf
 }
 
 package() {
@@ -258,4 +265,5 @@ b2sums=('2d4747249c2732f37c0479ec7724c71981f49bbbad66bdf10280a193c795182539bc568
         '2a73c12585b502ae11188482cbc9fb1f45f95bfe4383a7615011104b132f4845f9813d01fb40277e1934fab5f1b35ab40b4f4a66a9967463dd1d666a666904e9'
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         'c0c2c063de47b484758dc315496c4c8d477273ce286ab5408fbdf8aae2cb8187160faec151c1ecfc18a90a4c6f3b36df9c78097ddc862ee6056739c556af4ff8'
-        '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85')
+        '4d30eea9306392790677a4e19f7e416a387aaf10c4a7681aa8fcd94faf07be81a984b28ba1437428d7c215c5ecdbba70993091547068fbdc224e809c3f7abd85'
+        'ded33c991713dc02ff144978ac0f657b3835c51bce7a633d1ae9ca21479868172bdbdd5feba94e1f5d6bfecb54d1a000d1673395fdd9d68e7bab12bdcb978cc5')
