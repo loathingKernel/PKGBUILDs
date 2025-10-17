@@ -4,13 +4,15 @@
 pkgname=proton-cachyos-slr
 _srctag=10.0-20251015
 pkgver=${_srctag//-/.}
-pkgrel=1
+pkgrel=2
 epoch=1
 
 _package_name="proton-cachyos-${_srctag}-slr-x86_64"
-sha256sums=('b2a1c2b961e0781e8db16ddc1e6b314e94378cd3a37b473906ddc214febab391')
+sha256sums=('b2a1c2b961e0781e8db16ddc1e6b314e94378cd3a37b473906ddc214febab391'
+            'a233ef8e1d68c0475dc7699143cc9a6cc1d95fa80c70e8ae924075a207841964')
 source=(
-  "https://github.com/CachyOS/proton-cachyos/releases/download/cachyos-${_srctag}-slr/${_package_name}.tar.xz"
+  https://github.com/CachyOS/proton-cachyos/releases/download/cachyos-${_srctag}-slr/${_package_name}.tar.xz
+  compatibilitytool.vdf.template
 )
 
 pkgdesc="A compatibility tool for Steam Play based on Wine and additional components, experimental branch with extra CachyOS flavour (Steam Linux Runtime build)"
@@ -80,8 +82,10 @@ install=${pkgname}.install
 
 build() {
     cd "${_package_name}"
-    sed -e "0,/${_package_name}/ s|${_package_name}|proton-cachyos-slr|" -i compatibilitytool.vdf
-    sed -e "s|${_package_name}|proton-cachyos (steam linux runtime package)|g" -i compatibilitytool.vdf
+    sed -r \
+      -e "s|##BUILD_NAME##|proton-cachyos-${_srctag} (steam linux runtime)|" \
+      -e "s|##INTERNAL_TOOL_NAME##|${pkgname}|" \
+      "${srcdir}/compatibilitytool.vdf.template" > compatibilitytool.vdf
 }
 
 package() {
