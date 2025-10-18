@@ -125,7 +125,7 @@ pkgbase = wine
 	source = miniproton
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
-	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=22dc4c45deb162cb05298381e0f115f4d4253306
+	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=94fb13d8e55164f2a9664db9feecb6bb77d06b35
 	source = wine-sauce.patch
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
@@ -135,7 +135,7 @@ pkgbase = wine
 	sha512sums = 244e6ca6321a322508786434789e096fb4e25c37e7f600dd11c33b93adf0685c804730641e90e4348e5ba756a030c26532f44ba22950e3c2766b44628db00030
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
-	sha512sums = 9792febbe757636d4636ac933187f3ba47b0cfeeb36de6130a721ddb0cf8983c02f2c7565fbb48df6a61b966c2f49ed7741bfb67c921ab9d7bfd4e1dd85db5fa
-	sha512sums = 7edd1992a4fc7fe77d93e068c90e2e4846967e282d7ec4ca70c682cb03c6b0f44a1a8a95d36098f8ad3e5f7030efaf41b2158d4d5a5fb5f0b0f2505334a8713f
+	sha512sums = 064aa63790f80073bdabe3d8b17a1694635716cb694c1647b49fb28d1a0427bac3bef1233b5a9644f52388a32a39bca766998f54c951b1cd7d47d4658e80b08f
+	sha512sums = 3034b2a5e6cb96afec7411d6d0c46a53cf9d5b7c6a58919ee1cea9f54bd302a0cbe29bfbf64b2f4e1b7830c55abc1b0ecb7d5c7d2d4807ceb43972eeb4735bb1
 
 pkgname = wine
