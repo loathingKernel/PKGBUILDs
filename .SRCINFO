@@ -1,6 +1,6 @@
 pkgbase = dxvk-msvc-git
 	pkgdesc = A Vulkan-based compatibility layer for Direct3D 8/9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers DLL version)
-	pkgver = 2.7.1.r165.g8bd72bb2b
+	pkgver = 2.7.1.r195.g2f9309786
 	pkgrel = 1
 	url = https://github.com/doitsujin/dxvk
 	arch = x86_64
@@ -26,7 +26,7 @@ pkgbase = dxvk-msvc-git
 	optdepends = msvc-wine-git: A very convenient package for having the msvc headers available globally. This is the preferred method instead of letting this PKGBUILD manage it.
 	provides = dxvk
 	provides = d9vk
-	provides = dxvk=2.7.1.r165.g8bd72bb2b
+	provides = dxvk=2.7.1.r195.g2f9309786
 	conflicts = d9vk
 	conflicts = dxvk
 	conflicts = dxvk-mingw-git
@@ -38,14 +38,15 @@ pkgbase = dxvk-msvc-git
 	source = git+https://github.com/Joshua-Ashton/mingw-directx-headers.git
 	source = git+https://github.com/KhronosGroup/Vulkan-Headers.git
 	source = git+https://github.com/KhronosGroup/SPIRV-Headers.git
+	source = git+https://github.com/doitsujin/dxbc-spirv.git
 	source = git+https://github.com/doitsujin/libdisplay-info.git#commit=275e645
 	source = https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8caps.h
 	source = https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8types.h
 	source = https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8.h
 	source = git+https://github.com/mstorsjo/msvc-wine.git#commit=49ae4b6
-	source = git+https://github.com/doitsujin/dxbc-spirv.git#commit=4537036
 	source = setup_dxvk.sh
 	source = clang.patch
+	sha256sums = SKIP
 	sha256sums = SKIP
 	sha256sums = SKIP
 	sha256sums = SKIP
@@ -55,8 +56,7 @@ pkgbase = dxvk-msvc-git
 	sha256sums = 6c03f80228539ad1a78390186ae9ebeae40d5c02559a39b58ed8ec4738a7b957
 	sha256sums = d06d0375a6976ccbf452bba2feb7d7e5db43c6631bd4d59ad563315e9c973ccb
 	sha256sums = bf7883203d9c8fe729131f1f9d82da799f33a1c3c3ebb22d2070ac77e337de8c
-	sha256sums = 68e7a732c0ced47ebbed3c5b34cdb80f3a0d0a81d01b434fc2654b4234b1e487
 	sha256sums = fb2bb15494d0ccf35452e8da98621264bcf4d44ac916db0ef5adbdf25f3790c8
-	sha256sums = 6dfed2a5ad51a23607f68a462de4af3a0effc199d5003a462c25e6a78fee778a
+	sha256sums = eb4dfed4a4e47dbd7b8ed8ed24c03795d95bba1ae93e3cf8c409a2954439a36d
 
 pkgname = dxvk-msvc-git

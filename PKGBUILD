@@ -5,8 +5,8 @@
 # Contributor: Adrià Cereto i Massagué <ssorgatem at gmail.com>
 
 # shellcheck disable=SC2034
-pkgname=('dxvk-msvc-git')
-pkgver=2.7.1.r165.g8bd72bb2b
+pkgname=dxvk-msvc-git
+pkgver=2.7.1.r195.g2f9309786
 pkgrel=1
 pkgdesc="A Vulkan-based compatibility layer for Direct3D 8/9/10/11 which allows running 3D applications on Linux using Wine (Clang+MSVC headers DLL version)"
 arch=('x86_64')
@@ -23,16 +23,17 @@ source=(
     "git+https://github.com/Joshua-Ashton/mingw-directx-headers.git"
     "git+https://github.com/KhronosGroup/Vulkan-Headers.git"
     "git+https://github.com/KhronosGroup/SPIRV-Headers.git"
+    "git+https://github.com/doitsujin/dxbc-spirv.git"
     "git+https://github.com/doitsujin/libdisplay-info.git#commit=275e645"
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8caps.h"
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8types.h"
     "https://raw.githubusercontent.com/NovaRain/DXSDK_Collection/61827822ad945fac5acb3123ab00c378654bfcd7/DXSDK_Aug2007/Include/d3d8.h"
     "git+https://github.com/mstorsjo/msvc-wine.git#commit=49ae4b6"
-    "git+https://github.com/doitsujin/dxbc-spirv.git#commit=4537036"
     "setup_dxvk.sh"
     "clang.patch" # contains the clang-msvc build changes
 )
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -41,9 +42,8 @@ sha256sums=('SKIP'
             '6c03f80228539ad1a78390186ae9ebeae40d5c02559a39b58ed8ec4738a7b957'
             'd06d0375a6976ccbf452bba2feb7d7e5db43c6631bd4d59ad563315e9c973ccb'
             'bf7883203d9c8fe729131f1f9d82da799f33a1c3c3ebb22d2070ac77e337de8c'
-            '68e7a732c0ced47ebbed3c5b34cdb80f3a0d0a81d01b434fc2654b4234b1e487'
             'fb2bb15494d0ccf35452e8da98621264bcf4d44ac916db0ef5adbdf25f3790c8'
-            '6dfed2a5ad51a23607f68a462de4af3a0effc199d5003a462c25e6a78fee778a')
+            'eb4dfed4a4e47dbd7b8ed8ed24c03795d95bba1ae93e3cf8c409a2954439a36d')
 
 pkgver() {
     # shellcheck disable=SC2154
@@ -154,7 +154,6 @@ prepare() {
 
     if [ -z "${_debug}" ]; then
         echo "!!! This package won't have debug symbols. Consider adding 'debug' to your PKGBUILD options to allow for better support from the developers."
-
     else
         echo "!!! This package will have debug symbols, which substantially increases the size, but allows for better support from the developers."
     fi
