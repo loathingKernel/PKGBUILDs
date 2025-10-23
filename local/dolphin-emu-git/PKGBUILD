@@ -8,7 +8,7 @@ pkgname=(
   dolphin-emu-tool-git
 )
 pkgver=2509.r213.06b4c89c51
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='A Gamecube and Wii emulator'
 arch=(x86_64)
@@ -85,11 +85,11 @@ build() {
   export CXXFLAGS+=' -I/usr/include/mbedtls2'
   export LDFLAGS+=' -L/usr/lib/mbedtls2'
   cmake -S dolphin-emu -B build -G Ninja \
-    -QT_NO_PRIVATE_MODULE_WARNING=ON \
     -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DDISTRIBUTOR=archlinux.org \
+    -DQT_NO_PRIVATE_MODULE_WARNING=ON \
     -DENABLE_ANALYTICS=OFF \
     -DENABLE_AUTOUPDATE=OFF \
     -DENABLE_LTO=OFF \
