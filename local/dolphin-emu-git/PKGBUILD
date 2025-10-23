@@ -8,7 +8,7 @@ pkgname=(
   dolphin-emu-tool-git
 )
 pkgver=2509.r213.06b4c89c51
-pkgrel=2
+pkgrel=1
 epoch=1
 pkgdesc='A Gamecube and Wii emulator'
 arch=(x86_64)
@@ -49,6 +49,7 @@ makedepends=(
   alsa-lib
   cmake
   git
+  glslang
   libevdev
   libminiupnpc.so
   libpulse
