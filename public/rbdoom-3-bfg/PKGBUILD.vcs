@@ -33,7 +33,7 @@ optdepends=(
 install=$pkgname.install
 options=(!lto)
 source=(
-  git+https://github.com/RobertBeckebans/RBDOOM-3-BFG.git
+  git+https://github.com/RobertBeckebans/RBDOOM-3-BFG.git#commit=8184ab7e
   rbdoom-3-bfg.png
   rbdoom-3-bfg.desktop
   rbdoom-3-bfg-launcher
@@ -82,7 +82,7 @@ package() {
   install -Dm644 -t "$pkgdir"/usr/share/pixmaps/ rbdoom-3-bfg.png
 }
 
-sha256sums=('SKIP'
+sha256sums=('6fe58b417452230c2e299394762f56256087d91cb679104b17f8ec71434ee03e'
             '0fb6a3bb9b47cad65d5012ba20dc9de3b1487f4ac1908ee847e6087511b7f09e'
             'f317d503d30ecc6e0a70e353cb020d2ea78ecb05d8d2e0250f39cfd8a4fe16a5'
             'a3c3006c254ce25ff890494acc8cfbfb88d406661f4468b56aaefc144227db21'
