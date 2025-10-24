@@ -11,14 +11,13 @@ arch=('x86_64')
 url="https://github.com/RobertBeckebans/RBDOOM-3-BFG"
 license=('GPL3')
 depends=(
-  ffmpeg
   openal
   sdl2
+  vulkan-icd-loader
 )
 makedepends=(
   clang
   cmake
-  directx-shader-compiler
   git
   glu
   ispc
@@ -39,6 +38,10 @@ source=(
   rbdoom-3-bfg.desktop
   rbdoom-3-bfg-launcher
   rbdoom-3-bfg-launcher.desktop
+  https://github.com/microsoft/DirectXShaderCompiler/releases/download/v1.8.2405/linux_dxc_2024_05_24.x86_64.tar.gz
+)
+noextract=(
+  linux_dxc_2024_05_24.x86_64.tar.gz
 )
 
 prepare() {
@@ -48,6 +51,11 @@ prepare() {
 }
 
 build() {
+  mkdir -p "$srcdir/dxc/"
+  tar xvzf "$srcdir/linux_dxc_2024_05_24.x86_64.tar.gz" --directory "$srcdir/dxc/"
+  chmod +x "$srcdir/dxc/bin/dxc"
+  export PATH="$srcdir/dxc/bin:$PATH"
+
   export CC=clang
   export CXX=clang++
   cmake \
@@ -55,8 +63,8 @@ build() {
     -B build \
     -DCMAKE_BUILD_TYPE="Release" \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBINKDEC=OFF \
-    -DFFMPEG=ON \
+    -DBINKDEC=ON \
+    -DFFMPEG=OFF \
     -DWINDOWS10=OFF \
     -DUSE_DX12=OFF \
     -DUSE_VULKAN=ON \
@@ -82,4 +90,5 @@ sha256sums=('7360cae94ee9a09817e552a1c2b18f31b8c41f2f9f1147266b7980774d409b55'
             '0fb6a3bb9b47cad65d5012ba20dc9de3b1487f4ac1908ee847e6087511b7f09e'
             'f317d503d30ecc6e0a70e353cb020d2ea78ecb05d8d2e0250f39cfd8a4fe16a5'
             'a3c3006c254ce25ff890494acc8cfbfb88d406661f4468b56aaefc144227db21'
-            'c083d028b5dd6f7c0d13d8d3f7a4b73a0d57d414890fea454eecbbf2dbcdac6d')
+            'c083d028b5dd6f7c0d13d8d3f7a4b73a0d57d414890fea454eecbbf2dbcdac6d'
+            '85d74a5f7e0ad339cae875b5baab04c38218d6ac33960b75f8780fd9d8447ee9')
