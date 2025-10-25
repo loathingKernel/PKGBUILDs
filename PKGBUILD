@@ -3,56 +3,55 @@
 # All my PKGBUILDs are managed at https://github.com/eli-schwartz/pkgbuilds
 
 pkgname=pacman-static
-pkgver=6.1.0
-_cares_ver=1.27.0
-_nghttp2_ver=1.60.0
-_curlver=8.6.0
-_sslver=3.2.1
+pkgver=7.0.0.r6.gc685ae6
+_cares_ver=1.34.5
+_nghttp2_ver=1.67.1
+_curlver=8.16.0
+_sslver=3.5.3
 _zlibver=1.3.1
-_xzver=5.6.1
+_xzver=5.8.1
 _bzipver=1.0.8
-_zstdver=1.5.5
-_libarchive_ver=3.7.2
-_gpgerrorver=1.48
-_libassuanver=2.5.6
-_gpgmever=1.23.2
-pkgrel=8
+_zstdver=1.5.7
+_libarchive_ver=3.8.1
+_gpgerrorver=1.55
+_libassuanver=3.0.0
+_gpgmever=2.0.0
+pkgrel=19
+# use annotated tag and patch level commit from release branch (can be empty for no patches)
+_git_tag=7.0.0
+_git_patch_level_commit=c685ae6412af04cae1eaa5d6bda8c277c7ffb8c8
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
-license=('GPL')
+license=('GPL-2.0-or-later')
 depends=('pacman')
 makedepends=('meson' 'musl' 'kernel-headers-musl' 'git')
 options=('!emptydirs' '!lto')
 
 # pacman
-source=("https://gitlab.archlinux.org/pacman/pacman/-/releases/v$pkgver/downloads/pacman-$pkgver.tar.xz"{,.sig}
-        revertme-makepkg-remove-libdepends-and-libprovides.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/354a300cd26bb1c7e6551473596be5ecced921de.patch
-        "$pkgname-fix-msg-unknown-key.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/6bb95c8856437513ee0ab19226bc090d6fd0fb06.patch"
-        "$pkgname-man-gitlab.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/95f148c2222db608a0d72d5c5577d0c71e7fa199.patch"
-        "$pkgname-make-aligned-titles.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/5e0496260b7d3f9c9fcf2b1c4899e4dbcc20ff03.patch"
-        "$pkgname-repo-add-parseopts.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/0571ee82bff0edbd5ffac2228d4e6ac510b9008e.patch"
-        "$pkgname-drop-result-warn.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/111eed0251238a9d3f90e76d62f2ac01aeccce48.patch"
-        "$pkgname-fix-debugedit.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/bae9594ac1806ce30f2af1de27c49bb101a00d44.patch")
+source=("git+https://gitlab.archlinux.org/pacman/pacman.git#tag=v${_git_tag}?signed"
+        pacman-revertme-makepkg-remove-libdepends-and-libprovides.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/354a300cd26bb1c7e6551473596be5ecced921de.patch)
 
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121') # Andrew Gregory (pacman) <andrew@archlinux.org>
 # nghttp2
 source+=("https://github.com/nghttp2/nghttp2/releases/download/v$_nghttp2_ver/nghttp2-$_nghttp2_ver.tar.xz")
 # c-ares
-source+=("https://c-ares.haxx.se/download/c-ares-${_cares_ver}.tar.gz"{,.asc})
-validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2') # Daniel Stenberg <daniel@haxx.se>
+source+=("https://github.com/c-ares/c-ares/releases/download/v${_cares_ver}/c-ares-${_cares_ver}.tar.gz"{,.asc})
+validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2'  # Daniel Stenberg <daniel@haxx.se>
+               'DA7D64E4C82C6294CB73A20E22E3D13B5411B7CA') # Brad House <brad@brad-house.com>
 # curl
 source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc})
 validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2') # Daniel Stenberg
 # openssl
-source+=("https://www.openssl.org/source/openssl-${_sslver}.tar.gz"{,.asc}
+source+=("https://github.com/openssl/openssl/releases/download/openssl-${_sslver}/openssl-${_sslver}.tar.gz"{,.asc}
          "ca-dir.patch"
          "openssl-3.0.7-no-atomic.patch")
 validpgpkeys+=('8657ABB260F056B1E5190839D9C4D26D0E604491'
               '7953AC1FBC3DC8B3B292393ED5E9E43F7DF9EE8C'
               'A21FAB74B0088AA361152586B8EF1A6BA9DA2D5C'
-              'EFC0A467D613CB83C7ED6D30D894E2CE8B3D79F5')
+              'EFC0A467D613CB83C7ED6D30D894E2CE8B3D79F5'
+              'BA5473A2B0587B07FB27CF2D216094DFD0CB81EF')
 
 validpgpkeys+=('8657ABB260F056B1E5190839D9C4D26D0E604491'  # Matt Caswell <matt@openssl.org>
               '7953AC1FBC3DC8B3B292393ED5E9E43F7DF9EE8C'   # Matt Caswell <matt@openssl.org>
@@ -62,7 +61,7 @@ validpgpkeys+=('8657ABB260F056B1E5190839D9C4D26D0E604491'  # Matt Caswell <matt@
 source+=("https://zlib.net/zlib-${_zlibver}.tar.gz"{,.asc})
 validpgpkeys+=('5ED46A6721D365587791E2AA783FCD8E58BCAFBA') # Mark Adler <madler@alumni.caltech.edu>
 # xz
-source+=("git+https://git.tukaani.org/xz.git#tag=v${_xzver}")
+source+=("git+https://github.com/tukaani-project/xz#tag=v${_xzver}")
 validpgpkeys+=('3690C240CE51B4670D30AD1C38EE757D69184620')  # Lasse Collin <lasse.collin@tukaani.org>
 # bzip2
 source+=("https://sourceware.org/pub/bzip2/bzip2-${_bzipver}.tar.gz"{,.sig})
@@ -85,38 +84,31 @@ source+=("https://github.com/libarchive/libarchive/releases/download/v${_libarch
 validpgpkeys+=('A5A45B12AD92D964B89EEE2DEC560C81CEC2276E'  # Martin Matuska <mm@FreeBSD.org>
               'DB2C7CF1B4C265FAEF56E3FC5848A18B8F14184B') # Martin Matuska <martin@matuska.org>
 
-sha512sums=('da5e78506e0505aac47def4b658a8cd6012be90c7ad7f7343da2edca2df5bd019091eec0a297f79c6f2fc264c139f139175778015d928cace26cb81c87d0477b'
-            'SKIP'
+sha512sums=('44e00c2bc259fe6a85de71f7fd8a43fcfd1b8fb7d920d2267bd5b347e02f1dab736b3d96e31faf7b535480398e2348f7c0b9914e51ca7e12bab2d5b8003926b4'
             '1a108c4384b6104e627652488659de0b1ac3330640fc3250f0a283af7c5884daab187c1efc024b2545262da1911d2b0b7b0d5e4e5b68bb98db25a760c9f1fb1a'
-            'b50a8c7734c884f2a645eba18a42081d8d6becf77cef04467ac1b755dcf58f8e79fc9a65cb9b2fda11ca87f1150a685adcf2d11b4a20441472b2f68e830c9394'
-            'fb79497bd2ea6d12a2234aa6b0acae0341cbdf1bd6358c4eb5e20548f4edf6b7159abcae0635574b1b0e1e05e34e73f11afa463f32f43bcb156bef3d5e2a3663'
-            '22ee8654ee131292eb124170544bf15aeb70922049c5447f33c5e211a6b489bde9feb6fc1ef3022ad09b7b5d781edad1c233110cea1b6638e4f7a3bf9b716d09'
-            '35e1b7f37dc440317c2f1530f0d8ce2c8cd1ef4ddc0d68a22e89f792e53ce9f48719abd9661378b31496b780ad493dbc13a73770385a7af35595941007971aa5'
-            '8adb3696579e3b771a7a61dd6ff013afb1444bbb087a0a71f3971da4d51e6b304ad631cbafe8187c837bd763b1a3298e2bd19605438d515743a73ff24192e33f'
-            '2ff45ed5e27b1d90524ec0de45acf55891b6f5bf7242dbfeec5c370b7c5d6e35eb49254b19f2a2d194dbab38fa27bca34afaf6175888a911a105237f2bab8d19'
-            '5e6365d9118596d41848930de70f4a918d72463920184df60a7e1678c3a6c9cf1416236888e7e34395c87f41bba00a114994ba5a6e73f6a389769abf1b5cc842'
-            'd0bffeeabdc5f1d4cececd46bd495b8224a64eaaf6d2a91c5475517440effe0e096146a1ebf19ece07367198be576c61b11961d5e4c3f601c5c5529ce4fcb46a'
+            'e1b50e963602c961dd839ba032216a6c6c22009c6be0aebecb3711cb6412e2a2caf96fe3fa2a6a1691134c12f8ce479c181825a3c8d2cf87a8e0b1aa40f0261a'
+            '386709e9f405034cb16ba514f9792e89992be52b24a237e6c51f1032e4ca99a8c57b1c3038d6f0a205202a3bfb1246bb95ff0d5e6fc0ee2bba1cb17f6677f97f'
             'SKIP'
-            '43fdb6b81b394f3382d353d5f57673b2b3d26cfe34b25d08a526bc0597f508d5298e5a7088d0736d1f139cad19cd922affa51533c3a5a4bb5f2de68891c2958d'
+            '7cf8378afbbbf2ace0d78342bf38fd8fe488170d9e758fd3aa1bade0a3c1f3841c2955d1434869e1ced078134436aa9a50d2fd9ac1e757dc97f9b2f465b55b50'
             'SKIP'
-            'bab2b2419319f1feffaba4692f03edbf13b44d1090c6e075a2d69dad67a2d51e64e6edbf83456a26c83900a726d20d2c4ee4ead9c94b322fd0b536f3b5a863c4'
+            '58265c05d208a269418d4928d3127d22738e696d5d080ab8f1c0cbd2cd30e4e1e07e244a1d81c9b40f1a7f972fe835f4f122c098a7b2177ac48492881416aa78'
             'SKIP'
             'b1873dbb7a49460b007255689102062756972de5cc2d38b12cc9f389b6be412da6797579b1acd3717a8cd2ee118fd9801b94e55f063d4328f050f0876a5eb53c'
             'b5887ea77417fae49b6cb1e9fa782d3021f268d5219701d87a092235964f73fa72a31428b630445517f56f2bb69dcbbb24119ef9dbf8b4e40a753369a9f9a16f'
             '580677aad97093829090d4b605ac81c50327e74a6c2de0b85dd2e8525553f3ddde17556ea46f8f007f89e435493c9a20bc997d1ef1c1c2c23274528e3c46b94f'
             'SKIP'
-            'SKIP'
+            'b9a0f746215cd93c04fecd390ca44fc281d892b989e740ec6abbaa6a1eb457bbef40a33596dfe6e2285a319f2b09ae1994d778f0cf61114cbee9454a0eaa754b'
             '083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3'
             'SKIP'
-            'c2d88b2c2050262f85be32877142c94e36a8ee451890f579cd2426c7de565fb22d21c369bad11f306093f0b356e935cef5a8ff5a2b0c007ade0f7e7eb944d2a5'
+            '2af02be3df319556b65403450acc55964d971fe263fed87dea823fb264a862db807a2a3d89358564277a83e5b303302cc677f66b5e523e3d224120b884e5ef1b'
             'SKIP'
-            '3e9ea99cfb7d706791eb3349a9356b6bc44a53ef8bfa9a4e89afb5203dad5af3f466a039a1764361c0c7f697a6fa668a21d05ceaeb8e44ec5a11d6468998adf2'
+            'd3f6ca9d9abefe81f5cbbc195fbe259d3362119018c535ad2621ee407cad3487011325a9f4c4a15442a9ac5a0fe7ce86dafd7b3d891a446516362ba6b7b9047b'
             'SKIP'
-            'dcca942d222a2c226a7e34ba7988ee0c3c55bd6032166eb472caf2053db89aeeea7a40e93d8c2887c7ee73c5f838e8b0725e8cfb595accc1606646559362f7ee'
+            '7c5c95c1b85bef2d4890c068a5a8ea8a1fe0d8def6ab09e5f34fc2746d8808bbb0fc168e3bd66d52ee5ed799dcf9f258f4125cda98c8384f6411bcad8d8b3139'
             'SKIP'
-            '6cfcd07e81a93de240582de5a46545420cee93d1f27fe20ea2c983780fdd3036b69fdba073cf549d68a20791e189bf4b3cdde14a43f912d2ab9ef3414c83ac75'
+            'ee58dc2a4273c740d5b9ef13cc655d5e600ddddd137fb85a781c31e8854829283b4ce241d7810a963d9a125d603213600f37e7d0c1ce3b3cf1b935e62cf60777'
             'SKIP'
-            'a21bebb27b808cb7d2ed13a70739904a1b7b55661d8dea83c9897a0129cf71e20c962f13666c571782ff0f4f753ca885619c2097d9e7691c2dee4e6e4b9a2971'
+            'c794d1c6e6a6dcf4072438dc4e8ce5b1530bbe9ad40afad18f4e6a444aa5d85e48c58cfbd8af41d4d25e93844956de3ce262cb1d68097d2e5f95bd87b5a982b7'
             'SKIP')
 
 export LDFLAGS="$LDFLAGS -static"
@@ -142,16 +134,34 @@ export CXXFLAGS+=' -D_LARGEFILE64_SOURCE'
 [[ $PKGEXT = .pkg.tar.zst ]] && PKGEXT=.pkg.tar.xz
 
 prepare() {
-    # pacman
-    cd "${srcdir}"/pacman-${pkgver}
-    local src
-    for src in "${source[@]}"; do
-        src="${src%%::*}"
-        src="${src##*/}"
-        [[ $src = pacman-*.patch ]] || continue
-        msg2 "Applying pacman patch $src..."
-        patch -Np1 < "../$src"
-    done
+    cd "${srcdir}/pacman"
+
+    # apply patch level commits on top of annotated tag for pacman
+    if [[ -n ${_git_patch_level_commit} ]]; then
+        if [[ v${_git_tag} != $(git describe --tags --abbrev=0 "${_git_patch_level_commit}") ]] then
+            error "patch level commit ${_git_patch_level_commit} is not a descendant of v${_git_tag}"
+            exit 1
+        fi
+        git rebase "${_git_patch_level_commit}"
+    fi
+
+    # handle local pacman patches
+    local -a patches
+    patches=($(printf '%s\n' "${source[@]}" | grep 'pacman-.*.patch'))
+    patches=("${patches[@]%%::*}")
+    patches=("${patches[@]##*/}")
+
+    if (( ${#patches[@]} != 0 )); then
+        for patch in "${patches[@]}"; do
+            if [[ $patch =~ revertme-* ]]; then
+                msg2 "Reverting patch $patch..."
+                patch -RNp1 < "../$patch"
+            else
+                msg2 "Applying patch $patch..."
+                patch -Np1 < "../$patch"
+            fi
+        done
+    fi
 
     # openssl
     cd "${srcdir}"/openssl-${_sslver}
@@ -310,10 +320,9 @@ build() {
     rm "${srcdir}"/temp/usr/lib/lib*.la
 
     # Finally, it's a pacman!
-    mkdir -p "${srcdir}"/pacman-${pkgver}/builddir
-    cd "${srcdir}"/pacman-${pkgver}/builddir
-    meson setup \
-        --prefix=/usr \
+    mkdir -p "${srcdir}"/pacman
+    cd "${srcdir}"/pacman
+    meson --prefix=/usr \
         --includedir=lib/pacman/include \
         --libdir=lib/pacman/lib \
         --buildtype=plain \
@@ -323,13 +332,13 @@ build() {
         -Ddoxygen=disabled \
         -Dldconfig=/usr/bin/ldconfig \
         -Dscriptlet-shell=/usr/bin/bash \
-        ..
-    ninja
+        build
+    meson compile -C build
 }
 
 package() {
-    cd "${srcdir}"/pacman-${pkgver}/builddir
-    DESTDIR="${pkgdir}" ninja install
+    cd "${srcdir}"/pacman
+    DESTDIR="${pkgdir}" meson install -C build
 
     rm -rf "${pkgdir}"/usr/share "${pkgdir}"/etc
     for exe in "${pkgdir}"/usr/bin/*; do
