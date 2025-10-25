@@ -1,4 +1,4 @@
-*.pkg.tar*
+*.tar.*
 /llvm-mingw/
 /llvm-mingw/
 /llvm-project/
