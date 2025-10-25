@@ -4,18 +4,17 @@
 
 _pkgname=vdf
 pkgname=python-vdf
-pkgver=3.4
-pkgrel=3
+pkgver=4.0
+pkgrel=2
 pkgdesc="Library for working with Valve's VDF text format"
 arch=('any')
-url='https://github.com/ValvePython/vdf'
+url='https://github.com/solsticegamestudios/vdf'
 license=('MIT')
-depends=('python>=3.3')
-# if python < 3.3, will need python-mock as checkdepends https://mock.readthedocs.io/en/latest/
+depends=('python>=3.6')
 makedepends=(python-setuptools)
-checkdepends=(python-nose python-coverage)
-source=("$pkgname-$pkgver.tar.gz::https://github.com/ValvePython/vdf/archive/v$pkgver.tar.gz")
-sha256sums=('c9fb42b6de9daf475cd229377d0c32d6e87c0f21e874a35e0e679eb201723a67')
+checkdepends=(python-nose python-coverage python-pytest)
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('1d778663f1158be0f70aa1cdd5b2685ae6eee14e4d11a0d96684b7ed86e89c93')
 
 build() {
   cd "$_pkgname-$pkgver"
@@ -24,7 +23,7 @@ build() {
 
 check() {
   cd "$_pkgname-$pkgver"
-  python setup.py test
+  pytest tests
 }
 
 package() {
