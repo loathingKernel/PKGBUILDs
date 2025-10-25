@@ -1,7 +1,7 @@
 pkgbase = ksmbd-tools
 	pkgdesc = Userspace tools for the ksmbd kernel SMB server
-	pkgver = 3.5.3
-	pkgrel = 2
+	pkgver = 3.5.4
+	pkgrel = 1
 	url = https://github.com/cifsd-team/ksmbd-tools
 	arch = x86_64
 	arch = i686
@@ -14,7 +14,7 @@ pkgbase = ksmbd-tools
 	depends = KSMBD-MODULE
 	depends = libnl
 	provides = samba
-	source = ksmbd-tools-3.5.3.tar.gz::https://github.com/cifsd-team/ksmbd-tools/archive/refs/tags/3.5.3.tar.gz
-	sha256sums = 2b0a9c117d8e66f1e9ad819f1a1925af2f54e3940cf19f67eba86b2ee9171d4d
+	source = ksmbd-tools-3.5.4.tar.gz::https://github.com/cifsd-team/ksmbd-tools/archive/refs/tags/3.5.4.tar.gz
+	sha256sums = 465ac06b75b47523953d979d9d3d831acca2b3c6b8ee3e69bcded5787bc075f9
 
 pkgname = ksmbd-tools
