@@ -1,0 +1,5 @@
+[chromium-widevine]
+source = 'jq'
+url = 'https://raw.githubusercontent.com/mozilla-firefox/firefox/refs/heads/main/toolkit/content/gmp-sources/widevinecdm.json'
+filter = '.name'                                                                                                               # fix this line
+prefix = 'Widevine-'
