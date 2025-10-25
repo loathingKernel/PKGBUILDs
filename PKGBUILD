@@ -3,20 +3,22 @@
 # Maintainer: Cazzoo <caz.san@gmail.com>
 
 pkgname=jstest-gtk-git
-pkgver=0.1.0.r115.g420317b
+pkgver=0.1.0.r127.g92bdf8e
 pkgrel=1
 pkgdesc="A simple GTK2-based joystick tester and calibrator"
 arch=('i686' 'x86_64')
-url="https://gitlab.com/jstest-gtk/jstest-gtk/"
-source=('git+https://github.com/Grumbel/jstest-gtk.git' 'jstest-gtk.desktop' 'fix_datadir.patch')
+url="https://github.com/Grumbel/jstest-gtk"
+source=("git+$url.git"
+		'jstest-gtk.desktop'
+		'fix_datadir.patch')
 license=('GPL3')
 depends=('gtkmm3')
 makedepends=('git' 'cmake')
 _gitname="jstest-gtk"
 
-sha1sums=('SKIP'
-          '4a8a3f5ac41b509fdfc0aec7cf017447e58ec973'
-          '1c1cdc1c2d98c18ce4b0523c53b8be8a08f4eeed')
+sha256sums=('SKIP'
+			'8063bdd1426bd772396929bc044de933db40a9888663bc72556ffc62a255c0fc'
+			'2aa59e55543db649bc0d1288ed22ec9b0702c824edd9f84913b8eadd029cac77')
 
 pkgver() {
   cd "$_gitname"
@@ -46,7 +48,3 @@ package() {
   mkdir -p "${pkgdir}/usr/share/jstest-gtk"
   cp -r "../jstest-gtk/data" "${pkgdir}/usr/share/jstest-gtk/"
 }
-
-sha1sums=('SKIP'
-          '4a8a3f5ac41b509fdfc0aec7cf017447e58ec973'
-          '1c1cdc1c2d98c18ce4b0523c53b8be8a08f4eeed')
