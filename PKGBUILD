@@ -6,33 +6,28 @@
 pkgname=pi-hole-ftl
 _pkgname=FTL
 _servicename=pihole-FTL
-pkgver=5.25.2
+pkgver=6.2.3
 pkgrel=1
-#_now=`date +%N`
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc="The Pi-hole FTL engine"
 url="https://github.com/pi-hole/FTL"
 license=('EUPL-1.2')
-depends=('nettle' 'gmp' 'libidn')
-makedepends=('cmake' 'sqlite' 'xxd')
+depends=('nettle' 'gmp' 'mbedtls' 'pi-hole-web')
+makedepends=('cmake' 'xxd')
 conflicts=('dnsmasq')
 provides=('dnsmasq')
 install=$pkgname.install
-backup=('etc/pihole/pihole-FTL.conf' 'etc/pihole/pihole-FTL.db' 'etc/pihole/dhcp.leases')
+backup=('etc/pihole/pihole-FTL.conf' 'etc/pihole/dhcp.leases')
 source=($pkgname-v$pkgver.tar.gz::"https://github.com/pi-hole/FTL/archive/v$pkgver.tar.gz"
         "https://raw.githubusercontent.com/max72bra/pi-hole-ftl-archlinux-customization/master/arch-ftl-$pkgver-$pkgrel.patch"
         "$pkgname.tmpfile"
         "$pkgname.sysuser"
-        "$pkgname.service"
-        "$pkgname.db"
-        "$pkgname.conf")
-sha256sums=('d14523c623a4a79afe48b64f3953f73eb454c688edeeded9d95b169b275d354d'
-            '37ecbbff753b8c73892d3951fcfa02bda9cdb2e7ae2ffe441dc106d81fe743d3'
-            '538d2f66e30eabeeb0ac6794ac388b96ddf1830d9e988a0aaa810cb17c5c69fc'
-            '39ef7bfd672ce59440bbf89e812992adc4d40091bc8d70fa24bd586381979064'
-            '8ac9e414f3330a8c7f5d761a17c1a7a9b3c025c8927467222c3e5d6c57f784d8'
-            '8beb120ac275f88c4b72bf2dde583f27f0c1e1fb9766c2d7c60285bd342867ed'
-            'efb7f8195b7f8b87a4af20c66f5ae123d7b5bf97a5f0947de6dc60244545d074')
+        "$pkgname.service")
+sha256sums=('590e0856bca288950ef6c27d2f0b8ebc24c92fa66020576360acdb62721a3e64'
+            'db4a09f0c1c7cdcbc0a9d44bf3769847f673acc47db2ba54da67d563627528a8'
+            '0feb4597a4afd9054553505d305b0feb7e1f6e1705b092561648ff37d0a2893c'
+            'dd1d2a341e774d4e549373ae75604031b9af0ee44debcd71a89259d9110d2a77'
+            '0998da040d038ddbad129ba8e1ea74741bc912813407b579cab1b3b3f206e721')
 
 prepare() {
   cd "$srcdir"/"$_pkgname"-"$pkgver"
@@ -41,28 +36,26 @@ prepare() {
 
 build() {
   cd "$srcdir"/"$_pkgname"-"$pkgver"
-  ./build.sh
+  STATIC=false ./build.sh
 }
 
 package() {
   cd "$srcdir"
   install -Dm775 "$_pkgname"-$pkgver/pihole-FTL "${pkgdir}"/usr/bin/pihole-FTL
-  
+
   install -Dm644 "$pkgname.tmpfile" "$pkgdir"/usr/lib/tmpfiles.d/$pkgname.conf
   install -Dm644 "$pkgname.sysuser" "$pkgdir"/usr/lib/sysusers.d/$pkgname.conf
 
-  install -dm775 "$pkgdir"/etc/pihole
-  install -Dm644 "$pkgname.conf" "$pkgdir"/etc/pihole/pihole-FTL.conf
-  install -Dm644 "$pkgname.db" "$pkgdir"/etc/pihole/pihole-FTL.db
+  install -dm755 "$pkgdir"/etc/pihole
   install -Dm664 /dev/null "$pkgdir"/etc/pihole/dhcp.leases
 
   install -Dm644 "$pkgname.service" "$pkgdir"/usr/lib/systemd/system/$_servicename.service
   install -dm755 "$pkgdir/usr/lib/systemd/system/multi-user.target.wants"
   ln -s ../$_servicename.service "$pkgdir/usr/lib/systemd/system/multi-user.target.wants/$_servicename.service"
-  
+
   install -dm755 "$pkgdir"/usr/share/licenses/pihole
   install -Dm644 "$_pkgname"-$pkgver/LICENSE "$pkgdir"/usr/share/licenses/pihole/Pi-hole-FTL
-  
-  # ver. 5.0 dnamasq dropin support
+
+  # ver. 5.0+ dnamasq dropin support
   ln -s ./pihole-FTL "$pkgdir/usr/bin/dnsmasq"
 }
