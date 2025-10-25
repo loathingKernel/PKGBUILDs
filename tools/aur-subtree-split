@@ -18,6 +18,6 @@ fi
 
 for arg in "$@"; do
     repo="$(basename "$arg")"
-    git subtree split --prefix="$1" --rejoin
+    git subtree split --prefix="$1" --rejoin --squash
 done
 
