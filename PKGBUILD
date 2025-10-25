@@ -8,7 +8,7 @@ pkgname=(
     'samsung-unified-driver'
 )
 pkgver=1.00.39
-pkgrel=7
+pkgrel=11
 
 pkgdesc='Samsung Unified Linux Driver for printers and scanners.'
 arch=('i686' 'x86_64')
@@ -49,6 +49,12 @@ package_samsung-unified-driver-printer()
     mkdir -p "$pkgdir"/usr/lib
     cp "$srcdir"/uld/$_arch/libscmssc.so "$pkgdir"/usr/lib
 
+    # rastertospl contains a hardcoded path to /opt/smfp-common/printer/lib
+    mkdir -p "$pkgdir"/opt/smfp-common/printer/
+    ln -s /usr/lib "$pkgdir"/opt/smfp-common/printer/lib
+    mkdir -p "$pkgdir"/usr/share/cups/model/
+    ln -s ../../ppd/suld "$pkgdir"/usr/share/cups/model/uld-samsung
+
     mkdir -p "$pkgdir"/usr/lib/cups/backend
     cp "$srcdir"/uld/$_arch/smfpnetdiscovery "$pkgdir"/usr/lib/cups/backend
 
@@ -71,7 +77,7 @@ package_samsung-unified-driver-printer()
 package_samsung-unified-driver-scanner()
 {
     pkgdesc='Samsung Unified Linux Driver for scanners.'
-    depends=('samsung-unified-driver-common' 'libxml2' 'libusb-compat' 'sane')
+    depends=('samsung-unified-driver-common' 'libxml2-legacy' 'libusb-compat' 'sane')
 
     mkdir -p "$pkgdir"/usr/share
     cp -r "$srcdir"/uld/noarch/share/locale "$pkgdir"/usr/share
