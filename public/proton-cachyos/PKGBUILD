@@ -16,7 +16,7 @@ source=(
     https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
     https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
     https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
-  compatibilitytool.vdf.template
+    compatibilitytool.vdf.template
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
