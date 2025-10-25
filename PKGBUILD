@@ -12,7 +12,7 @@ _opt_SkipMissing=0 # Default 0
 #   Calibri Light you'll never use.
 # 0=Require all fonts. (original)
 
-_opt_ConvertTTC=1 # Default 1
+_opt_ConvertTTC=0 # Default 1
 # 1=Break out all TTC to TTF (slow, more space, possible conversion losses, TTF is better supported)
 # 0=Add TTC as is (fast, compact, original, TTC not supported in all apps)
 
@@ -151,8 +151,8 @@ sha256sums=('096cdd18e26b2b3d8cf0b3ec6a1ffb5b0eaae0fcc2105e3c145f19037a42d467'
             '700aad3b80067389ba6921bd16c9ebcda152e685330e113c38f1e06a84000619'
             '738a6be15b6c405742cce7f0d9a510e0b5cf8eb92e295db4f1185ebf58d0e9c7'
             '0524fe42951adc3a7eb870e32f0920313c71f170c859b5f770d82b4ee111e970')
-PKGEXT='.pkg.tar' # because XZ compression is awfully slow
-PKGEXT='.pkg.tar.gz' # XZ takes 8 minutes. TGZ takes 3 minutes. TAR takes the same and is double the space. With no TTC conversion TGZ is less than a minute.
+#PKGEXT='.pkg.tar' # because XZ compression is awfully slow
+#PKGEXT='.pkg.tar.gz' # XZ takes 8 minutes. TGZ takes 3 minutes. TAR takes the same and is double the space. With no TTC conversion TGZ is less than a minute.
 #export BUILDDIR='/tmp/makepkg'
 
 # See sums for font name and known versions.
@@ -616,6 +616,31 @@ _fnt256sumsx=(
   '511d71a455c698ee74d78f03ca4747da53025f862faee1d5bede407285517a81' #  84 consolab.ttf  en-US Version 5.34 Consolas Bold
   '09a343ad31be772eb1aee5cfd315828ac5dea9e7275b2456a75933c2d1461268' #  85 consolai.ttf  en-US Version 5.34 Consolas Italic
   '62a8cb4c643b2e47bc877a70f274f4daac271a3f82f8c6aaa0894e4b26fb3f75' #  86 consolaz.ttf  en-US Version 5.34 Consolas Bold Italic
+
+# Fonts found in my local install
+  '103f95fb6919365c1f54b990fc1c171b623c68590e3ccf1b1508507eb8eb896d' #   1 arial.ttf     en-US Version 6.87 Arial
+  '9bf77b2215ff69ea7be5cb529473f2dcd46b8270239f4a2bc3dcf49b7649e758' #   2 arialbd.ttf   en-US Version 6.87 Arial Bold
+  'ba80c0f8942663bd12d585e6f35a41d8caf7651be0df6586b059851353bb1ae0' #   3 ariali.ttf    en-US Version 6.87 Arial Italic
+  '6d639051c9d3373c3f3c4ccc7326c15962c1349eccbfb02047cee3c7d58f833b' #   4 arialbi.ttf   en-US Version 6.87 Arial Bold Italic
+  '9656779a2f59a38811471107971b83839a7db976b204d515cdb0bafcd17af249' #  24 micross.ttf   en-US Version 6.02 Microsoft Sans Serif
+  '0e960af16b424d119ae455cb562c5348fff4c56754bc80eaf5b095879036518b' #  40 segoeuil.ttf  en-US Version 5.35 Segoe UI Light
+  'bb36623e3cc809f8d26870d3792ec3d9387add79079ff978bb959b8243eccc6d' #  41 seguili.ttf   en-US Version 5.35 Segoe UI Light Italic
+  '0bb7b6a58a2897531ca733c6527d3e3d7351ebc395891c0f1a19b9288b5de877' #  42 seguisb.ttf   en-US Version 5.35 Segoe UI Semibold
+  '6d2bb12fc23525cc5a8734e18ac078d9cec1a9f3b324859a470877a5f903ac59' #  43 seguisbi.ttf  en-US Version 5.35 Segoe UI Semibold Italic
+  '74fd570e88f8aec8e795bcf156c3e0387f3d03669b12435b6337adb4941330c7' #  44 segoeuisl.ttf en-US Version 5.35 Segoe UI Semilight
+  'da5e90ca353bf98f6027509452e24d1fd9c568f7a8213e82488e9a707d962732' #  45 seguisli.ttf  en-US Version 5.35 Segoe UI Semilight Italic
+  'fdb916671fcd4187b9b0639681cf263e663e5859a9ee69bd02b19bb5eaf401c0' #  53 tahoma.ttf    en-US Version 6.03 Tahoma
+  'd427dc86ed34a3418274dea5c8565d60895197367a391da31e896b623c9e19ee' #  54 tahomabd.ttf  en-US Version 6.03 Tahoma Bold
+  '24938f3f71cdf9cd1c60d13fc8a1707c58a5c3559cf0617ab3e06ee5768ddc28' #  55 times.ttf     en-US Version 6.87 Times New Roman
+  '85dd4783bdc338b422760f738c950c737aaf7ba4d69ea56de0729f3db74a5593' #  56 timesbd.ttf   en-US Version 6.87 Times New Roman Bold
+  'a374bed5accfa94c0a666add5fffff3218adfc876f277a8c1b88b226a628bb06' #  57 timesi.ttf    en-US Version 6.87 Times New Roman Italic
+  '799fdc80a7b88a8af8484efd9593addd58a79567274790294111c053b24f777b' #  58 timesbi.ttf   en-US Version 6.87 Times New Roman Bold Italic
+  'c97c1acc78d827e72387b0965441b25020d9d138843683a81bbaea8c32fdd845' #  73 calibril.ttf  en-US Version 2.12 Calibri Light
+  'd41c05e0196ec4b0cd4a0635ecf46890dd846fcacce6dae426ae60afc3838849' #  74 calibrili.ttf en-US Version 2.12 Calibri Light Italic
+  'b61ac0f6300164c89dea0cba44e2f05310b2c7e472cc219d488af4a1d884b9f2' #  75 cambria.ttc   en-US Version 6.82 Cambria; Cambria Math
+  '4b1126c04249a05ec51362912ce874022110a17595513212b4698b6d7cf997c2' #  76 cambriab.ttf  en-US Version 6.82 Cambria Bold
+  'c44d5e336932aae9804d734a17ac6a0dd9348beaeef8614774ffc15c95a1d794' #  77 cambriai.ttf  en-US Version 6.82 Cambria Italic
+  '7e58321b99fd0665f4a04d95688df0aa3267555a6a45b1c085916cbb3be78c72' #  78 cambriaz.ttf  en-US Version 6.82 Cambria Bold Italic
 )
 
 _tt_deli=':'
