@@ -2,13 +2,13 @@
 # Contributor: Joe Davison <joe@warhaggis.com>
 
 pkgname=lgogdownloader-qt5-git
-pkgver=3.12.r0.g8e07ba1
+pkgver=3.15.r4.gb37dafb
 pkgrel=1
 pkgdesc="Open source downloader for GOG.com games, with QT5 enabled for solving reCAPTCHA"
 url="https://sites.google.com/site/gogdownloader/"
 arch=(x86_64 i686 pentium4)
-license=('custom:WTFPL')
-depends=(boost-libs jsoncpp tinyxml2 rhash htmlcxx tidy qt5-webengine)
+license=(WTFPL)
+depends=(boost-libs jsoncpp tinyxml2 rhash tidy qt5-webengine)
 makedepends=(git help2man cmake boost)
 provides=(lgogdownloader)
 conflicts=(lgogdownloader)
