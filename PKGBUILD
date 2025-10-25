@@ -7,22 +7,41 @@
 
 pkgname=opencv2
 pkgver=2.4.13.7
-pkgrel=5
+pkgrel=7
 pkgdesc='Open Source Computer Vision Library (version 2.x)'
 arch=('x86_64')
-license=('BSD')
+license=('BSD-3-Clause')
 url='https://opencv.org/'
-depends=('glib2' 'gst-plugins-base' 'gst-plugins-base-libs' 'gstreamer' 'gtk2' 'gtkglext'
-         'libdc1394' 'libgl' 'libjpeg' 'libpng' 'libtiff' 'zlib')
-makedepends=('cmake' 'eigen' 'mesa')
+depends=(
+    'gcc-libs'
+    'glib2'
+    'glibc'
+    'gst-plugins-base'
+    'gst-plugins-base-libs'
+    'gstreamer'
+    'gtk2'
+    'gtkglext'
+    'libdc1394'
+    'libgl'
+    'libjpeg'
+    'libpng'
+    'libtiff'
+    'zlib')
+makedepends=(
+    'cmake'
+    'eigen'
+    'mesa')
 optdepends=('opencl-icd-loader: for coding with OpenCL')
 source=("https://github.com/opencv/opencv/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz"
-        '010-opencv2-remove-prototypes-warnings.patch')
+        '010-opencv2-remove-prototypes-warnings.patch'
+        '020-opencv2-cmake4-fix.patch')
 sha256sums=('192d903588ae2cdceab3d7dc5a5636b023132c8369f184ca89ccec0312ae33d0'
-            '0ac6a30a0708339486941b0c784a3a94f4ab2a5154cd74ae82edd405b4f61823')
+            '0ac6a30a0708339486941b0c784a3a94f4ab2a5154cd74ae82edd405b4f61823'
+            'e66d3cc57c87b7d94f0a46e6d1aecea15aff059a1f98c05b4e8f95381afd6398')
 
 prepare() {
     patch -d "opencv-${pkgver}" -Np1 -i "${srcdir}/010-opencv2-remove-prototypes-warnings.patch"
+    patch -d "opencv-${pkgver}" -Np1 -i "${srcdir}/020-opencv2-cmake4-fix.patch"
 }
 
 build() {
@@ -31,6 +50,7 @@ build() {
         -G 'Unix Makefiles' \
         -DCMAKE_BUILD_TYPE:STRING='None' \
         -DCMAKE_INSTALL_PREFIX:PATH='/opt/opencv2' \
+        -DCMAKE_POLICY_VERSION_MINIMUM:STRING="3.5.0" \
         -DCMAKE_SKIP_INSTALL_RPATH:BOOL='YES' \
         -DBUILD_JASPER:BOOL='ON' \
         -DBUILD_opencv_java:BOOL='OFF' \
