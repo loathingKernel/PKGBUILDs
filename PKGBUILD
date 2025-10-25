@@ -2,47 +2,75 @@
 
 pkgname=dissent
 _fqpn=so.libdb.${pkgname}
-pkgver=0.0.24
+pkgver=0.0.37
 pkgrel=1
 pkgdesc='Discord client written in go and gtk4'
-arch=('x86_64' 'aarch64')
+arch=(x86_64 aarch64)
 url='https://github.com/diamondburned/dissent'
 license=('GPL-3.0-only')
-depends=('gtk4>=4.10.3' 'gobject-introspection' 'libadwaita>=1.3.2'
-    'hicolor-icon-theme' 'gdk-pixbuf2' 'glib2' 'pango' 'cairo' 'glibc'
-    'gcc-libs' 'graphene')
-provides=('dissent')
-conflicts=('dissent')
-makedepends=('git' 'go>=1.20.3')
+depends=(
+  cairo
+  gcc-libs
+  gdk-pixbuf2
+  glib2
+  glibc
+  gobject-introspection
+  graphene
+  gtk4
+  gtksourceview5
+  hicolor-icon-theme
+  libadwaita
+  libspelling
+  pango
+)
+makedepends=(git 'go>=1.20.3')
 source=("git+https://github.com/diamondburned/dissent#tag=v${pkgver}")
-sha256sums=('e8445b7099ba8df399c161391f4160404ad048dbfe64fd597344f743e4aa598b')
+sha256sums=('320cd5c176f727c6dd36de0ef2ae6df15a41dba4ef3045fb18b2694776fbec50')
+options=(!ccache)
 
 prepare() {
-    cd "${pkgname}"
-    mkdir -p build
+  cd "${pkgname}"
+
+  mkdir -p build
+
+  export GOPATH="${srcdir}"
+  export GOFLAGS="-modcacherw"
+  go mod download
 }
 
 build() {
-    cd "${pkgname}"
-    # https://wiki.archlinux.org/index.php/Go_package_guidelines
-    export CGO_CPPFLAGS="${CPPFLAGS}"
-    export CGO_CFLAGS="${CFLAGS}"
-    export CGO_CXXFLAGS="${CXXFLAGS}"
-    export CGO_LDFLAGS="${LDFLAGS}"
-    export GOPATH="${srcdir}/go"
-    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
-    go build -o build
+  cd "${pkgname}"
+
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOPATH="${srcdir}"
+  export GOFLAGS="\
+    -buildmode=pie \
+    -mod=readonly \
+    -modcacherw \
+    -trimpath \
+  "
+  local _ld_flags=" \
+    -compressdwarf=false \
+    -linkmode=external \
+  "
+  go build \
+    -ldflags "${_ldflags}" \
+    -o build
 }
 
 package() {
-    cd "${pkgname}/build"
-    install -Dm755 "${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
-    install -Dm644 "${srcdir}/${pkgname}/LICENSE.md" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-    install -Dm644 "${srcdir}/${pkgname}/nix/${_fqpn}.desktop" "${pkgdir}/usr/share/applications/${_fqpn}.desktop"
-    install -Dm644 "${srcdir}/${pkgname}/${_fqpn}.metainfo.xml" "${pkgdir}/usr/share/metainfo/${_fqpn}.metainfo.xml"
-    cp -r "${srcdir}/${pkgname}/internal/icons/hicolor/" "${pkgdir}/usr/share/icons/"
-    cp -r "${srcdir}/${pkgname}/internal/icons/scalable/" "${pkgdir}/usr/share/icons/hicolor/"
-    cp -r "${srcdir}/${pkgname}/internal/icons/symbolic/" "${pkgdir}/usr/share/icons/hicolor/"
-    install -Dm644 "${srcdir}/${pkgname}/nix/${_fqpn}.service" "${pkgdir}/usr/share/dbus-1/services/${_fqpn}.service"
-}
+  cd "${pkgname}"
 
+  install -Dm755 "build/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 "nix/${_fqpn}.desktop" "${pkgdir}/usr/share/applications/${_fqpn}.desktop"
+  install -Dm644 "nix/${_fqpn}.service" "${pkgdir}/usr/share/dbus-1/services/${_fqpn}.service"
+  install -Dm644 "${_fqpn}.metainfo.xml" "${pkgdir}/usr/share/metainfo/${_fqpn}.metainfo.xml"
+
+  cp -dr internal/icons/hicolor/ "${pkgdir}/usr/share/icons/"
+  cp -dr internal/icons/scalable/ "${pkgdir}/usr/share/icons/hicolor/"
+  cp -dr internal/icons/symbolic/ "${pkgdir}/usr/share/icons/hicolor/"
+}
