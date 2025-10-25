@@ -100,6 +100,7 @@ def main() -> int:
         base_path = ["+set", "fs_basepath", mount_dir]
 
     proc.setProgram(QStandardPaths.findExecutable(exe_name))
+    # doom_roe = ("+set", "fs_game", "d3xp",)
     proc.setArguments(["+set", "in_tty", "0", *base_path, *sys.argv])
     proc.start()
     proc.waitForFinished(-1)
