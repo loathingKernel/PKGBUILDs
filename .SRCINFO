@@ -6,6 +6,7 @@ pkgbase = vkbasalt
 	install = vkbasalt.install
 	arch = x86_64
 	license = zlib
+	makedepends = git
 	makedepends = meson
 	makedepends = ninja
 	makedepends = spirv-headers
@@ -13,8 +14,8 @@ pkgbase = vkbasalt
 	depends = gcc-libs
 	depends = glslang
 	depends = libx11
-	optdepends = reshade-shaders-git
-	source = https://github.com/DadSchoorse/vkBasalt/releases/download/v0.3.2.10/vkBasalt-0.3.2.10.tar.gz
-	sha256sums = eb196ff446fa36ec0ca99c4406d753c1fa210afddeec5e7a76e1c2e74ed605e3
+	source = git+https://github.com/DadSchoorse/vkBasalt.git#tag=v0.3.2.10
+	sha256sums = 9ff099c515e29d2acfbd5d328c5abedf56fd53d50b9b1380d41b41e3be8504fc
 
 pkgname = vkbasalt
+	optdepends = reshade-shaders-git
