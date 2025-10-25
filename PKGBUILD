@@ -3,16 +3,16 @@
 # Co-Maintainer: zoorat <zoorat [at] protonmail [dot] com>
 
 pkgname=aurutils
-pkgver=19.5
+pkgver=20.5.7
 pkgrel=1
 pkgdesc='helper tools for the arch user repository'
 url='https://github.com/AladW/aurutils'
 arch=('any')
-license=('custom:ISC')
+license=('ISC')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
 changelog=aurutils.changelog
 install=aurutils.install
-sha256sums=('26d00c1f3cdcef92962bcf92649416760fb935fea86fdd13439e4ce4873dcc37')
+sha256sums=('36390ba76eb2b2bda943bc1b7128b0bb4d4d51bc2ba9608dd83528f2642848fb')
 depends=('git' 'pacutils' 'curl' 'perl' 'perl-json-xs' 'bash')
 optdepends=('bash-completion: bash completion'
             'zsh: zsh completion'
@@ -21,7 +21,8 @@ optdepends=('bash-completion: bash completion'
             'ninja: aur-sync ninja support'
             'bat: view-delta example script'
             'git-delta: view-delta example script'
-            'python-srcinfo: sync-rebuild example script')
+            'python-srcinfo: sync-rebuild example script'
+            'expect: non-interactive usage')
 
 build() {
     cd "$pkgname-$pkgver"
