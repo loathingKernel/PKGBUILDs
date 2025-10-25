@@ -1,6 +1,6 @@
 pkgbase = ttf-ms-win10
 	pkgver = 10.0.19043.1055
-	pkgrel = 1
+	pkgrel = 2
 	url = http://www.microsoft.com/typography/fonts/product.aspx?PID=164
 	arch = any
 	license = custom
@@ -215,7 +215,7 @@ pkgbase = ttf-ms-win10
 	sha256sums = 3cced0162ddb9e5f1e63ee1b36fd6e581c090318dce1a0af01b77f5ea9952c80
 	sha256sums = d0dfad2f6bbe7ff7c0f96a0c80a28bd4f4624f900573a61abd9d29406d3775d7
 	sha256sums = 91283e8af7f9eca8b14b498b484b35d49c3bd3144ab7e25aa4934297138ea28b
-	sha256sums = 1fabce5448df08c9e000bf9749c07c365c5ffba31bfc73121c61b5b96ea498c0
+	sha256sums = e968d310e4cf8b695d293c70cf1d98ca4cacc823677c2464ff347b47907fa861
 	sha256sums = ba32a222b23d727267cf1aba4e5296fe84ce99b9d910915103fc085d7931bc88
 	sha256sums = 1b242874a2f57529060e770ba313e027a99d40b3c36e1c7e8b2dece16ad6ed88
 	sha256sums = 9adf7d619c593ee38c96af06bb15b4bd893e4087bcc1a0b7becee8f4ae15bb1c
@@ -293,7 +293,7 @@ pkgbase = ttf-ms-win10
 	sha256sums = ef2c245c5b895e4cb4fd67b1842141921ff17e5812d8daca7f1f7f760e848552
 	sha256sums = 21b256efb2eaaf7bbbf99865bcda5a3e04bb78d9740929d0d6e37d4cc50ae7b0
 	sha256sums = a5b742323c8da0fe29b0003fb0073969b757865fbf91789d32206397593c4d6a
-	sha256sums = SKIP
+	sha256sums = ee94189e240a6c554b4dcccb68238a885c8b803acd0ff3ffdc0d83bd33af066b
 
 pkgname = ttf-ms-win10
 	pkgdesc = Microsoft Windows 10 TrueType fonts
