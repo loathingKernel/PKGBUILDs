@@ -1,14 +1,14 @@
 pkgbase = pi-hole-web
 	pkgdesc = Pi-hole Dashboard for stats and more.
-	pkgver = 6.0.1
+	pkgver = 6.2.1
 	pkgrel = 1
 	url = https://github.com/pi-hole/pi-hole
 	install = pi-hole-web.install
 	arch = any
 	license = EUPL-1.2
-	source = web-6.0.1.tar.gz::https://github.com/pi-hole/web/archive/refs/tags/v6.0.1.tar.gz
-	source = https://raw.githubusercontent.com/max72bra/pi-hole-web-customization/main/arch-web-6.0.1-1.patch
-	sha256sums = a4dc870be359a8d7a95cbbeaa00e7901247f517ff221415b1d6155531ac2cdd8
-	sha256sums = 5a45c50c295561b7721e5c8447487d9aefb2069f8a1ba575396267c67b846260
+	source = web-6.2.1.tar.gz::https://github.com/pi-hole/web/archive/refs/tags/v6.2.1.tar.gz
+	source = https://raw.githubusercontent.com/max72bra/pi-hole-web-customization/main/arch-web-6.2.1-1.patch
+	sha256sums = 89c60c0013efba2865955a890fa6eb32fa4fc5f090a1d9c14a7472fcf3a5c35c
+	sha256sums = 635ccfdadf1f532d0c7e3e31777472a443064aab87ee099757570a689f9c5fc2
 
 pkgname = pi-hole-web
