@@ -8,6 +8,11 @@ import argparse
 from pathlib import Path
 from subprocess import CalledProcessError
 from typing import Sequence
+import logging
+
+format = "%(levelname)s: %(message)s"
+logging.basicConfig(stream=sys.stderr, format=format, level=logging.DEBUG)
+logger = logging.getLogger(os.path.basename(__file__))
 
 
 script_name = os.path.basename(__file__)
@@ -17,35 +22,53 @@ if script_prefix == "arch":
 elif script_prefix == "aur":
     repo_url = "ssh://aur@aur.archlinux.org"
 else:
-    print(f"Invalid script name {script_name}", file=sys.stderr)
+    logger.error("Invalid script name %s", script_name)
     sys.exit(1)
 
 
 def pcall(cmd: Sequence[str]) -> int:
+    logger.debug("Command: %s", cmd)
     try:
         comp = subprocess.run(cmd, check=True)
-        status = comp.returncode
+        ret = comp.returncode
     except CalledProcessError as error:
-        print(error)
-        status = error.returncode
-    return status
+        logger.exception(error)
+        ret = error.returncode
+    return ret
+
+
+def subtree(action: str, path: Path, squash: bool) -> int:
+    cmd = ["git", "subtree", action, f"--prefix={path}"]
+
+    if action in {"add", "push", "pull"}:
+        cmd.extend([f"{repo_url}/{path.stem}.git", "master"])
+    elif action == "split":
+        cmd.append("--rejoin")
+
+    if squash and action != "push":
+        cmd.append("--squash")
+
+    return pcall(cmd)
 
 
 if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser(prog=script_name, description="Manage subtrees for PKGBUILD repositories",)
-    parser.add_argument("action", action="store", choices={"add", "pull", "push", "split"})
+    parser = argparse.ArgumentParser(
+        prog=script_name,
+        description="Manage subtrees for PKGBUILD repositories",
+    )
+    parser.add_argument(
+        "action", action="store", choices={"add", "pull", "push", "split"}
+    )
     parser.add_argument("--squash", action="store_true", required=False)
-    parser.add_argument('paths', nargs='+')
+    parser.add_argument("paths", nargs="+")
 
     args = parser.parse_args()
-    print(args)
-
 
     if not os.path.exists(os.path.join(os.getcwd(), ".git")):
-        print(f"{os.getcwd()} is not a git repository or not the root of one.")
+        logger.error(
+            "'%s' is not a git repository or not the root of one.", os.getcwd()
+        )
         sys.exit(2)
-
 
     status = 0
     if args.action == "add":
@@ -53,58 +76,28 @@ if __name__ == "__main__":
             path = Path(path)
             if path.exists():
                 if path.is_dir():
-                    print(f"{path} exists and will be moved to {path}.old.")
-                    shutil.move(path, Path(f"{path}.old"))
+                    old_path = Path(f"{path}.old")
+                    logger.info(
+                        "'%s' exists and will be moved to '%s'.", path, old_path
+                    )
+                    shutil.move(path, old_path)
                     pcall(("git", "add", "-u", path))
                     pcall(("git", "commit", "-m", f"[subtree] {path}"))
                 else:
-                    print(f"{path} is not a directory and will be removed.")
+                    logger.info("'%s' is not a directory and will be removed.", path)
                     os.unlink(path)
-            cmd = [
-                "git",
-                "subtree",
-                "add",
-                f"--prefix={path}",
-                f"{repo_url}/{path.stem}.git",
-                "master",
-            ]
-            if args.squash:
-                cmd.append("--squash")
-            status = pcall(cmd)
+            status = subtree(args.action, path, args.squash)
 
-    elif args.action in {"pull", "push"}:
-        for path in args.paths:
-            path = Path(path)
-            if not path.is_dir:
-                print(f"{path} is not a directory and will be skipped.")
-                continue
-            cmd = [
-                "git",
-                "subtree",
-                args.action,
-                f"--prefix={path}",
-                f"{repo_url}/{path.stem}.git",
-                "master",
-            ]
-            if args.squash and args.action != "push":
-                cmd.append("--squash")
-            status = pcall(cmd)
-
-    elif args.action == "split":
+    elif args.action in {"pull", "push", "split"}:
         for path in args.paths:
             path = Path(path)
             if not path.is_dir():
-                print(f"{path} is not a directory and will be skipped.")
+                logger.info("'%s' is not a directory and will be skipped.", path)
                 continue
-            cmd = [
-                "git",
-                "subtree",
-                "split",
-                f"--prefix={path}",
-                "--rejoin",
-            ]
-            if args.squash:
-                cmd.append("--squash")
-            status = pcall(cmd)
+            status = subtree(args.action, path, args.squash)
+
+    else:
+        logger.error("How did you even get here????")
+        status = 22
 
     sys.exit(status)
