@@ -2,18 +2,18 @@
 
 pkgname=auracle-git
 _pkgname="${pkgname%-git}"
-pkgver=r373.fc335fc
+pkgver=r427.33f9097
 pkgrel=1
 pkgdesc='A flexible client for the AUR'
 arch=('x86_64' 'i686')
-url="https://github.com/inglor/auracle"
+url="https://github.com/falconindy/auracle"
 license=('MIT')
-depends=('pacman' 'libcurl.so' 'libsystemd')
-makedepends=('meson' 'git' 'perl' 'systemd')
+depends=('pacman' 'abseil-cpp' 'fmt' 'libcurl.so' 'libsystemd')
+makedepends=('meson' 'git' 'glaze' 'perl' 'systemd')
 checkdepends=('python' 'fakechroot' 'gtest')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
-source=("git+https://github.com/inglor/auracle")
+source=("git+$url")
 b2sums=('SKIP')
 
 pkgver() {
@@ -32,23 +32,23 @@ prepare() {
       patch -p1 -N -i "$srcdir/${filename##*/}"
     fi
   done
-}
-
-build() {
-  cd "$_pkgname"
 
   local meson_args=(
     --prefix=/usr
+    --libexecdir=lib
+    --sbindir=bin
     --buildtype=plain
     --default-library=static
+    -Db_pie=true
   )
 
   [[ -d build ]] && meson_args+=(--wipe)
 
-  # Some tests fail with these enabled
-  CFLAGS=${CFLAGS/,-D_GLIBCXX_ASSERTIONS/}
-  CXXFLAGS="${CFLAGS}"
-  meson build "${meson_args[@]}"
+  meson setup build "${meson_args[@]}"
+}
+
+build() {
+  cd "$_pkgname"
 
   meson compile -C build
 }
