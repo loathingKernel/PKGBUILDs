@@ -6,6 +6,7 @@ mingw-directx-headers/
 Vulkan-Headers/
 SPIRV-Headers/
 libdisplay-info/
+dxbc-spirv/
 *pkg.tar*
 msvc-wine/
 msvc/
