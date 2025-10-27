@@ -47,14 +47,13 @@ build() {
   ./tools/ui2py.sh --force
   ./tools/qrc2py.sh --force
   ./tools/ts2qm.py
-  SETUPTOOLS_SCM_PRETEND_VERSION="$(git describe --long | sed 's/-/./g' | cut -d . -f 1,2,3,4)" \
-    python -m setuptools_scm --force-write-version-files
+  export SETUPTOOLS_SCM_PRETEND_VERSION="$(git describe --long | sed 's/-/./g' | cut -d . -f 1,2,3,4)"
+  python -m setuptools_scm --force-write-version-files
   nuitka_opts=(
     '--output-dir=build'
     '--show-scons'
     '--clang'
     '--lto=no'
-    '--jobs=4'
     '--static-libpython=no'
     '--standalone'
     '--enable-plugin=anti-bloat'
@@ -79,8 +78,8 @@ build() {
     '--file-description=Rare.bin'
     '--company-name=RareDevs'
     '--product-name=Rare'
-    '--file-version=0.0.0.0'
-    '--product-version=0.0.0.0'
+    "--file-version=$SETUPTOOLS_SCM_PRETEND_VERSION"
+    "--product-version=$SETUPTOOLS_SCM_PRETEND_VERSION"
   )
   python -m nuitka "${nuitka_opts[@]}" rare < /dev/null
   deactivate
@@ -92,7 +91,7 @@ package() {
   install -Dm644 "misc/${pkgname%-git}.desktop" "$pkgdir/usr/share/applications/${pkgname%-git}.desktop"
   install -Dm644 "rare/resources/images/Rare.png" "$pkgdir/usr/share/pixmaps/${pkgname%-git}.png"
   cd build/rare.dist
-  find . -type f -exec install -Dm 644 {} "$pkgdir/opt/rare"/{} \;
+  find . -type f -exec install -Dm 644 "{}" "$pkgdir/opt/rare/{}" \;
   chmod 755 "$pkgdir/opt/rare/Rare.bin"
 }
 
