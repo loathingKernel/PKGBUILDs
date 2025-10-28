@@ -58,6 +58,7 @@ build() {
     '--standalone'
     '--enable-plugin=anti-bloat'
     '--enable-plugin=pyside6'
+    '--enable-plugin=multiprocessing'
     '--show-modules'
     '--show-anti-bloat-changes'
     '--follow-stdlib'
