@@ -11,7 +11,7 @@ pkgver=${_srctag//-/.}
 _geckover=2.47.4
 _monover=10.3.0
 _xaliaver=0.4.6
-pkgrel=1
+pkgrel=2
 epoch=2
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -207,12 +207,12 @@ package() {
   cd "$srcdir/$pkgname-32-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
-    dlldir="$pkgdir/usr/lib/wine" install-lib
+    dlldir="$pkgdir/usr/lib/wine" install
 
   cd "$srcdir/$pkgname-64-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
-    dlldir="$pkgdir/usr/lib/wine" install-lib
+    dlldir="$pkgdir/usr/lib/wine" install
 
   # Font aliasing settings for Win32 applications
   install -d "$pkgdir"/usr/share/fontconfig/conf.{avail,default}
@@ -222,9 +222,6 @@ package() {
 
   i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.{dll,exe}
   x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe}
-
-  find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
-  find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
 
   # Install wine-gecko
   cd "$srcdir"
