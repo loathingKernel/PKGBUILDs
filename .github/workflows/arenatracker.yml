@@ -1,20 +1,31 @@
+
 name: arenatracker
 
 on:
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - public/arenatracker/.SRCINFO
+      - public/arenatracker/.SRCINFO
 
 jobs:
   repository:
     strategy:
       matrix:
-        include:
-          - repository: public
+        repository: [public]
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: public/arenatracker
       repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
