@@ -1,0 +1,34 @@
+
+name: anypaper
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Repository action"
+        required: true
+        type: choice
+        default: 'build'
+        options:
+          - 'build'
+          - 'remove'
+          - 'skip'
+  push:
+    branches:
+      - master
+    paths:
+      - local/anypaper/.SRCINFO
+
+jobs:
+  repository:
+    strategy:
+      matrix:
+        include:
+          - repository: public
+            pkgbuild: PKGBUILD.vcs
+    uses: ./.github/workflows/_job_pkgrepo.yml
+    with:
+      pkgdir: local/anypaper
+      repository: ${{ matrix.repository }}
+      action: ${{ inputs.action != '' && inputs.action || 'build' }}
+      pkgbuild: ${{ matrix.pkgbuild }}
