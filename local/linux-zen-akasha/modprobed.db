@@ -28,6 +28,7 @@ crc32_pclmul
 crc_itu_t
 crct10dif_pclmul
 cryptd
+crypto_lz4
 crypto_simd
 crypto_user
 curve25519_x86_64
@@ -75,6 +76,7 @@ intel_uncore
 ip6_udp_tunnel
 ipmi_devintf
 ipmi_msghandler
+ip_set
 iptable_filter
 iptable_nat
 ip_tables
@@ -173,9 +175,12 @@ sha512_ssse3
 snd
 snd_compress
 snd_hda_codec
+snd_hda_codec_alc882
 snd_hda_codec_generic
 snd_hda_codec_hdmi
+snd_hda_codec_nvhdmi
 snd_hda_codec_realtek
+snd_hda_codec_realtek_lib
 snd_hda_core
 snd_hda_intel
 snd_hda_scodec_component
@@ -227,6 +232,8 @@ winesync
 wireguard
 wmi
 x86_pkg_temp_thermal
+xfrm_algo
+xfrm_user
 xhci_hcd
 xhci_pci
 xhci_pci_renesas
@@ -239,6 +246,7 @@ xt_comment
 xt_conntrack
 xt_MASQUERADE
 xt_nat
+xt_set
 xt_state
 xt_tcpudp
 zram
