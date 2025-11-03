@@ -20,7 +20,7 @@ source=($_pkgname-$pkgver.tar.gz::https://github.com/$_mainpkgname/$_pkgname/arc
 )
 
 sha256sums=('33aa568a08c54419fdc39687b6c7ab085dcada528e9d51cb928f4a8abc4e46e0'
-            'e6eb3b4c3e2e87eb1ae6ee939e41b8ed2324dddae9659fca283c1654c2ef3507')
+            '5678a1a5668c98d8d0b3f0fc9696c32f08172cd546934c4cd5bf2a67bf732171')
 
 prepare() {
   cd "$srcdir"/"$_pkgname"-"$pkgver"
