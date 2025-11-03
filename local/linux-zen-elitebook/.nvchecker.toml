@@ -1,0 +1,7 @@
+[linux-zen]
+source = "git"
+git = "https://github.com/zen-kernel/zen-kernel.git"
+include_regex = 'v\d+(\.\d+)*-zen\d+'
+from_pattern = '-([a-z])'
+to_pattern = '.\1'
+prefix = "v"

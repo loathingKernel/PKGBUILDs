@@ -187,9 +187,12 @@ snd
 snd_compress
 snd_ctl_led
 snd_hda_codec
+snd_hda_codec_alc269
 snd_hda_codec_generic
 snd_hda_codec_hdmi
+snd_hda_codec_intelhdmi
 snd_hda_codec_realtek
+snd_hda_codec_realtek_lib
 snd_hda_core
 snd_hda_intel
 snd_hda_scodec_component
