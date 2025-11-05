@@ -12,8 +12,8 @@ _tag="20251104"
 # When updating, needs to be manually changed to the mingw_commit echoed during prepare().
 mingw_commit="287a0d4d478e3575d082ba37ce4dcba86524fc9e"
 
-pkgdesc="A self-contained LLVM/Clang/LLD based mingw-w64 toolchain for i686 and x86_64 targets"
-arch=('x86_64')
+pkgdesc="A self-contained LLVM/Clang/LLD based mingw-w64 toolchain targeting i686, x86-64, armv7, and aarch64"
+arch=('any')
 url="https://github.com/mstorsjo/${pkgname}"
 license=(
   'LicenseRef-custom'
@@ -101,8 +101,8 @@ build() {
   export DISPLAY=
   export WAYLAND_DISPLAY=
 
-  # Configure to build only i686 and x86_64 targets (default builds i686, x86_64, armv7, aarch64)
-  export TOOLCHAIN_ARCHS="i686 x86_64"
+  # Configure target architectures
+  export TOOLCHAIN_ARCHS="i686 x86_64 armv7 aarch64"
 
   # Flags from GH Actions workflow
   export LLVM_CMAKEFLAGS="-DLLVM_ENABLE_BINDINGS=OFF -DLLVM_ENABLE_LIBXML2=OFF -DLLVM_ENABLE_TERMINFO=OFF -DLLDB_ENABLE_PYTHON=OFF"

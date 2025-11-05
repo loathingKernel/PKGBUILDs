@@ -1,9 +1,9 @@
 pkgbase = llvm-mingw
-	pkgdesc = A self-contained LLVM/Clang/LLD based mingw-w64 toolchain for i686 and x86_64 targets
+	pkgdesc = A self-contained LLVM/Clang/LLD based mingw-w64 toolchain targeting i686, x86-64, armv7, and aarch64
 	pkgver = 21.1.5+20251104
 	pkgrel = 1
 	url = https://github.com/mstorsjo/llvm-mingw
-	arch = x86_64
+	arch = any
 	groups = mingw-w64-toolchain
 	groups = mingw-w64
 	license = LicenseRef-custom
