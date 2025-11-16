@@ -173,6 +173,7 @@ build() {
     --with-alsa \
     --with-ffmpeg \
     --without-oss \
+    --disable-lsteamclient \
     --disable-tests \
     --enable-archs=x86_64,i386
 
