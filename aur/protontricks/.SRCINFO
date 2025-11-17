@@ -1,7 +1,7 @@
 pkgbase = protontricks
 	pkgdesc = Run Winetricks commands for Steam Play/Proton games among other common Wine features
-	pkgver = 1.13.0
-	pkgrel = 3
+	pkgver = 1.13.1
+	pkgrel = 1
 	url = https://github.com/Matoking/protontricks
 	arch = any
 	license = GPL-3.0-or-later
@@ -19,7 +19,7 @@ pkgbase = protontricks
 	optdepends = zenity: GUI for winetricks
 	provides = protontricks
 	conflicts = protontricks-git
-	source = protontricks-1.13.0::git+https://github.com/Matoking/protontricks.git#tag=1.13.0
+	source = protontricks-1.13.1::git+https://github.com/Matoking/protontricks.git#tag=1.13.1
 	source = protontricks.desktop
 	source = protontricks.png
 	sha512sums = SKIP
