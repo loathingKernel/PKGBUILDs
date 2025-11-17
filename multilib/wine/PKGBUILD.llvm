@@ -5,7 +5,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=10.18
+pkgver=10.19
 pkgrel=1
 _tkg_commit=2b032b4df78329f34ce68e6dac59b76858fb6f55
 
@@ -21,7 +21,7 @@ source+=(
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
         wine-sauce.patch
 )
-sha512sums=('e79fd61a4ebc7166fcfec5da5485e545dad2cf94d5985124f6b0ce154261ef47d40a0207e34e02b28c1fddf7e819c34cae5fb3c150f2574e78c9213436386c4c'
+sha512sums=('49c670fe848aa3615416d57c3ada93cd605cdb206140c098bfda115d836237d080e98032e0969d5b321daf10f5dba0b6101aee3971c0f21e9cfad2a24325d9bb'
             '14a97ee7c9a023cf8b7cf8392325540ccc2e22673dd624d3add8e759c06ae98373fd3904835980803d661a174febfc2a3ad05e9e574b80435ebdcb7cc217fa31'
             '61e0176986a9794855eb89367b123413039c5c4a8a16ce9bdc65abc7668ae48e7d4fd9feeeb4d300888998d44bb5c457f19a8defb482edefd719a7dfdced3235'
             '244e6ca6321a322508786434789e096fb4e25c37e7f600dd11c33b93adf0685c804730641e90e4348e5ba756a030c26532f44ba22950e3c2766b44628db00030'
