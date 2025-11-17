@@ -1,6 +1,6 @@
 pkgbase = wine-staging
 	pkgdesc = A compatibility layer for running Windows programs - Staging branch
-	pkgver = 10.18
+	pkgver = 10.19
 	pkgrel = 1
 	url = https://www.wine-staging.com
 	install = wine.install
@@ -116,13 +116,13 @@ pkgbase = wine-staging
 	optdepends = wine-mono
 	optdepends = ntsync-common
 	optdepends = NTSYNC-MODULE
-	provides = wine=10.18
+	provides = wine=10.19
 	conflicts = wine
 	options = !staticlibs
 	options = !lto
 	options = !debug
-	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-10.18
-	source = git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v10.18
+	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-10.19
+	source = git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v10.19
 	source = compatibilitytool.vdf
 	source = toolmanifest.vdf
 	source = miniproton
@@ -132,8 +132,8 @@ pkgbase = wine-staging
 	source = wine-sauce.patch
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = e79fd61a4ebc7166fcfec5da5485e545dad2cf94d5985124f6b0ce154261ef47d40a0207e34e02b28c1fddf7e819c34cae5fb3c150f2574e78c9213436386c4c
-	sha512sums = 7dfc1c77e7a9fdd0008279825449601f8e0c6014c314f97ac4b13a7d5a4e79213033845628e46c9c96aa77099267e3962e24d0086a9e2d531d961b09e5f7ce32
+	sha512sums = 49c670fe848aa3615416d57c3ada93cd605cdb206140c098bfda115d836237d080e98032e0969d5b321daf10f5dba0b6101aee3971c0f21e9cfad2a24325d9bb
+	sha512sums = 7946ebe3db46cf3ba465966a933b26391fb2d6e1deec6a061dd8753cd5fb54e7b115de68f1ff0d2eb748eb709c00389230e1206da72307d8e84e6609daf0d8a4
 	sha512sums = c06f44bd8f7de3d2251c66f5795bd5ccc45977486855519b3e76396a8c3aa87c18ac905891fd8925f5937ece3ff8d431c8bfa94f96324e101aa249be239965cb
 	sha512sums = 61e0176986a9794855eb89367b123413039c5c4a8a16ce9bdc65abc7668ae48e7d4fd9feeeb4d300888998d44bb5c457f19a8defb482edefd719a7dfdced3235
 	sha512sums = 244e6ca6321a322508786434789e096fb4e25c37e7f600dd11c33b93adf0685c804730641e90e4348e5ba756a030c26532f44ba22950e3c2766b44628db00030
