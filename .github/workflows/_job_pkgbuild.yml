@@ -53,7 +53,7 @@ jobs:
           *llvm*
           mysql*
           dotnet-sdk-*
-        remove_packages_one_command: true
+        remove_packages_one_command: false
         remove_folders: >-
           /usr/share/swift
           /usr/share/miniconda
