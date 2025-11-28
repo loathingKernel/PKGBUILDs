@@ -29,10 +29,43 @@ on:
 
 jobs:
   pkgbuild:
-    runs-on: archlinux:base-devel
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v6
+
+    - name: Debloat GitHub runner
+      uses: endersonmenezes/free-disk-space@v3
+      with:
+        remove_android: true
+        remove_dotnet: true
+        remove_haskell: true
+        remove_tool_cache: true
+        remove_swap: true
+        remove_packages: >-
+          azure-cli
+          google-cloud-cli
+          microsoft-edge-stable
+          google-chrome-stable
+          firefox
+          postgresql*
+          temurin-*
+          *llvm*
+          mysql*
+          dotnet-sdk-*
+        remove_packages_one_command: true
+        remove_folders: >-
+          /usr/share/swift
+          /usr/share/miniconda
+          /usr/share/az*
+          /usr/local/lib/node_modules
+          /usr/local/share/chromium
+          /usr/local/share/powershell
+          /usr/local/julia
+          /usr/local/aws-cli
+          /usr/local/aws-sam-cli
+          /usr/share/gradle
+        testing: false
 
     - name: Restore cache
       id: ccache-restore
@@ -43,23 +76,18 @@ jobs:
         restore-keys: |
           ${{ github.workflow }}-${{ inputs.release_tag }}
 
-    - name: Install prerequisites
-      run: |
-        sudo pacman -Syu --noconfirm extra/github-cli
-
     - name: Run 'pkgbuild' action
       id: pkgbuild
-      env:
-        INPUT_PKGDIR: ${{ inputs.pkgdir }}
-        INPUT_NAMCAPDISABLE: true
-        INPUT_PACMANCONF: ${{ inputs.pacman_conf }}
-        INPUT_MAKEPKGCONF: ${{ inputs.makepkg_conf }}
-        INPUT_MAKEPKGARGS: ${{ inputs.makepkg_args }}
-        INPUT_MULTILIB: ${{ inputs.multilib }}
-        INPUT_USECCACHEEXT: ${{ inputs.ccache_ext }}
-        INPUT_REPORELEASETAG: ${{ inputs.release_tag }}
-      run: |
-        ./.github/actions/entrypoint.sh
+      uses: ./.github/actions/pkgbuild
+      with:
+        pkgdir: ${{ inputs.pkgdir }}
+        namcapDisable: true
+        pacmanConf: ${{ inputs.pacman_conf }}
+        makepkgConf: ${{ inputs.makepkg_conf }}
+        makepkgArgs: ${{ inputs.makepkg_args }}
+        multilib: ${{ inputs.multilib }}
+        useCcacheExt: ${{ inputs.ccache_ext }}
+        repoReleaseTag: ${{ inputs.release_tag }}
 
     - name: Save cache
       id: ccache-save
