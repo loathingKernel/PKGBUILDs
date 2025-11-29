@@ -68,5 +68,5 @@ package() {
     org.dhewm3.Dhewm3.d3xp.desktop > org.dhewm3.Dhewm3.d3xp.launcher.desktop
 }
 
-sha256sums=('SKIP'
-            'be258d88d43dff6b2e1bb2955597d7af6d5ac128d7c99f7106919dbc12c5a747')
+sha256sums=('ceeb46ccb4b43006b5506794b6f1b7873447d11b1efaf2c44236c34ee288ad4b'
+            '0ca160bc573053b8616dbac452cb05c44bb7f9578685f79d7880be6145a16a6c')
