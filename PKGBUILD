@@ -2,7 +2,7 @@
 
 pkgname=jay
 pkgver=1.11.1
-pkgrel=1
+pkgrel=2
 pkgdesc='A Wayland Compositor'
 arch=('x86_64')
 license=(GPL-3.0-only)
@@ -31,16 +31,22 @@ options=(!lto)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/mahkoh/jay/archive/v$pkgver.tar.gz")
 sha512sums=('a6db2e46c1b5dfdbee28d9405243011b128a352611fd2403029b08fab27d25d1a86c83b152231abaffed7e37be3d2a738e2b6e9b4ec220bddfa5793ba6be26b4')
 
+prepare() {
+  cd $pkgname-$pkgver/
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
 build() {
   cd $pkgname-$pkgver/
   export RUSTUP_TOOLCHAIN=stable
-  cargo build --release --locked
+  cargo build --frozen --release
 }
 
 check() {
   cd $pkgname-$pkgver/
   export RUSTUP_TOOLCHAIN=stable
-  cargo test --release --locked
+  cargo test --frozen --release
 }
 
 package() {
