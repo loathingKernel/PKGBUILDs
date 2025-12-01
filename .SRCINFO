@@ -1,7 +1,7 @@
 pkgbase = jay
 	pkgdesc = A Wayland Compositor
 	pkgver = 1.11.1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/mahkoh/jay
 	arch = x86_64
 	license = GPL-3.0-only
