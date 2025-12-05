@@ -1,6 +1,6 @@
 pkgbase = wine-staging
 	pkgdesc = A compatibility layer for running Windows programs - Staging branch
-	pkgver = 10.19
+	pkgver = 10.20
 	pkgrel = 1
 	url = https://www.wine-staging.com
 	install = wine.install
@@ -116,30 +116,30 @@ pkgbase = wine-staging
 	optdepends = wine-mono
 	optdepends = ntsync-common
 	optdepends = NTSYNC-MODULE
-	provides = wine=10.19
+	provides = wine=10.20
 	conflicts = wine
 	options = !staticlibs
 	options = !lto
 	options = !debug
-	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-10.19
-	source = git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v10.19
+	source = git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-10.20
+	source = git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v10.20
 	source = compatibilitytool.vdf
 	source = toolmanifest.vdf
 	source = miniproton
 	source = 30-win32-aliases.conf
 	source = wine-binfmt.conf
-	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=2b032b4df78329f34ce68e6dac59b76858fb6f55
+	source = git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=d9840ddec9d53f7379929ac3c8dc25ccf4d326be
 	source = wine-sauce.patch
 	validpgpkeys = 5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
 	validpgpkeys = DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D
-	sha512sums = 49c670fe848aa3615416d57c3ada93cd605cdb206140c098bfda115d836237d080e98032e0969d5b321daf10f5dba0b6101aee3971c0f21e9cfad2a24325d9bb
-	sha512sums = 7946ebe3db46cf3ba465966a933b26391fb2d6e1deec6a061dd8753cd5fb54e7b115de68f1ff0d2eb748eb709c00389230e1206da72307d8e84e6609daf0d8a4
+	sha512sums = 6a082b9b0142631b199d63deb03fc44f0856515b955c1126c9f6547c88ca89df47e45bb220d10f1ab89bc5a36d3141bbcfdd38fc477ba574b9bd601f5a6d17e1
+	sha512sums = bd6722823cdbeae6e886f72679fbc4c1bde8393db359de3912bf591bb5251d37b014a6755673bf5d025324630ef246e855cbdc8ae2d0f5a77be30aa3ca87307d
 	sha512sums = c06f44bd8f7de3d2251c66f5795bd5ccc45977486855519b3e76396a8c3aa87c18ac905891fd8925f5937ece3ff8d431c8bfa94f96324e101aa249be239965cb
 	sha512sums = 61e0176986a9794855eb89367b123413039c5c4a8a16ce9bdc65abc7668ae48e7d4fd9feeeb4d300888998d44bb5c457f19a8defb482edefd719a7dfdced3235
 	sha512sums = 244e6ca6321a322508786434789e096fb4e25c37e7f600dd11c33b93adf0685c804730641e90e4348e5ba756a030c26532f44ba22950e3c2766b44628db00030
 	sha512sums = 6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb
 	sha512sums = bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285
-	sha512sums = ab3294d1ee799fce9b1567a1837f7001265eb31f7422875c33b6f2ed741ce667dd1bf52b435502004560bbe221d868680c85498d0f616ce75f3599d293e67ef6
-	sha512sums = b5a041f19faa71373e0d9a502504ab71f7cc36fed4a88d89c02ccd03d85925c9b62e95f5ab8fc010f788ba75ea27cfbf397f0fb54185ba3c6a565663f01ccffc
+	sha512sums = 8824cba32694080de9c28094bdb4cc404432409ecc4025fe83a7c46762070d22d5557907817fd9c2e52057cb3c9473d4cd7d19584f88a528539e6ef339d5a9d5
+	sha512sums = 2e1f4872e6adcafe6aa5959e46058f30a3deda3b2e9cc5b699a1c2efa7041b111366a368832e213383d5b0ed3b488cf5d2725df938a99389d029d34726d3dde7
 
 pkgname = wine-staging
