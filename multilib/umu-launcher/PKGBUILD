@@ -80,6 +80,8 @@ pkgver() {
 prepare() {
   cd "$srcdir"/umu-launcher
 
+  git config --global user.email "builder@builder.org"
+  git config --global user.name "Bob the Builder"
   git am -3  "$srcdir/574.patch"
 
   export RUSTUP_TOOLCHAIN=stable
