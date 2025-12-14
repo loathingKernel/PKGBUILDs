@@ -17,7 +17,7 @@ _gpgerrorver=1.57
 _libassuanver=3.0.0
 _gpgmever=2.0.1
 _libseccompver=2.5.6
-pkgrel=2
+pkgrel=3
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.1.0
 _git_patch_level_commit=b9f7d4a5b0bea75953f5892621a2caecc5672de5
@@ -26,7 +26,7 @@ arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
 license=('GPL-2.0-or-later')
 depends=('pacman')
-makedepends=('meson' 'musl' 'kernel-headers-musl' 'git' 'automake' 'autoconf' 'gperf')
+makedepends=('meson' 'musl' 'kernel-headers-musl' 'git' 'gperf')
 options=('!emptydirs' '!lto')
 
 # pacman
