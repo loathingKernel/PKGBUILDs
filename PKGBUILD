@@ -17,7 +17,7 @@ _gpgerrorver=1.57
 _libassuanver=3.0.0
 _gpgmever=2.0.1
 _libseccompver=2.5.6
-pkgrel=1
+pkgrel=2
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.1.0
 _git_patch_level_commit=b9f7d4a5b0bea75953f5892621a2caecc5672de5
@@ -131,11 +131,6 @@ if [[ $CARCH = i686 || $CARCH = pentium4 || $CARCH = i486 ]]; then
     export CXX="musl-gcc -fno-stack-protector"
     export CFLAGS="${CFLAGS/-fstack-protector-strong/}"
     export CXXFLAGS="${CXXFLAGS/-fstack-protector-strong/}"
-fi
-
-# on ArchlinuyxArm: nghttp2 enables musl-gcc with -std=c++14, force c++17
-if [[ $CARCH = aarch64 || $CARCH = armv7h || $CARCH = armv6h ]]; then
-    export CXX="${CXX} -std=c++17"
 fi
 
 # to enable func64 interface in musl for 64-bit file system functions
@@ -284,7 +279,7 @@ build() {
     # but seems to be needed for static builds
     cd "${srcdir}"/c-ares-${_cares_ver}
     ./configure --prefix="${srcdir}"/temp/usr \
-        --disable-shared
+        --disable-shared --disable-tests
     make -C src/lib
     make install-pkgconfigDATA
     make -C src/lib install
