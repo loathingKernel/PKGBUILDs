@@ -2,6 +2,7 @@
 name: python-hmmlearn
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:

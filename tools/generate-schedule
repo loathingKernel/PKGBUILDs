@@ -1,0 +1,118 @@
+#!/usr/bin/python3
+
+import argparse
+import os
+import subprocess
+import sys
+from pathlib import Path
+import logging
+
+format = "%(levelname)s: %(message)s"
+logging.basicConfig(stream=sys.stderr, format=format, level=logging.DEBUG)
+logger = logging.getLogger(os.path.basename(__file__))
+
+script_name = os.path.basename(__file__)
+
+workflows_folder = ".github/workflows/"
+workflows_path = Path(workflows_folder)
+
+workflow_base = """
+name: _job_schedule_{name}
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '{cron}'
+
+jobs:
+"""
+
+job_first = """
+  {current}:
+    uses: ./.github/workflows/{current}.yml
+"""
+
+job_base = """
+  {current}:
+    needs: {previous}
+    uses: ./.github/workflows/{current}.yml
+"""
+
+packages = {
+    "daily": (),
+    "weekly": (
+        'dxvk-mingw-git',
+        'dxvk-msvc-git',
+        'dxvk-nvapi-mingw-git',
+        'dxvk-nvapi-vkreflex-layer-git',
+        'vkd3d-proton-mingw-git',
+        'dxvk-sarek-async-mingw-git',
+        'dxvk-gplasync-mingw-git',
+        'dolphin-emu-git',
+        'rare-git',
+    ),
+    "biweekly": (
+        'auracle-git',
+        'awesome',
+        'vicious',
+        'lgogdownloader-git',
+        'lgogdownloader-qt5-git',
+        'mangohud-git',
+        'lib32-mangohud-git',
+        'ppsspp-git',
+        'rbdoom-3-bfg',
+        'dhewm3',
+    ),
+    "monthly": (),
+}
+
+cron = {
+    "daily": "0 15 * * *",
+    "weekly": "0 0 */7 * *",
+    "biweekly": "0 0 */13 * *",
+    "monthly": "0 0 */27 * *",
+}
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        prog=script_name,
+        description="Manage subtrees for PKGBUILD repositories",
+    )
+    parser.add_argument(
+        "--schedule", action="store", choices={"weekly", "biweekly", "monthly"}, default="weekly", required=True
+    )
+    args = parser.parse_args()
+
+    if not os.path.exists(os.path.join(os.getcwd(), ".git")):
+        logger.error(
+            "'%s' is not a git repository or not the root of one.", os.getcwd()
+        )
+        sys.exit(2)
+
+    if not os.path.isdir(workflows_folder):
+        logger.error(
+            "'%s' is not a configured GitHub repository.", os.getcwd()
+        )
+        sys.exit(2)
+
+    workflow_file = workflows_path.joinpath(f"_job_schedule_{args.schedule}.yml")
+
+    if not packages[args.schedule]:
+        logger.info("schedule '%s' is empty", args.schedule)
+        sys.exit(1)
+
+    logger.info("generating workflow for '%s' builds", args.schedule)
+    with workflow_file.open("w") as wf:
+        wf.write(workflow_base.format(name=args.schedule, cron=cron[args.schedule]))
+
+        package = packages[args.schedule][0]
+        wf.write(job_first.format(current=package))
+
+        previous = package
+        for package in packages[args.schedule][1:]:
+            wf.write(job_base.format(current=package, previous=previous))
+            previous = package
+
+    subprocess.run(['git', 'add', workflow_file.as_posix()])
+    subprocess.run(['git', 'commit', '-m', f'workflows: update {args.schedule} workflow'])
+    sys.exit(0)

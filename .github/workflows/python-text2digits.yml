@@ -1,6 +1,7 @@
 name: python-text2digits
 
 on:
+  workflow_call:
   workflow_dispatch:
   push:
     branches:

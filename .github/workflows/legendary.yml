@@ -2,6 +2,7 @@
 name: legendary
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:

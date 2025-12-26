@@ -2,6 +2,7 @@
 name: aurutils
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:

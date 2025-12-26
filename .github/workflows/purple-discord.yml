@@ -2,6 +2,7 @@
 name: purple-discord
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:

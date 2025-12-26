@@ -2,6 +2,7 @@
 name: ksmbd-tools
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:

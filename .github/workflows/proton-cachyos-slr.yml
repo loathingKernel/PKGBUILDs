@@ -2,6 +2,7 @@
 name: proton-cachyos-slr
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:

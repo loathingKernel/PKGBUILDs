@@ -2,6 +2,7 @@
 name: vkd3d-proton-mingw
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:

@@ -20,6 +20,7 @@ workflow_base = """
 name: {pkgname}
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:
@@ -53,7 +54,7 @@ jobs:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog=script_name,
-        description="Manage subtrees for PKGBUILD repositories",
+        description="Generate workflow for packaging a PKGBUILD",
     )
     parser.add_argument(
         "--repotag", action="store", choices={"public", "personal", "all"}, default="public", required=True

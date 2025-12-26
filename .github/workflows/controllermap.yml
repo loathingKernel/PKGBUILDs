@@ -2,6 +2,7 @@
 name: controllermap
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:

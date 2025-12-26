@@ -2,6 +2,7 @@
 name: lib32-gperftools
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:

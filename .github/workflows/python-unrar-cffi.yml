@@ -1,6 +1,7 @@
 name: python-unrar-cffi
 
 on:
+  workflow_call:
   workflow_dispatch:
   push:
     branches:

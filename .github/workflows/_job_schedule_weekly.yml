@@ -1,0 +1,44 @@
+
+name: _job_schedule_weekly
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 */7 * *'
+
+jobs:
+
+  dxvk-mingw-git:
+    uses: ./.github/workflows/dxvk-mingw-git.yml
+
+  dxvk-msvc-git:
+    needs: dxvk-mingw-git
+    uses: ./.github/workflows/dxvk-msvc-git.yml
+
+  dxvk-nvapi-mingw-git:
+    needs: dxvk-msvc-git
+    uses: ./.github/workflows/dxvk-nvapi-mingw-git.yml
+
+  dxvk-nvapi-vkreflex-layer-git:
+    needs: dxvk-nvapi-mingw-git
+    uses: ./.github/workflows/dxvk-nvapi-vkreflex-layer-git.yml
+
+  vkd3d-proton-mingw-git:
+    needs: dxvk-nvapi-vkreflex-layer-git
+    uses: ./.github/workflows/vkd3d-proton-mingw-git.yml
+
+  dxvk-sarek-async-mingw-git:
+    needs: vkd3d-proton-mingw-git
+    uses: ./.github/workflows/dxvk-sarek-async-mingw-git.yml
+
+  dxvk-gplasync-mingw-git:
+    needs: dxvk-sarek-async-mingw-git
+    uses: ./.github/workflows/dxvk-gplasync-mingw-git.yml
+
+  dolphin-emu-git:
+    needs: dxvk-gplasync-mingw-git
+    uses: ./.github/workflows/dolphin-emu-git.yml
+
+  rare-git:
+    needs: dolphin-emu-git
+    uses: ./.github/workflows/rare-git.yml

@@ -2,6 +2,7 @@
 name: lib32-ncurses5-compat-libs
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:

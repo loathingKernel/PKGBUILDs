@@ -1,0 +1,48 @@
+
+name: _job_schedule_biweekly
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 */13 * *'
+
+jobs:
+
+  auracle-git:
+    uses: ./.github/workflows/auracle-git.yml
+
+  awesome:
+    needs: auracle-git
+    uses: ./.github/workflows/awesome.yml
+
+  vicious:
+    needs: awesome
+    uses: ./.github/workflows/vicious.yml
+
+  lgogdownloader-git:
+    needs: vicious
+    uses: ./.github/workflows/lgogdownloader-git.yml
+
+  lgogdownloader-qt5-git:
+    needs: lgogdownloader-git
+    uses: ./.github/workflows/lgogdownloader-qt5-git.yml
+
+  mangohud-git:
+    needs: lgogdownloader-qt5-git
+    uses: ./.github/workflows/mangohud-git.yml
+
+  lib32-mangohud-git:
+    needs: mangohud-git
+    uses: ./.github/workflows/lib32-mangohud-git.yml
+
+  ppsspp-git:
+    needs: lib32-mangohud-git
+    uses: ./.github/workflows/ppsspp-git.yml
+
+  rbdoom-3-bfg:
+    needs: ppsspp-git
+    uses: ./.github/workflows/rbdoom-3-bfg.yml
+
+  dhewm3:
+    needs: rbdoom-3-bfg
+    uses: ./.github/workflows/dhewm3.yml

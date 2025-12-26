@@ -2,6 +2,7 @@
 name: font-config-info-git
 
 on:
+  workflow_call:
   workflow_dispatch:
     inputs:
       action:
