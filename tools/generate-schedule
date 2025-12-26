@@ -47,7 +47,6 @@ packages = {
         'dxvk-nvapi-vkreflex-layer-git',
         'vkd3d-proton-mingw-git',
         'dxvk-sarek-async-mingw-git',
-        'dxvk-gplasync-mingw-git',
         'dolphin-emu-git',
         'rare-git',
     ),
