@@ -23,12 +23,8 @@ jobs:
     needs: vicious
     uses: ./.github/workflows/lgogdownloader-git.yml
 
-  lgogdownloader-qt5-git:
-    needs: lgogdownloader-git
-    uses: ./.github/workflows/lgogdownloader-qt5-git.yml
-
   mangohud-git:
-    needs: lgogdownloader-qt5-git
+    needs: lgogdownloader-git
     uses: ./.github/workflows/mangohud-git.yml
 
   lib32-mangohud-git:
