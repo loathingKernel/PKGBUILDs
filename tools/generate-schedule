@@ -48,8 +48,8 @@ packages = {
 #        'dxvk-gplasync-mingw-git',
         'vkd3d-proton-mingw-git',
         'dxvk-sarek-async-mingw-git',
-        'dolphin-emu-git',
         'rare-git',
+        'dolphin-emu-git',
     ),
     "biweekly": (
         'auracle-git',
