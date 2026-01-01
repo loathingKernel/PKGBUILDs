@@ -31,10 +31,10 @@ jobs:
     needs: vkd3d-proton-mingw-git
     uses: ./.github/workflows/dxvk-sarek-async-mingw-git.yml
 
-  dolphin-emu-git:
-    needs: dxvk-sarek-async-mingw-git
-    uses: ./.github/workflows/dolphin-emu-git.yml
-
   rare-git:
-    needs: dolphin-emu-git
+    needs: dxvk-sarek-async-mingw-git
     uses: ./.github/workflows/rare-git.yml
+
+  dolphin-emu-git:
+    needs: rare-git
+    uses: ./.github/workflows/dolphin-emu-git.yml
