@@ -31,3 +31,4 @@ jobs:
       repository: ${{ matrix.repository }}
       action: ${{ inputs.action != '' && inputs.action || 'build' }}
       multilib: true
+      debloat: true
