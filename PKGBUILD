@@ -2,7 +2,7 @@
 
 pkgname=jay
 pkgver=1.11.1
-pkgrel=3
+pkgrel=4
 pkgdesc='A Wayland Compositor'
 arch=('x86_64')
 license=(GPL-3.0-only)
@@ -12,9 +12,12 @@ provides=(
 )
 depends=(
   cairo
+  gcc-libs
+  glib2
+  glibc
   libinput
-  libudev.so
-  libvulkan.so
+  libudev.so=1
+  libvulkan.so=1
   mesa
   pango
 )

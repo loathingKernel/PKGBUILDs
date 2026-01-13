@@ -1,7 +1,7 @@
 pkgbase = jay
 	pkgdesc = A Wayland Compositor
 	pkgver = 1.11.1
-	pkgrel = 3
+	pkgrel = 4
 	url = https://github.com/mahkoh/jay
 	install = jay.install
 	arch = x86_64
@@ -10,9 +10,12 @@ pkgbase = jay
 	makedepends = cmake
 	makedepends = shaderc
 	depends = cairo
+	depends = gcc-libs
+	depends = glib2
+	depends = glibc
 	depends = libinput
-	depends = libudev.so
-	depends = libvulkan.so
+	depends = libudev.so=1
+	depends = libvulkan.so=1
 	depends = mesa
 	depends = pango
 	optdepends = xorg-xwayland: X11 support
