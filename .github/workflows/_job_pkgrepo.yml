@@ -22,6 +22,10 @@ on:
         required: false
         type: boolean
         default: true
+      debloat:
+        required: false
+        type: boolean
+        default: false
       action:
         required: false
         type: string
@@ -41,8 +45,9 @@ jobs:
       pacman_conf: .github/conf/${{ inputs.repository }}/pacman.conf
       makepkg_conf: .github/conf/${{ inputs.repository }}/makepkg.conf
       makepkg_args: -p ${{ inputs.pkgbuild }} --skippgpcheck
-      multilib: ${{ inputs.multilib }}
-      ccache_ext: ${{ inputs.ccache_ext }}
+      multilib: ${{ inputs.multilib == 'true' }}
+      ccache_ext: ${{ inputs.ccache_ext == 'true' }}
+      debloat: ${{ inputs.debloat == 'true' }}
       release_tag: loathk-${{ inputs.repository }}
   pkgremove:
     if: ${{ inputs.action == 'remove' }}

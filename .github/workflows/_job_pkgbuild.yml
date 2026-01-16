@@ -23,13 +23,13 @@ on:
         required: false
         type: boolean
         default: true
-      release_tag:
-        required: true
-        type: string
       debloat:
         required: false
         type: boolean
         default: false
+      release_tag:
+        required: true
+        type: string
 
 jobs:
   pkgbuild:
