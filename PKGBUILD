@@ -1,6 +1,6 @@
 # Maintainer: Jimmy <your-email@example.com>
 pkgname=somewm-git
-pkgver=0.5.0.r87.gf1d2187
+pkgver=0.5.0.r91.gc9921b6
 pkgrel=1
 pkgdesc="AwesomeWM ported to Wayland - 100% Lua API compatible"
 arch=('x86_64')
@@ -11,26 +11,32 @@ depends=(
     'dbus'
     'gdk-pixbuf2'
     'glib2'
+    'libdisplay-info'
     'libdrm'
     'libinput'
+    'libliftoff'
+    'libxcb'
     'libxkbcommon'
     'lua51-lgi'
     'luajit'
     'pango'
     'pixman'
+    'seatd'
+    'vulkan-icd-loader'
     'wayland'
+    'xcb-util-errors'
+    'xcb-util-renderutil'
+    'xcb-util-wm'
 )
 makedepends=(
     'git'
+    'glslang'
     'hwdata'
-    'libdisplay-info'
-    'libliftoff'
-    'libseat'
-    'libxcb'
     'meson'
     'ninja'
+    'vulkan-headers'
     'wayland-protocols'
-    'xcb-util-wm'
+    'xcb-util'
     'xorg-xwayland'
 )
 optdepends=(
@@ -49,6 +55,7 @@ pkgver() {
 build() {
     cd "$pkgname"
     arch-meson build \
+        --wrap-mode=default \
         -Db_sanitize=none \
         -Dwerror=false
     meson compile -C build
