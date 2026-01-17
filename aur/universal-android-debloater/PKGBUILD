@@ -1,6 +1,6 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=universal-android-debloater
-pkgver=1.1.2
+pkgver=1.2.0
 pkgrel=1
 pkgdesc="Cross-platform GUI written in Rust using ADB to debloat non-rooted Android devices"
 arch=('x86_64')
@@ -14,18 +14,17 @@ makedepends=(
   'cargo'
   'clang'
   'cmake'
-  'mold'
 )
 source=("$pkgname-next-generation-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
         'uad-ng.desktop')
 conflicts=('universal-android-debloater-opengl')
-sha256sums=('24e2759e011bfee1130142a8a58ef3ac6e4c26e475e561552462c6171b26b5b2'
+sha256sums=('455fd89ed5f57cb895d213d60e6acefcf0d779fcbc982e31c0f0acb085909430'
             '8d5d790fffd35101af340792d081f8f75b61b1579bc8f89acab818f03f1071ea')
 
 prepare() {
   cd "$pkgname-next-generation-$pkgver"
   export RUSTUP_TOOLCHAIN=stable
-  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+  cargo fetch --locked --target "$(rustc --print host-tuple)"
 }
 
 build() {
@@ -33,7 +32,6 @@ build() {
   CFLAGS+=" -ffat-lto-objects"
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
-  export CARGO_PROFILE_RELEASE_STRIP=false
   cargo build --frozen --release --no-default-features --features wgpu,no-self-update
 }
 
