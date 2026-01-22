@@ -41,6 +41,7 @@ job_base = """
 packages = {
     "daily": (),
     "weekly": (
+        'somewm-git',
         'dxvk-mingw-git',
         'dxvk-msvc-git',
         'dxvk-nvapi-mingw-git',
