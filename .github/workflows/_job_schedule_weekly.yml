@@ -8,7 +8,11 @@ on:
 
 jobs:
 
+  somewm-git:
+    uses: ./.github/workflows/somewm-git.yml
+
   dxvk-mingw-git:
+    needs: somewm-git
     uses: ./.github/workflows/dxvk-mingw-git.yml
 
   dxvk-msvc-git:
