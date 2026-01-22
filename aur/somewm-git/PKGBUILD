@@ -24,6 +24,7 @@ depends=(
     'seatd'
     'vulkan-icd-loader'
     'wayland'
+    'wlroots0.19'
     'xcb-util-errors'
     'xcb-util-renderutil'
     'xcb-util-wm'
@@ -55,7 +56,6 @@ pkgver() {
 build() {
     cd "$pkgname"
     arch-meson build \
-        --wrap-mode=default \
         -Db_sanitize=none \
         -Dwerror=false
     meson compile -C build

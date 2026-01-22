@@ -31,6 +31,7 @@ pkgbase = somewm-git
 	depends = seatd
 	depends = vulkan-icd-loader
 	depends = wayland
+	depends = wlroots0.19
 	depends = xcb-util-errors
 	depends = xcb-util-renderutil
 	depends = xcb-util-wm
