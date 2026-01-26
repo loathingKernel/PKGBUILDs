@@ -23,7 +23,7 @@ source+=(
         wine-sauce.patch
 )
 sha512sums=('c5ae65515c6e6cde47ac073c3eef46afb9c04f379ea7ecd303e158345008a6f24d00e266aa6d4d310de5391ba90e8cb06f736c176712ec9fa62022fe3156573c'
-            '14a97ee7c9a023cf8b7cf8392325540ccc2e22673dd624d3add8e759c06ae98373fd3904835980803d661a174febfc2a3ad05e9e574b80435ebdcb7cc217fa31'
+            '47eb18050d05500374d168277552a70b3878dda408b7ae7385a9225f516d48759f79370bb6644e4b9a7e435b6f8bda9fc57a68bb4694a2368151a6c46f6b49dd'
             '61e0176986a9794855eb89367b123413039c5c4a8a16ce9bdc65abc7668ae48e7d4fd9feeeb4d300888998d44bb5c457f19a8defb482edefd719a7dfdced3235'
             '5af31424909cda08a52daa31cd3baa436926953fb8f23348ae71c5d2f7aa353ae47febded60765c785d364d57d89c2fb5fbc5191bb3b02758fa511c6adb54070'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
@@ -215,10 +215,10 @@ package() {
   find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
   find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
 
-  install -d "$pkgdir/usr/share/steam/compatibilitytools.d/wine-miniproton"
-  install -m644 "$srcdir/compatibilitytool.vdf" "$pkgdir/usr/share/steam/compatibilitytools.d/wine-miniproton"
-  install -m644 "$srcdir/toolmanifest.vdf" "$pkgdir/usr/share/steam/compatibilitytools.d/wine-miniproton"
-  install -m755 "$srcdir/miniproton" "$pkgdir/usr/share/steam/compatibilitytools.d/wine-miniproton"
+  install -d "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
+  install -m644 "$srcdir/compatibilitytool.vdf" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
+  install -m644 "$srcdir/toolmanifest.vdf" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
+  install -m755 "$srcdir/miniproton" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
 
   # Load ntsync module
   install -Dm644 "$srcdir/ntsync.conf" "$pkgdir/usr/lib/modules-load.d/10-ntsync.conf"
