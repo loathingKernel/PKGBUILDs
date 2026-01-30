@@ -12,23 +12,23 @@ _tkg_commit=64ca71f0704e23830a0c0cf7477e0cebd7364ebe
 _pkgbasever=${pkgver/rc/-rc}
 
 source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbasever"
-        compatibilitytool.vdf
-        toolmanifest.vdf
-        miniproton
         30-win32-aliases.conf
         wine-binfmt.conf
         ntsync.conf)
 source+=(
+        compatibilitytool.vdf
+        toolmanifest.vdf
+        miniproton
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
         wine-sauce.patch
 )
 sha512sums=('c5ae65515c6e6cde47ac073c3eef46afb9c04f379ea7ecd303e158345008a6f24d00e266aa6d4d310de5391ba90e8cb06f736c176712ec9fa62022fe3156573c'
-            '47eb18050d05500374d168277552a70b3878dda408b7ae7385a9225f516d48759f79370bb6644e4b9a7e435b6f8bda9fc57a68bb4694a2368151a6c46f6b49dd'
-            '61e0176986a9794855eb89367b123413039c5c4a8a16ce9bdc65abc7668ae48e7d4fd9feeeb4d300888998d44bb5c457f19a8defb482edefd719a7dfdced3235'
-            '5af31424909cda08a52daa31cd3baa436926953fb8f23348ae71c5d2f7aa353ae47febded60765c785d364d57d89c2fb5fbc5191bb3b02758fa511c6adb54070'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
             'ac2bd634838ffe6b90f2637e229013f0993fc1013271dbeefd216dc262a8bb79e4a5ce15a75cbfcb0c3b521d32f4ebe1ed25a6b066b99cc327b60bd6d7212e6f'
+            '47eb18050d05500374d168277552a70b3878dda408b7ae7385a9225f516d48759f79370bb6644e4b9a7e435b6f8bda9fc57a68bb4694a2368151a6c46f6b49dd'
+            '61e0176986a9794855eb89367b123413039c5c4a8a16ce9bdc65abc7668ae48e7d4fd9feeeb4d300888998d44bb5c457f19a8defb482edefd719a7dfdced3235'
+            '5af31424909cda08a52daa31cd3baa436926953fb8f23348ae71c5d2f7aa353ae47febded60765c785d364d57d89c2fb5fbc5191bb3b02758fa511c6adb54070'
             '6dffba7346fc89ef8627e971c96069aa3a1026c1bf9d444a6bf0b09993f098231c7e9eb360d802b53f59a7c9b98a33fe01a6229fed04e2ca5ec467c05f7f878c'
             '950da53c1f1816136f9ef5505759f535b72f61b0f25bb296e877a5279a87b95d6d97b34bb7bdf3e1255aca84a0696187d521cd6ea7ccd76a9da361d250ffc36f')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
