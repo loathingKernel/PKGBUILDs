@@ -1,7 +1,7 @@
-From 1c2b5cf4301fb0e4ea3e1269d97baa954bca84fe Mon Sep 17 00:00:00 2001
+From 980e9af0ba3b74eb4baddd504718e9ba7f5fb984 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 25 Nov 2025 13:23:23 +0200
-Subject: [PATCH 01/13] umu_runtime: do not resolve runtime requirement when we
+Subject: [PATCH 01/15] umu_runtime: do not resolve runtime requirement when we
  just need information about the tool
 
 ---
@@ -10,10 +10,10 @@ Subject: [PATCH 01/13] umu_runtime: do not resolve runtime requirement when we
  2 files changed, 10 insertions(+), 8 deletions(-)
 
 diff --git a/umu/umu_run.py b/umu/umu_run.py
-index 02144bc..7e8306e 100755
+index 28a7d9a..cd74147 100755
 --- a/umu/umu_run.py
 +++ b/umu/umu_run.py
-@@ -735,7 +735,7 @@ def resolve_runtime() -> RuntimeVersion | None:
+@@ -738,7 +738,7 @@ def resolve_runtime() -> RuntimeVersion | None:
  
      toolmanifest = path.joinpath("toolmanifest.vdf")
      if toolmanifest.is_file():
@@ -22,7 +22,7 @@ index 02144bc..7e8306e 100755
          runtime = layer.required_runtime
      else:
          err: str = f"PROTONPATH '{os.environ['PROTONPATH']}' is not valid, toolmanifest.vdf not found"
-@@ -911,7 +911,7 @@ def umu_run(args: Namespace | tuple[str, list[str]]) -> int:
+@@ -914,7 +914,7 @@ def umu_run(args: Namespace | tuple[str, list[str]]) -> int:
              create_shim(UMU_LOCAL / "umu-shim")
  
          protonpath: Path = Path(env["PROTONPATH"]).expanduser().resolve(strict=True)
@@ -71,10 +71,10 @@ index b28ab40..262f094 100644
 2.52.0
 
 
-From 180c7d4f74cb3063e7fdc71115414a70bc347d52 Mon Sep 17 00:00:00 2001
+From ad7170132ad1c69a73ff5223774d4472526a47e7 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 25 Nov 2025 15:05:57 +0200
-Subject: [PATCH 02/13] Partially revert "doc: add documentation around
+Subject: [PATCH 02/15] Partially revert "doc: add documentation around
  UMU_NO_RUNTIME"
 
 This reverts commit 683cefd5e1b80c0906ed49fb5f29df9f4f5c0949.
@@ -119,10 +119,10 @@ index 5ae232d..8cd09ba 100644
 2.52.0
 
 
-From 59144705b81eb5bb60555d3e32f15f3578b818dc Mon Sep 17 00:00:00 2001
+From 3d88f950bda4381dde674adb88e0d5a940333325 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 25 Nov 2025 15:04:12 +0200
-Subject: [PATCH 03/13] Revert "project: add vdf requirement, submodule and
+Subject: [PATCH 03/15] Revert "project: add vdf requirement, submodule and
  vendor it"
 
 This reverts commit 70cc061a6599bf91fb2143fe374c71a6c7e9401a.
@@ -317,10 +317,10 @@ index d762926..0000000
 2.52.0
 
 
-From 6877cbc08d920fbdf80fb4fb2b4510387ec15c55 Mon Sep 17 00:00:00 2001
+From dd652ee42f5cba643d52f3fa8b3918b29d24f54c Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 25 Nov 2025 14:50:59 +0200
-Subject: [PATCH 04/13] umu: add vdf as a local python package
+Subject: [PATCH 04/15] umu: add vdf as a local python package
 
 ---
  umu/umu_proton.py   |   2 +-
@@ -1123,10 +1123,10 @@ index 0000000..e67afca
 2.52.0
 
 
-From 68fea766e0ef524b8aedd4c7dd7ca097d3967b31 Mon Sep 17 00:00:00 2001
+From e7f4dfc87fa094436de26fec87736cc5b9de4076 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 25 Nov 2025 14:55:06 +0200
-Subject: [PATCH 05/13] chore: apply safe fixes and format imported vdf package
+Subject: [PATCH 05/15] chore: apply safe fixes and format imported vdf package
 
 ---
  umu/vdf/__init__.py | 273 ++++++++++++++++++++++++++------------------
@@ -1809,10 +1809,10 @@ index e67afca..3d30b78 100644
 2.52.0
 
 
-From e5130800b3d2d79d67882edff3667d919ee099b8 Mon Sep 17 00:00:00 2001
+From bd05678f1c81dc5532490b2605896868578e8dd0 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 25 Nov 2025 22:26:30 +0200
-Subject: [PATCH 06/13] umu_runtime: separate launcher service from layer name
+Subject: [PATCH 06/15] umu_runtime: separate launcher service from layer name
 
 ---
  umu/umu_run.py     |  4 +---
@@ -1820,10 +1820,10 @@ Subject: [PATCH 06/13] umu_runtime: separate launcher service from layer name
  2 files changed, 11 insertions(+), 8 deletions(-)
 
 diff --git a/umu/umu_run.py b/umu/umu_run.py
-index 7e8306e..3ee4e47 100755
+index cd74147..4f17c30 100755
 --- a/umu/umu_run.py
 +++ b/umu/umu_run.py
-@@ -362,8 +362,6 @@ def build_command(
+@@ -365,8 +365,6 @@ def build_command(
              layer.runtime = None
              env["PROTON_VERB"] = "runinprefix"
              log.info("Re-entering container through bus '%s'", pfx_bus)
@@ -1832,7 +1832,7 @@ index 7e8306e..3ee4e47 100755
  
      return (
          *nsenter,
-@@ -920,7 +918,7 @@ def umu_run(args: Namespace | tuple[str, list[str]]) -> int:
+@@ -923,7 +921,7 @@ def umu_run(args: Namespace | tuple[str, list[str]]) -> int:
                  setup_pfx(cdata_path)
  
          # Configure the environment
@@ -1875,10 +1875,10 @@ index 13fae9c..63f6895 100644
 2.52.0
 
 
-From 0c26ef34873fec67f998ba5fe1e8c8274eaee00b Mon Sep 17 00:00:00 2001
+From 8eda70d199fe7ecc15789bb9c1996d07137c8d57 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 25 Nov 2025 23:54:40 +0200
-Subject: [PATCH 07/13] umu_runtime: refactor CompatLayer's interface to not
+Subject: [PATCH 07/15] umu_runtime: refactor CompatLayer's interface to not
  need to unset the runtime
 
 Instead of unsetting the runtime of the CompatLayer, make
@@ -1890,10 +1890,10 @@ requested.
  2 files changed, 30 insertions(+), 17 deletions(-)
 
 diff --git a/umu/umu_run.py b/umu/umu_run.py
-index 3ee4e47..d16b83a 100755
+index 4f17c30..2268e94 100755
 --- a/umu/umu_run.py
 +++ b/umu/umu_run.py
-@@ -337,7 +337,7 @@ def build_command(
+@@ -340,7 +340,7 @@ def build_command(
          # The position of arguments matter for winetricks
          # Usage: ./winetricks [options] [command|verb|path-to-verb] ...
          return (
@@ -1902,7 +1902,7 @@ index 3ee4e47..d16b83a 100755
              env["EXE"],
              "-q",
              *opts,
-@@ -357,15 +357,13 @@ def build_command(
+@@ -360,15 +360,13 @@ def build_command(
          pfx_bus = "com.steampowered.App" + env["STEAM_COMPAT_APP_ID"]
          if f"--bus-name={pfx_bus}" in bus_names:
              nsenter = (launch_client, f"--bus-name={pfx_bus}", "--")
@@ -2025,20 +2025,20 @@ index 63f6895..d508dbc 100644
 2.52.0
 
 
-From 0cea36e1d944053b30cfccce3b9b384b8ec14575 Mon Sep 17 00:00:00 2001
+From d9dd4866cd980d3faf5db894f9472aaf1d7d16ca Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 26 Nov 2025 00:04:09 +0200
-Subject: [PATCH 08/13] chore: remove some commented out code
+Subject: [PATCH 08/15] chore: remove some commented out code
 
 ---
  umu/umu_run.py | 20 --------------------
  1 file changed, 20 deletions(-)
 
 diff --git a/umu/umu_run.py b/umu/umu_run.py
-index d16b83a..b12f2e0 100755
+index 2268e94..b98cc39 100755
 --- a/umu/umu_run.py
 +++ b/umu/umu_run.py
-@@ -318,20 +318,6 @@ def build_command(
+@@ -321,20 +321,6 @@ def build_command(
      if opts is None:
          opts = []
  
@@ -2059,7 +2059,7 @@ index d16b83a..b12f2e0 100755
      # Winetricks
      if layer.is_proton and env.get("EXE", "").endswith("winetricks") and opts:
          # The position of arguments matter for winetricks
-@@ -343,12 +329,6 @@ def build_command(
+@@ -346,12 +332,6 @@ def build_command(
              *opts,
          )
  
@@ -2076,10 +2076,10 @@ index d16b83a..b12f2e0 100755
 2.52.0
 
 
-From 8586fec26ca8b13d87cd3904bb7f449904636648 Mon Sep 17 00:00:00 2001
+From 09f199209b7e34971c77ac7b34e45fa3cdaafd4c Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 26 Nov 2025 22:36:33 +0200
-Subject: [PATCH 09/13] umu_runtime: resolve the runtime just-in-time
+Subject: [PATCH 09/15] umu_runtime: resolve the runtime just-in-time
 
 ---
  umu/umu_run.py     |  8 ++++----
@@ -2087,10 +2087,10 @@ Subject: [PATCH 09/13] umu_runtime: resolve the runtime just-in-time
  2 files changed, 18 insertions(+), 12 deletions(-)
 
 diff --git a/umu/umu_run.py b/umu/umu_run.py
-index b12f2e0..b28d189 100755
+index b98cc39..3da0c89 100755
 --- a/umu/umu_run.py
 +++ b/umu/umu_run.py
-@@ -313,7 +313,7 @@ def build_command(
+@@ -316,7 +316,7 @@ def build_command(
      env: dict[str, str],
      layer: CompatLayer,
      opts: list[str] | None = None,
@@ -2099,7 +2099,7 @@ index b12f2e0..b28d189 100755
      """Build the command to be executed."""
      if opts is None:
          opts = []
-@@ -711,7 +711,7 @@ def resolve_runtime() -> RuntimeVersion | None:
+@@ -714,7 +714,7 @@ def resolve_runtime() -> RuntimeVersion | None:
  
      toolmanifest = path.joinpath("toolmanifest.vdf")
      if toolmanifest.is_file():
@@ -2108,7 +2108,7 @@ index b12f2e0..b28d189 100755
          runtime = layer.required_runtime
      else:
          err: str = f"PROTONPATH '{os.environ['PROTONPATH']}' is not valid, toolmanifest.vdf not found"
-@@ -887,7 +887,7 @@ def umu_run(args: Namespace | tuple[str, list[str]]) -> int:
+@@ -890,7 +890,7 @@ def umu_run(args: Namespace | tuple[str, list[str]]) -> int:
              create_shim(UMU_LOCAL / "umu-shim")
  
          protonpath: Path = Path(env["PROTONPATH"]).expanduser().resolve(strict=True)
@@ -2117,7 +2117,7 @@ index b12f2e0..b28d189 100755
  
          # Prepare the prefix
          if layer.is_proton:
-@@ -912,7 +912,7 @@ def umu_run(args: Namespace | tuple[str, list[str]]) -> int:
+@@ -915,7 +915,7 @@ def umu_run(args: Namespace | tuple[str, list[str]]) -> int:
          sys.exit(1)
  
      # Build the command
@@ -2190,17 +2190,17 @@ index d508dbc..534a107 100644
 2.52.0
 
 
-From a049f32e4f326c313918188c8340f42f7deca4b3 Mon Sep 17 00:00:00 2001
+From a8ac1a864d95089cdacd99fd72a6a289137068aa Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sat, 29 Nov 2025 00:21:44 +0200
-Subject: [PATCH 10/13] umu_run: resolve paths again to satisfy the tests.
+Subject: [PATCH 10/15] umu_run: resolve paths again to satisfy the tests.
 
 ---
- umu/umu_run.py | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ umu/umu_run.py | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/umu/umu_run.py b/umu/umu_run.py
-index b28d189..6b79231 100755
+index 3da0c89..9dd5991 100755
 --- a/umu/umu_run.py
 +++ b/umu/umu_run.py
 @@ -64,7 +64,13 @@ RuntimeVersion = tuple[str, str, str]
@@ -2218,12 +2218,11 @@ index b28d189..6b79231 100755
      if not path.is_dir():
          path.mkdir(parents=True, exist_ok=True)
  
-@@ -116,12 +122,12 @@ def check_env(env: dict[str, str]) -> tuple[dict[str, str] | dict[str, Any], boo
-         raise ValueError(err)
- 
-     if "WINEPREFIX" not in os.environ:
--        pfx: Path = Path.home().joinpath("Games", "umu", env["GAMEID"])
-+        pfx: Path = Path.home().joinpath("Games", "umu", env["GAMEID"]).resolve(strict=False)
+@@ -120,11 +126,12 @@ def check_env(env: dict[str, str]) -> tuple[dict[str, str] | dict[str, Any], boo
+             pfx: Path = Path.home().joinpath("Games", env["STORE"])
+         else:
+             pfx: Path = Path.home().joinpath("Games", "umu", env["GAMEID"])
++        pfx = pfx.resolve(strict=False)
      else:
 -        pfx: Path = Path(os.environ["WINEPREFIX"]).expanduser()
 +        pfx: Path = Path(os.environ["WINEPREFIX"]).expanduser().resolve(strict=False)
@@ -2238,10 +2237,10 @@ index b28d189..6b79231 100755
 2.52.0
 
 
-From 91c1b70d7298c165a4e4bc7a4947ef3561d197c4 Mon Sep 17 00:00:00 2001
+From e605764af4f069733f76e12fd1902a23894fd1f5 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sat, 29 Nov 2025 14:03:59 +0200
-Subject: [PATCH 11/13] umu_run: add temporary backwards compatibility with
+Subject: [PATCH 11/15] umu_run: add temporary backwards compatibility with
  RUNTIMEPATH when resolving the required runtime
 
 ---
@@ -2249,10 +2248,10 @@ Subject: [PATCH 11/13] umu_run: add temporary backwards compatibility with
  1 file changed, 10 insertions(+)
 
 diff --git a/umu/umu_run.py b/umu/umu_run.py
-index 6b79231..e9263ce 100755
+index 9dd5991..d35c5ef 100755
 --- a/umu/umu_run.py
 +++ b/umu/umu_run.py
-@@ -687,6 +687,16 @@ def run_command(command: tuple[Path | str, ...]) -> int:
+@@ -691,6 +691,16 @@ def run_command(command: tuple[Path | str, ...]) -> int:
  
  def resolve_runtime() -> RuntimeVersion | None:
      """Resolve the required runtime of a compatibility tool."""
@@ -2273,10 +2272,10 @@ index 6b79231..e9263ce 100755
 2.52.0
 
 
-From ddffadc74f973db404c75f2f7553995ca06b6540 Mon Sep 17 00:00:00 2001
+From 3882c272395742b10439dca449c872684350d9b7 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 26 Nov 2025 22:36:50 +0200
-Subject: [PATCH 12/13] umu: update tests
+Subject: [PATCH 12/15] umu: update tests
 
 ---
  umu/umu_test.py         | 411 ++++++++++++++++++++++++----------------
@@ -3440,10 +3439,10 @@ index d3463b6..a31a180 100644
 2.52.0
 
 
-From c3dea7b6d1e3170ac9fd1eaa3fe045d3db6f55c5 Mon Sep 17 00:00:00 2001
+From 9892e2e7658810829227aa541bb736f9764c22e8 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Mon, 24 Nov 2025 17:17:29 +0200
-Subject: [PATCH 13/13] umu: add arm64 sniper runtime
+Subject: [PATCH 13/15] umu: add arm64 sniper runtime
 
 ---
  umu/umu_proton.py  |  2 ++
@@ -3472,10 +3471,10 @@ index ff954e3..4f63d0d 100644
      }):
          return None
 diff --git a/umu/umu_run.py b/umu/umu_run.py
-index e9263ce..0bec8aa 100755
+index d35c5ef..eb359b0 100755
 --- a/umu/umu_run.py
 +++ b/umu/umu_run.py
-@@ -145,7 +145,11 @@ def check_env(env: dict[str, str]) -> tuple[dict[str, str] | dict[str, Any], boo
+@@ -149,7 +149,11 @@ def check_env(env: dict[str, str]) -> tuple[dict[str, str] | dict[str, Any], boo
  
      # Proton Codename
      if os.environ.get("PROTONPATH") in {
@@ -3488,7 +3487,7 @@ index e9263ce..0bec8aa 100755
      }:
          do_download = True
  
-@@ -704,6 +708,7 @@ def resolve_runtime() -> RuntimeVersion | None:
+@@ -708,6 +712,7 @@ def resolve_runtime() -> RuntimeVersion | None:
      named_runtimes = {
          RUNTIME_NAMES["steamrt4"]: {"umu-steamrt4"},
          RUNTIME_NAMES["sniper"]: {"GE-Proton", "GE-Latest", "UMU-Latest", "umu-sniper"},
@@ -3517,6 +3516,130 @@ index 534a107..d2b7d6e 100644
  }
  
  
+-- 
+2.52.0
+
+
+From 8910736dbca764298a51774d28031b5b397f1678 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Mon, 29 Dec 2025 14:09:08 +0200
+Subject: [PATCH 14/15] umu: add steamrt4 arm64
+
+---
+ umu/umu_proton.py  |  4 +++-
+ umu/umu_run.py     |  3 ++-
+ umu/umu_runtime.py | 22 +++++++++++++++++-----
+ 3 files changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/umu/umu_proton.py b/umu/umu_proton.py
+index 4f63d0d..898a869 100644
+--- a/umu/umu_proton.py
++++ b/umu/umu_proton.py
+@@ -58,6 +58,7 @@ class ProtonVersion(Enum):
+     UMUSniper = "umu-sniper"
+     UMUSniper_arm64 = "umu-sniper-arm64"
+     UMUSteamRT4 = "umu-steamrt4"
++    UMUSteamRT4_arm64 = "umu-steamrt4-arm64"
+ 
+ 
+ def get_umu_proton(env: dict[str, str], session_pools: SessionPools) -> dict[str, str]:
+@@ -116,7 +117,8 @@ def _get_umu_runtime_tool(env: dict[str, str], name: str) -> dict[str, str] | No
+         ProtonVersion.UMUSoldier.value,
+         ProtonVersion.UMUSniper.value,
+         ProtonVersion.UMUSniper_arm64.value,
+-        ProtonVersion.UMUSteamRT4.value
++        ProtonVersion.UMUSteamRT4.value,
++        ProtonVersion.UMUSteamRT4_arm64.value,
+     }):
+         return None
+ 
+diff --git a/umu/umu_run.py b/umu/umu_run.py
+index eb359b0..8a6086f 100755
+--- a/umu/umu_run.py
++++ b/umu/umu_run.py
+@@ -153,7 +153,7 @@ def check_env(env: dict[str, str]) -> tuple[dict[str, str] | dict[str, Any], boo
+         "umu-scout",
+         "umu-soldier",
+         "umu-sniper", "umu-sniper-arm64",
+-        "umu-steamrt4"
++        "umu-steamrt4", "umu-steamrt4-arm64",
+     }:
+         do_download = True
+ 
+@@ -711,6 +711,7 @@ def resolve_runtime() -> RuntimeVersion | None:
+ 
+     named_runtimes = {
+         RUNTIME_NAMES["steamrt4"]: {"umu-steamrt4"},
++        RUNTIME_NAMES["steamrt4-arm64"]: {"umu-steamrt4-arm64"},
+         RUNTIME_NAMES["sniper"]: {"GE-Proton", "GE-Latest", "UMU-Latest", "umu-sniper"},
+         RUNTIME_NAMES["sniper-arm64"]: {"umu-sniper-arm64"},
+         RUNTIME_NAMES["soldier"]: {"umu-scout", "umu-soldier"},
+diff --git a/umu/umu_runtime.py b/umu/umu_runtime.py
+index d2b7d6e..1c3fac9 100644
+--- a/umu/umu_runtime.py
++++ b/umu/umu_runtime.py
+@@ -1,4 +1,5 @@
+ import os
++import platform
+ import shlex
+ from collections.abc import Callable
+ from concurrent.futures import ThreadPoolExecutor
+@@ -450,13 +451,24 @@ class UmuRuntime:
+ 
+ RUNTIME_VERSIONS = {
+     "host": UmuRuntime("host", "", ""),
+-    "1391110": UmuRuntime("soldier",      "steamrt2", "1391110"),
+-    "1628350": UmuRuntime("sniper",       "steamrt3", "1628350"),
+-    "3810310": UmuRuntime("sniper-arm64", "steamrt3", "3810310"),
+-    "4183110": UmuRuntime("steamrt4",     "steamrt4", "4183110"),
+-    # "4183110": UmuRuntime("steamrt4-arm64", "steamrt4", "4183110"),
+ }
+ 
++RUNTIME_VERSIONS.update({
++    "1391110": UmuRuntime("soldier",        "steamrt2", "1391110"),
++    "1628350": UmuRuntime("sniper",         "steamrt3", "1628350"),
++    "3810310": UmuRuntime("sniper-arm64",   "steamrt3", "3810310"),
++    "4183110": UmuRuntime("steamrt4",       "steamrt4", "4183110"),
++    "4185400": UmuRuntime("steamrt4-arm64", "steamrt4", "4185400"),
++})
++
++if platform.machine() == "x86_64":  # noqa: SIM114
++    pass
++elif platform.machine() == "aarch64":
++    pass
++else:
++    err: str = f"Unsupported platform {platform.machine()}"
++    raise RuntimeError(err)
++
+ 
+ RUNTIME_NAMES = {RUNTIME_VERSIONS[key].name: key for key in RUNTIME_VERSIONS}
+ 
+-- 
+2.52.0
+
+
+From 6234b1f978016dfda8af6f71305fb65e9b16ec05 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Sat, 31 Jan 2026 13:32:13 +0200
+Subject: [PATCH 15/15] umu_runtime: fix steamrt4-arm64 download
+
+---
+ umu/umu_runtime.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/umu/umu_runtime.py b/umu/umu_runtime.py
+index 1c3fac9..3f76587 100644
+--- a/umu/umu_runtime.py
++++ b/umu/umu_runtime.py
+@@ -80,7 +80,7 @@ def _install_umu(
+     token: str = f"?versions={token_urlsafe(16)}"
+     host: str = "repo.steampowered.com"
+ 
+-    if codename.removeprefix("steamrt").isdigit():
++    if codename.removeprefix("steamrt").removesuffix("-arm64").isdigit():
+         archive = f"SteamLinuxRuntime_{codename.removeprefix('steamrt')}.tar.xz"
+     else:
+         archive = f"SteamLinuxRuntime_{codename}.tar.xz"
 -- 
 2.52.0
 
