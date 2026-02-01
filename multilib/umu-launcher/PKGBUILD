@@ -66,10 +66,10 @@ optdepends=(
   'python-truststore: Verify certificates using OS trust stores'
 )
 source=(
-    "git+https://github.com/Open-Wine-Components/umu-launcher.git#commit=4ed61d1"
+    "git+https://github.com/Open-Wine-Components/umu-launcher.git#commit=bb5c870"
     574.patch
 )
-sha256sums=('0e825bb8b0809a954177f0a493b992de3893dc26859f8b11deea4a37da33198b'
+sha256sums=('71caa5944ee76f100b61ceb074cf9c4acfaa9502f511c5c62ca4c00eeec10f68'
             '30c00a3d68d5c82b2df30c8144736c84727027192f865864c61812a81aef20b2')
 
 pkgver() {
