@@ -1,0 +1,13 @@
+pkgbase = shelly
+	pkgdesc = Shelly: A Modern Arch Package Manager
+	pkgver = 1.4.1
+	pkgrel = 1
+	url = https://github.com/ZoeyErinBauer/Shelly-ALPM
+	arch = x86_64
+	license = GPL-2.0-only
+	makedepends = dotnet-sdk-10.0
+	depends = pacman
+	source = shelly-1.4.1.tar.gz::https://github.com/ZoeyErinBauer/Shelly-ALPM/archive/v1.4.1.tar.gz
+	sha256sums = 396125101b9ece04bcd94d073e2fb15f36b1314bd0babe326c02f40ed9baa0ac
+
+pkgname = shelly
