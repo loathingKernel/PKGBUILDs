@@ -1,6 +1,6 @@
 pkgbase = shelly
 	pkgdesc = Shelly: A Modern Arch Package Manager
-	pkgver = 1.4.7
+	pkgver = 1.4.8
 	pkgrel = 1
 	url = https://github.com/ZoeyErinBauer/Shelly-ALPM
 	arch = x86_64
@@ -46,7 +46,7 @@ pkgbase = shelly
 	depends = xdg-utils
 	depends = zlib
 	optdepends = flatpak
-	source = shelly-1.4.7.tar.gz::https://github.com/ZoeyErinBauer/Shelly-ALPM/archive/v1.4.7.tar.gz
-	sha256sums = b8a284a2faa90155c934162b87211eb834aa7877023844ea94668c3575c2b7d4
+	source = shelly-1.4.8.tar.gz::https://github.com/ZoeyErinBauer/Shelly-ALPM/archive/v1.4.8.tar.gz
+	sha256sums = b3a72837602c821d7c84db6de61db1d7b2ad29359718f3ab739880d701c1c4b1
 
 pkgname = shelly
