@@ -1,14 +1,14 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=universal-android-debloater
 pkgver=1.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Cross-platform GUI written in Rust using ADB to debloat non-rooted Android devices"
 arch=('x86_64')
 url="https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation"
 license=('GPL-3.0-or-later')
 depends=(
   'android-tools'
-  'gcc-libs'
+  'libgcc'
 )
 makedepends=(
   'cargo'
