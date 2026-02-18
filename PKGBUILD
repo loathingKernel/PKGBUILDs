@@ -1,12 +1,13 @@
 # Maintainer: Zoey Bauer <zoey.erin.bauer@gmail.com>
 # Maintainer: Caroline Snyder
 pkgname=shelly
-pkgver=1.4.14
+pkgver=1.5.0
 pkgrel=1
 pkgdesc="Shelly: A Modern Arch Package Manager"
 arch=('x86_64')
 url="https://github.com/ZoeyErinBauer/Shelly-ALPM"
 license=('GPL-3.0-only')
+provides=('shelly')
 depends=(
     'brotli'
     'bzip2'
@@ -56,7 +57,7 @@ makedepends=('dotnet-sdk-10.0')
 # Source tarball from GitHub release
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ZoeyErinBauer/Shelly-ALPM/archive/v${pkgver}.tar.gz")
 
-sha256sums=('9d6b1aa01b5510b59ed609ef7bc46fd693710e9fbb7f51cc26223004ab1e4df6')
+sha256sums=('4ad96866272923f4ff4ac44ccf4fd509824057cd8c73f9103d09e745ceb278db')
 
 build() {
   cd "$srcdir/Shelly-ALPM-${pkgver}"
