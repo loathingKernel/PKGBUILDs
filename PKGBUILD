@@ -1,7 +1,7 @@
 # Maintainer: Zoey Bauer <zoey.erin.bauer@gmail.com>
-# Maintainer: Caroline Snyder
+# Maintainer: Caroline Snyder <hirpeng@gmail.com>
 pkgname=shelly
-pkgver=1.5.0
+pkgver=1.5.2
 pkgrel=1
 pkgdesc="Shelly: A Modern Arch Package Manager"
 arch=('x86_64')
@@ -9,87 +9,55 @@ url="https://github.com/ZoeyErinBauer/Shelly-ALPM"
 license=('GPL-3.0-only')
 provides=('shelly')
 depends=(
-    'brotli'
-    'bzip2'
-    'expat'
-    'fontconfig'
-    'freetype2'
-    'glibc'
-    'graphite'
-    'harfbuzz'
-    'hicolor-icon-theme'
-    'icu'
-    'libdisplay-info'
-    'libdrm'
-    'libedit'
-    'libice'
-    'libpng'
-    'libtirpc'
-    'libx11'
-    'libxau'
-    'libxcb'
-    'libxcrypt'
-    'libxcursor'
-    'libxdmcp'
-    'libxext'
-    'libxfixes'
-    'libxi'
-    'libxrandr'
-    'libxrender'
-    'libxshmfence'
-    'ncurses'
     'pacman'
-    'pcre2'
-    'sh'
     'sudo'
     'tar'
-    'util-linux'
-    'vulkan-driver'
-    'xcb-util-keysyms'
+    'sh'
     'xdg-utils'
-    'zlib'
+    'hicolor-icon-theme'
+    'icu'
+    'fontconfig'
+    'freetype2'
+    'harfbuzz'
+    'libpng'
+    'libx11'
+    'libxcb'
+    'libxcursor'
 )
 optdepends=(
     'flatpak'
+    'glib2'
 )
 makedepends=('dotnet-sdk-10.0')
 
 # Source tarball from GitHub release
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ZoeyErinBauer/Shelly-ALPM/archive/v${pkgver}.tar.gz")
 
-sha256sums=('4ad96866272923f4ff4ac44ccf4fd509824057cd8c73f9103d09e745ceb278db')
+sha256sums=('779fcc474c73fdd44f6d39a51ab1bf11b0d17e5a7c9b3e5f024079adec65d0c7')
 
 build() {
   cd "$srcdir/Shelly-ALPM-${pkgver}"
 
-  dotnet publish Shelly-UI/Shelly-UI.csproj -c Release -o out --nologo
-  dotnet publish Shelly-CLI/Shelly-CLI.csproj -c Release -o out-cli --nologo
+  dotnet publish Shelly-CLI/Shelly-CLI.csproj -c Release -o out-cli --nologo -p:InstructionSet=${INSTRUCTIONS:=x86-64-v3}
+  dotnet publish Shelly-UI/Shelly-UI.csproj -c Release -r linux-x64 -o out --nologo -p:InstructionSet=${INSTRUCTIONS:=x86-64-v3}
+  dotnet publish Shelly-Notifications/Shelly-Notifications.csproj -c Release -r linux-x64 -o out-notify --nologo -p:InstructionSet=${INSTRUCTIONS:=x86-64-v3}
 }
 
 package() {
   cd "$srcdir/Shelly-ALPM-${pkgver}"
 
   # Install Shelly-UI binary
-  install -Dm755 out/Shelly-UI "$pkgdir/usr/lib/shelly/Shelly-UI"
+  install -Dm755 out/Shelly-UI "$pkgdir/usr/bin/shelly-ui"
 
   # Install bundled native libraries (SkiaSharp and HarfBuzzSharp)
-  install -Dm755 out/libSkiaSharp.so "$pkgdir/usr/lib/shelly/libSkiaSharp.so"
-  install -Dm755 out/libHarfBuzzSharp.so "$pkgdir/usr/lib/shelly/libHarfBuzzSharp.so"
+  install -Dm755 out/libSkiaSharp.so "$pkgdir/usr/lib/libSkiaSharp.so"
+  install -Dm755 out/libHarfBuzzSharp.so "$pkgdir/usr/lib/libHarfBuzzSharp.so"
+
+  # Install Shelly-Notifications binary
+  install -Dm755 out-notify/Shelly-Notifications "$pkgdir/usr/bin/shelly-notifications"
 
   # Install Shelly-CLI binary
-  install -Dm755 out-cli/shelly "$pkgdir/usr/lib/shelly/shelly"
-
-  # Install shelly launch wrapper
-  cat <<'EOF' | install -Dm755 /dev/stdin "$pkgdir/usr/bin/shelly"
-#!/bin/sh
-exec /usr/lib/shelly/shelly "$@"
-EOF
-
-  # Install shelly-ui launch wrapper
-  cat <<'EOF' | install -Dm755 /dev/stdin "$pkgdir/usr/bin/shelly-ui"
-#!/bin/sh
-exec /usr/lib/shelly/Shelly-UI "$@"
-EOF
+  install -Dm755 out-cli/shelly "$pkgdir/usr/bin/shelly"
 
   # Install desktop entry
   cat <<'EOF' | install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/shelly.desktop"
