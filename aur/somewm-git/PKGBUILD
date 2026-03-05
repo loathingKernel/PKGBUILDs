@@ -56,6 +56,7 @@ pkgver() {
 build() {
     cd "$pkgname"
     arch-meson build \
+        --wrap-mode=nodownload \
         -Db_sanitize=none \
         -Dwerror=false
     meson compile -C build
