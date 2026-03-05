@@ -1,11 +1,13 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-akasha
-pkgver=6.17.9.zen1
+pkgver=6.19.6.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Akasha'
 url='https://github.com/zen-kernel/zen-kernel'
-arch=(x86_64)
+arch=(
+  x86_64
+)
 license=(GPL-2.0-only)
 makedepends=(
   bc
@@ -32,26 +34,27 @@ source=(
   https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
   $url/releases/download/$_srctag/linux-$_srctag.patch.zst{,.sig}
   modprobed.db
-  config  # the main kernel config file
 )
+source_x86_64=(config.x86_64)
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
+b2sums=('612fd1e944194c20bb2e6f9d2b309d5957db5b738bcb7b782c9c25de4c02b341fa5caa9af76d92e88628135b8334f550cc2277d63738098fde950ca05f46e89a'
+        'SKIP'
+        '683ea0a422207be1edf2d903831b07303f140b578de1b3897a38308ba4d50acfc9a3fe619a5e5521b9906b14a08a84eccc64eb1734b8b8e1bfe9eebc0b2716da'
+        'SKIP'
+        'c92f61311ad55771b9a497edd145ffb54b63be32187e340e6e5274a0bdbbc5ce301ff98a4d343107b9cb0aaf9e621b84ff777a992e6ded6c64ee9655d9afbb47')
+b2sums_x86_64=('805fbf7b4becf5f46cb0399ca2fd8c012b25cca08cd461ed1522438aa14dddebdcdd7665c94cc4885b745652136fe1329ade8755482fb2fe02f62495332edb13')
+
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('6d08803b953c509df48d44d3281ed392524321d8bb353eb21c0555790c8f8e06'
+sha256sums=('4d9f3ff73214f68c0194ef02db9ca4b7ba713253ac1045441d4e9f352bc22e14'
             'SKIP'
-            '31f6e2501d50a5de539d8170a79596cbab907730afac5bf66a1d6d672fefbf99'
+            '67149f13fa844780bb0c83fc02bdd56ba31d762009b1f24fafd9cd806db8d0f5'
             'SKIP'
-            '4a0ba836bc8f243d4c308f6144f2379c5eca4ecdf368fe95a6f9f137c69bd364'
-            'f84abc4ff211a89924e7339ee28752e41cd77cf1f31fcd931c0d3a667e804e8b')
-b2sums=('1e8e226364a85f3fd66e51495a99a76e377389aa48c708953aaa28b6ec669f05aab6d240365965eec5643e2fa6aee15796005b2873e8fea748e432b1d799eabc'
-        'SKIP'
-        '4d733c1c4e6eb2da3ac774e0b5828fca32ecfa550069e6b764a93ff8254c4774777460297641cf1c4d952d722637ed737b964f6dbe9da78682045d291928c081'
-        'SKIP'
-        'c92f61311ad55771b9a497edd145ffb54b63be32187e340e6e5274a0bdbbc5ce301ff98a4d343107b9cb0aaf9e621b84ff777a992e6ded6c64ee9655d9afbb47'
-        '95131df018d5bb1f58a2700731c46500477266f2610596f6c377b9c459283f0888ca3527343afedef6ccf158bdf37dd62996f9df07866405c2c84180ef8b24c1')
+            '4a0ba836bc8f243d4c308f6144f2379c5eca4ecdf368fe95a6f9f137c69bd364')
+sha256sums_x86_64=('f282016bbce997e029243adef336848b4bf659af6257b1c853e3006e36c9b274')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -76,7 +79,7 @@ prepare() {
   done
 
   echo "Setting config..."
-  cp ../config .config
+  cp ../config.$CARCH .config
   if true; then
   mkdir -p "${startdir}/configs"
   echo "-> Native config..."
@@ -139,7 +142,7 @@ prepare() {
     # Kernel Testing and Coverage
     scripts/config --enable  CONFIG_MEMTEST
   make olddefconfig
-  diff -u ../config .config || :
+  diff -u ../config.$CARCH .config || :
   cat .config > "${startdir}/configs/config-${pkgver}-${pkgrel}-stage1-native"
   echo "-> Running nconfig..."
   test -t 0 && make nconfig
@@ -168,6 +171,7 @@ _package() {
     kmod
   )
   optdepends=(
+    "$pkgbase-headers: headers and scripts for building modules"
     'linux-firmware: firmware images needed for some devices'
     'scx-scheds: to use sched-ext schedulers'
     'wireless-regdb: to set the correct wireless channels of your country'
@@ -204,28 +208,37 @@ _package() {
 _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
   depends=(pahole)
+  provides=(LINUX-HEADERS)
 
   cd $_srcname
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
+
+  local karch
+  case $CARCH in
+    x86_64) karch=x86 ;;
+    *) echo "Unknown CARCH $CARCH"; exit 1 ;;
+  esac
 
   echo "Installing build files..."
   install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
     localversion.* version vmlinux tools/bpf/bpftool/vmlinux.h
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
-  install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
+  install -Dt "$builddir/arch/$karch" -m644 arch/$karch/Makefile
   cp -t "$builddir" -a scripts
   ln -srt "$builddir" "$builddir/scripts/gdb/vmlinux-gdb.py"
 
-  # required when STACK_VALIDATION is enabled
-  install -Dt "$builddir/tools/objtool" tools/objtool/objtool
+  if [[ $(scripts/config -s CONFIG_HAVE_STACK_VALIDATION) = y ]]; then
+    install -Dt "$builddir/tools/objtool" tools/objtool/objtool
+  fi
 
-  # required when DEBUG_INFO_BTF_MODULES is enabled
-  install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
+  if [[ $(scripts/config -s CONFIG_DEBUG_INFO_BTF_MODULES) = y ]]; then
+    install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
+  fi
 
   echo "Installing headers..."
   cp -t "$builddir" -a include
-  cp -t "$builddir/arch/x86" -a arch/x86/include
-  install -Dt "$builddir/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
+  cp -t "$builddir/arch/$karch" -a arch/$karch/include
+  install -Dt "$builddir/arch/$karch/kernel" -m644 arch/$karch/kernel/asm-offsets.s
 
   install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
   install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
@@ -251,7 +264,7 @@ _package-headers() {
   echo "Removing unneeded architectures..."
   local arch
   for arch in "$builddir"/arch/*/; do
-    [[ $arch = */x86/ ]] && continue
+    [[ $arch = */$karch/ ]] && continue
     echo "Removing $(basename "$arch")"
     rm -r "$arch"
   done
