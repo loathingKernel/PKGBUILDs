@@ -1,6 +1,6 @@
 pkgbase = shelly
 	pkgdesc = Shelly: A Modern Arch Package Manager
-	pkgver = 2.0.0
+	pkgver = 2.0.1
 	pkgrel = 1
 	url = https://github.com/ZoeyErinBauer/Shelly-ALPM
 	arch = x86_64
@@ -19,7 +19,7 @@ pkgbase = shelly
 	depends = glib2
 	optdepends = flatpak: For supporting flatpak implementation.
 	provides = shelly
-	source = shelly-2.0.0.tar.gz::https://github.com/ZoeyErinBauer/Shelly-ALPM/archive/v2.0.0.tar.gz
-	sha256sums = 4cbffa6894084245ea577dc31a3d7f8727a7f6f816a608526ba0ab2efe5f92fa
+	source = shelly-2.0.1.tar.gz::https://github.com/ZoeyErinBauer/Shelly-ALPM/archive/v2.0.1.tar.gz
+	sha256sums = d1436c80999e595573ad9f26e486517ccb0519e652d3d5cd6fb9cdafd27136ec
 
 pkgname = shelly
