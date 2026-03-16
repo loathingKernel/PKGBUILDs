@@ -1,8 +1,8 @@
 # Maintainer: Stipe Kotarac <stipe@kotarac.net>
 
 pkgname=jay
-pkgver=1.11.1
-pkgrel=4
+pkgver=1.12.0
+pkgrel=1
 pkgdesc='A Wayland Compositor'
 arch=('x86_64')
 license=(GPL-3.0-only)
@@ -28,12 +28,11 @@ optdepends=(
 makedepends=(
   cargo
   cmake
-  shaderc
 )
 options=(!lto)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/mahkoh/jay/archive/v$pkgver.tar.gz")
 install=jay.install
-sha512sums=('a6db2e46c1b5dfdbee28d9405243011b128a352611fd2403029b08fab27d25d1a86c83b152231abaffed7e37be3d2a738e2b6e9b4ec220bddfa5793ba6be26b4')
+sha512sums=('08bac6f1d660c6db2778473b71e919b3174d3483be9138af5695d05af7efc6f3cb873ae548a753b2604740e6f9c86fdea448b7fc4905441472b02f1c7d06c207')
 
 prepare() {
   cd $pkgname-$pkgver/
