@@ -6,9 +6,9 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine-staging
-pkgver=11.4
+pkgver=11.5
 pkgrel=1
-_tkg_commit=97f2231bffbfab385046f08897df50663b571a2f
+_tkg_commit=13b74356e1b588cf4d6e54a0a9225c1aed100604
 
 _pkgbasever=${pkgver/rc/-rc}
 _winever=$_pkgbasever
@@ -26,16 +26,16 @@ source+=(
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
         wine-sauce.patch
 )
-sha512sums=('d36d15dedb6381f68484f5ee46e3353a0afaca88dc0694c06cfbdfa8af4e5a1d9595ba882a8ec2d4296397980cf2e28b2344fefec5ecf3889f75e0cd6be60f77'
-            '75d2f2e297ecc1ceef72dc043413d41ccfbb237061073d5f726250b67574309487fd92a996abc0fd11cf16a074e98695b29949b087c264a28c981b8b374e605c'
+sha512sums=('ce95d38f4c1e53bf43525f56675b7a945253689bc7c28c4772a220af8b9a7e793c02e763be9fc73533238ec8da13814cb413f8254797d7ac0fcb5de7c4e5013a'
+            '36fb6eac84f095271db15a034dbf2e1ba0970c646b7c680e656f0b95d8641fcd0c6b02bf6087f7e090f45b23eaa0731ae158b6ec7e5b36c039d1d9fdbe59d3d0'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
             'ac2bd634838ffe6b90f2637e229013f0993fc1013271dbeefd216dc262a8bb79e4a5ce15a75cbfcb0c3b521d32f4ebe1ed25a6b066b99cc327b60bd6d7212e6f'
             'e2508069a474bb5a18227f5cbd557842285645b17e3b7aa4d27141c129d8b3ee5bd26f858816962f1965262b19c74fdd9ee087bc289c5bf66e33e1e44b55a084'
             '61e0176986a9794855eb89367b123413039c5c4a8a16ce9bdc65abc7668ae48e7d4fd9feeeb4d300888998d44bb5c457f19a8defb482edefd719a7dfdced3235'
             '5af31424909cda08a52daa31cd3baa436926953fb8f23348ae71c5d2f7aa353ae47febded60765c785d364d57d89c2fb5fbc5191bb3b02758fa511c6adb54070'
-            '71cdbce35925ac03ab4bfbea224caea07ff9e02e20f7e950350b2df5ec0b2a237fde084951f71cd1b7e691619b7bc4daa5aa358a9260c10ef18d0b3d79472c86'
-            '96be878008ce10c9bd688a97d0726905f38d1d05e25d937c06981dc1bd921310df5eed4c51881c9757321202c01eb0929bd2ff55901e5dffb8209d4cec7568d8')
+            'ef3671dae532c93f51b8bee8ce277f354312a8ca0d690012700e5faf87a562f7575212ab07327ddd7a09b3b122eba3f03550a71f3f52640b5f13d1f85e89ca85'
+            '503f7825d5821874d3edef67736c68c73935132971aa2a4187110f02dcf0a48bc6a562045bafbc229b7cc755ea5ecc0e327f7971db6106ae6648896df66c21d2')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
@@ -224,10 +224,10 @@ package() {
   find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
   find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
 
-  install -d "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton-staging"
-  install -m644 "$srcdir/compatibilitytool.vdf" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton-staging"
-  install -m644 "$srcdir/toolmanifest.vdf" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton-staging"
-  install -m755 "$srcdir/miniproton" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton-staging"
+  #install -d "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
+  #install -m644 "$srcdir/compatibilitytool.vdf" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
+  #install -m644 "$srcdir/toolmanifest.vdf" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
+  #install -m755 "$srcdir/miniproton" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
 
   # Load ntsync module
   install -Dm644 "$srcdir/ntsync.conf" "$pkgdir/usr/lib/modules-load.d/10-ntsync.conf"
