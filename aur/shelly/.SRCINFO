@@ -1,0 +1,27 @@
+pkgbase = shelly
+	pkgdesc = Shelly: A Modern Arch Package Manager
+	pkgver = 2.0.5
+	pkgrel = 1
+	url = https://github.com/ZoeyErinBauer/Shelly-ALPM
+	arch = x86_64
+	license = GPL-3.0-only
+	makedepends = dotnet-sdk-10.0
+	makedepends = clang
+	depends = pacman
+	depends = gtk4
+	depends = glib2
+	depends = sudo
+	depends = tar
+	depends = bash
+	depends = git
+	depends = hicolor-icon-theme
+	depends = dbus
+	depends = glibc
+	depends = glib2
+	optdepends = flatpak: For supporting flatpak implementation.
+	optdepends = archlinux-appstream-data: package icons and metadata
+	provides = shelly
+	source = shelly-2.0.5.tar.gz::https://github.com/ZoeyErinBauer/Shelly-ALPM/archive/v2.0.5.tar.gz
+	sha256sums = 24eca2a1048c3307f262452637a5ff98c588593c2393ea567c6602ba202a75ca
+
+pkgname = shelly
