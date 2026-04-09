@@ -8,15 +8,20 @@
 # Contributor: Vesa Kaihlavirta
 
 pkgname=awesome
-pkgver=4.3.r1654.g8b1f895
+pkgver=4.3.r1736.g994f9d6ed
 pkgrel=1
 pkgdesc='Highly configurable framework window manager'
 url='https://awesomewm.org'
 arch=(x86_64)
 license=(GPL-2.0-or-later)
-depends=(cairo
+depends=(bash
+         cairo
          dbus
          gdk-pixbuf2
+         glib2
+         glibc
+         libx11
+         libxcb
          imlib2
          libxdg-basedir
          libxkbcommon
@@ -25,11 +30,11 @@ depends=(cairo
          lua53-lgi
          pango
          startup-notification
+         xcb-util
          xcb-util-cursor
          xcb-util-keysyms
          xcb-util-wm
-         xcb-util-xrm
-         xorg-xmessage)
+         xcb-util-xrm)
 makedepends=(asciidoctor
              git
              cmake
@@ -60,15 +65,21 @@ prepare() {
 	sed -i 's| lua | lua5.3 |;s/lua)/lua5.3)/' tests/examples/CMakeLists.txt
 	sed -i '1s|/usr/bin/env lua$|/usr/bin/env lua5.3|' build-utils/check_for_invalid_requires.lua
 	sed -i 's/"lua"/"lua5.3"/' tests/test-spawn.lua
+
+	# https://gitlab.archlinux.org/archlinux/packaging/packages/awesome/-/issues/1
+	sed -e '/^local Gio = lgi.Gio$/alocal GioUnix = lgi.GioUnix' \
+	    -e 's/Gio\.UnixInputStream/GioUnix\.InputStream/g' \
+	    -e 's/Gio\.UnixOutputStream/GioUnix\.OutputStream/g' \
+	    -i lib/awful/spawn.lua tests/_client.lua tests/test-spawn.lua
 }
 
 build() {
 	cd "$_archive"
 	CFLAGS+=' -fcommon' # https://wiki.gentoo.org/wiki/Gcc_10_porting_notes/fno_common
 	cmake -B build \
-        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
 		-DCMAKE_BUILD_TYPE=RELEASE \
 		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
 		-DSYSCONFDIR=/etc \
 		-DGENERATE_DOC=OFF \
 		-DLUA_EXECUTABLE=/usr/bin/lua5.3 \
