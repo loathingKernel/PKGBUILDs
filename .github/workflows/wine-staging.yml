@@ -27,13 +27,13 @@ jobs:
         include:
           - repository: public
             pkgbuild: PKGBUILD
-            multilib: true
+            multilib: false
           - repository: personal
             pkgbuild: PKGBUILD
-            multilib: true
+            multilib: false
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
-      pkgdir: multilib/wine-staging
+      pkgdir: extra/wine-staging
       repository: ${{ matrix.repository }}
       action: ${{ inputs.action != '' && inputs.action || 'build' }}
       pkgbuild: ${{ matrix.pkgbuild }}
