@@ -11,14 +11,14 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - aur/lib32-lapack/.SRCINFO
+      - aur/lib32-lapack/.SRCINFO
 
 jobs:
   repository:
