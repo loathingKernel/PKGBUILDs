@@ -11,14 +11,14 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - public/lib32-libxnvctrl/.SRCINFO
+      - public/lib32-libxnvctrl/.SRCINFO
 
 jobs:
   repository:
