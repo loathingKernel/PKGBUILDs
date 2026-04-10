@@ -6,7 +6,7 @@
 
 pkgname=wine
 pkgver=11.5
-pkgrel=1
+pkgrel=2
 _tkg_commit=13b74356e1b588cf4d6e54a0a9225c1aed100604
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -44,6 +44,7 @@ depends=(
   desktop-file-utils
   fontconfig
   freetype2
+  libgcc
   gettext
   glib2
   glibc
@@ -55,13 +56,11 @@ depends=(
   libxkbcommon
   libxi
   libxrandr
-  llvm-libs
   systemd-libs
   wayland
 )
 makedepends=(
   alsa-lib
-  clang
   ffmpeg
   git
   gnutls
@@ -73,9 +72,8 @@ makedepends=(
   libxcomposite
   libxinerama
   libxxf86vm
-  lld
-  llvm
   mesa
+  mingw-w64-gcc
   opencl-headers
   opencl-icd-loader
   pcsclite
@@ -155,31 +153,24 @@ build() {
   local march="${flags["-march"]:-nocona}"
   local mtune="${flags["-mtune"]:-core-avx2}"
 
-  export CC="clang"
-  export CXX="clang++"
-
   # From Proton
   OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe"
+  OPTIMIZE_FLAGS+=" -mprefer-avx128 -fvect-cost-model=cheap -fipa-pta"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64"
   DEBUG_FLAGS="-ffunction-sections -fdata-sections -fno-omit-frame-pointer"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
-  #STRIP_FLAGS="-s"
+  STRIP_FLAGS="-s"
   COMMON_FLAGS="$OPTIMIZE_FLAGS $SANITY_FLAGS $DEBUG_FLAGS $WARNING_FLAGS $STRIP_FLAGS"
-  #LTO_CFLAGS="-flto=thin -D__LLD_LTO__"
+  #LTO_CFLAGS="-fuse-linker-plugin -fdevirtualize-at-ltrans -flto-partition=one -flto -Wl,-flto"
 
   COMMON_LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-  #LTO_LDFLAGS="-flto=thin -fuse-ld=lld"
-
-  # Per component CFLAGS and LDFlAGS (requires makedep patch)
-  #export preloader_CFLAGS=" -fno-lto -Wl,--no-relax"
-  #export wine64_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
-  #export wine_preloader_LDFLAGS=" -fno-lto -Wl,--no-relax"
+  #LTO_LDFLAGS="$LTO_CFLAGS"
 
   # Disable assertions
   #export CPPFLAGS="-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0 -DNDEBUG -D_NDEBUG"
 
   export LDFLAGS="$COMMON_LDFLAGS $LTO_LDFLAGS"
-  export CROSSLDFLAGS="-Wl,/FILEALIGN:4096,/OPT:REF,/OPT:ICF"
+  export CROSSLDFLAGS="$COMMON_LDFLAGS -Wl,--file-alignment,4096"
 
   export CFLAGS="$COMMON_FLAGS -mcmodel=small $LTO_CFLAGS"
   export CXXFLAGS="$COMMON_FLAGS -mcmodel=small -std=c++17 $LTO_CFLAGS"
@@ -194,7 +185,7 @@ build() {
     --with-wayland \
     --with-gstreamer \
     --with-freetype \
-    --with-mingw=clang \
+    --with-mingw \
     --with-alsa \
     --with-ffmpeg \
     --without-oss \
@@ -217,8 +208,8 @@ package() {
   ln -s ../conf.avail/30-win32-aliases.conf "$pkgdir/usr/share/fontconfig/conf.default/30-win32-aliases.conf"
   install -Dm 644 "$srcdir/wine-binfmt.conf" "$pkgdir/usr/lib/binfmt.d/wine.conf"
 
-  llvm-strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.{dll,exe,cpl}
-  llvm-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe,cpl}
+  i686-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/i386-windows/*.{dll,exe,cpl}
+  x86_64-w64-mingw32-strip --strip-unneeded "$pkgdir"/usr/lib/wine/x86_64-windows/*.{dll,exe,cpl}
 
   find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
   find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
