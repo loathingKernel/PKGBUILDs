@@ -11,23 +11,22 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - aur/lib32-simplescreenrecorder/.SRCINFO
+      - aur/lib32-simplescreenrecorder/.SRCINFO
 
 jobs:
   repository:
     strategy:
       matrix:
-        repository: [public, personal]
+        repository: [public]
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: aur/lib32-simplescreenrecorder
       repository: ${{ matrix.repository }}
-      multilib: true
       action: ${{ inputs.action != '' && inputs.action || 'build' }}
