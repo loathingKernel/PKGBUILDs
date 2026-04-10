@@ -27,10 +27,10 @@ jobs:
         include:
           - repository: public
             pkgbuild: PKGBUILD
-            multilib: true
+            multilib: false
           - repository: personal
             pkgbuild: PKGBUILD
-            multilib: true
+            multilib: false
     uses: ./.github/workflows/_job_pkgrepo.yml
     with:
       pkgdir: public/wine-cachyos
