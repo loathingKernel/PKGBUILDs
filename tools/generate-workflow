@@ -49,6 +49,7 @@ jobs:
       repository: ${{{{ matrix.repository }}}}
       action: ${{{{ inputs.action != '' && inputs.action || 'build' }}}}
       multilib: {multilib}
+      debloat: {debloat}
 """
 
 
@@ -63,6 +64,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--multilib", action="store_true", default=False, required=False
     )
+    parser.add_argument(
+        "--debloat", action="store_true", default=False, required=False
+    )
+
     parser.add_argument("path")
     args = parser.parse_args()
 
@@ -98,10 +103,12 @@ if __name__ == "__main__":
         multilib = True
     multilib = str(multilib).lower()
 
+    debloat = str(args.debloat).lower()
+
     logger.info("adding workflow for %s to repositories %s", pkgname, repotag)
     with workflow_file.open("w") as wf:
         wf.write(workflow_base.format(
-            subdir=subdir, pkgname=pkgname, repotag=repotag, multilib=multilib)
+            subdir=subdir, pkgname=pkgname, repotag=repotag, multilib=multilib, debloat=debloat)
         )
 
     subprocess.run(['git', 'add', workflow_file.as_posix()])
