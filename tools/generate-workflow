@@ -105,12 +105,13 @@ if __name__ == "__main__":
 
     debloat = str(args.debloat).lower()
 
-    logger.info("adding workflow for %s to repositories %s", pkgname, repotag)
+    exists = workflow_file.exists()
+    logger.info("%s workflow for %s to repositories %s", "updating" if exists else "adding", pkgname, repotag)
     with workflow_file.open("w") as wf:
         wf.write(workflow_base.format(
             subdir=subdir, pkgname=pkgname, repotag=repotag, multilib=multilib, debloat=debloat)
         )
 
     subprocess.run(['git', 'add', workflow_file.as_posix()])
-    subprocess.run(['git', 'commit', '-m', f'workflows: add {pkgname}'])
+    subprocess.run(['git', 'commit', '-m', f'workflows: {"update" if exists else "add"} {pkgname}.yml'])
     sys.exit(0)
