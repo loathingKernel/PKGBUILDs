@@ -18,7 +18,7 @@ on:
     branches:
       - master
     paths:
-      - multilib/wine-staging/.SRCINFO
+      - extra/wine-staging/.SRCINFO
 
 jobs:
   repository:
@@ -38,3 +38,4 @@ jobs:
       action: ${{ inputs.action != '' && inputs.action || 'build' }}
       pkgbuild: ${{ matrix.pkgbuild }}
       multilib: ${{ matrix.multilib }}
+      debloat: false
