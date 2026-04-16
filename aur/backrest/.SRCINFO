@@ -1,7 +1,7 @@
 pkgbase = backrest
 	pkgdesc = A web UI and orchestrator for restic backup.
 	pkgver = 1.12.1
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/garethgeorge/backrest
 	arch = i686
 	arch = pentium4
