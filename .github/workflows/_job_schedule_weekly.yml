@@ -31,12 +31,12 @@ jobs:
     needs: dxvk-nvapi-vkreflex-layer-git
     uses: ./.github/workflows/vkd3d-proton-mingw-git.yml
 
-  dxvk-sarek-async-mingw-git:
+  dxvk-sarek-mingw-git:
     needs: vkd3d-proton-mingw-git
-    uses: ./.github/workflows/dxvk-sarek-async-mingw-git.yml
+    uses: ./.github/workflows/dxvk-sarek-mingw-git.yml
 
   rare-git:
-    needs: dxvk-sarek-async-mingw-git
+    needs: dxvk-sarek-mingw-git
     uses: ./.github/workflows/rare-git.yml
 
   dolphin-emu-git:
