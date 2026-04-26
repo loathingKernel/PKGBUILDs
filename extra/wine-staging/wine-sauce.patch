@@ -1,7 +1,7 @@
-From 716135d61ef1a2831f663eeb1cb71353322990f9 Mon Sep 17 00:00:00 2001
+From 0fc28b864ea556665c62901a9ba22f62f6ffd9eb Mon Sep 17 00:00:00 2001
 From: William Horvath <william@horvath.blog>
 Date: Thu, 14 Nov 2024 02:29:41 -0800
-Subject: [PATCH 01/16] clang: fixup lto
+Subject: [PATCH 01/15] clang: fixup lto
 
 ---
  loader/preloader.c | 4 ++++
@@ -31,157 +31,13 @@ index ce82a9f296f..385dbf50b67 100644
  
  #endif /* __linux__ */
 -- 
-2.53.0
+2.54.0
 
 
-From c3ddeb121e173f8419f718a7bc54d472aab97271 Mon Sep 17 00:00:00 2001
-From: Stelios Tsampas <loathingkernel@gmail.com>
-Date: Tue, 8 Jul 2025 15:27:08 +0300
-Subject: [PATCH 02/16] HACK: kernelbase: allow overriding dlls for DLSS, XeSS,
- FSR4 and FSR3
-
-`WINE_LOADDLL_REPLACE=fsr4` will force Wine to load c:\windows\system32\amdxcffx64.dll
-`WINE_LOADDLL_REPLACE=dlss` will force Wine to load c:\windows\system32\nvngx_dlss{,d,g}.dll
-
-* HACK: kernelbase: allow overriding dlls for XeSS
-* HACK: kernelbase: elevate debug output for replacement dlls from TRACE to FIXME
-* HACK: kernelbase: allow overriding dlls for FSR3
-* HACK: kernelbase: allow multiple options to be enabled for WINE_LOADDLL_REPLACE
-* HACK: kernelbase: don't override nvngx_dlssg.dll from the Nvidia Linux driver
----
- dlls/kernelbase/loader.c | 37 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
-
-diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index f4e1ca2e23a..acc252442ca 100644
---- a/dlls/kernelbase/loader.c
-+++ b/dlls/kernelbase/loader.c
-@@ -556,17 +556,50 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
- {
-     UNICODE_STRING str;
-     HMODULE module;
-+    WCHAR overrideW[MAX_PATH] = {0}, envW[40] = {0};
- 
-     if (!name)
-     {
-         SetLastError( ERROR_INVALID_PARAMETER );
-         return 0;
-     }
--    RtlInitUnicodeString( &str, name );
-+
-+    if ( GetEnvironmentVariableW( L"WINE_LOADDLL_REPLACE", envW, sizeof(envW)) )
-+    {
-+        if ( wcsstr( envW, L"fsr3" ) )
-+        {
-+            /* HACK: override amd_fidelityfx_*.dll path to a non-standard location for FSR3 upgrade */
-+            if (wcsstr( name, L"amd_fidelityfx_vk.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_vk.dll" );
-+            if (wcsstr( name, L"amd_fidelityfx_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_dx12.dll" );
-+        }
-+        if ( wcsstr( envW, L"fsr4" ) )
-+        {
-+            /* HACK: override amdxcffx64.dll path to a non-standard location for FSR4 upgrade */
-+            if (wcsstr( name, L"amdxcffx64.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amdxcffx64.dll" );
-+        }
-+        if ( wcsstr( envW, L"dlss" ) )
-+        {
-+            /* HACK: override nvngx_dlss*.dll paths to a non-standard location for DLSS upgrade */
-+            if (wcsstr( name, L"nvngx_dlss.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\nvngx_dlss.dll" );
-+            if (wcsstr( name, L"nvngx_dlssd.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\nvngx_dlssd.dll" );
-+            if (wcsstr( name, L"nvngx_dlssg.dll" ) && !wcsstr( name, L"nvidia/wine/nvngx_dlssg.dll" ))
-+                wcscpy( overrideW, L"c:\\windows\\system32\\nvngx_dlssg.dll" );
-+        }
-+        if ( wcsstr( envW, L"xess" ) )
-+        {
-+            /* HACK: override libxe*.dll paths to a non-standard location for XeSS upgrade */
-+            if (wcsstr( name, L"libxess.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxess.dll" );
-+            if (wcsstr( name, L"libxell.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxell.dll" );
-+            if (wcsstr( name, L"libxess_fg.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxess_fg.dll" );
-+        }
-+        if ( overrideW[0] ) FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
-+    }
-+
-+    RtlInitUnicodeString( &str, overrideW[0] ? overrideW : name );
-     if (str.Length && str.Buffer[str.Length/sizeof(WCHAR) - 1] != ' ') return load_library( &str, flags );
- 
-     /* library name has trailing spaces */
--    RtlCreateUnicodeString( &str, name );
-+    RtlCreateUnicodeString( &str, overrideW[0] ? overrideW : name );
-     while (str.Length > sizeof(WCHAR) && str.Buffer[str.Length/sizeof(WCHAR) - 1] == ' ')
-         str.Length -= sizeof(WCHAR);
- 
--- 
-2.53.0
-
-
-From dce7b6cb8cd0240b55aba9530cb57e153540c34e Mon Sep 17 00:00:00 2001
-From: Stelios Tsampas <loathingkernel@gmail.com>
-Date: Tue, 26 Aug 2025 18:23:50 +0300
-Subject: [PATCH 03/16] HACK: kernelbase: allow overriding dlls for FSR SDK 2.0
- (wip)
-
----
- dlls/kernelbase/loader.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index acc252442ca..e1122ccb210 100644
---- a/dlls/kernelbase/loader.c
-+++ b/dlls/kernelbase/loader.c
-@@ -577,6 +577,13 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
-             /* HACK: override amdxcffx64.dll path to a non-standard location for FSR4 upgrade */
-             if (wcsstr( name, L"amdxcffx64.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amdxcffx64.dll" );
-         }
-+        if ( wcsstr( envW, L"fsr_sdk2" ) )
-+        {
-+            /* HACK: override amd_fidelityfx_dx12.dll to load amd_fidelityfx_loader_dx12 instead for FSR2/3/4 upgrade */
-+            if (wcsstr( name, L"amd_fidelityfx_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_loader_dx12.dll" );
-+            /* HACK: override amd_fidelityfx_loader_*.dll path to a non-standard location for FSR2/3/4 upgrade */
-+            if (wcsstr( name, L"amd_fidelityfx_loader_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_loader_dx12.dll" );
-+        }
-         if ( wcsstr( envW, L"dlss" ) )
-         {
-             /* HACK: override nvngx_dlss*.dll paths to a non-standard location for DLSS upgrade */
--- 
-2.53.0
-
-
-From 2aa67ffb86a8d6f36f5de9efc325f664b855ae3b Mon Sep 17 00:00:00 2001
-From: Stelios Tsampas <loathingkernel@gmail.com>
-Date: Fri, 5 Sep 2025 16:45:14 +0300
-Subject: [PATCH 04/16] Revert "HACK: kernelbase: allow overriding dlls for FSR
- SDK 2.0 (wip)"
-
-This reverts commit bdaa80a85304a61c74648e3bc97ee282a8c3e775.
----
- dlls/kernelbase/loader.c | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index e1122ccb210..acc252442ca 100644
---- a/dlls/kernelbase/loader.c
-+++ b/dlls/kernelbase/loader.c
-@@ -577,13 +577,6 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
-             /* HACK: override amdxcffx64.dll path to a non-standard location for FSR4 upgrade */
-             if (wcsstr( name, L"amdxcffx64.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amdxcffx64.dll" );
-         }
--        if ( wcsstr( envW, L"fsr_sdk2" ) )
--        {
--            /* HACK: override amd_fidelityfx_dx12.dll to load amd_fidelityfx_loader_dx12 instead for FSR2/3/4 upgrade */
--            if (wcsstr( name, L"amd_fidelityfx_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_loader_dx12.dll" );
--            /* HACK: override amd_fidelityfx_loader_*.dll path to a non-standard location for FSR2/3/4 upgrade */
--            if (wcsstr( name, L"amd_fidelityfx_loader_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_loader_dx12.dll" );
--        }
-         if ( wcsstr( envW, L"dlss" ) )
-         {
-             /* HACK: override nvngx_dlss*.dll paths to a non-standard location for DLSS upgrade */
--- 
-2.53.0
-
-
-From 7de3c9cf3ccc045a1dedd0b295557ea93e60fbdd Mon Sep 17 00:00:00 2001
+From 8a5daa89059e9d1b7aae66c19954751f26a82297 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Thu, 21 Nov 2024 00:59:01 +0200
-Subject: [PATCH 05/16] makedep: add per-source cflags and per-program ldflags
+Subject: [PATCH 02/15] makedep: add per-source cflags and per-program ldflags
  variables
 
 Co-authored-by: William Horvath <william@horvath.blog>
@@ -190,7 +46,7 @@ Co-authored-by: William Horvath <william@horvath.blog>
  1 file changed, 24 insertions(+)
 
 diff --git a/tools/makedep.c b/tools/makedep.c
-index 1782f3ed79d..bc1732c3141 100644
+index 90a522640fe..23d596d3b42 100644
 --- a/tools/makedep.c
 +++ b/tools/makedep.c
 @@ -485,6 +485,19 @@ static const char *get_base_name( const char *name )
@@ -253,13 +109,42 @@ index 1782f3ed79d..bc1732c3141 100644
          strarray_add( &make->all_targets[arch], program );
  
 -- 
-2.53.0
+2.54.0
 
 
-From 7d75633e43d88d8243ba33dc74d6231ac13f31bf Mon Sep 17 00:00:00 2001
+From 4662ca47643d45cf995db6b765199158beb8d2e5 Mon Sep 17 00:00:00 2001
+From: William Horvath <william@horvath.blog>
+Date: Fri, 22 Nov 2024 10:31:07 -0800
+Subject: [PATCH 03/15] configure: Enforce 4-byte stack alignment on clang for
+ PE builds.
+
+Same as -mpreferred-stack-boundary=2 for gcc.
+Clang interprets this as "n" bytes, while gcc uses "2^n" bytes.
+https://linux.kernel.narkive.com/y7hAplfS/patch-x86-build-specify-stack-alignment-for-clang
+---
+ configure.ac | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configure.ac b/configure.ac
+index 258b03a1c9e..be89743ed1b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -627,6 +627,7 @@ This is an error since --enable-archs=$wine_arch was requested.])])
+ 
+     case $wine_arch in
+       i386) WINE_TRY_PE_CFLAGS([-fno-omit-frame-pointer])
++            WINE_TRY_PE_CFLAGS([-mstack-alignment=4])
+             WINE_TRY_PE_CFLAGS([-mpreferred-stack-boundary=2])
+             WINE_TRY_PE_CFLAGS([-mlong-double-64])
+             WINE_TRY_PE_CFLAGS([-Wl,--disable-stdcall-fixup],
+-- 
+2.54.0
+
+
+From 98471e23aad436a3bff293079ccbfe290e036c8b Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Bernhard=20K=C3=B6lbl?= <besentv@gmail.com>
 Date: Tue, 20 May 2025 20:14:23 +0200
-Subject: [PATCH 06/16] fixup! win32u: Provide more gpu device properties.
+Subject: [PATCH 04/15] fixup! win32u: Provide more gpu device properties.
 
 CW-Bug-Id: #23941
 ---
@@ -280,13 +165,13 @@ index 6490dcba446..1d4ef464e82 100644
      }
  }
 -- 
-2.53.0
+2.54.0
 
 
-From e39ef968fcbe2b2a022cf84a89b64f6508917b80 Mon Sep 17 00:00:00 2001
+From 21786c1c84c87a8539e691f2fef330a852a3b6a2 Mon Sep 17 00:00:00 2001
 From: Arkadiusz Hiler <ahiler@codeweavers.com>
 Date: Fri, 17 Oct 2025 11:23:58 +0300
-Subject: [PATCH 07/16] fixup! win32u: Bump GPU internal driver versions to a
+Subject: [PATCH 05/15] fixup! win32u: Bump GPU internal driver versions to a
  future version.
 
 Dune: Awakening still complains about driver version with Nvidia GPUs.
@@ -321,42 +206,13 @@ index 1d4ef464e82..4ccb844dde3 100644
  }
  
 -- 
-2.53.0
+2.54.0
 
 
-From 11a0b61126351f6c608ab08718bdd58b57cb2ec3 Mon Sep 17 00:00:00 2001
-From: William Horvath <william@horvath.blog>
-Date: Fri, 22 Nov 2024 10:31:07 -0800
-Subject: [PATCH 08/16] configure: Enforce 4-byte stack alignment on clang for
- PE builds.
-
-Same as -mpreferred-stack-boundary=2 for gcc.
-Clang interprets this as "n" bytes, while gcc uses "2^n" bytes.
-https://linux.kernel.narkive.com/y7hAplfS/patch-x86-build-specify-stack-alignment-for-clang
----
- configure.ac | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/configure.ac b/configure.ac
-index a3893fc4703..4293727ee76 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -623,6 +623,7 @@ This is an error since --enable-archs=$wine_arch was requested.])])
- 
-     case $wine_arch in
-       i386) WINE_TRY_PE_CFLAGS([-fno-omit-frame-pointer])
-+            WINE_TRY_PE_CFLAGS([-mstack-alignment=4])
-             WINE_TRY_PE_CFLAGS([-mpreferred-stack-boundary=2])
-             WINE_TRY_PE_CFLAGS([-mlong-double-64])
-             WINE_TRY_PE_CFLAGS([-Wl,--disable-stdcall-fixup],
--- 
-2.53.0
-
-
-From 455b442237a8580167480f5039f6701873898ce9 Mon Sep 17 00:00:00 2001
+From ed392d117cff7154cfc60b31535c1a54be443f2c Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sat, 25 May 2024 15:35:25 +0300
-Subject: [PATCH 09/16] HACK: shell32: Add WINEUSERSANDBOX environment variable
+Subject: [PATCH 06/15] HACK: shell32: Add WINEUSERSANDBOX environment variable
 
 Setting 'WINEUSERSANDBOX=1' stops Wine from creating
 links to the $HOME folders from the respective Wine folders.
@@ -383,13 +239,13 @@ index 6eb5d5cc345..c5242605092 100644
      /* create directory/directories */
      ret = SHCreateDirectoryExW(hwndOwner, szBuildPath, NULL);
 -- 
-2.53.0
+2.54.0
 
 
-From e0094833d10ce27a5e20d9483d77b6f6d64faf76 Mon Sep 17 00:00:00 2001
+From 3d228b085cf9f46d5b22615241eb63bf2f4174ea Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sat, 25 May 2024 15:38:24 +0300
-Subject: [PATCH 10/16] HACK: winex11.drv: Allow custom window wmclass to set
+Subject: [PATCH 07/15] HACK: winex11.drv: Allow custom window wmclass to set
  through the environment
 
 Wine's wmclass can be controlled through the WINE_WMCLASS environment
@@ -399,7 +255,7 @@ variable.
  1 file changed, 9 insertions(+)
 
 diff --git a/dlls/winex11.drv/window.c b/dlls/winex11.drv/window.c
-index 33d8ceee438..dee46f78580 100644
+index a83359b2d74..94e96149639 100644
 --- a/dlls/winex11.drv/window.c
 +++ b/dlls/winex11.drv/window.c
 @@ -1173,8 +1173,17 @@ static void set_initial_wm_hints( Display *display, Window window )
@@ -421,13 +277,13 @@ index 33d8ceee438..dee46f78580 100644
          XFree( class_hints );
      }
 -- 
-2.53.0
+2.54.0
 
 
-From ef0efcee36c1fce8a51d823034de59f91ee7c027 Mon Sep 17 00:00:00 2001
+From 8e715ea50cb2b024a2b27a45ca3b14598be4acf3 Mon Sep 17 00:00:00 2001
 From: Zebra2711 <zebra2711@users.noreply.github.com>
 Date: Mon, 28 Apr 2025 16:21:24 +0300
-Subject: [PATCH 11/16] HACK: winewayland.drv: Also use WINE_WMCLASS
+Subject: [PATCH 08/15] HACK: winewayland.drv: Also use WINE_WMCLASS
  environment variable under Wayland
 
 ---
@@ -456,48 +312,32 @@ index 2f8275ddb52..e00bc0849e5 100644
      if (!NtUserInternalGetWindowText(surface->hwnd, text, ARRAY_SIZE(text)))
          text[0] = 0;
 -- 
-2.53.0
+2.54.0
 
 
-From 512514445fc12cf2afb0426cacda8e04665f55ab Mon Sep 17 00:00:00 2001
+From 84580c5feabaf02957f4a52052cade3912f1b702 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
-Date: Mon, 5 Jan 2026 20:48:27 +0200
-Subject: [PATCH 12/16] HACK: kernelbase: add redirection for libxess_dx11.dll
+Date: Tue, 8 Jul 2025 15:27:08 +0300
+Subject: [PATCH 09/15] HACK: kernelbase: allow overriding dlls for DLSS, XeSS,
+ FSR4 and FSR3
 
+`WINE_LOADDLL_REPLACE=fsr4` will force Wine to load c:\windows\system32\amdxcffx64.dll
+`WINE_LOADDLL_REPLACE=dlss` will force Wine to load c:\windows\system32\nvngx_dlss{,d,g}.dll
+
+* HACK: kernelbase: allow overriding dlls for XeSS
+* HACK: kernelbase: elevate debug output for replacement dlls from TRACE to FIXME
+* HACK: kernelbase: allow overriding dlls for FSR3
+* HACK: kernelbase: allow multiple options to be enabled for WINE_LOADDLL_REPLACE
+* HACK: kernelbase: don't override nvngx_dlssg.dll from the Nvidia Linux driver
 ---
- dlls/kernelbase/loader.c | 1 +
- 1 file changed, 1 insertion(+)
+ dlls/kernelbase/loader.c | 57 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 55 insertions(+), 2 deletions(-)
 
 diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index acc252442ca..d1cf2607f45 100644
+index 6c6f1f31881..6e2f93873dd 100644
 --- a/dlls/kernelbase/loader.c
 +++ b/dlls/kernelbase/loader.c
-@@ -589,6 +589,7 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
-         {
-             /* HACK: override libxe*.dll paths to a non-standard location for XeSS upgrade */
-             if (wcsstr( name, L"libxess.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxess.dll" );
-+            if (wcsstr( name, L"libxess_dx11.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxess_dx11.dll" );
-             if (wcsstr( name, L"libxell.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxell.dll" );
-             if (wcsstr( name, L"libxess_fg.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxess_fg.dll" );
-         }
--- 
-2.53.0
-
-
-From 103a97eedf42da0d5a0ee18c96ac56b9c37ee448 Mon Sep 17 00:00:00 2001
-From: Stelios Tsampas <loathingkernel@gmail.com>
-Date: Thu, 2 Apr 2026 14:29:44 +0300
-Subject: [PATCH 13/16] HACK: kernelbase: move overrides out of LoadLibraryExW
-
----
- dlls/kernelbase/loader.c | 83 ++++++++++++++++++++++++----------------
- 1 file changed, 51 insertions(+), 32 deletions(-)
-
-diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index d1cf2607f45..7c7697d3da8 100644
---- a/dlls/kernelbase/loader.c
-+++ b/dlls/kernelbase/loader.c
-@@ -549,6 +549,54 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExA( LPCSTR name, HANDLE file, DWORD
+@@ -556,6 +556,54 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExA( LPCSTR name, HANDLE file, DWORD
  }
  
  
@@ -552,63 +392,112 @@ index d1cf2607f45..7c7697d3da8 100644
  /***********************************************************************
   *	LoadLibraryExW   (kernelbase.@)
   */
-@@ -556,7 +604,7 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+@@ -563,17 +611,22 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
  {
      UNICODE_STRING str;
      HMODULE module;
--    WCHAR overrideW[MAX_PATH] = {0}, envW[40] = {0};
 +    WCHAR overrideW[MAX_PATH] = {0};
  
      if (!name)
      {
-@@ -564,37 +612,8 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+         SetLastError( ERROR_INVALID_PARAMETER );
+         return 0;
+     }
+-    RtlInitUnicodeString( &str, name );
++
++    if ( loaddll_replace(name, overrideW) )
++        FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
++
++    RtlInitUnicodeString( &str, overrideW[0] ? overrideW : name );
+     if (str.Length && str.Buffer[str.Length/sizeof(WCHAR) - 1] != ' ') return load_library( &str, flags );
+ 
+     /* library name has trailing spaces */
+-    RtlCreateUnicodeString( &str, name );
++    RtlCreateUnicodeString( &str, overrideW[0] ? overrideW : name );
+     while (str.Length > sizeof(WCHAR) && str.Buffer[str.Length/sizeof(WCHAR) - 1] == ' ')
+         str.Length -= sizeof(WCHAR);
+ 
+-- 
+2.54.0
+
+
+From fda3167c8694abba3d77328aa0b2de891a39c722 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Thu, 9 Apr 2026 15:50:43 +0300
+Subject: [PATCH 10/15] HACK: kernelbase: add WINE_OPTISCALER_NAME to load
+ optiscaler's dll from an external location
+
+The matching intentionally matches `name.dll` exactly to allow optiscaler
+to load the real dll through the fully qualified path.
+---
+ dlls/kernelbase/loader.c | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
+
+diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
+index 6e2f93873dd..06495663c37 100644
+--- a/dlls/kernelbase/loader.c
++++ b/dlls/kernelbase/loader.c
+@@ -559,19 +559,31 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExA( LPCSTR name, HANDLE file, DWORD
+ /***********************************************************************
+  * LoadLibary replace hack
+  */
+-BOOL loaddll_replace(LPCWSTR name, LPWSTR override)
++BOOL loaddll_optiscaler_hack(LPCWSTR name, LPWSTR override, DWORD size)
+ {
+-    WCHAR envW[64] = {0};
++    WCHAR dllW[64] = {0};
+     UINT ret;
+ 
+-    ret = GetEnvironmentVariableW( L"WINE_LOADDLL_REPLACE", envW, sizeof(envW));
+-    if ( !ret ) return FALSE;
+-    if ( ret > ARRAY_SIZE(envW) )
++    ret = GetEnvironmentVariableW( L"WINE_OPTISCALER_NAME", dllW, sizeof(dllW));
++    if ( !ret || ret >= ARRAY_SIZE(dllW) ) return FALSE;
++
++    if ( !wcscmp( name, dllW ) )
+     {
+-        ERR("WINE_LOADDLL_REPLACE value larger than %zu (%u)\n", ARRAY_SIZE(envW), ret);
+-        return FALSE;
++        swprintf( override, size, L"c:\\windows\\system32\\umu\\%s", dllW );
++        return TRUE;
+     }
+ 
++    return FALSE;
++}
++
++BOOL loaddll_upscaler_hack(LPCWSTR name, LPWSTR override, DWORD size)
++{
++    WCHAR envW[64] = {0};
++    UINT ret;
++
++    ret = GetEnvironmentVariableW( L"WINE_UPSCALER_REPLACE", envW, sizeof(envW));
++    if ( !ret || ret >= ARRAY_SIZE(envW) ) return FALSE;
++
+     if ( wcsstr( envW, L"fsr3" ) )
+     {
+         /* HACK: override amd_fidelityfx_*.dll path to a non-standard location for FSR3 upgrade */
+@@ -619,8 +631,11 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
          return 0;
      }
  
--    if ( GetEnvironmentVariableW( L"WINE_LOADDLL_REPLACE", envW, sizeof(envW)) )
--    {
--        if ( wcsstr( envW, L"fsr3" ) )
--        {
--            /* HACK: override amd_fidelityfx_*.dll path to a non-standard location for FSR3 upgrade */
--            if (wcsstr( name, L"amd_fidelityfx_vk.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_vk.dll" );
--            if (wcsstr( name, L"amd_fidelityfx_dx12.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amd_fidelityfx_dx12.dll" );
--        }
--        if ( wcsstr( envW, L"fsr4" ) )
--        {
--            /* HACK: override amdxcffx64.dll path to a non-standard location for FSR4 upgrade */
--            if (wcsstr( name, L"amdxcffx64.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\amdxcffx64.dll" );
--        }
--        if ( wcsstr( envW, L"dlss" ) )
--        {
--            /* HACK: override nvngx_dlss*.dll paths to a non-standard location for DLSS upgrade */
--            if (wcsstr( name, L"nvngx_dlss.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\nvngx_dlss.dll" );
--            if (wcsstr( name, L"nvngx_dlssd.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\nvngx_dlssd.dll" );
--            if (wcsstr( name, L"nvngx_dlssg.dll" ) && !wcsstr( name, L"nvidia/wine/nvngx_dlssg.dll" ))
--                wcscpy( overrideW, L"c:\\windows\\system32\\nvngx_dlssg.dll" );
--        }
--        if ( wcsstr( envW, L"xess" ) )
--        {
--            /* HACK: override libxe*.dll paths to a non-standard location for XeSS upgrade */
--            if (wcsstr( name, L"libxess.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxess.dll" );
--            if (wcsstr( name, L"libxess_dx11.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxess_dx11.dll" );
--            if (wcsstr( name, L"libxell.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxell.dll" );
--            if (wcsstr( name, L"libxess_fg.dll" )) wcscpy( overrideW, L"c:\\windows\\system32\\libxess_fg.dll" );
--        }
--        if ( overrideW[0] ) FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
--    }
-+    if ( loaddll_replace(name, overrideW) )
-+        FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
+-    if ( loaddll_replace(name, overrideW) )
+-        FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
++    if ( loaddll_optiscaler_hack(name, overrideW, ARRAY_SIZE(overrideW))
++        || loaddll_upscaler_hack(name, overrideW, ARRAY_SIZE(overrideW)) )
++    {
++        FIXME( "HACK: replacing %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
++    }
  
      RtlInitUnicodeString( &str, overrideW[0] ? overrideW : name );
      if (str.Length && str.Buffer[str.Length/sizeof(WCHAR) - 1] != ' ') return load_library( &str, flags );
 -- 
-2.53.0
+2.54.0
 
 
-From 90cb0b5626054e65a0446726748a863ad5fffdba Mon Sep 17 00:00:00 2001
+From ec006928628c3682d156af28e2514ba7e2161637 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Thu, 2 Apr 2026 20:39:56 +0300
-Subject: [PATCH 14/16] HACK: kernelbase: add WINE_LOADDLL_REDIRECT to handle
+Subject: [PATCH 11/15] HACK: kernelbase: add WINE_LOADDLL_REDIRECT to handle
  arbitrary dlls and paths
 
 Update WINE_LOADDLL_REDIRECT format to handle multiple dlls and their paths.
@@ -634,14 +523,14 @@ respectively
 
 Will redirect `six.dll` to load `seven.dll`
 ---
- dlls/kernelbase/loader.c | 63 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 61 insertions(+), 2 deletions(-)
+ dlls/kernelbase/loader.c | 61 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 60 insertions(+), 1 deletion(-)
 
 diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index 7c7697d3da8..d5d86452dac 100644
+index 06495663c37..6f7ae2cb875 100644
 --- a/dlls/kernelbase/loader.c
 +++ b/dlls/kernelbase/loader.c
-@@ -550,8 +550,67 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExA( LPCSTR name, HANDLE file, DWORD
+@@ -557,8 +557,67 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExA( LPCSTR name, HANDLE file, DWORD
  
  
  /***********************************************************************
@@ -662,9 +551,9 @@ index 7c7697d3da8..d5d86452dac 100644
 +
 +    ret = GetEnvironmentVariableW( L"WINE_LOADDLL_REDIRECT", envW, sizeof(envW));
 +    if ( !ret ) return FALSE;
-+    if ( ret > ARRAY_SIZE(envW) )
++    if ( ret >= ARRAY_SIZE(envW) )
 +    {
-+        ERR("WINE_LOADDLL_REDIRECT value larger than %zu (%u)\n", ARRAY_SIZE(envW), ret);
++        ERR("WINE_LOADDLL_REDIRECT larger than %lu (%u)\n", (unsigned long)ARRAY_SIZE(envW), ret);
 +        return FALSE;
 +    }
 +
@@ -707,129 +596,163 @@ index 7c7697d3da8..d5d86452dac 100644
 +    return FALSE;
 +}
 +
- BOOL loaddll_replace(LPCWSTR name, LPWSTR override)
- {
-     WCHAR envW[64] = {0};
-@@ -612,7 +671,7 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
-         return 0;
-     }
- 
--    if ( loaddll_replace(name, overrideW) )
-+    if ( loaddll_replace(name, overrideW) || loaddll_redirect(name, overrideW, ARRAY_SIZE(overrideW)) )
-         FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
- 
-     RtlInitUnicodeString( &str, overrideW[0] ? overrideW : name );
--- 
-2.53.0
-
-
-From 94de32a1521ef5ea3d5fabb6540dba9dc5509846 Mon Sep 17 00:00:00 2001
-From: Stelios Tsampas <loathingkernel@gmail.com>
-Date: Thu, 9 Apr 2026 15:50:43 +0300
-Subject: [PATCH 15/16] HACK: kernelbase: add WINE_OPTISCALER_NAME to load
- optiscaler's dll from an external location
-
-The matching intentionally matches `name.dll` exactly to allow optiscaler
-to load the real dll through the fully qualified path.
----
- dlls/kernelbase/loader.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index d5d86452dac..ebaae91c94d 100644
---- a/dlls/kernelbase/loader.c
-+++ b/dlls/kernelbase/loader.c
-@@ -568,7 +568,7 @@ BOOL loaddll_redirect(LPCWSTR name, LPWSTR override, DWORD size)
-     if ( !ret ) return FALSE;
-     if ( ret > ARRAY_SIZE(envW) )
-     {
--        ERR("WINE_LOADDLL_REDIRECT value larger than %zu (%u)\n", ARRAY_SIZE(envW), ret);
-+        ERR("WINE_LOADDLL_REDIRECT larger than %zu (%u)\n", ARRAY_SIZE(envW), ret);
-         return FALSE;
-     }
- 
-@@ -611,16 +611,25 @@ BOOL loaddll_redirect(LPCWSTR name, LPWSTR override, DWORD size)
-     return FALSE;
- }
- 
--BOOL loaddll_replace(LPCWSTR name, LPWSTR override)
-+BOOL loaddll_replace(LPCWSTR name, LPWSTR override, DWORD size)
- {
-+    WCHAR dllW[64] = {0};
-     WCHAR envW[64] = {0};
-     UINT ret;
- 
-+    ret = GetEnvironmentVariableW( L"WINE_OPTISCALER_NAME", dllW, sizeof(dllW));
-+    if ( !ret || ret > ARRAY_SIZE(dllW) ) return FALSE;
-+    if ( !wcscmp( name, dllW ) )
-+    {
-+        swprintf( override, size, L"c:\\windows\\system32\\umu\\%s", dllW );
-+        return TRUE;
-+    }
-+
-     ret = GetEnvironmentVariableW( L"WINE_LOADDLL_REPLACE", envW, sizeof(envW));
-     if ( !ret ) return FALSE;
-     if ( ret > ARRAY_SIZE(envW) )
-     {
--        ERR("WINE_LOADDLL_REPLACE value larger than %zu (%u)\n", ARRAY_SIZE(envW), ret);
-+        ERR("WINE_LOADDLL_REPLACE larger than %zu (%u)\n", ARRAY_SIZE(envW), ret);
-         return FALSE;
-     }
- 
-@@ -671,7 +680,7 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
-         return 0;
-     }
- 
--    if ( loaddll_replace(name, overrideW) || loaddll_redirect(name, overrideW, ARRAY_SIZE(overrideW)) )
-+    if ( loaddll_replace(name, overrideW, ARRAY_SIZE(overrideW)) || loaddll_redirect(name, overrideW, ARRAY_SIZE(overrideW)) )
-         FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
- 
-     RtlInitUnicodeString( &str, overrideW[0] ? overrideW : name );
--- 
-2.53.0
-
-
-From 02c9417d855a7b00f9fcd3478ec4f8cf49a5667b Mon Sep 17 00:00:00 2001
-From: Stelios Tsampas <loathingkernel@gmail.com>
-Date: Fri, 10 Apr 2026 01:13:08 +0300
-Subject: [PATCH 16/16] HACK: kernelbase: rename WINE_LOADDLL_REPLACE to
- WINE_UPSCALER_REPLACE
-
----
- dlls/kernelbase/loader.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index ebaae91c94d..0c22f0fb079 100644
---- a/dlls/kernelbase/loader.c
-+++ b/dlls/kernelbase/loader.c
-@@ -611,7 +611,7 @@ BOOL loaddll_redirect(LPCWSTR name, LPWSTR override, DWORD size)
-     return FALSE;
- }
- 
--BOOL loaddll_replace(LPCWSTR name, LPWSTR override, DWORD size)
-+BOOL loaddll_upscaler_hack(LPCWSTR name, LPWSTR override, DWORD size)
+ BOOL loaddll_optiscaler_hack(LPCWSTR name, LPWSTR override, DWORD size)
  {
      WCHAR dllW[64] = {0};
-     WCHAR envW[64] = {0};
-@@ -625,7 +625,7 @@ BOOL loaddll_replace(LPCWSTR name, LPWSTR override, DWORD size)
-         return TRUE;
-     }
- 
--    ret = GetEnvironmentVariableW( L"WINE_LOADDLL_REPLACE", envW, sizeof(envW));
-+    ret = GetEnvironmentVariableW( L"WINE_UPSCALER_REPLACE", envW, sizeof(envW));
-     if ( !ret ) return FALSE;
-     if ( ret > ARRAY_SIZE(envW) )
-     {
-@@ -680,7 +680,7 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
-         return 0;
-     }
- 
--    if ( loaddll_replace(name, overrideW, ARRAY_SIZE(overrideW)) || loaddll_redirect(name, overrideW, ARRAY_SIZE(overrideW)) )
-+    if ( loaddll_upscaler_hack(name, overrideW, ARRAY_SIZE(overrideW)) || loaddll_redirect(name, overrideW, ARRAY_SIZE(overrideW)) )
-         FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
- 
-     RtlInitUnicodeString( &str, overrideW[0] ? overrideW : name );
 -- 
-2.53.0
+2.54.0
+
+
+From 14072090bb9d8de00015b0a9bafbfebb13fc6c35 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Sun, 26 Apr 2026 17:24:02 +0300
+Subject: [PATCH 12/15] HACK: wine.inf: default to 'rgb' font smoothing
+
+---
+ loader/wine.inf.in | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/loader/wine.inf.in b/loader/wine.inf.in
+index aece31f8dc1..e7fc3479300 100644
+--- a/loader/wine.inf.in
++++ b/loader/wine.inf.in
+@@ -63,6 +63,7 @@ AddReg=\
+     Debugger,\
+     DirectX,\
+     Fonts,\
++    FontSmooth,\
+     LicenseInformation,\
+     MCI,\
+     Misc,\
+@@ -520,6 +521,12 @@ HKLM,%FontSubStr%,"Times New Roman Greek,161",,"Times New Roman,161"
+ HKLM,%FontSubStr%,"Times New Roman TUR,162",,"Times New Roman,162"
+ HKLM,System\CurrentControlSet\Hardware Profiles\Current\Software\Fonts,"LogPixels",0x10003,0x00000060
+ 
++[FontSmooth]
++HKCU,Control Panel\Desktop,"FontSmoothing",,"2"
++HKCU,Control Panel\Desktop,"FontSmoothingGamma",0x10001,0x00000578
++HKCU,Control Panel\Desktop,"FontSmoothingOrientation",0x10001,0x00000001
++HKCU,Control Panel\Desktop,"FontSmoothingType",0x10001,0x00000002
++
+ [MCI]
+ HKLM,%Mci32Str%,"AVIVideo",,"mciavi32.dll"
+ HKLM,%Mci32Str%,"CDAudio",,"mcicda.dll"
+-- 
+2.54.0
+
+
+From 6f2f74bda23b9e4a8c8c1a02bc578c533a764c51 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Mon, 20 Apr 2026 11:04:31 +0300
+Subject: [PATCH 13/15] Revert "ntdll: Switch to CLOCK_BOOTTIME for monotonic
+ counters when available."
+
+This reverts commit 3d373e452388b60bea9dca6d5c4cf3f8b20a0c54.
+---
+ dlls/ntdll/unix/sync.c | 4 ++--
+ server/request.c       | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/dlls/ntdll/unix/sync.c b/dlls/ntdll/unix/sync.c
+index bc9bbf2c30d..f6b564d2d1a 100644
+--- a/dlls/ntdll/unix/sync.c
++++ b/dlls/ntdll/unix/sync.c
+@@ -96,8 +96,8 @@ static inline ULONGLONG monotonic_counter(void)
+     return mach_continuous_time() * timebase.numer / timebase.denom / 100;
+ #elif defined(HAVE_CLOCK_GETTIME)
+     struct timespec ts;
+-#ifdef CLOCK_BOOTTIME
+-    if (!clock_gettime( CLOCK_BOOTTIME, &ts ))
++#ifdef CLOCK_MONOTONIC_RAW
++    if (!clock_gettime( CLOCK_MONOTONIC_RAW, &ts ))
+         return ts.tv_sec * (ULONGLONG)TICKSPERSEC + ts.tv_nsec / 100;
+ #endif
+     if (!clock_gettime( CLOCK_MONOTONIC, &ts ))
+diff --git a/server/request.c b/server/request.c
+index 994169a0565..ed39637728e 100644
+--- a/server/request.c
++++ b/server/request.c
+@@ -514,8 +514,8 @@ timeout_t monotonic_counter(void)
+     return mach_continuous_time() * timebase.numer / timebase.denom / 100;
+ #elif defined(HAVE_CLOCK_GETTIME)
+     struct timespec ts;
+-#ifdef CLOCK_BOOTTIME
+-    if (!clock_gettime( CLOCK_BOOTTIME, &ts ))
++#ifdef CLOCK_MONOTONIC_RAW
++    if (!clock_gettime( CLOCK_MONOTONIC_RAW, &ts ))
+         return (timeout_t)ts.tv_sec * TICKS_PER_SEC + ts.tv_nsec / 100;
+ #endif
+     if (!clock_gettime( CLOCK_MONOTONIC, &ts ))
+-- 
+2.54.0
+
+
+From c2e790533106c31a769787ebd0eec6941067c7e0 Mon Sep 17 00:00:00 2001
+From: William Horvath <william@horvath.blog>
+Date: Sat, 28 Dec 2024 06:45:10 -0800
+Subject: [PATCH 14/15] ntdll: Never use CLOCK_REALTIME_COARSE.
+
+This is required for deterministic timekeeping, as
+CLOCK_REALTIME_COARSE depends on the kernel tickrate.
+Since this function is provided by the vDSO, there is no
+performance degradation by using CLOCK_REALTIME instead.
+---
+ dlls/ntdll/unix/sync.c | 17 +----------------
+ 1 file changed, 1 insertion(+), 16 deletions(-)
+
+diff --git a/dlls/ntdll/unix/sync.c b/dlls/ntdll/unix/sync.c
+index f6b564d2d1a..9863674d4de 100644
+--- a/dlls/ntdll/unix/sync.c
++++ b/dlls/ntdll/unix/sync.c
+@@ -2484,22 +2484,7 @@ NTSTATUS WINAPI NtQuerySystemTime( LARGE_INTEGER *time )
+ {
+ #ifdef HAVE_CLOCK_GETTIME
+     struct timespec ts;
+-    static clockid_t clock_id = CLOCK_MONOTONIC; /* placeholder */
+-
+-    if (clock_id == CLOCK_MONOTONIC)
+-    {
+-#ifdef CLOCK_REALTIME_COARSE
+-        struct timespec res;
+-
+-        /* Use CLOCK_REALTIME_COARSE if it has 1 ms or better resolution */
+-        if (!clock_getres( CLOCK_REALTIME_COARSE, &res ) && res.tv_sec == 0 && res.tv_nsec <= 1000000)
+-            clock_id = CLOCK_REALTIME_COARSE;
+-        else
+-#endif /* CLOCK_REALTIME_COARSE */
+-            clock_id = CLOCK_REALTIME;
+-    }
+-
+-    if (!clock_gettime( clock_id, &ts ))
++    if (!clock_gettime( CLOCK_REALTIME, &ts ))
+     {
+         time->QuadPart = ticks_from_time_t( ts.tv_sec ) + (ts.tv_nsec + 50) / 100;
+     }
+-- 
+2.54.0
+
+
+From e1c82aaba8420b21c3f474f03f84c25c92d03e22 Mon Sep 17 00:00:00 2001
+From: NelloKudo <marshnelloosu@gmail.com>
+Date: Mon, 5 Jan 2026 16:18:02 +0100
+Subject: [PATCH 15/15] loader: Show dotfiles by default.
+
+---
+ loader/wine.inf.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/loader/wine.inf.in b/loader/wine.inf.in
+index e7fc3479300..9122ad844df 100644
+--- a/loader/wine.inf.in
++++ b/loader/wine.inf.in
+@@ -567,6 +567,7 @@ HKLM,%MciExtStr%,"wmx",,"MPEGVideo"
+ HKLM,%MciExtStr%,"wvx",,"MPEGVideo"
+ 
+ [Misc]
++HKCU,Software\Wine,"ShowDotFiles",2,"Y"
+ HKLM,Software\Borland\Database Engine\Settings\SYSTEM\INIT,SHAREDMEMLOCATION,,9000
+ HKLM,Software\Clients,,16
+ HKLM,Software\Clients\Mail,,2,"Native Mail Client"
+-- 
+2.54.0
 
