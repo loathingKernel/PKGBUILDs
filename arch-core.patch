@@ -30,23 +30,6 @@ diff -uprN pi-hole-6.3/advanced/Scripts/piholeLogFlush.sh pi-hole-6.3.cust/advan
  fi
  FTLFILE=$(getFTLConfigValue "files.log.ftl")
  if [ -z "$FTLFILE" ]; then
-@@ -80,14 +80,14 @@ flush_log() {
- 
- if [[ "$*" == *"once"* ]]; then
-     # Nightly logrotation
--    if command -v /usr/sbin/logrotate >/dev/null; then
-+    if command -v /usr/bin/logrotate >/dev/null; then
-         # Logrotate once
- 
-         if [[ "$*" != *"quiet"* ]]; then
-             echo -ne "  ${INFO} Running logrotate ..."
-         fi
-         mkdir -p "${STATEFILE%/*}"
--        /usr/sbin/logrotate --force --state "${STATEFILE}" /etc/pihole/logrotate
-+        /usr/bin/logrotate --force --state "${STATEFILE}" /etc/pihole/logrotate
-     else
-         # Handle rotation for each log file
-         rotate_log "${LOGFILE}"
 @@ -105,13 +105,13 @@ else
      fi
  
