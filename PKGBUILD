@@ -5,7 +5,7 @@
 pkgname=pi-hole-core
 _pkgname=pi-hole
 pkgver=6.4.2
-pkgrel=1
+pkgrel=2
 pkgdesc='The Pi-hole is an advertising-aware DNS/Web server. Arch adaptation for lan wide DNS server.'
 arch=('any')
 license=('EUPL-1.2')
@@ -16,7 +16,7 @@ optdepends=()
 conflicts=('pi-hole-standalone' 'pi-hole-server')
 provides=('pi-hole-standalone' 'pi-hole-server')
 install=$pkgname.install
-backup=('etc/pihole/adlists.list' 'etc/sudoers.d/pihole')
+backup=('etc/pihole/pihole.toml' 'etc/sudoers.d/pihole')
 
 source=($pkgname-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/archive/refs/tags/v$pkgver.tar.gz
         arch-core.patch
@@ -25,7 +25,6 @@ source=($pkgname-$pkgver.tar.gz::https://github.com/$_pkgname/$_pkgname/archive/
 	    $_pkgname-gravity.timer
 	    $_pkgname-logtruncate.service
 	    $_pkgname-logtruncate.timer
-	    mimic_setupVars.conf.sh
 	    mimic_basic-install.sh
 	    piholeDebug.sh
 )
@@ -36,7 +35,6 @@ sha256sums=('49a766408659ac98094e9ed30f2666f41738a6a12828b089f235bcf7b13a0662'
             '5228b4f923eab7784952a0fd6da895e7bff2f80a7f91c4a7c6350491dfdbb2e8'
             '88e3c78bbeaf5dc1100df65202ded8207877954a96bdf1b0ab3d9990d9fa759f'
             'ff507ce58c9492cce57e947696e1b814469fc2d856a1e303c6e68f98c62ebf46'
-            'd3bc841ce7f21b5a597dc47cdae23faeba64cb0bbb8c897d9daf1a2bc4fe0821'
             '27288535f7d5e18c73b9fe13aa0bcd78a2fd935cb2e978c70d51b0439c87844f'
             '69a71c29dbe42ef0cbd3655fd7ce5cf04e8a77e27a5b2c3a1fcce0b544223309')
 
@@ -66,7 +64,6 @@ package() {
   install -Dm644 $_pkgname-$pkgver/advanced/Templates/gravity_copy.sql "$pkgdir"/opt/pihole/gravity_copy.sql
 
   install -Dm755 piholeDebug.sh "$pkgdir"/opt/pihole/piholeDebug.sh
-  install -Dm755 mimic_setupVars.conf.sh "$pkgdir"/opt/pihole/mimic_setupVars.conf.sh
   install -Dm755 mimic_basic-install.sh "$pkgdir"/opt/pihole/basic-install.sh
 
   cp -dpr --no-preserve=ownership $_pkgname-$pkgver/advanced/Scripts/database_migration "$pkgdir"/opt/pihole/
