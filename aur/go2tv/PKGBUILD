@@ -1,24 +1,28 @@
 # Maintainer: Damjan Georgievski <gdamjan@gmail.com>
 pkgname=go2tv
-pkgver=2.1.0
+pkgver=2.3.0
 pkgrel=1
 pkgdesc='cast your videos to UPnP/DLNA MediaRenderer'
 arch=('x86_64')
 url="https://github.com/alexballas/${pkgname}"
 license=('MIT')
-depends=('glibc' 'libx11' 'libglvnd')
-makedepends=('go' 'libxcursor' 'libxrandr' 'libxinerama' 'libxi')
+depends=('glibc' 'libx11' 'libglvnd' 'libpipewire' )
+makedepends=('go' 'pkg-config' 'libxcursor' 'libxrandr' 'libxinerama' 'libxi')
 optdepends=('ffmpeg: transcoding support')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
 
 build() {
+  cd $pkgname-$pkgver
+
   export CGO_CPPFLAGS="${CPPFLAGS}"
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
+
+  # allow flag from `pkg-config --cflags libpipewire-0.3` - see also https://go.dev/wiki/InvalidFlag
+  export CGO_CFLAGS_ALLOW="-fno-strict-overflow"
   export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
 
-  cd $pkgname-$pkgver
   go build -ldflags "-s -w" -o go2tv cmd/go2tv/go2tv.go
 }
 
@@ -27,4 +31,4 @@ package() {
   install -Dm644 $pkgname-$pkgver/LICENSE    "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
 
-sha256sums=('78c6882f913da25ec12f99baf076006d5e2cb416bbafbd7b3499d8d061ee2326')
+sha256sums=('a210c8cd040e112a432f790f2df2064a036eb4dc469f570536f0c81db4121903')

@@ -1,11 +1,12 @@
 pkgbase = go2tv
 	pkgdesc = cast your videos to UPnP/DLNA MediaRenderer
-	pkgver = 2.1.0
+	pkgver = 2.3.0
 	pkgrel = 1
 	url = https://github.com/alexballas/go2tv
 	arch = x86_64
 	license = MIT
 	makedepends = go
+	makedepends = pkg-config
 	makedepends = libxcursor
 	makedepends = libxrandr
 	makedepends = libxinerama
@@ -13,8 +14,9 @@ pkgbase = go2tv
 	depends = glibc
 	depends = libx11
 	depends = libglvnd
+	depends = libpipewire
 	optdepends = ffmpeg: transcoding support
-	source = go2tv-2.1.0.tar.gz::https://github.com/alexballas/go2tv/archive/v2.1.0.tar.gz
-	sha256sums = 78c6882f913da25ec12f99baf076006d5e2cb416bbafbd7b3499d8d061ee2326
+	source = https://github.com/alexballas/go2tv/archive/v2.3.0/go2tv-2.3.0.tar.gz
+	sha256sums = a210c8cd040e112a432f790f2df2064a036eb4dc469f570536f0c81db4121903
 
 pkgname = go2tv
