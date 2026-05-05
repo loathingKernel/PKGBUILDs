@@ -1,12 +1,13 @@
 # Contributor: Mettacrawer <metta.crawler@gmail.com>
 # Contributor: luizribeiro <luizribeiro@gmail.com>
-# Maintainer:  max.bra <max dot bra dot gtalk at gmail dot com>
-# Maintainer:  graysky <therealgraysky AT protonmail DOT com>
+# Contributor: max.bra <max dot bra dot gtalk at gmail dot com>
+# Contributor: graysky <therealgraysky AT protonmail DOT com>
+# Maintainer: Piotr Zarycki <piotr.zarycki@gmail.com>
 
 pkgname=pi-hole-ftl
 _pkgname=FTL
 _servicename=pihole-FTL
-pkgver=6.4.1
+pkgver=6.6.1
 pkgrel=1
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc="The Pi-hole FTL engine"
@@ -19,19 +20,24 @@ provides=('dnsmasq')
 install=$pkgname.install
 backup=('etc/pihole/pihole-FTL.conf' 'etc/pihole/dhcp.leases')
 source=($pkgname-v$pkgver.tar.gz::"https://github.com/pi-hole/FTL/archive/v$pkgver.tar.gz"
-        "https://raw.githubusercontent.com/max72bra/pi-hole-ftl-archlinux-customization/master/arch-ftl-$pkgver-$pkgrel.patch"
         "$pkgname.tmpfile"
         "$pkgname.sysuser"
         "$pkgname.service")
-sha256sums=('054da435fc57644d835f6a686a92b77fdff102a6048afdb773c7cc5e8fe48131'
-            '8ecc6af8b402d9faa218b55530c3fac8a4773d26defe9416dbd54bfc6ab62194'
+sha256sums=('6502bc42196cf5fa991f64bf4eec223bb31371a3c369d12ea6b9c545c69b1d9d'
             '0feb4597a4afd9054553505d305b0feb7e1f6e1705b092561648ff37d0a2893c'
             'dd1d2a341e774d4e549373ae75604031b9af0ee44debcd71a89259d9110d2a77'
             '0998da040d038ddbad129ba8e1ea74741bc912813407b579cab1b3b3f206e721')
 
 prepare() {
   cd "$srcdir"/"$_pkgname"-"$pkgver"
-  patch -Np1 -i "$srcdir"/arch-ftl-$pkgver-$pkgrel.patch
+  # Fix strstr redefined warning treated as error (GCC 14+)
+  sed -i '/#define memmove/a #undef strstr' src/FTL.h
+  # Fix const qualifier warnings in webserver.c (GCC 14+)
+  sed -i 's/\bchar \*pos = strchr(host,/const char *pos = strchr(host,/g' src/webserver/webserver.c
+  sed -i 's/\bchar \*equal_sign = strchr(opt,/const char *equal_sign = strchr(opt,/g' src/webserver/webserver.c
+  # Fix mbedtls 3.x API changes
+  sed -i 's/mbedtls_x509write_crt_pem(\([^,]*\), \([^,]*\), sizeof(\([^)]*\)))/mbedtls_x509write_crt_pem(\1, \2, sizeof(\3), NULL, NULL)/g' src/webserver/x509.c
+  sed -i 's/mbedtls_pk_parse_keyfile(\([^,]*\), \([^,]*\), NULL);/mbedtls_pk_parse_keyfile(\1, \2, NULL, NULL, NULL);/g' src/webserver/x509.c
 }
 
 build() {
