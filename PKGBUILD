@@ -2,7 +2,7 @@
 
 pkgname="backrest"
 pkgver=1.13.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A web UI and orchestrator for restic backup."
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
 url="https://github.com/garethgeorge/${pkgname}"
@@ -12,7 +12,7 @@ makedepends=("npm" "go" "unzip")
 source=("${pkgname}-${pkgver}.zip::${url}/archive/refs/tags/v${pkgver}.zip"
         "${pkgname}.service"
         "${pkgname}@.service")
-sha256sums=('05bf8f2ea11ab7a929653f0fb4fa28523d1d16bce49da5213ddf8d179ad146a3'
+sha256sums=('58e8023f4bcb59bd6d53c91380b502b1e6305b8ba1fdb617b401f03949ed72ce'
             'ce8ae2ce067b354cdc20676919efc8e9a0f7793e0cfa11b013a7b3cecabde425'
             '957ffa5c171842fe0ded3705eb3755183c78a81d50124472d3f1dcda5ca5fc1d')
 
