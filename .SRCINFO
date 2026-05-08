@@ -1,6 +1,6 @@
 pkgbase = jay
 	pkgdesc = A Wayland Compositor
-	pkgver = 1.12.0
+	pkgver = 1.13.0
 	pkgrel = 1
 	url = https://github.com/mahkoh/jay
 	install = jay.install
@@ -21,7 +21,7 @@ pkgbase = jay
 	optdepends = xdg-desktop-portal: portal support
 	provides = wayland-compositor
 	options = !lto
-	source = jay-1.12.0.tar.gz::https://github.com/mahkoh/jay/archive/v1.12.0.tar.gz
-	sha512sums = 08bac6f1d660c6db2778473b71e919b3174d3483be9138af5695d05af7efc6f3cb873ae548a753b2604740e6f9c86fdea448b7fc4905441472b02f1c7d06c207
+	source = jay-1.13.0.tar.gz::https://github.com/mahkoh/jay/archive/v1.13.0.tar.gz
+	sha512sums = a8fcfb979011e81d5572cd910f7358747e240ab203d6e0c0e57e955c1d7a46558aa62d64a2165e1740cacc8158eec400a1f7187cefe82015d3c845fb41090ca5
 
 pkgname = jay
