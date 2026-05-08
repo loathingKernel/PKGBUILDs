@@ -1,7 +1,7 @@
 pkgbase = jay
 	pkgdesc = A Wayland Compositor
 	pkgver = 1.13.0
-	pkgrel = 1
+	pkgrel = 2
 	url = https://github.com/mahkoh/jay
 	install = jay.install
 	arch = x86_64
@@ -17,8 +17,9 @@ pkgbase = jay
 	depends = libvulkan.so=1
 	depends = mesa
 	depends = pango
-	optdepends = xorg-xwayland: X11 support
+	optdepends = sqlite: session management
 	optdepends = xdg-desktop-portal: portal support
+	optdepends = xorg-xwayland: X11 support
 	provides = wayland-compositor
 	options = !lto
 	source = jay-1.13.0.tar.gz::https://github.com/mahkoh/jay/archive/v1.13.0.tar.gz

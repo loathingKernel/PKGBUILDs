@@ -2,7 +2,7 @@
 
 pkgname=jay
 pkgver=1.13.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A Wayland Compositor'
 arch=('x86_64')
 license=(GPL-3.0-only)
@@ -22,8 +22,9 @@ depends=(
   pango
 )
 optdepends=(
-  'xorg-xwayland: X11 support'
+  'sqlite: session management'
   'xdg-desktop-portal: portal support'
+  'xorg-xwayland: X11 support'
 )
 makedepends=(
   cargo
