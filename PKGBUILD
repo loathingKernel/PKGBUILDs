@@ -1,7 +1,7 @@
 # Maintainer: Damjan Georgievski <gdamjan@gmail.com>
 pkgname=go2tv
 pkgver=2.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc='cast your videos to UPnP/DLNA MediaRenderer'
 arch=('x86_64')
 url="https://github.com/alexballas/${pkgname}"
@@ -29,6 +29,10 @@ build() {
 package() {
   install -Dm755 $pkgname-$pkgver/$pkgname   "$pkgdir"/usr/bin/$pkgname
   install -Dm644 $pkgname-$pkgver/LICENSE    "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  install -Dm644 $pkgname-$pkgver/assets/linux/app.go2tv.go2tv.desktop "$pkgdir"/usr/share/applications/app.go2tv.go2tv.desktop
+  install -Dm644 $pkgname-$pkgver/assets/linux/app.go2tv.go2tv.appdata.xml "$pkgdir"/usr/share/metainfo/app.go2tv.go2tv.appdata.xml
+  install -Dm644 $pkgname-$pkgver/assets/go2tv-icon-desktop-512.png "$pkgdir"/usr/share/icons/hicolor/512x512/apps/app.go2tv.go2tv.png
+  install -Dm644 $pkgname-$pkgver/assets/go2tv-icon-color.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/app.go2tv.go2tv.svg
 }
 
 sha256sums=('a210c8cd040e112a432f790f2df2064a036eb4dc469f570536f0c81db4121903')
