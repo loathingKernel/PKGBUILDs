@@ -5,7 +5,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine
-pkgver=11.7
+pkgver=11.9
 pkgrel=1
 _tkg_commit=879a479086de486279f68988d259cd4780cb3264
 
@@ -16,21 +16,15 @@ source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbaseve
         wine-binfmt.conf
         ntsync.conf)
 source+=(
-        compatibilitytool.vdf
-        toolmanifest.vdf
-        miniproton
         git+https://github.com/Frogging-Family/wine-tkg-git.git#commit=${_tkg_commit}
         wine-sauce.patch
 )
-sha512sums=('f09db330555d74cd26555ac25b20e44d15cb6def624b6094946b077b027b221b336192a16a1e378b643f420dfc5682cced75bbfde051a18b157d25a088c5f48f'
+sha512sums=('b84c379d4fa2f8d5678890f3fa1d3136aa2165edc11965ed245dd8283d20aa1fca2f8375c19ca43a1f5a9673090bbe4abd9fd23aec9e02f1830ad04b8b9da999'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
             'ac2bd634838ffe6b90f2637e229013f0993fc1013271dbeefd216dc262a8bb79e4a5ce15a75cbfcb0c3b521d32f4ebe1ed25a6b066b99cc327b60bd6d7212e6f'
-            '47eb18050d05500374d168277552a70b3878dda408b7ae7385a9225f516d48759f79370bb6644e4b9a7e435b6f8bda9fc57a68bb4694a2368151a6c46f6b49dd'
-            '61e0176986a9794855eb89367b123413039c5c4a8a16ce9bdc65abc7668ae48e7d4fd9feeeb4d300888998d44bb5c457f19a8defb482edefd719a7dfdced3235'
-            '5af31424909cda08a52daa31cd3baa436926953fb8f23348ae71c5d2f7aa353ae47febded60765c785d364d57d89c2fb5fbc5191bb3b02758fa511c6adb54070'
             '5c7bd92ce97e3350f6fa21ebf1339e3f13fed6afaff764004ab0fd1633b84b641cc77a9b10239392ba99c4bcea48fc0d812df9be26b870666c0079234bbde7dc'
-            '7312f303d7aa10fc1b8f98dfceaa1a80339686217cade7089c7de8c46c21e6968bb29de45cc590cac91e18ed2b73f160c84cda0370ced616ba9d69f64849db69')
+            'bd01834067d42c3f07601e7d546c0cc38bc2573a92828b72aca90d52f69f81e9f303a96072a3b7d05faff7d7f199009c3d82b27c667fcc2cae48dd057007ae36')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
@@ -154,8 +148,8 @@ build() {
   local mtune="${flags["-mtune"]:-core-avx2}"
 
   # From Proton
-  OPTIMIZE_FLAGS="-O2 -march=$march -mtune=$mtune -mfpmath=sse -pipe"
-  OPTIMIZE_FLAGS+=" -mno-avx -mno-avx2 -fvect-cost-model=cheap -fipa-pta"
+  OPTIMIZE_FLAGS="-O3 -march=$march -mtune=$mtune -mfpmath=sse -pipe"
+  OPTIMIZE_FLAGS+=" -mno-avx -mno-avx2 -mno-avx512f -fvect-cost-model=cheap -fipa-pta"
   SANITY_FLAGS="-fwrapv -fno-strict-aliasing -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64"
   DEBUG_FLAGS="-ffunction-sections -fdata-sections -fno-omit-frame-pointer"
   WARNING_FLAGS="-Wno-incompatible-pointer-types"
@@ -213,11 +207,6 @@ package() {
 
   find "$pkgdir"/usr/lib/wine -iname "*.a" -delete
   find "$pkgdir"/usr/lib/wine -iname "*.def" -delete
-
-  #install -d "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
-  #install -m644 "$srcdir/compatibilitytool.vdf" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
-  #install -m644 "$srcdir/toolmanifest.vdf" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
-  #install -m755 "$srcdir/miniproton" "$pkgdir/usr/share/steam/compatibilitytools.d/miniproton"
 
   # Load ntsync module
   install -Dm644 "$srcdir/ntsync.conf" "$pkgdir/usr/lib/modules-load.d/10-ntsync.conf"

@@ -1,14 +1,14 @@
-From 0fc28b864ea556665c62901a9ba22f62f6ffd9eb Mon Sep 17 00:00:00 2001
+From 168ee71d1a83fac516d8eaafe20e4179b9f4b9bf Mon Sep 17 00:00:00 2001
 From: William Horvath <william@horvath.blog>
 Date: Thu, 14 Nov 2024 02:29:41 -0800
-Subject: [PATCH 01/15] clang: fixup lto
+Subject: [PATCH 01/26] clang: fixup lto
 
 ---
  loader/preloader.c | 4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/loader/preloader.c b/loader/preloader.c
-index ce82a9f296f..385dbf50b67 100644
+index 72b7fcc7817..af7eb7ce637 100644
 --- a/loader/preloader.c
 +++ b/loader/preloader.c
 @@ -89,7 +89,9 @@
@@ -34,10 +34,10 @@ index ce82a9f296f..385dbf50b67 100644
 2.54.0
 
 
-From 8a5daa89059e9d1b7aae66c19954751f26a82297 Mon Sep 17 00:00:00 2001
+From 77fb68db45f4a8331a40dd0e2c29569cc0955abf Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Thu, 21 Nov 2024 00:59:01 +0200
-Subject: [PATCH 02/15] makedep: add per-source cflags and per-program ldflags
+Subject: [PATCH 02/26] makedep: add per-source cflags and per-program ldflags
  variables
 
 Co-authored-by: William Horvath <william@horvath.blog>
@@ -112,10 +112,10 @@ index 90a522640fe..23d596d3b42 100644
 2.54.0
 
 
-From 4662ca47643d45cf995db6b765199158beb8d2e5 Mon Sep 17 00:00:00 2001
+From bba57a36116e3b1d74f2e589c8a2f28831eaf527 Mon Sep 17 00:00:00 2001
 From: William Horvath <william@horvath.blog>
 Date: Fri, 22 Nov 2024 10:31:07 -0800
-Subject: [PATCH 03/15] configure: Enforce 4-byte stack alignment on clang for
+Subject: [PATCH 03/26] configure: Enforce 4-byte stack alignment on clang for
  PE builds.
 
 Same as -mpreferred-stack-boundary=2 for gcc.
@@ -126,7 +126,7 @@ https://linux.kernel.narkive.com/y7hAplfS/patch-x86-build-specify-stack-alignmen
  1 file changed, 1 insertion(+)
 
 diff --git a/configure.ac b/configure.ac
-index 258b03a1c9e..be89743ed1b 100644
+index 485a1370b06..e0bd2fd85b5 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -627,6 +627,7 @@ This is an error since --enable-archs=$wine_arch was requested.])])
@@ -141,10 +141,10 @@ index 258b03a1c9e..be89743ed1b 100644
 2.54.0
 
 
-From 98471e23aad436a3bff293079ccbfe290e036c8b Mon Sep 17 00:00:00 2001
+From a73760ffbf65aefe2816b13567c3961d0dc694b8 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Bernhard=20K=C3=B6lbl?= <besentv@gmail.com>
 Date: Tue, 20 May 2025 20:14:23 +0200
-Subject: [PATCH 04/15] fixup! win32u: Provide more gpu device properties.
+Subject: [PATCH 04/26] fixup! win32u: Provide more gpu device properties.
 
 CW-Bug-Id: #23941
 ---
@@ -152,7 +152,7 @@ CW-Bug-Id: #23941
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/dlls/win32u/sysparams.c b/dlls/win32u/sysparams.c
-index 6490dcba446..1d4ef464e82 100644
+index 00fe10f30ca..0e40f8ab694 100644
 --- a/dlls/win32u/sysparams.c
 +++ b/dlls/win32u/sysparams.c
 @@ -1115,7 +1115,7 @@ static const char* driver_vendor_to_version( UINT16 vendor )
@@ -168,10 +168,10 @@ index 6490dcba446..1d4ef464e82 100644
 2.54.0
 
 
-From 21786c1c84c87a8539e691f2fef330a852a3b6a2 Mon Sep 17 00:00:00 2001
+From eeb953f4821d96d453a394d53055234421a28745 Mon Sep 17 00:00:00 2001
 From: Arkadiusz Hiler <ahiler@codeweavers.com>
 Date: Fri, 17 Oct 2025 11:23:58 +0300
-Subject: [PATCH 05/15] fixup! win32u: Bump GPU internal driver versions to a
+Subject: [PATCH 05/26] fixup! win32u: Bump GPU internal driver versions to a
  future version.
 
 Dune: Awakening still complains about driver version with Nvidia GPUs.
@@ -187,7 +187,7 @@ CW-Bug-Id: #25893
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/dlls/win32u/sysparams.c b/dlls/win32u/sysparams.c
-index 1d4ef464e82..4ccb844dde3 100644
+index 0e40f8ab694..25ff77a314d 100644
 --- a/dlls/win32u/sysparams.c
 +++ b/dlls/win32u/sysparams.c
 @@ -1113,10 +1113,10 @@ static const char* driver_vendor_to_version( UINT16 vendor )
@@ -209,10 +209,10 @@ index 1d4ef464e82..4ccb844dde3 100644
 2.54.0
 
 
-From ed392d117cff7154cfc60b31535c1a54be443f2c Mon Sep 17 00:00:00 2001
+From 06b3c4acdbff80f97d0a21abac5bda206c5c992e Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sat, 25 May 2024 15:35:25 +0300
-Subject: [PATCH 06/15] HACK: shell32: Add WINEUSERSANDBOX environment variable
+Subject: [PATCH 06/26] HACK: shell32: Add WINEUSERSANDBOX environment variable
 
 Setting 'WINEUSERSANDBOX=1' stops Wine from creating
 links to the $HOME folders from the respective Wine folders.
@@ -242,10 +242,10 @@ index 6eb5d5cc345..c5242605092 100644
 2.54.0
 
 
-From 3d228b085cf9f46d5b22615241eb63bf2f4174ea Mon Sep 17 00:00:00 2001
+From d48ca3b93cb806f6bf05211be55eb0f7d03ac8d1 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sat, 25 May 2024 15:38:24 +0300
-Subject: [PATCH 07/15] HACK: winex11.drv: Allow custom window wmclass to set
+Subject: [PATCH 07/26] HACK: winex11.drv: Allow custom window wmclass to set
  through the environment
 
 Wine's wmclass can be controlled through the WINE_WMCLASS environment
@@ -255,7 +255,7 @@ variable.
  1 file changed, 9 insertions(+)
 
 diff --git a/dlls/winex11.drv/window.c b/dlls/winex11.drv/window.c
-index a83359b2d74..94e96149639 100644
+index d2d53a40be3..57e1f1355ff 100644
 --- a/dlls/winex11.drv/window.c
 +++ b/dlls/winex11.drv/window.c
 @@ -1173,8 +1173,17 @@ static void set_initial_wm_hints( Display *display, Window window )
@@ -280,10 +280,10 @@ index a83359b2d74..94e96149639 100644
 2.54.0
 
 
-From 8e715ea50cb2b024a2b27a45ca3b14598be4acf3 Mon Sep 17 00:00:00 2001
+From bd44d698d3399545ba6238ac0f898a75fad8a879 Mon Sep 17 00:00:00 2001
 From: Zebra2711 <zebra2711@users.noreply.github.com>
 Date: Mon, 28 Apr 2025 16:21:24 +0300
-Subject: [PATCH 08/15] HACK: winewayland.drv: Also use WINE_WMCLASS
+Subject: [PATCH 08/26] HACK: winewayland.drv: Also use WINE_WMCLASS
  environment variable under Wayland
 
 ---
@@ -315,10 +315,10 @@ index 2f8275ddb52..e00bc0849e5 100644
 2.54.0
 
 
-From 84580c5feabaf02957f4a52052cade3912f1b702 Mon Sep 17 00:00:00 2001
+From 794f5775533fa27816faee95242c6bed67bc2228 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Tue, 8 Jul 2025 15:27:08 +0300
-Subject: [PATCH 09/15] HACK: kernelbase: allow overriding dlls for DLSS, XeSS,
+Subject: [PATCH 09/26] HACK: kernelbase: allow overriding dlls for DLSS, XeSS,
  FSR4 and FSR3
 
 `WINE_LOADDLL_REPLACE=fsr4` will force Wine to load c:\windows\system32\amdxcffx64.dll
@@ -329,12 +329,14 @@ Subject: [PATCH 09/15] HACK: kernelbase: allow overriding dlls for DLSS, XeSS,
 * HACK: kernelbase: allow overriding dlls for FSR3
 * HACK: kernelbase: allow multiple options to be enabled for WINE_LOADDLL_REPLACE
 * HACK: kernelbase: don't override nvngx_dlssg.dll from the Nvidia Linux driver
+* HACK: kernelbase: add redirection for libxess_dx11.dll
+* HACK: kernelbase: move overrides out of LoadLibraryExW
 ---
- dlls/kernelbase/loader.c | 57 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 2 deletions(-)
+ dlls/kernelbase/loader.c | 56 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 54 insertions(+), 2 deletions(-)
 
 diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index 6c6f1f31881..6e2f93873dd 100644
+index 6c6f1f31881..9f275ea4387 100644
 --- a/dlls/kernelbase/loader.c
 +++ b/dlls/kernelbase/loader.c
 @@ -556,6 +556,54 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExA( LPCSTR name, HANDLE file, DWORD
@@ -392,7 +394,7 @@ index 6c6f1f31881..6e2f93873dd 100644
  /***********************************************************************
   *	LoadLibraryExW   (kernelbase.@)
   */
-@@ -563,17 +611,22 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+@@ -563,17 +611,21 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
  {
      UNICODE_STRING str;
      HMODULE module;
@@ -404,7 +406,6 @@ index 6c6f1f31881..6e2f93873dd 100644
          return 0;
      }
 -    RtlInitUnicodeString( &str, name );
-+
 +    if ( loaddll_replace(name, overrideW) )
 +        FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
 +
@@ -421,10 +422,10 @@ index 6c6f1f31881..6e2f93873dd 100644
 2.54.0
 
 
-From fda3167c8694abba3d77328aa0b2de891a39c722 Mon Sep 17 00:00:00 2001
+From 23225b1f403c9e80bbf10eaaf039fcdba20eeed7 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Thu, 9 Apr 2026 15:50:43 +0300
-Subject: [PATCH 10/15] HACK: kernelbase: add WINE_OPTISCALER_NAME to load
+Subject: [PATCH 10/26] HACK: kernelbase: add WINE_OPTISCALER_NAME to load
  optiscaler's dll from an external location
 
 The matching intentionally matches `name.dll` exactly to allow optiscaler
@@ -434,7 +435,7 @@ to load the real dll through the fully qualified path.
  1 file changed, 24 insertions(+), 9 deletions(-)
 
 diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index 6e2f93873dd..06495663c37 100644
+index 9f275ea4387..bec20e95e93 100644
 --- a/dlls/kernelbase/loader.c
 +++ b/dlls/kernelbase/loader.c
 @@ -559,19 +559,31 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExA( LPCSTR name, HANDLE file, DWORD
@@ -476,10 +477,10 @@ index 6e2f93873dd..06495663c37 100644
      if ( wcsstr( envW, L"fsr3" ) )
      {
          /* HACK: override amd_fidelityfx_*.dll path to a non-standard location for FSR3 upgrade */
-@@ -619,8 +631,11 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+@@ -618,8 +630,11 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+         SetLastError( ERROR_INVALID_PARAMETER );
          return 0;
      }
- 
 -    if ( loaddll_replace(name, overrideW) )
 -        FIXME( "HACK: replaced %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
 +    if ( loaddll_optiscaler_hack(name, overrideW, ARRAY_SIZE(overrideW))
@@ -494,10 +495,10 @@ index 6e2f93873dd..06495663c37 100644
 2.54.0
 
 
-From ec006928628c3682d156af28e2514ba7e2161637 Mon Sep 17 00:00:00 2001
+From 251d1d573f22789abb3cd0a8a7a3186c9c8af22e Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Thu, 2 Apr 2026 20:39:56 +0300
-Subject: [PATCH 11/15] HACK: kernelbase: add WINE_LOADDLL_REDIRECT to handle
+Subject: [PATCH 11/26] HACK: kernelbase: add WINE_LOADDLL_REDIRECT to handle
  arbitrary dlls and paths
 
 Update WINE_LOADDLL_REDIRECT format to handle multiple dlls and their paths.
@@ -527,7 +528,7 @@ Will redirect `six.dll` to load `seven.dll`
  1 file changed, 60 insertions(+), 1 deletion(-)
 
 diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
-index 06495663c37..6f7ae2cb875 100644
+index bec20e95e93..959c3fa2a19 100644
 --- a/dlls/kernelbase/loader.c
 +++ b/dlls/kernelbase/loader.c
 @@ -557,8 +557,67 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExA( LPCSTR name, HANDLE file, DWORD
@@ -603,10 +604,191 @@ index 06495663c37..6f7ae2cb875 100644
 2.54.0
 
 
-From 14072090bb9d8de00015b0a9bafbfebb13fc6c35 Mon Sep 17 00:00:00 2001
+From c46be66140b7dbe4287f84db9af9b83651bfcbbd Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Tue, 19 May 2026 15:55:27 +0300
+Subject: [PATCH 12/26] HACK: kernelbase: remove loaddll_optiscaler_hack from
+ LoadLibraryExW
+
+---
+ dlls/kernelbase/loader.c | 24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
+
+diff --git a/dlls/kernelbase/loader.c b/dlls/kernelbase/loader.c
+index 959c3fa2a19..31a6f35f0bb 100644
+--- a/dlls/kernelbase/loader.c
++++ b/dlls/kernelbase/loader.c
+@@ -618,23 +618,6 @@ BOOL loaddll_redirect(LPCWSTR name, LPWSTR override, DWORD size)
+     return FALSE;
+ }
+ 
+-BOOL loaddll_optiscaler_hack(LPCWSTR name, LPWSTR override, DWORD size)
+-{
+-    WCHAR dllW[64] = {0};
+-    UINT ret;
+-
+-    ret = GetEnvironmentVariableW( L"WINE_OPTISCALER_NAME", dllW, sizeof(dllW));
+-    if ( !ret || ret >= ARRAY_SIZE(dllW) ) return FALSE;
+-
+-    if ( !wcscmp( name, dllW ) )
+-    {
+-        swprintf( override, size, L"c:\\windows\\system32\\umu\\%s", dllW );
+-        return TRUE;
+-    }
+-
+-    return FALSE;
+-}
+-
+ BOOL loaddll_upscaler_hack(LPCWSTR name, LPWSTR override, DWORD size)
+ {
+     WCHAR envW[64] = {0};
+@@ -689,11 +672,8 @@ HMODULE WINAPI DECLSPEC_HOTPATCH LoadLibraryExW( LPCWSTR name, HANDLE file, DWOR
+         SetLastError( ERROR_INVALID_PARAMETER );
+         return 0;
+     }
+-    if ( loaddll_optiscaler_hack(name, overrideW, ARRAY_SIZE(overrideW))
+-        || loaddll_upscaler_hack(name, overrideW, ARRAY_SIZE(overrideW)) )
+-    {
+-        FIXME( "HACK: replacing %s with %s\n", debugstr_w(name), debugstr_w(overrideW));
+-    }
++    if ( loaddll_upscaler_hack(name, overrideW, ARRAY_SIZE(overrideW)) )
++        FIXME( "HACK: redirecting %s to %s\n", debugstr_w(name), debugstr_w(overrideW));
+ 
+     RtlInitUnicodeString( &str, overrideW[0] ? overrideW : name );
+     if (str.Length && str.Buffer[str.Length/sizeof(WCHAR) - 1] != ' ') return load_library( &str, flags );
+-- 
+2.54.0
+
+
+From 69ba1aaae74ec6169f02b3be4ed424e59d05c99d Mon Sep 17 00:00:00 2001
+From: Sven Baars <sbaars@codeweavers.com>
+Date: Thu, 5 Dec 2019 13:48:38 +0100
+Subject: [PATCH 13/26] HACK: ntdll: add local get_env method
+
+---
+ dlls/ntdll/loader.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/dlls/ntdll/loader.c b/dlls/ntdll/loader.c
+index b19bf78a456..3e4e428c5c4 100644
+--- a/dlls/ntdll/loader.c
++++ b/dlls/ntdll/loader.c
+@@ -204,6 +204,21 @@ static inline BOOL contains_path( LPCWSTR name )
+     return ((*name && (name[1] == ':')) || wcschr(name, '/') || wcschr(name, '\\'));
+ }
+ 
++static BOOL get_env( const WCHAR *var, WCHAR *val, unsigned int len )
++{
++    UNICODE_STRING name, value;
++
++    name.Length = wcslen( var ) * sizeof(WCHAR);
++    name.MaximumLength = name.Length + sizeof(WCHAR);
++    name.Buffer = (WCHAR *)var;
++
++    value.Length = 0;
++    value.MaximumLength = len;
++    value.Buffer = val;
++
++    return !RtlQueryEnvironmentVariable_U( NULL, &name, &value );
++}
++
+ #define RTL_UNLOAD_EVENT_TRACE_NUMBER 64
+ 
+ typedef struct _RTL_UNLOAD_EVENT_TRACE
+-- 
+2.54.0
+
+
+From 099c8e88e047f23a016a8def51af615be226af38 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Tue, 19 May 2026 17:54:37 +0300
+Subject: [PATCH 14/26] HACK: ntdll: add optiscaler injection hack
+
+---
+ dlls/ntdll/loader.c | 48 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
+
+diff --git a/dlls/ntdll/loader.c b/dlls/ntdll/loader.c
+index 3e4e428c5c4..b82f0b9f89b 100644
+--- a/dlls/ntdll/loader.c
++++ b/dlls/ntdll/loader.c
+@@ -3328,6 +3328,48 @@ static NTSTATUS find_dll_file( const WCHAR *load_path, const WCHAR *libname, UNI
+ }
+ 
+ 
++/***********************************************************************
++ *	load_dll_optiscaler_hack
++ *
++ * Very silly hack to inject optiscaler
++ */
++BOOL load_dll_optiscaler_hack(LPCWSTR name, LPWSTR override, DWORD size)
++{
++    static WCHAR dllW[32] = {0};
++    static INT cached = -1;
++    UNICODE_STRING overrideW;
++    OBJECT_ATTRIBUTES attr;
++    IO_STATUS_BLOCK io;
++    NTSTATUS status;
++    HANDLE handle;
++
++    if ( cached == -1 ) {
++        cached = get_env( L"WINE_OPTISCALER_NAME", dllW, sizeof(dllW));
++        if ( !cached ) return FALSE;
++    }
++
++    if ( cached && !_wcsicmp( name, dllW ) )
++    {
++        swprintf( override, size, L"\\??\\c:\\windows\\system32\\umu\\%s", dllW );
++        if ( cached != 2 )
++        {
++            RtlInitUnicodeString( &overrideW, override );
++            InitializeObjectAttributes( &attr, &overrideW, OBJ_CASE_INSENSITIVE, 0, NULL );
++            status = NtOpenFile( &handle, GENERIC_READ | SYNCHRONIZE, &attr, &io,
++                                 FILE_SHARE_READ | FILE_SHARE_DELETE,
++                                 FILE_SYNCHRONOUS_IO_NONALERT | FILE_NON_DIRECTORY_FILE );
++            TRACE ( "trying to open %s, status=%lx\n", debugstr_w(override), status );
++            NtClose( handle );
++            RtlFreeUnicodeString( &overrideW );
++            if ( !status ) cached = 2;
++        }
++        return cached == 2;
++    }
++
++    return FALSE;
++}
++
++
+ /***********************************************************************
+  *	load_dll  (internal)
+  *
+@@ -3343,6 +3385,8 @@ static NTSTATUS load_dll( const WCHAR *load_path, const WCHAR *libname, DWORD fl
+     NTSTATUS nts = STATUS_DLL_NOT_FOUND;
+     BOOL redirected;
+     void *prev;
++    WCHAR override[260] = {0};
++    BOOL do_override = FALSE;
+ 
+     TRACE( "looking for %s in %s\n", debugstr_w(libname), debugstr_w(load_path) );
+ 
+@@ -3351,7 +3395,9 @@ static NTSTATUS load_dll( const WCHAR *load_path, const WCHAR *libname, DWORD fl
+ 
+     if (nts)
+     {
+-        nts = find_dll_file( load_path, libname, &nt_name, pwm, &mapping, &image_info, &id,
++        if ( (do_override = load_dll_optiscaler_hack(libname, override, ARRAY_SIZE(override))) )
++            FIXME ( "HACK: redirecting %s to %s\n", debugstr_w(libname), debugstr_w(override) );
++        nts = find_dll_file( load_path, do_override ? override : libname, &nt_name, pwm, &mapping, &image_info, &id,
+                              &redirected, FALSE );
+         system = FALSE;
+     }
+-- 
+2.54.0
+
+
+From d23e8ae93fb470e211be2560c2c9a3041f4e7e37 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Sun, 26 Apr 2026 17:24:02 +0300
-Subject: [PATCH 12/15] HACK: wine.inf: default to 'rgb' font smoothing
+Subject: [PATCH 15/26] HACK: wine.inf: default to 'rgb' font smoothing
 
 ---
  loader/wine.inf.in | 7 +++++++
@@ -641,10 +823,50 @@ index aece31f8dc1..e7fc3479300 100644
 2.54.0
 
 
-From 6f2f74bda23b9e4a8c8c1a02bc578c533a764c51 Mon Sep 17 00:00:00 2001
+From 1f969b951ac4cd160aacea51d8bf5c791df3dd46 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Fri, 22 May 2026 12:41:31 +0300
+Subject: [PATCH 16/26] Revert "HACK: wine.inf: default to 'rgb' font
+ smoothing"
+
+This reverts commit a7cb8640f1d45c86b0fed363820519d4a1a1af4e.
+---
+ loader/wine.inf.in | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/loader/wine.inf.in b/loader/wine.inf.in
+index e7fc3479300..aece31f8dc1 100644
+--- a/loader/wine.inf.in
++++ b/loader/wine.inf.in
+@@ -63,7 +63,6 @@ AddReg=\
+     Debugger,\
+     DirectX,\
+     Fonts,\
+-    FontSmooth,\
+     LicenseInformation,\
+     MCI,\
+     Misc,\
+@@ -521,12 +520,6 @@ HKLM,%FontSubStr%,"Times New Roman Greek,161",,"Times New Roman,161"
+ HKLM,%FontSubStr%,"Times New Roman TUR,162",,"Times New Roman,162"
+ HKLM,System\CurrentControlSet\Hardware Profiles\Current\Software\Fonts,"LogPixels",0x10003,0x00000060
+ 
+-[FontSmooth]
+-HKCU,Control Panel\Desktop,"FontSmoothing",,"2"
+-HKCU,Control Panel\Desktop,"FontSmoothingGamma",0x10001,0x00000578
+-HKCU,Control Panel\Desktop,"FontSmoothingOrientation",0x10001,0x00000001
+-HKCU,Control Panel\Desktop,"FontSmoothingType",0x10001,0x00000002
+-
+ [MCI]
+ HKLM,%Mci32Str%,"AVIVideo",,"mciavi32.dll"
+ HKLM,%Mci32Str%,"CDAudio",,"mcicda.dll"
+-- 
+2.54.0
+
+
+From e626be5eeb23f9c23c2661cb4bcd81350faceb5e Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Mon, 20 Apr 2026 11:04:31 +0300
-Subject: [PATCH 13/15] Revert "ntdll: Switch to CLOCK_BOOTTIME for monotonic
+Subject: [PATCH 17/26] Revert "ntdll: Switch to CLOCK_BOOTTIME for monotonic
  counters when available."
 
 This reverts commit 3d373e452388b60bea9dca6d5c4cf3f8b20a0c54.
@@ -654,7 +876,7 @@ This reverts commit 3d373e452388b60bea9dca6d5c4cf3f8b20a0c54.
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/dlls/ntdll/unix/sync.c b/dlls/ntdll/unix/sync.c
-index bc9bbf2c30d..f6b564d2d1a 100644
+index fbf054e9d93..febbd21401c 100644
 --- a/dlls/ntdll/unix/sync.c
 +++ b/dlls/ntdll/unix/sync.c
 @@ -96,8 +96,8 @@ static inline ULONGLONG monotonic_counter(void)
@@ -669,7 +891,7 @@ index bc9bbf2c30d..f6b564d2d1a 100644
  #endif
      if (!clock_gettime( CLOCK_MONOTONIC, &ts ))
 diff --git a/server/request.c b/server/request.c
-index 994169a0565..ed39637728e 100644
+index fd09ca2ccc4..82b71de1cc8 100644
 --- a/server/request.c
 +++ b/server/request.c
 @@ -514,8 +514,8 @@ timeout_t monotonic_counter(void)
@@ -687,10 +909,10 @@ index 994169a0565..ed39637728e 100644
 2.54.0
 
 
-From c2e790533106c31a769787ebd0eec6941067c7e0 Mon Sep 17 00:00:00 2001
+From f661fb33d99034184fab9d37739449709e01715f Mon Sep 17 00:00:00 2001
 From: William Horvath <william@horvath.blog>
 Date: Sat, 28 Dec 2024 06:45:10 -0800
-Subject: [PATCH 14/15] ntdll: Never use CLOCK_REALTIME_COARSE.
+Subject: [PATCH 18/26] ntdll: Never use CLOCK_REALTIME_COARSE.
 
 This is required for deterministic timekeeping, as
 CLOCK_REALTIME_COARSE depends on the kernel tickrate.
@@ -701,10 +923,10 @@ performance degradation by using CLOCK_REALTIME instead.
  1 file changed, 1 insertion(+), 16 deletions(-)
 
 diff --git a/dlls/ntdll/unix/sync.c b/dlls/ntdll/unix/sync.c
-index f6b564d2d1a..9863674d4de 100644
+index febbd21401c..4b5344a146f 100644
 --- a/dlls/ntdll/unix/sync.c
 +++ b/dlls/ntdll/unix/sync.c
-@@ -2484,22 +2484,7 @@ NTSTATUS WINAPI NtQuerySystemTime( LARGE_INTEGER *time )
+@@ -2483,22 +2483,7 @@ NTSTATUS WINAPI NtQuerySystemTime( LARGE_INTEGER *time )
  {
  #ifdef HAVE_CLOCK_GETTIME
      struct timespec ts;
@@ -732,20 +954,20 @@ index f6b564d2d1a..9863674d4de 100644
 2.54.0
 
 
-From e1c82aaba8420b21c3f474f03f84c25c92d03e22 Mon Sep 17 00:00:00 2001
+From 39e7c985a486a2816d1176b05bef308588557a53 Mon Sep 17 00:00:00 2001
 From: NelloKudo <marshnelloosu@gmail.com>
 Date: Mon, 5 Jan 2026 16:18:02 +0100
-Subject: [PATCH 15/15] loader: Show dotfiles by default.
+Subject: [PATCH 19/26] loader: Show dotfiles by default.
 
 ---
  loader/wine.inf.in | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/loader/wine.inf.in b/loader/wine.inf.in
-index e7fc3479300..9122ad844df 100644
+index aece31f8dc1..f77b0463c6d 100644
 --- a/loader/wine.inf.in
 +++ b/loader/wine.inf.in
-@@ -567,6 +567,7 @@ HKLM,%MciExtStr%,"wmx",,"MPEGVideo"
+@@ -560,6 +560,7 @@ HKLM,%MciExtStr%,"wmx",,"MPEGVideo"
  HKLM,%MciExtStr%,"wvx",,"MPEGVideo"
  
  [Misc]
@@ -753,6 +975,486 @@ index e7fc3479300..9122ad844df 100644
  HKLM,Software\Borland\Database Engine\Settings\SYSTEM\INIT,SHAREDMEMLOCATION,,9000
  HKLM,Software\Clients,,16
  HKLM,Software\Clients\Mail,,2,"Native Mail Client"
+-- 
+2.54.0
+
+
+From b85e6d584cdea7f9a3feb4ef6e870380da3ae650 Mon Sep 17 00:00:00 2001
+From: Marc-Aurel Zent <mzent@codeweavers.com>
+Date: Tue, 21 Apr 2026 12:38:57 +0200
+Subject: [PATCH 20/26] ntdll: Make futex spinlock adaptive.
+
+---
+ dlls/ntdll/sync.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/dlls/ntdll/sync.c b/dlls/ntdll/sync.c
+index e118cbee86a..77845d34216 100644
+--- a/dlls/ntdll/sync.c
++++ b/dlls/ntdll/sync.c
+@@ -846,8 +846,24 @@ static struct futex_queue *get_futex_queue( const void *addr )
+ 
+ static void spin_lock( LONG *lock )
+ {
+-    while (InterlockedCompareExchange( lock, -1, 0 ))
++    unsigned int i;
++
++    if (!InterlockedCompareExchange( lock, -1, 0 ))
++        return;
++
++    for (i = 0; i < 64; i++)
++    {
+         YieldProcessor();
++        if (!ReadNoFence( lock ) && !InterlockedCompareExchange( lock, -1, 0 ))
++            return;
++    }
++
++    for (;;)
++    {
++        NtYieldExecution();
++        if (!ReadNoFence( lock ) && !InterlockedCompareExchange( lock, -1, 0 ))
++            return;
++    }
+ }
+ 
+ static void spin_unlock( LONG *lock )
+-- 
+2.54.0
+
+
+From fe57f25fec27326a843f12c533752157cea8d147 Mon Sep 17 00:00:00 2001
+From: Marc-Aurel Zent <mzent@codeweavers.com>
+Date: Tue, 21 Apr 2026 12:48:32 +0200
+Subject: [PATCH 21/26] ntdll: Increase number of futex queues to 1024.
+
+---
+ dlls/ntdll/sync.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dlls/ntdll/sync.c b/dlls/ntdll/sync.c
+index 77845d34216..c49bd5bd1a4 100644
+--- a/dlls/ntdll/sync.c
++++ b/dlls/ntdll/sync.c
+@@ -835,7 +835,7 @@ struct futex_queue
+     LONG lock;
+ };
+ 
+-static struct futex_queue futex_queues[256];
++static struct futex_queue futex_queues[1024];
+ 
+ static struct futex_queue *get_futex_queue( const void *addr )
+ {
+-- 
+2.54.0
+
+
+From 65920f5c3aec43ae17f4ab05b6cb2161b1be506a Mon Sep 17 00:00:00 2001
+From: Marc-Aurel Zent <mzent@codeweavers.com>
+Date: Tue, 21 Apr 2026 12:51:25 +0200
+Subject: [PATCH 22/26] ntdll: Improve futex queue selection to reduce
+ collisions.
+
+---
+ dlls/ntdll/sync.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/dlls/ntdll/sync.c b/dlls/ntdll/sync.c
+index c49bd5bd1a4..c655e1e28e2 100644
+--- a/dlls/ntdll/sync.c
++++ b/dlls/ntdll/sync.c
+@@ -839,9 +839,12 @@ static struct futex_queue futex_queues[1024];
+ 
+ static struct futex_queue *get_futex_queue( const void *addr )
+ {
+-    ULONG_PTR val = (ULONG_PTR)addr;
++    ULONG_PTR val = (ULONG_PTR)addr >> 4;
+ 
+-    return &futex_queues[(val >> 4) % ARRAY_SIZE(futex_queues)];
++    /* Mix the bits a bit to avoid collisions on low bits. */
++    val ^= val >> 11;
++    val ^= val >> 22;
++    return &futex_queues[val % ARRAY_SIZE(futex_queues)];
+ }
+ 
+ static void spin_lock( LONG *lock )
+-- 
+2.54.0
+
+
+From e40d5c9fd79ed5fef8eb1b7e0eeedf3b6a6ed0a7 Mon Sep 17 00:00:00 2001
+From: Ziqing Hui <zhui@codeweavers.com>
+Date: Thu, 23 Apr 2026 13:06:27 +0800
+Subject: [PATCH 23/26] gdi32/tests: Add a test for runtime font smoothing
+ changes.
+
+---
+ dlls/gdi32/tests/dib.c | 114 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 114 insertions(+)
+
+diff --git a/dlls/gdi32/tests/dib.c b/dlls/gdi32/tests/dib.c
+index 14e8a9b384f..62f62afa9d8 100644
+--- a/dlls/gdi32/tests/dib.c
++++ b/dlls/gdi32/tests/dib.c
+@@ -3007,6 +3007,119 @@ static inline COLORREF aa_colorref( COLORREF dst, COLORREF text, BYTE glyph )
+ 
+ static const BYTE masks[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
+ 
++static unsigned int draw_runtime_smoothing_text( HDC hdc, const BITMAPINFO *bmi, BYTE *bits,
++                                                 HFONT font, BOOL smoothing )
++{
++    unsigned int mixed = 0, size = bmi->bmiHeader.biWidth * abs( bmi->bmiHeader.biHeight );
++    static const DWORD background = 0x00ff00ff;
++    static const DWORD foreground = 0x00000000;
++    BOOL text_pixels = FALSE;
++    BOOL ret;
++    int i;
++
++    ret = SystemParametersInfoA( SPI_SETFONTSMOOTHING, smoothing, NULL, 0 );
++    ok( ret, "SPI_SETFONTSMOOTHING failed, error %lu\n", GetLastError() );
++    ret = SystemParametersInfoA( SPI_SETFONTSMOOTHINGTYPE, 0, UlongToPtr(FE_FONTSMOOTHINGSTANDARD), 0 );
++    ok( ret, "SPI_SETFONTSMOOTHINGTYPE failed, error %lu\n", GetLastError() );
++
++    SelectObject( hdc, GetStockObject( SYSTEM_FONT ) );
++    SelectObject( hdc, font );
++
++    for (i = 0; i < size; i++)
++        ((DWORD *)bits)[i] = background;
++
++    SetTextColor( hdc, RGB(0, 0, 0) );
++    SetBkMode( hdc, TRANSPARENT );
++    ret = ExtTextOutA( hdc, 8, 48, 0, NULL, "Hello Wine", 10, NULL );
++    ok( ret, "ExtTextOutA failed\n" );
++
++    for (i = 0; i < size; i++)
++    {
++        DWORD pixel = ((DWORD *)bits)[i] & 0x00ffffff;
++
++        if (pixel != background)
++        {
++            text_pixels = TRUE;
++            if (pixel != foreground) mixed++;
++        }
++    }
++
++    ok( text_pixels, "expected some text pixels\n" );
++
++    return mixed;
++}
++
++static void test_runtime_font_smoothing(void)
++{
++    BITMAPINFO bmi = {{ sizeof(BITMAPINFOHEADER), 256, -96, 1, 32, BI_RGB }};
++    HFONT font, cleartype_font, old_font;
++    BOOL old_smoothing, ret;
++    HBITMAP dib, old_dib;
++    unsigned int mixed;
++    LOGFONTA lf = {0};
++    TEXTMETRICA tm;
++    UINT old_type;
++    BYTE *bits;
++    HDC hdc;
++
++    ret = SystemParametersInfoA( SPI_GETFONTSMOOTHING, 0, &old_smoothing, 0 );
++    if (!ret)
++    {
++        win_skip( "SPI_GETFONTSMOOTHING failed, error %lu\n", GetLastError() );
++        return;
++    }
++    ret = SystemParametersInfoA( SPI_GETFONTSMOOTHINGTYPE, 0, &old_type, 0 );
++    ok( ret, "SPI_GETFONTSMOOTHINGTYPE failed, error %lu\n", GetLastError() );
++
++    hdc = CreateCompatibleDC( NULL );
++    ok( hdc != NULL, "CreateCompatibleDC failed\n" );
++
++    dib = CreateDIBSection( hdc, &bmi, DIB_RGB_COLORS, (void **)&bits, NULL, 0 );
++    ok( dib != NULL, "CreateDIBSection failed\n" );
++    old_dib = SelectObject( hdc, dib );
++
++    strcpy( lf.lfFaceName, "Tahoma" );
++    lf.lfHeight = 32;
++    lf.lfQuality = DEFAULT_QUALITY;
++
++    font = CreateFontIndirectA( &lf );
++    ok( font != NULL, "CreateFontIndirectA failed\n" );
++    lf.lfQuality = CLEARTYPE_QUALITY;
++    cleartype_font = CreateFontIndirectA( &lf );
++    ok( cleartype_font != NULL, "CreateFontIndirectA failed\n" );
++
++    old_font = SelectObject( hdc, font );
++    GetTextMetricsA( hdc, &tm );
++    if (!(tm.tmPitchAndFamily & TMPF_VECTOR))
++    {
++        skip( "skipping as a bitmap font has been selected for Tahoma.\n" );
++        goto done;
++    }
++
++    mixed = draw_runtime_smoothing_text( hdc, &bmi, bits, font, TRUE );
++    ok( mixed, "expected some antialiased pixels\n" );
++
++    mixed = draw_runtime_smoothing_text( hdc, &bmi, bits, font, FALSE );
++    todo_wine
++    ok( !mixed, "expected no antialiased pixels, got %u\n", mixed );
++
++    mixed = draw_runtime_smoothing_text( hdc, &bmi, bits, cleartype_font, FALSE );
++    ok( mixed, "expected some antialiased pixels\n" );
++
++done:
++    SelectObject( hdc, old_font );
++    DeleteObject( font );
++    DeleteObject( cleartype_font );
++    SelectObject( hdc, old_dib );
++    DeleteObject( dib );
++    DeleteDC( hdc );
++
++    ret = SystemParametersInfoA( SPI_SETFONTSMOOTHING, old_smoothing, NULL, 0 );
++    ok( ret, "failed to restore SPI_SETFONTSMOOTHING, error %lu\n", GetLastError() );
++    ret = SystemParametersInfoA( SPI_SETFONTSMOOTHINGTYPE, 0, UlongToPtr(old_type), 0 );
++    ok( ret, "failed to restore SPI_SETFONTSMOOTHINGTYPE, error %lu\n", GetLastError() );
++}
++
+ static void draw_text_2( HDC hdc, const BITMAPINFO *bmi, BYTE *bits, BOOL aa )
+ {
+     DWORD dib_size = get_dib_size(bmi), ret;
+@@ -3533,6 +3646,7 @@ START_TEST(dib)
+ {
+     CryptAcquireContextW(&crypt_prov, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);
+ 
++    test_runtime_font_smoothing();
+     test_simple_graphics();
+ 
+     CryptReleaseContext(crypt_prov, 0);
+-- 
+2.54.0
+
+
+From a0e5540f28534cf4f8f83458e5a37d0472658d6b Mon Sep 17 00:00:00 2001
+From: Ziqing Hui <zhui@codeweavers.com>
+Date: Tue, 5 May 2026 14:44:49 +0800
+Subject: [PATCH 24/26] win32u: Respect runtime font smoothing settings.
+
+---
+ dlls/win32u/font.c           | 15 ++++++++++++++-
+ dlls/win32u/sysparams.c      | 33 +++++++++++++++++++++++++++++++++
+ dlls/win32u/win32u_private.h |  1 +
+ 3 files changed, 48 insertions(+), 1 deletion(-)
+
+diff --git a/dlls/win32u/font.c b/dlls/win32u/font.c
+index dcc75e8096b..44950476808 100644
+--- a/dlls/win32u/font.c
++++ b/dlls/win32u/font.c
+@@ -4531,6 +4531,8 @@ static HFONT font_SelectFont( PHYSDEV dev, HFONT hfont, UINT *aa_flags )
+         LOGFONTW lf;
+         FMAT2 dcmat;
+         BOOL can_use_bitmap = !!(NtGdiGetDeviceCaps( dc->hSelf, TEXTCAPS ) & TC_RA_ABLE);
++        UINT new_font_smoothing, new_subpixel_orientation;
++        BOOL update_font_smoothing;
+ 
+         NtGdiExtGetObjectW( hfont, sizeof(lf), &lf );
+         switch (lf.lfQuality)
+@@ -4580,17 +4582,28 @@ static HFONT font_SelectFont( PHYSDEV dev, HFONT hfont, UINT *aa_flags )
+         }
+         TRACE( "DC transform %f %f %f %f\n", dcmat.eM11, dcmat.eM12, dcmat.eM21, dcmat.eM22 );
+ 
++        update_font_smoothing = get_font_smoothing_aa( &new_font_smoothing,
++                                                       &new_subpixel_orientation );
++
+         pthread_mutex_lock( &font_lock );
++        if (update_font_smoothing)
++        {
++            font_smoothing = new_font_smoothing;
++            subpixel_orientation = new_subpixel_orientation;
++        }
+ 
+         font = select_font( &lf, dcmat, can_use_bitmap );
+ 
+         if (font)
+         {
+-            if (!*aa_flags) *aa_flags = font->aa_flags;
+             if (!*aa_flags)
+             {
+                 if (lf.lfQuality == CLEARTYPE_QUALITY || lf.lfQuality == CLEARTYPE_NATURAL_QUALITY)
+                     *aa_flags = subpixel_orientation;
++                else if (font_smoothing == GGO_BITMAP)
++                    *aa_flags = GGO_BITMAP;
++                else if (font->aa_flags)
++                    *aa_flags = font->aa_flags;
+                 else
+                     *aa_flags = font_smoothing;
+             }
+diff --git a/dlls/win32u/sysparams.c b/dlls/win32u/sysparams.c
+index 25ff77a314d..ff7bd35d9fa 100644
+--- a/dlls/win32u/sysparams.c
++++ b/dlls/win32u/sysparams.c
+@@ -8090,3 +8090,36 @@ BOOL get_gpu_info_from_uuid( const GUID *uuid, LUID *luid, UINT32 *node_mask, ch
+     unlock_display_devices();
+     return found;
+ }
++
++BOOL get_font_smoothing_aa( UINT *font_aa, UINT *subpixel_orientation_aa )
++{
++    DWORD type, orientation;
++    UINT smoothing;
++
++    if (!volatile_base_key
++            || !get_entry( &entry_FONTSMOOTHING, 0, &smoothing )
++            || !get_entry( &entry_FONTSMOOTHINGTYPE, 0, &type )
++            || !get_entry( &entry_FONTSMOOTHINGORIENTATION, 0, &orientation ))
++        return FALSE;
++
++    switch (orientation)
++    {
++    case FE_FONTSMOOTHINGORIENTATIONBGR:
++        *subpixel_orientation_aa = WINE_GGO_HBGR_BITMAP;
++        break;
++    case FE_FONTSMOOTHINGORIENTATIONRGB:
++        *subpixel_orientation_aa = WINE_GGO_HRGB_BITMAP;
++        break;
++    default:
++        return FALSE;
++    }
++
++    if (!smoothing)
++        *font_aa = GGO_BITMAP;
++    else if (type == FE_FONTSMOOTHINGCLEARTYPE)
++        *font_aa = *subpixel_orientation_aa;
++    else
++        *font_aa = GGO_GRAY4_BITMAP;
++
++    return TRUE;
++}
+diff --git a/dlls/win32u/win32u_private.h b/dlls/win32u/win32u_private.h
+index 031e1afec70..eec6b755f8b 100644
+--- a/dlls/win32u/win32u_private.h
++++ b/dlls/win32u/win32u_private.h
+@@ -169,6 +169,7 @@ extern COLORREF get_sys_color( int index );
+ extern HBRUSH get_sys_color_brush( unsigned int index );
+ extern HPEN get_sys_color_pen( unsigned int index );
+ extern UINT get_system_dpi(void);
++extern BOOL get_font_smoothing_aa( UINT *font_aa, UINT *subpixel_orientation_aa );
+ extern int get_system_metrics( int index );
+ extern UINT get_thread_dpi(void);
+ extern UINT set_thread_dpi_awareness_context( UINT context );
+-- 
+2.54.0
+
+
+From 9ac3f32ef7d1153db4302bbe5f3afa33a680e131 Mon Sep 17 00:00:00 2001
+From: Ziqing Hui <zhui@codeweavers.com>
+Date: Tue, 5 May 2026 14:47:00 +0800
+Subject: [PATCH 25/26] winex11.drv: Preserve disabled font smoothing.
+
+---
+ dlls/gdi32/tests/dib.c     | 1 -
+ dlls/winex11.drv/xrender.c | 4 +++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/dlls/gdi32/tests/dib.c b/dlls/gdi32/tests/dib.c
+index 62f62afa9d8..60ed7ffabc4 100644
+--- a/dlls/gdi32/tests/dib.c
++++ b/dlls/gdi32/tests/dib.c
+@@ -3100,7 +3100,6 @@ static void test_runtime_font_smoothing(void)
+     ok( mixed, "expected some antialiased pixels\n" );
+ 
+     mixed = draw_runtime_smoothing_text( hdc, &bmi, bits, font, FALSE );
+-    todo_wine
+     ok( !mixed, "expected no antialiased pixels, got %u\n", mixed );
+ 
+     mixed = draw_runtime_smoothing_text( hdc, &bmi, bits, cleartype_font, FALSE );
+diff --git a/dlls/winex11.drv/xrender.c b/dlls/winex11.drv/xrender.c
+index dd3f596cac3..b11c04a7f3a 100644
+--- a/dlls/winex11.drv/xrender.c
++++ b/dlls/winex11.drv/xrender.c
+@@ -820,14 +820,16 @@ static HFONT xrenderdrv_SelectFont( PHYSDEV dev, HFONT hfont, UINT *aa_flags )
+     LFANDSIZE lfsz;
+     struct xrender_physdev *physdev = get_xrender_dev( dev );
+     PHYSDEV next = GET_NEXT_PHYSDEV( dev, pSelectFont );
++    UINT xft_aa_flags;
+     DWORD mode;
+     HFONT ret;
+ 
+     NtGdiExtGetObjectW( hfont, sizeof(lfsz.lf), &lfsz.lf );
+-    if (!*aa_flags) *aa_flags = get_xft_aa_flags( &lfsz.lf );
+ 
+     ret = next->funcs->pSelectFont( next, hfont, aa_flags );
+     if (!ret) return 0;
++    xft_aa_flags = get_xft_aa_flags( &lfsz.lf );
++    if (xft_aa_flags && *aa_flags != GGO_BITMAP) *aa_flags = xft_aa_flags;
+ 
+     switch (*aa_flags)
+     {
+-- 
+2.54.0
+
+
+From 1c89e8f1f5cf091e1d406d94a0558d10ed186400 Mon Sep 17 00:00:00 2001
+From: Arie Miller <renari@arimil.com>
+Date: Tue, 19 May 2026 02:56:10 -0400
+Subject: [PATCH 26/26] shell32: Don't add backslash after CSIDL_PERSONAL.
+
+---
+ dlls/shell32/shfldr_fs.c       |  1 -
+ dlls/shell32/tests/shlfolder.c | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
+
+diff --git a/dlls/shell32/shfldr_fs.c b/dlls/shell32/shfldr_fs.c
+index fabd27e984f..0d74f4578c5 100644
+--- a/dlls/shell32/shfldr_fs.c
++++ b/dlls/shell32/shfldr_fs.c
+@@ -1409,7 +1409,6 @@ IFSFldr_PersistFolder3_Initialize (IPersistFolder3 * iface, LPCITEMIDLIST pidl)
+         if (IsEqualCLSID( This->pclsid, &CLSID_MyDocuments ))
+         {
+             if (!SHGetSpecialFolderPathW( 0, wszTemp, CSIDL_PERSONAL, FALSE )) return E_FAIL;
+-            PathAddBackslashW( wszTemp );
+         }
+         else lstrcpyW( wszTemp, L"\\\\?\\unix\\" );
+     }
+diff --git a/dlls/shell32/tests/shlfolder.c b/dlls/shell32/tests/shlfolder.c
+index 5f8b4dc3470..08c8c73dd47 100644
+--- a/dlls/shell32/tests/shlfolder.c
++++ b/dlls/shell32/tests/shlfolder.c
+@@ -1501,6 +1501,34 @@ static void test_SHGetPathFromIDList(void)
+     ok(result, "SHGetPathFromIDListW failed\n");
+ }
+ 
++static void test_SHGetPathFromIDList_personal(void)
++{
++    WCHAR personal[MAX_PATH], path[MAX_PATH];
++    LPITEMIDLIST pidl;
++    HRESULT hr;
++    BOOL ret;
++    int len;
++
++    ret = SHGetSpecialFolderPathW(NULL, personal, CSIDL_PERSONAL, FALSE);
++    ok(ret, "SHGetSpecialFolderPathW(CSIDL_PERSONAL) failed, error %lu.\n", GetLastError());
++    if (!ret) return;
++
++    hr = SHGetSpecialFolderLocation(NULL, CSIDL_PERSONAL, &pidl);
++    ok(hr == S_OK, "SHGetSpecialFolderLocation(CSIDL_PERSONAL) failed, hr %#lx.\n", hr);
++    if (hr != S_OK) return;
++
++    ret = SHGetPathFromIDListW(pidl, path);
++    ILFree(pidl);
++    ok(ret, "SHGetPathFromIDListW(CSIDL_PERSONAL) failed, error %lu.\n", GetLastError());
++    if (!ret) return;
++    ok(!lstrcmpiW(path, personal), "got %s, expected %s.\n", wine_dbgstr_w(path),
++       wine_dbgstr_w(personal));
++
++    len = lstrlenW(path);
++    ok(len && path[len - 1] != '\\', "CSIDL_PERSONAL path has trailing backslash: %s.\n",
++       wine_dbgstr_w(path));
++}
++
+ static void test_EnumObjects_and_CompareIDs(void)
+ {
+     ITEMIDLIST *newPIDL;
+@@ -6291,6 +6319,7 @@ START_TEST(shlfolder)
+     test_GetDisplayName();
+     test_GetAttributesOf();
+     test_SHGetPathFromIDList();
++    test_SHGetPathFromIDList_personal();
+     test_CallForAttributes();
+     test_FolderShortcut();
+     test_ITEMIDLIST_format();
 -- 
 2.54.0
 
