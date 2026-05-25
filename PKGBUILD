@@ -38,8 +38,10 @@ prepare() {
   # Fix mbedtls 3.x API changes
   sed -i 's/mbedtls_x509write_crt_pem(\([^,]*\), \([^,]*\), sizeof(\([^)]*\)))/mbedtls_x509write_crt_pem(\1, \2, sizeof(\3), NULL, NULL)/g' src/webserver/x509.c
   sed -i 's/mbedtls_pk_parse_keyfile(\([^,]*\), \([^,]*\), NULL);/mbedtls_pk_parse_keyfile(\1, \2, NULL, NULL, NULL);/g' src/webserver/x509.c
-  # Fix nettle 4.0 API change: hmac_sha1_digest() no longer takes a length argument
-  sed -i 's/hmac_sha1_digest(\([^,]*\), SHA1_DIGEST_SIZE, \([^)]*\))/hmac_sha1_digest(\1, \2)/g' src/api/2fa.c
+  # Fix nettle 4.0 API change: digest functions no longer take a length argument
+  find src -name '*.[ch]' -print0 | \
+    xargs -0 sed -i 's/\(hmac_sha[0-9]*_digest\|sha[0-9]*_digest\)(\([^,]*\), [A-Z0-9_]*DIGEST_SIZE, \([^)]*\))/\1(\2, \3)/g'
+  sed -i 's/hash->digest(ctx, hash->digest_size, digest)/hash->digest(ctx, digest)/g' src/dnsmasq/dnssec.c
 }
 
 build() {
