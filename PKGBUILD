@@ -8,7 +8,7 @@ pkgname=pi-hole-ftl
 _pkgname=FTL
 _servicename=pihole-FTL
 pkgver=6.6.2
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc="The Pi-hole FTL engine"
 url="https://github.com/pi-hole/FTL"
@@ -38,6 +38,8 @@ prepare() {
   # Fix mbedtls 3.x API changes
   sed -i 's/mbedtls_x509write_crt_pem(\([^,]*\), \([^,]*\), sizeof(\([^)]*\)))/mbedtls_x509write_crt_pem(\1, \2, sizeof(\3), NULL, NULL)/g' src/webserver/x509.c
   sed -i 's/mbedtls_pk_parse_keyfile(\([^,]*\), \([^,]*\), NULL);/mbedtls_pk_parse_keyfile(\1, \2, NULL, NULL, NULL);/g' src/webserver/x509.c
+  # Fix nettle 4.0 API change: hmac_sha1_digest() no longer takes a length argument
+  sed -i 's/hmac_sha1_digest(\([^,]*\), SHA1_DIGEST_SIZE, \([^)]*\))/hmac_sha1_digest(\1, \2)/g' src/api/2fa.c
 }
 
 build() {
