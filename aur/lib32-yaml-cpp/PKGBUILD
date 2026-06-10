@@ -13,7 +13,7 @@ url="https://github.com/jbeder/yaml-cpp"
 arch=('x86_64')
 license=('MIT')
 depends=('lib32-gcc-libs' 'lib32-glibc')
-makedepends=('cmake' 'gcc-multilib' 'ninja')
+makedepends=('cmake' 'gcc-multilib' 'git' 'ninja')
 source=("git+$url.git#tag=yaml-cpp-$pkgver")
 b2sums=('757d0b3724536b411b6c0e505540e02117c06449ddc5059b24f9a59bbdbd1fab8710dd1746c10d17ad61decc5cd2bd1c081791a06b79af1fe6aa3a50dbe238d5')
 
