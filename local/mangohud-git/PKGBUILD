@@ -4,17 +4,16 @@
 # Contributor: Mark Wagie <mark dot wagie at proton dot me>
 _pkgname=MangoHud
 pkgname=mangohud-git
-_pkgver=0.7.2
-pkgver=0.7.2.r101.gd9e312f
+pkgver=0.8.4.r24.g77b4bbea
 pkgrel=1
 pkgdesc="A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load and more."
 arch=('x86_64')
 url="https://github.com/flightlessmango/MangoHud"
 license=('MIT')
-makedepends=('appstream' 'cmocka' 'git' 'glslang' 'libxnvctrl' 'libxrandr' 'meson' 'nlohmann-json' 'python-mako' 'vulkan-headers')
-depends=('dbus' 'fmt' 'gcc-libs' 'glew' 'glfw' 'hicolor-icon-theme' 'libglvnd' 'libx11' 'libxkbcommon' 'python' 'python-matplotlib' 'python-numpy' 'vulkan-icd-loader' 'wayland')
-optdepends=('libxnvctrl: NVIDIA GPU stats by XNVCtrl'
-            'gamescope: Use MangoApp as an overlay within gamescope')
+makedepends=('appstream' 'cmocka' 'git' 'glslang' 'libxnvctrl' 'libxrandr' 'meson' 'python-mako' 'vulkan-headers' 'yaml-cpp')
+depends=('dbus' 'fmt' 'glfw' 'hicolor-icon-theme' 'libglvnd' 'libx11' 'libxkbcommon' 'python' 'python-matplotlib' 'python-numpy' 'vulkan-icd-loader' 'wayland')
+optdepends=('gamescope: Use MangoApp as an overlay within gamescope'
+            'libxnvctrl: NVIDIA GPU stats by XNVCtrl')
 provides=("${pkgname//-git}")
 conflicts=("${pkgname//-git}")
 source=("git+https://github.com/flightlessmango/MangoHud.git")
@@ -29,8 +28,8 @@ prepare() {
     cd "$_pkgname"
 
     # Use system cmocka instead of subproject
-    sed -i "s/  cmocka = subproject('cmocka')//g" meson.build
-    sed -i "s/cmocka_dep = cmocka.get_variable('cmocka_dep')/cmocka_dep = dependency('cmocka')/g" meson.build
+    sed --in-place "s/  cmocka = subproject('cmocka')//g" meson.build
+    sed --in-place "s/cmocka_dep = cmocka.get_variable('cmocka_dep')/cmocka_dep = dependency('cmocka')/g" meson.build
 }
 
 build() {
@@ -46,6 +45,7 @@ package() {
     meson install -C build --destdir "$pkgdir"
 
     install -Dm 0644 "$srcdir/$_pkgname/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+    rm --force "$pkgdir/usr/lib/libimgui.a"
 }
 
 check() {
