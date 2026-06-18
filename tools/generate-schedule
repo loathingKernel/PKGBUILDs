@@ -115,5 +115,6 @@ if __name__ == "__main__":
             previous = package
 
     subprocess.run(['git', 'add', workflow_file.as_posix()])
+    subprocess.run(['git', 'add', __file__])
     subprocess.run(['git', 'commit', '-m', f'workflows: update {args.schedule} workflow'])
     sys.exit(0)
