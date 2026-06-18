@@ -57,7 +57,7 @@ packages = {
         'awesome',
         'vicious',
         'lgogdownloader-git',
-#        'lgogdownloader-qt5-git',
+        'lgogdownloader-qt-git',
         'mangohud-git',
         'lib32-mangohud-git',
         'ppsspp-git',
