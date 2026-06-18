@@ -11,14 +11,14 @@ on:
         type: choice
         default: 'build'
         options:
-        - 'build'
-        - 'remove'
-        - 'skip'
+          - 'build'
+          - 'remove'
+          - 'skip'
   push:
     branches:
-     - master
+      - master
     paths:
-     - aur/libstrangle/.SRCINFO
+      - aur/libstrangle/.SRCINFO
 
 jobs:
   repository:
@@ -30,3 +30,5 @@ jobs:
       pkgdir: aur/libstrangle
       repository: ${{ matrix.repository }}
       action: ${{ inputs.action != '' && inputs.action || 'build' }}
+      multilib: false
+      debloat: false
