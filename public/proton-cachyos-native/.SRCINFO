@@ -222,6 +222,7 @@ pkgbase = proton-cachyos-native
 	optdepends = NTSYNC-MODULE
 	provides = proton-cachyos
 	provides = proton
+	replaces = proton-cachyos
 	noextract = wine-gecko-2.47.4-x86.tar.xz
 	noextract = wine-gecko-2.47.4-x86_64.tar.xz
 	noextract = wine-mono-11.0.0-x86.tar.xz
