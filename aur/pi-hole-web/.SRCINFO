@@ -1,12 +1,12 @@
 pkgbase = pi-hole-web
 	pkgdesc = Pi-hole Dashboard for stats and more.
-	pkgver = 6.5
+	pkgver = 6.5.1
 	pkgrel = 1
-	url = https://github.com/pi-hole/pi-hole
+	url = https://github.com/pi-hole/web
 	install = pi-hole-web.install
 	arch = any
 	license = EUPL-1.2
-	source = web-6.5.tar.gz::https://github.com/pi-hole/web/archive/refs/tags/v6.5.tar.gz
-	sha256sums = e7261d6503c4a3d65aad2ae500dfc04163156403d29fddecd6dcfe7f9d679b1f
+	source = web-6.5.1.tar.gz::https://github.com/pi-hole/web/archive/refs/tags/v6.5.1.tar.gz
+	sha256sums = db0603d1f1a3679cc2ee5b30bb738c178666c4230dd1a9b49917ed56ef9aa7e9
 
 pkgname = pi-hole-web
