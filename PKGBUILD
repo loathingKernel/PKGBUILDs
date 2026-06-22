@@ -2,7 +2,7 @@
 # Maintainer: Caroline Snyder <hirpeng@gmail.com>
 pkgname=shelly
 pkgver=2.4.0.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Shelly: A Modern Arch Package Manager"
 arch=('x86_64')
 url="https://github.com/Seafoam-Labs/Shelly-ALPM"
