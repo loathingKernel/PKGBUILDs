@@ -12,7 +12,7 @@ url="https://github.com/dhewm/dhewm3"
 license=('GPL3')
 depends=(
   curl
-  libjpeg
+  libjpeg-turbo
   libvorbis
   openal
   sdl2
