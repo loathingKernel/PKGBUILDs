@@ -34,6 +34,7 @@ depends=(
   'libxinerama'
   'libxml2'
   'tolua++'
+  'libxnvctrl' libXNVCtrl.so
   'lua54'
   'ncurses' libncursesw.so
   'pango'
@@ -95,7 +96,6 @@ build() {
     -D BUILD_LUA_CAIRO=ON \
     -D BUILD_LUA_IMLIB2=ON \
     -D BUILD_LUA_RSVG=ON \
-    -D BUILD_NVIDIA_NVML=ON \
     -D DOC_PATH=share/doc/$pkgname
   cmake --build build
 }
