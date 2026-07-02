@@ -74,7 +74,7 @@ jobs:
 
     - name: Restore cache
       id: ccache-restore
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ./.ccache
         key: ${{ github.workflow }}-${{ inputs.release_tag }}-${{ github.run_id }}
@@ -97,7 +97,7 @@ jobs:
     - name: Save cache
       id: ccache-save
       if: always()
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         path: ./.ccache
         key: ${{ steps.ccache-restore.outputs.cache-primary-key }}
