@@ -31,6 +31,7 @@ depends=(
   'libxext'
   'libxfixes'
   'libxft'
+  'libxi'
   'libxinerama'
   'libxml2'
   'tolua++'
