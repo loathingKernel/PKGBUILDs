@@ -8,7 +8,7 @@ shopt -s extglob
 
 pkgbase=python
 pkgname=(python39 python39-tests)
-pkgver=3.9.23
+pkgver=3.9.25
 pkgrel=1
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
@@ -21,7 +21,7 @@ makedepends=('tk' 'sqlite' 'bluez-libs' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-fon
 source=("https://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"{,.asc}
         mpdecimal-2.5.1.patch
         EXTERNALLY-MANAGED)
-sha512sums=('ad2eb2eebff286a16ad631339bc0890b0686cf5e669d28905a98f96e9b1af6673d255f36bf19e146aa4de8d012587dc6b3193e903718f9cdba4b97041318f418'
+sha512sums=('33fd65952cc3ce5df83825aa32a103935815bdd5a016e5fd9896cafb068a3f89b3a6134458a2694e4f0f4f8a9fbe84739b53116264728b32cde0f03ab210cb19'
             'SKIP'
             '58f683cbfdc6aa84c03d068c1bc2f1d8d2c17ba4f7b632c14ab1d529d8332e767354266c3815e239427497fff1a42ec2a37739ea312d24cb76a69dcf1c98c0ad'
             '62a6fbfbaeaa3ba7c54e109d9c3b7f67e73bb21986da4c1fcc5d28cca83d71e0fcae28e1fc70ee8ddce7dea8cd0b64e18d1031dae3a2eae5eaa379c53efd53a0')
