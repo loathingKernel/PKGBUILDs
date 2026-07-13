@@ -1,7 +1,7 @@
 pkgbase = go2tv
-	pkgdesc = cast your videos to UPnP/DLNA MediaRenderer
-	pkgver = 2.3.0
-	pkgrel = 2
+	pkgdesc = Cast media files to Smart TVs and Chromecast devices
+	pkgver = 2.4.0
+	pkgrel = 1
 	url = https://github.com/alexballas/go2tv
 	arch = x86_64
 	license = MIT
@@ -16,7 +16,7 @@ pkgbase = go2tv
 	depends = libglvnd
 	depends = libpipewire
 	optdepends = ffmpeg: transcoding support
-	source = https://github.com/alexballas/go2tv/archive/v2.3.0/go2tv-2.3.0.tar.gz
-	sha256sums = a210c8cd040e112a432f790f2df2064a036eb4dc469f570536f0c81db4121903
+	source = https://github.com/alexballas/go2tv/archive/v2.4.0/go2tv-2.4.0.tar.gz
+	sha256sums = 8d7349ee8d01736a725565285558a9d200f90b3d52d1cf5ac0c77377d1ec4336
 
 pkgname = go2tv

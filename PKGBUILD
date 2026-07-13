@@ -1,8 +1,8 @@
 # Maintainer: Damjan Georgievski <gdamjan@gmail.com>
 pkgname=go2tv
-pkgver=2.3.0
-pkgrel=2
-pkgdesc='cast your videos to UPnP/DLNA MediaRenderer'
+pkgver=2.4.0
+pkgrel=1
+pkgdesc='Cast media files to Smart TVs and Chromecast devices'
 arch=('x86_64')
 url="https://github.com/alexballas/${pkgname}"
 license=('MIT')
@@ -35,4 +35,4 @@ package() {
   install -Dm644 $pkgname-$pkgver/assets/go2tv-icon-color.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/app.go2tv.go2tv.svg
 }
 
-sha256sums=('a210c8cd040e112a432f790f2df2064a036eb4dc469f570536f0c81db4121903')
+sha256sums=('8d7349ee8d01736a725565285558a9d200f90b3d52d1cf5ac0c77377d1ec4336')
