@@ -1,6 +1,6 @@
 pkgbase = somewm-git
 	pkgdesc = AwesomeWM ported to Wayland - 100% Lua API compatible
-	pkgver = 0.5.0.r91.gc9921b6
+	pkgver = 2.0.0.dev.r156.g6de5e1e
 	pkgrel = 1
 	url = https://github.com/trip-zip/somewm
 	arch = x86_64
@@ -31,7 +31,7 @@ pkgbase = somewm-git
 	depends = seatd
 	depends = vulkan-icd-loader
 	depends = wayland
-	depends = wlroots0.19
+	depends = wlroots0.20
 	depends = xcb-util-errors
 	depends = xcb-util-renderutil
 	depends = xcb-util-wm

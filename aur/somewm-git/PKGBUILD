@@ -1,6 +1,6 @@
 # Maintainer: Jimmy <your-email@example.com>
 pkgname=somewm-git
-pkgver=0.5.0.r91.gc9921b6
+pkgver=2.0.0.dev.r156.g6de5e1e
 pkgrel=1
 pkgdesc="AwesomeWM ported to Wayland - 100% Lua API compatible"
 arch=('x86_64')
@@ -24,7 +24,7 @@ depends=(
     'seatd'
     'vulkan-icd-loader'
     'wayland'
-    'wlroots0.19'
+    'wlroots0.20'
     'xcb-util-errors'
     'xcb-util-renderutil'
     'xcb-util-wm'
