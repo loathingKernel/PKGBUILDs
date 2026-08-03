@@ -25,16 +25,17 @@ on:
     - cron: '{cron}'
 
 jobs:
-  continue-on-error: true
 """
 
 job_first = """
   {current}:
+    continue-on-error: true
     uses: ./.github/workflows/{current}.yml
 """
 
 job_base = """
   {current}:
+    continue-on-error: true
     needs: {previous}
     uses: ./.github/workflows/{current}.yml
 """
