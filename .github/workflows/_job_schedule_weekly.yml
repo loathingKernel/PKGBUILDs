@@ -7,39 +7,47 @@ on:
     - cron: '0 0 */7 * *'
 
 jobs:
-  continue-on-error: true
 
   somewm-git:
+    continue-on-error: true
     uses: ./.github/workflows/somewm-git.yml
 
   dxvk-mingw-git:
+    continue-on-error: true
     needs: somewm-git
     uses: ./.github/workflows/dxvk-mingw-git.yml
 
   dxvk-msvc-git:
+    continue-on-error: true
     needs: dxvk-mingw-git
     uses: ./.github/workflows/dxvk-msvc-git.yml
 
   dxvk-nvapi-mingw-git:
+    continue-on-error: true
     needs: dxvk-msvc-git
     uses: ./.github/workflows/dxvk-nvapi-mingw-git.yml
 
   dxvk-nvapi-vkreflex-layer-git:
+    continue-on-error: true
     needs: dxvk-nvapi-mingw-git
     uses: ./.github/workflows/dxvk-nvapi-vkreflex-layer-git.yml
 
   vkd3d-proton-mingw-git:
+    continue-on-error: true
     needs: dxvk-nvapi-vkreflex-layer-git
     uses: ./.github/workflows/vkd3d-proton-mingw-git.yml
 
   dxvk-sarek-mingw-git:
+    continue-on-error: true
     needs: vkd3d-proton-mingw-git
     uses: ./.github/workflows/dxvk-sarek-mingw-git.yml
 
   rare-git:
+    continue-on-error: true
     needs: dxvk-sarek-mingw-git
     uses: ./.github/workflows/rare-git.yml
 
   dolphin-emu-git:
+    continue-on-error: true
     needs: rare-git
     uses: ./.github/workflows/dolphin-emu-git.yml
