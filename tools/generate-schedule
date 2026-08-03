@@ -25,6 +25,7 @@ on:
     - cron: '{cron}'
 
 jobs:
+    continue-on-error: true
 """
 
 job_first = """
