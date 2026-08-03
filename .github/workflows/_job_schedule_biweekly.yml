@@ -7,7 +7,7 @@ on:
     - cron: '0 0 */13 * *'
 
 jobs:
-    continue-on-error: true
+  continue-on-error: true
 
   auracle-git:
     uses: ./.github/workflows/auracle-git.yml
