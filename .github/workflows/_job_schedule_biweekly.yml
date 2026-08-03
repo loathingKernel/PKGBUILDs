@@ -9,50 +9,40 @@ on:
 jobs:
 
   auracle-git:
-    continue-on-error: true
     uses: ./.github/workflows/auracle-git.yml
 
   awesome:
-    continue-on-error: true
     needs: auracle-git
     uses: ./.github/workflows/awesome.yml
 
   vicious:
-    continue-on-error: true
     needs: awesome
     uses: ./.github/workflows/vicious.yml
 
   lgogdownloader-git:
-    continue-on-error: true
     needs: vicious
     uses: ./.github/workflows/lgogdownloader-git.yml
 
   lgogdownloader-qt-git:
-    continue-on-error: true
     needs: lgogdownloader-git
     uses: ./.github/workflows/lgogdownloader-qt-git.yml
 
   mangohud-git:
-    continue-on-error: true
     needs: lgogdownloader-qt-git
     uses: ./.github/workflows/mangohud-git.yml
 
   lib32-mangohud-git:
-    continue-on-error: true
     needs: mangohud-git
     uses: ./.github/workflows/lib32-mangohud-git.yml
 
   ppsspp-git:
-    continue-on-error: true
     needs: lib32-mangohud-git
     uses: ./.github/workflows/ppsspp-git.yml
 
   rbdoom-3-bfg:
-    continue-on-error: true
     needs: ppsspp-git
     uses: ./.github/workflows/rbdoom-3-bfg.yml
 
   dhewm3:
-    continue-on-error: true
     needs: rbdoom-3-bfg
     uses: ./.github/workflows/dhewm3.yml
