@@ -1,4 +1,5 @@
 ac97_bus
+aead
 aesni_intel
 af_alg
 agpgart
@@ -47,6 +48,7 @@ f2fs
 fat
 fb_sys_fops
 ff_memless
+firmware_attributes_class
 ftdi_sio
 fuse
 gf128mul
@@ -57,6 +59,7 @@ hid_logitech_dj
 hid_logitech_hidpp
 hid_rmi
 hp_accel
+hp_bioscfg
 hp_wmi
 i2c_algo_bit
 i2c_dev
@@ -66,6 +69,7 @@ i2c_mux
 i2c_smbus
 i8042
 i915
+inet_diag
 intel_cstate
 intel_gtt
 intel_pmc_bxt
@@ -221,6 +225,7 @@ stp
 syscopyarea
 sysfillrect
 sysimgblt
+tcp_diag
 tls
 tpm
 tpm_infineon

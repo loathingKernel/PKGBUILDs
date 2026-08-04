@@ -1,0 +1,456 @@
+From 3a5ff9fc8c3712e4e75c4f94f6380d31c09641ff Mon Sep 17 00:00:00 2001
+From: Muhammad Bilal <meatuni001@gmail.com>
+Date: Thu, 9 Jul 2026 21:58:56 +0500
+Subject: [PATCH 1/4] platform/x86: hp-bioscfg: pass validated element count to
+ package parsers
+
+The per-type package parsers are handed the wrong element count.
+
+hp_init_bios_package_attribute() validates obj->package.count and then
+calls one of the five hp_populate_*_package_data() wrappers (string,
+integer, enumeration, ordered list, password). Each wrapper forwards a
+count to its hp_populate_*_elements_from_package() parser, but instead
+of forwarding the validated obj->package.count it derives the count
+from elements[0]. elements[0] is the NAME field and is always an
+ACPI_TYPE_STRING, so reading ->package.count from it in fact reads
+->string.length through the union acpi_object. The parsers thus bound
+themselves against the length of the name string rather than against
+the real number of elements in the package.
+
+This is safe today because hp_init_bios_package_attribute() refuses any
+package that has fewer than the type's element count, so a parser only
+ever runs on a full package and never reads past it regardless of the
+bogus bound.
+
+An upcoming change relaxes that check to accept shorter packages. Once
+a parser can receive fewer elements than its per-type count, a bound
+taken from the name length no longer reflects the array size, and the
+"elem < count" loop conditions and "elem + n >= count" sub-loop guards
+read past the end of elements[] - an out-of-bounds heap read.
+
+Forward the validated obj->package.count to every *_package_data()
+wrapper so the parsers bound themselves against the real package size.
+This does not change behaviour for the packages that enumerate
+correctly today and is a prerequisite for accepting shorter packages
+safely.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
+---
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c               | 5 +++++
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.h               | 5 +++++
+ drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c       | 4 +++-
+ drivers/platform/x86/hp/hp-bioscfg/int-attributes.c        | 4 +++-
+ drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 6 ++++--
+ drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c  | 6 ++++--
+ drivers/platform/x86/hp/hp-bioscfg/string-attributes.c     | 4 +++-
+ 7 files changed, 27 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+index 27fd6cd2152..768330d291d 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -731,26 +731,31 @@ static int hp_init_bios_package_attribute(enum hp_wmi_data_type attr_type,
+ 	switch (attr_type) {
+ 	case HPWMI_STRING_TYPE:
+ 		ret = hp_populate_string_package_data(elements,
++						      obj->package.count,
+ 						      instance_id,
+ 						      attr_name_kobj);
+ 		break;
+ 	case HPWMI_INTEGER_TYPE:
+ 		ret = hp_populate_integer_package_data(elements,
++						       obj->package.count,
+ 						       instance_id,
+ 						       attr_name_kobj);
+ 		break;
+ 	case HPWMI_ENUMERATION_TYPE:
+ 		ret = hp_populate_enumeration_package_data(elements,
++							   obj->package.count,
+ 							   instance_id,
+ 							   attr_name_kobj);
+ 		break;
+ 	case HPWMI_ORDERED_LIST_TYPE:
+ 		ret = hp_populate_ordered_list_package_data(elements,
++							    obj->package.count,
+ 							    instance_id,
+ 							    attr_name_kobj);
+ 		break;
+ 	case HPWMI_PASSWORD_TYPE:
+ 		ret = hp_populate_password_package_data(elements,
++							obj->package.count,
+ 							instance_id,
+ 							attr_name_kobj);
+ 		break;
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+index f1eec0e4ba0..416d7e7aaaa 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+@@ -401,6 +401,7 @@ int hp_populate_string_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+ int hp_alloc_string_data(void);
+ void hp_exit_string_attributes(void);
+ int hp_populate_string_package_data(union acpi_object *str_obj,
++				    int str_obj_count,
+ 				    int instance_id,
+ 				    struct kobject *attr_name_kobj);
+ 
+@@ -411,6 +412,7 @@ int hp_populate_integer_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+ int hp_alloc_integer_data(void);
+ void hp_exit_integer_attributes(void);
+ int hp_populate_integer_package_data(union acpi_object *integer_obj,
++				     int integer_obj_count,
+ 				     int instance_id,
+ 				     struct kobject *attr_name_kobj);
+ 
+@@ -421,6 +423,7 @@ int hp_populate_enumeration_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+ int hp_alloc_enumeration_data(void);
+ void hp_exit_enumeration_attributes(void);
+ int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
++					 int enum_obj_count,
+ 					 int instance_id,
+ 					 struct kobject *attr_name_kobj);
+ 
+@@ -432,6 +435,7 @@ int hp_populate_ordered_list_buffer_data(u8 *buffer_ptr,
+ int hp_alloc_ordered_list_data(void);
+ void hp_exit_ordered_list_attributes(void);
+ int hp_populate_ordered_list_package_data(union acpi_object *order_obj,
++					  int order_obj_count,
+ 					  int instance_id,
+ 					  struct kobject *attr_name_kobj);
+ 
+@@ -440,6 +444,7 @@ int hp_populate_password_buffer_data(u8 *buffer_ptr, u32 *buffer_size,
+ 				     int instance_id,
+ 				     struct kobject *attr_name_kobj);
+ int hp_populate_password_package_data(union acpi_object *password_obj,
++				      int password_obj_count,
+ 				      int instance_id,
+ 				      struct kobject *attr_name_kobj);
+ int hp_alloc_password_data(void);
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+index af4d1920d48..de156a9f88a 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+@@ -300,10 +300,12 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
+  * Populate all properties of an instance under enumeration attribute
+  *
+  * @enum_obj: ACPI object with enumeration data
++ * @enum_obj_count: Number of elements in @enum_obj
+  * @instance_id: The instance to enumerate
+  * @attr_name_kobj: The parent kernel object
+  */
+ int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
++					 int enum_obj_count,
+ 					 int instance_id,
+ 					 struct kobject *attr_name_kobj)
+ {
+@@ -312,7 +314,7 @@ int hp_populate_enumeration_package_data(union acpi_object *enum_obj,
+ 	enum_data->attr_name_kobj = attr_name_kobj;
+ 
+ 	hp_populate_enumeration_elements_from_package(enum_obj,
+-						      enum_obj->package.count,
++						      enum_obj_count,
+ 						      instance_id);
+ 	hp_update_attribute_permissions(enum_data->common.is_readonly,
+ 					&enumeration_current_val);
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+index d96e160953e..f2fd966c9ca 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/int-attributes.c
+@@ -275,10 +275,12 @@ static int hp_populate_integer_elements_from_package(union acpi_object *integer_
+  * Populate all properties of an instance under integer attribute
+  *
+  * @integer_obj: ACPI object with integer data
++ * @integer_obj_count: Number of elements in @integer_obj
+  * @instance_id: The instance to enumerate
+  * @attr_name_kobj: The parent kernel object
+  */
+ int hp_populate_integer_package_data(union acpi_object *integer_obj,
++				     int integer_obj_count,
+ 				     int instance_id,
+ 				     struct kobject *attr_name_kobj)
+ {
+@@ -286,7 +288,7 @@ int hp_populate_integer_package_data(union acpi_object *integer_obj,
+ 
+ 	integer_data->attr_name_kobj = attr_name_kobj;
+ 	hp_populate_integer_elements_from_package(integer_obj,
+-						  integer_obj->package.count,
++						  integer_obj_count,
+ 						  instance_id);
+ 	hp_update_attribute_permissions(integer_data->common.is_readonly,
+ 					&integer_current_val);
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+index f09489a085c..cc5bebe73a9 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+@@ -298,10 +298,12 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+  * Populate all properties of an instance under ordered_list attribute
+  *
+  * @order_obj: ACPI object with ordered_list data
++ * @order_obj_count: Number of elements in @order_obj
+  * @instance_id: The instance to enumerate
+  * @attr_name_kobj: The parent kernel object
+  */
+-int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int instance_id,
++int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int order_obj_count,
++					  int instance_id,
+ 					  struct kobject *attr_name_kobj)
+ {
+ 	struct ordered_list_data *ordered_list_data = &bioscfg_drv.ordered_list_data[instance_id];
+@@ -309,7 +311,7 @@ int hp_populate_ordered_list_package_data(union acpi_object *order_obj, int inst
+ 	ordered_list_data->attr_name_kobj = attr_name_kobj;
+ 
+ 	hp_populate_ordered_list_elements_from_package(order_obj,
+-						       order_obj->package.count,
++						       order_obj_count,
+ 						       instance_id);
+ 	hp_update_attribute_permissions(ordered_list_data->common.is_readonly,
+ 					&ordered_list_current_val);
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+index 4d79eb8056a..ed5e2080f22 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/passwdobj-attributes.c
+@@ -385,10 +385,12 @@ static int hp_populate_password_elements_from_package(union acpi_object *passwor
+  *	Populate all properties for an instance under password attribute
+  *
+  * @password_obj: ACPI object with password data
++ * @password_obj_count: Number of elements in @password_obj
+  * @instance_id: The instance to enumerate
+  * @attr_name_kobj: The parent kernel object
+  */
+-int hp_populate_password_package_data(union acpi_object *password_obj, int instance_id,
++int hp_populate_password_package_data(union acpi_object *password_obj, int password_obj_count,
++				      int instance_id,
+ 				      struct kobject *attr_name_kobj)
+ {
+ 	struct password_data *password_data = &bioscfg_drv.password_data[instance_id];
+@@ -396,7 +398,7 @@ int hp_populate_password_package_data(union acpi_object *password_obj, int insta
+ 	password_data->attr_name_kobj = attr_name_kobj;
+ 
+ 	hp_populate_password_elements_from_package(password_obj,
+-						   password_obj->package.count,
++						   password_obj_count,
+ 						   instance_id);
+ 
+ 	hp_friendly_user_name_update(password_data->common.path,
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+index fe5a9a3a4ef..f98c32dacbc 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/string-attributes.c
+@@ -263,10 +263,12 @@ static int hp_populate_string_elements_from_package(union acpi_object *string_ob
+  * Populate all properties of an instance under string attribute
+  *
+  * @string_obj: ACPI object with string data
++ * @string_obj_count: Number of elements in @string_obj
+  * @instance_id: The instance to enumerate
+  * @attr_name_kobj: The parent kernel object
+  */
+ int hp_populate_string_package_data(union acpi_object *string_obj,
++				    int string_obj_count,
+ 				    int instance_id,
+ 				    struct kobject *attr_name_kobj)
+ {
+@@ -275,7 +277,7 @@ int hp_populate_string_package_data(union acpi_object *string_obj,
+ 	string_data->attr_name_kobj = attr_name_kobj;
+ 
+ 	hp_populate_string_elements_from_package(string_obj,
+-						 string_obj->package.count,
++						 string_obj_count,
+ 						 instance_id);
+ 
+ 	hp_update_attribute_permissions(string_data->common.is_readonly,
+-- 
+2.55.0
+
+
+From 72c3218572b92a924910990ba07741a2704b677b Mon Sep 17 00:00:00 2001
+From: Muhammad Bilal <meatuni001@gmail.com>
+Date: Thu, 9 Jul 2026 21:58:57 +0500
+Subject: [PATCH 2/4] platform/x86: hp-bioscfg: bound ordered-list parsing by
+ the package count
+
+hp_populate_ordered_list_elements_from_package() differs from the other
+per-type parsers: its main loop is bounded only by the fixed per-type
+count and never checks elem against the number of elements actually
+present in the package,
+
+  for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT; elem++, eloc++)
+
+whereas the string, integer, enumeration and password parsers bound
+their main loop with "elem < count" as well.
+
+This is safe today because hp_init_bios_package_attribute() rejects any
+package with fewer than ORD_ELEM_CNT elements before the parser runs.
+An upcoming change, however, relaxes that check to accept shorter
+packages.
+
+Bound the loop by the validated element count as well, so it stops at
+whichever comes first, the per-type count or the real package size,
+
+  for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT && elem < order_obj_count;
+       elem++, eloc++)
+
+order_obj_count is the validated element count, now correctly forwarded
+from the caller. No functional change for packages that enumerate
+correctly today.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
+---
+ drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+index cc5bebe73a9..863e486474a 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/order-list-attributes.c
+@@ -145,7 +145,7 @@ static int hp_populate_ordered_list_elements_from_package(union acpi_object *ord
+ 	if (!order_obj)
+ 		return -EINVAL;
+ 
+-	for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT; elem++, eloc++) {
++	for (elem = 1, eloc = 1; eloc < ORD_ELEM_CNT && elem < order_obj_count; elem++, eloc++) {
+ 
+ 		switch (order_obj[elem].type) {
+ 		case ACPI_TYPE_STRING:
+-- 
+2.55.0
+
+
+From a6a99131f0861b8d21cc3b917cc5e6d9c1aca729 Mon Sep 17 00:00:00 2001
+From: Muhammad Bilal <meatuni001@gmail.com>
+Date: Thu, 9 Jul 2026 21:58:58 +0500
+Subject: [PATCH 3/4] platform/x86: hp-bioscfg: accept reduced ACPI packages
+ from older HP BIOS
+
+hp_init_bios_package_attribute() hard-fails when a WMI ACPI package
+contains fewer elements than the type-specific expected count (e.g. 11
+elements instead of 13 for INTEGER or ENUMERATION attributes). This
+causes the entire hp_bioscfg driver to skip attribute enumeration on
+older HP hardware whose BIOS returns shortened packages when optional
+fields like prerequisites or possible values are absent.
+
+Observed on HP EliteBook 840 G2 (BIOS M71 Ver. 01.31):
+
+  hp_bioscfg: ACPI-package does not have enough elements: 11 < 13
+
+The element layout has two tiers:
+  - Elements 0-9 (SECURITY_LEVEL+1 = 10): common to all attribute types
+  - Elements 10-N: type-specific (bounds, values, encodings, ...)
+
+The per-type populate functions (hp_populate_*_elements_from_package)
+already handle sparse packages correctly via their own elem < count
+loop guards and inner-loop bounds checks. The only unsafe case is when
+we lack even the common elements needed to register the attribute.
+
+Fix by introducing COMMON_ELEM_CNT to mark the hard minimum (10), and
+splitting the check into two tiers:
+  - Fewer than COMMON_ELEM_CNT elements: hard fail, can't proceed.
+  - Fewer than expected type-specific elements: warn, but let the
+    populate function parse what is available.
+
+Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+Cc: stable@vger.kernel.org
+Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
+Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+---
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.c | 11 ++++++++---
+ drivers/platform/x86/hp/hp-bioscfg/bioscfg.h |  3 +++
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+index 768330d291d..78019644ec3 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.c
+@@ -661,12 +661,17 @@ static int hp_init_bios_package_attribute(enum hp_wmi_data_type attr_type,
+ 	int ret = 0;
+ 
+ 	/* Take action appropriate to each ACPI TYPE */
+-	if (obj->package.count < min_elements) {
+-		pr_err("ACPI-package does not have enough elements: %d < %d\n",
+-		       obj->package.count, min_elements);
++	if (obj->package.count < COMMON_ELEM_CNT) {
++		pr_err("ACPI-package is missing common elements: %d < %d\n",
++		       obj->package.count, COMMON_ELEM_CNT);
+ 		goto pack_attr_exit;
+ 	}
+ 
++	if (obj->package.count < min_elements) {
++		pr_warn("ACPI-package has fewer elements than expected: %d < %d, parsing available elements\n",
++			obj->package.count, min_elements);
++	}
++
+ 	elements = obj->package.elements;
+ 
+ 	/* sanity checking */
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+index 416d7e7aaaa..ac57d6eab4c 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
++++ b/drivers/platform/x86/hp/hp-bioscfg/bioscfg.h
+@@ -279,6 +279,9 @@ enum hp_wmi_data_elements {
+ 	PSWD_ENCODINGS = 13,
+ 	PSWD_IS_SET = 14,
+ 	PSWD_ELEM_CNT = 15,
++
++	/* Minimum elements shared by all attribute types (NAME..SECURITY_LEVEL) */
++	COMMON_ELEM_CNT = SECURITY_LEVEL + 1,
+ };
+ 
+ #define GET_INSTANCE_ID(type)						\
+-- 
+2.55.0
+
+
+From 4b2fd934f01372b311b272237e2426d8ec659a3b Mon Sep 17 00:00:00 2001
+From: Muhammad Bilal <meatuni001@gmail.com>
+Date: Thu, 9 Jul 2026 21:58:59 +0500
+Subject: [PATCH 4/4] platform/x86: hp-bioscfg: warn on element type mismatch
+ instead of failing
+
+hp_populate_enumeration_elements_from_package() returns -EIO and aborts
+enumeration of the entire attribute when any single element has an
+unexpected ACPI type. This is observed on HP EliteBook 840 G2 when the
+BIOS returns malformed ACPI data following a failed WMI query:
+
+  ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Index (0x000000032)
+    is beyond end of object (length 0x32)
+  ACPI Error: Aborting method \_SB.WMID.WQBE due to previous error
+  Error expected type 2 for elem 13, but got type 1 instead
+  hp_bioscfg: Returned error 0x3,
+    "Invalid command value/Feature not supported"
+
+Aborting immediately discards the attribute entirely.
+
+Warn about the unexpected element type, free the temporary string, skip
+the offending element, and continue parsing the remaining package
+instead of failing the whole attribute.
+
+Fixes: a34fc329b189 ("platform/x86: hp-bioscfg: bioscfg")
+Cc: stable@vger.kernel.org
+Signed-off-by: Muhammad Bilal <meatuni001@gmail.com>
+Reviewed-by: Mario Limonciello (AMD) <superm1@kernel.org>
+---
+ drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+index de156a9f88a..21077d17113 100644
+--- a/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
++++ b/drivers/platform/x86/hp/hp-bioscfg/enum-attributes.c
+@@ -163,10 +163,11 @@ static int hp_populate_enumeration_elements_from_package(union acpi_object *enum
+ 
+ 		/* Check that both expected and read object type match */
+ 		if (expected_enum_types[eloc] != enum_obj[elem].type) {
+-			pr_err("Error expected type %d for elem %d, but got type %d instead\n",
+-			       expected_enum_types[eloc], elem, enum_obj[elem].type);
++			pr_warn("Unexpected element type at elem %d: expected %d, got %d, skipping\n",
++				elem, expected_enum_types[eloc], enum_obj[elem].type);
+ 			kfree(str_value);
+-			return -EIO;
++			str_value = NULL;
++			continue;
+ 		}
+ 
+ 		/* Assign appropriate element value to corresponding field */
+-- 
+2.55.0
+
