@@ -1,4 +1,0 @@
-[protonplus]
-source = "git"
-git = "https://github.com/Vysp3r/ProtonPlus.git"
-prefix = "v"
