@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=7.1.6.zen1
+pkgver=6.19.6.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Elitebook LLVM'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -11,13 +11,9 @@ arch=(
 license=(GPL-2.0-only)
 makedepends=(
   bc
-  binutils
   cpio
   gettext
-  glibc
   libelf
-  libgcc
-  openssl
   pahole
   perl
   python
@@ -25,10 +21,7 @@ makedepends=(
   rust-bindgen
   rust-src
   tar
-  xxhash
   xz
-  zlib
-  zstd
 
   clang llvm lld
 )
@@ -42,7 +35,6 @@ source=(
   https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
   $url/releases/download/$_srctag/linux-$_srctag.patch.zst{,.sig}
   modprobed.db
-  linux-zen-hp-bioscfg.patch
 )
 source_x86_64=(config.x86_64)
 validpgpkeys=(
@@ -50,22 +42,20 @@ validpgpkeys=(
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
-sha256sums=('995dd7188d924662b94b48fd6fb783587267590e5b8bb33dade2c771e7d855c1'
-            'SKIP'
-            '456f57bb1a114030913652a0a2b379c3622d02af4165e2f2bda48d232f6f1554'
-            'SKIP'
-            'f228090029fb4cf4ead264ddb885a1b337fa12801af49df2e9bec916cadab65f'
-            'fb9493ea7decbf923b54f024fbb9f92469af99502b250217b1235d9a0d70dd64')
-sha256sums_x86_64=('6323e8aa344eb942259e2444d6b7a63053b9866907c1dc126a3118d6a22fef32')
-b2sums=('86bf9bebe2d44f1a7782a5b313690eeac03a9bf34934f5eec90a1f5252130d22f813e86e1db5a269d717f6cea26d846551ba32e6921caadc80294f9b6b487d30'
+b2sums=('612fd1e944194c20bb2e6f9d2b309d5957db5b738bcb7b782c9c25de4c02b341fa5caa9af76d92e88628135b8334f550cc2277d63738098fde950ca05f46e89a'
         'SKIP'
-        '0b8f2d8929cce654c85ad1f36c74e84df83119754c0d601653b666caadd673346ce80d4a8af7327dcd03e68dc66fee7f0377d8431f20a208b4b04dd5a081e16a'
+        '683ea0a422207be1edf2d903831b07303f140b578de1b3897a38308ba4d50acfc9a3fe619a5e5521b9906b14a08a84eccc64eb1734b8b8e1bfe9eebc0b2716da'
         'SKIP'
-        'a1e7621421f7292b9560629dff246a814fdcbd7b47b688738b8e0e42698184f8986fc3f7772ca676bb14a0c333091514117d99b225cf81f982c342a9a04f6800'
-        '61a9a94a53ac1d134ed7aab5d4cb41f2e5efc69f7ee251c1b5b8b17bac5a4df1a93cfbf949ce75a23c2fe2a4ca336c49d56dfae46c3b8fbb25ad101555c9fe9b')
-b2sums_x86_64=('f8b0a4fd1fc32f1e866e4485d39257913967b8764de281582de5b9410425344e3a81d2562011a6bebf39cb8d21e5c2c3f1180860d58c87cda1343287dc36c259')
+        '2f8632f49f1747bc5be678ed51580759eae89a1be627a0f7deb1a9e1f625e569cd05f6305cb999adc583fc154f4ea0d10aed4c4462ccc0f68aae4f37787dce7d')
+b2sums_x86_64=('805fbf7b4becf5f46cb0399ca2fd8c012b25cca08cd461ed1522438aa14dddebdcdd7665c94cc4885b745652136fe1329ade8755482fb2fe02f62495332edb13')
 
-# https://www.kernel.org/pub/linux/kernel/v7.x/sha256sums.asc
+# https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
+sha256sums=('4d9f3ff73214f68c0194ef02db9ca4b7ba713253ac1045441d4e9f352bc22e14'
+            'SKIP'
+            '67149f13fa844780bb0c83fc02bdd56ba31d762009b1f24fafd9cd806db8d0f5'
+            'SKIP'
+            'b7d5dfb204f57eee2f060e21f886f5acd7e2fb2490d921bba6b00c867bb11917')
+sha256sums_x86_64=('f282016bbce997e029243adef336848b4bf659af6257b1c853e3006e36c9b274')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -218,17 +208,7 @@ _package() {
 
 _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
-  depends=(
-    binutils
-    glibc
-    libelf
-    libgcc
-    openssl
-    pahole
-    xxhash
-    zlib
-    zstd
-  )
+  depends=(pahole)
   provides=(LINUX-HEADERS)
 
   cd $_srcname
@@ -334,10 +314,7 @@ _package-docs() {
     dst="${src#Documentation/}"
     dst="$builddir/Documentation/${dst#output/}"
     install -Dm644 "$src" "$dst"
-  done < <(
-    find Documentation \( -name '.*' -o -name __pycache__ \) -prune \
-      -o \! -type d -print0
-  )
+  done < <(find Documentation -name '.*' -prune -o ! -type d -print0)
 
   echo "Adding symlink..."
   mkdir -p "$pkgdir/usr/share/doc"
