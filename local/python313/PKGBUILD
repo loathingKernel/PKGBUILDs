@@ -9,7 +9,7 @@ shopt -s extglob
 
 pkgbase=python
 pkgname=(python313 python313-tests)
-pkgver=3.13.14
+pkgver=3.13.15
 pkgrel=1
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
@@ -21,7 +21,7 @@ depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib' '
 makedepends=('tk' 'sqlite' 'bluez-libs' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-font')
 source=("https://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"{,.asc}
         EXTERNALLY-MANAGED)
-sha512sums=('0790da65f8ce88a13b06d3b287ace5a1f36b0a8f630a3af00fbbdf93b6ef0944dea05173a20c9e1336d280ef9a97ae2b95a44a4b487a7bbb71fda53b6331c0eb'
+sha512sums=('b0ab766a3de0b4cfdbf0b93300d7330c734d3f7057577bb03e95e39da4cdade81993e769c7fa6dfdcc13b9d43a3b399d9cd89b5477b413662e9e691c1b7886b8'
             'SKIP'
             '62a6fbfbaeaa3ba7c54e109d9c3b7f67e73bb21986da4c1fcc5d28cca83d71e0fcae28e1fc70ee8ddce7dea8cd0b64e18d1031dae3a2eae5eaa379c53efd53a0')
 validpgpkeys=('0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D'  # Ned Deily (Python release signing key) <nad@python.org>
