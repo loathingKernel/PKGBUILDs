@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-elitebook
-pkgver=6.19.14.zen1
+pkgver=6.19.6.zen1
 pkgrel=1
 pkgdesc='Linux ZEN Elitebook LLVM LTO'
 url='https://github.com/zen-kernel/zen-kernel'
@@ -42,20 +42,20 @@ validpgpkeys=(
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
-sha256sums=('cde8bf6739be4a0777fedbbba5330b8188c55680c45a922a4dfa289cbec6f185'
-            'SKIP'
-            '7b28c779c73b0542a80d6c2dc7c049cbae6370a87953a1da24f450583ad63e45'
-            'SKIP'
-            'b7d5dfb204f57eee2f060e21f886f5acd7e2fb2490d921bba6b00c867bb11917')
-sha256sums_x86_64=('f282016bbce997e029243adef336848b4bf659af6257b1c853e3006e36c9b274')
-b2sums=('64c2a0003d8080f268772d36923ff6ef8b2d55320ea08b77ad39384c98c9a5c1a8e71425470619aa3aa4dda8941f46aa9da364748cfa8fd9f8507a5ddd7ac03a'
+b2sums=('612fd1e944194c20bb2e6f9d2b309d5957db5b738bcb7b782c9c25de4c02b341fa5caa9af76d92e88628135b8334f550cc2277d63738098fde950ca05f46e89a'
         'SKIP'
-        'db9a6de3606a6f6182e6aadffda947b87308dc6f52c6aa8ec44bf039924d5592f54675b86c79cf3d60e10bb3e156ec5ecf1eaafc2ccd04da9324f13103f2d26b'
+        '683ea0a422207be1edf2d903831b07303f140b578de1b3897a38308ba4d50acfc9a3fe619a5e5521b9906b14a08a84eccc64eb1734b8b8e1bfe9eebc0b2716da'
         'SKIP'
         '2f8632f49f1747bc5be678ed51580759eae89a1be627a0f7deb1a9e1f625e569cd05f6305cb999adc583fc154f4ea0d10aed4c4462ccc0f68aae4f37787dce7d')
 b2sums_x86_64=('805fbf7b4becf5f46cb0399ca2fd8c012b25cca08cd461ed1522438aa14dddebdcdd7665c94cc4885b745652136fe1329ade8755482fb2fe02f62495332edb13')
 
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
+sha256sums=('4d9f3ff73214f68c0194ef02db9ca4b7ba713253ac1045441d4e9f352bc22e14'
+            'SKIP'
+            '67149f13fa844780bb0c83fc02bdd56ba31d762009b1f24fafd9cd806db8d0f5'
+            'SKIP'
+            'b7d5dfb204f57eee2f060e21f886f5acd7e2fb2490d921bba6b00c867bb11917')
+sha256sums_x86_64=('f282016bbce997e029243adef336848b4bf659af6257b1c853e3006e36c9b274')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
