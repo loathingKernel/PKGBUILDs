@@ -1,4 +1,4 @@
-pkgbase = python
+pkgbase = python39
 	pkgdesc = The Python programming language, version 3.9
 	pkgver = 3.9.25
 	pkgrel = 1
