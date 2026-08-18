@@ -10,11 +10,12 @@ license=('GPL3')
 depends=(
   clang
   lld
-  patchelf
   pyside6
 )
 makedepends=(
   git
+  patchelf
+  python313
 )
 optdepends=(
   "wine: run Windows games"
@@ -34,7 +35,7 @@ pkgver() {
 
 prepare() {
   cd Rare
-  python -m venv venv
+  python3.13 -m venv venv
   source venv/bin/activate
   pip install nuitka ruff
   pip install -r packaging/requirements.in
