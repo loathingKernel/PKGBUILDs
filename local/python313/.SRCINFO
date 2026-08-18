@@ -1,4 +1,4 @@
-pkgbase = python
+pkgbase = python313
 	pkgdesc = The Python programming language, version 3.13
 	pkgver = 3.13.15
 	pkgrel = 1
