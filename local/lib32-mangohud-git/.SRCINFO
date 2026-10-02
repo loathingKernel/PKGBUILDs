@@ -5,6 +5,7 @@ pkgbase = lib32-mangohud-git
 	url = https://github.com/flightlessmango/MangoHud
 	arch = x86_64
 	license = MIT
+	makedepends = appstream
 	makedepends = git
 	makedepends = glfw-x11
 	makedepends = glslang
