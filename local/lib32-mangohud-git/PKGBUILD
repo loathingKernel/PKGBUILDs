@@ -38,11 +38,13 @@ build() {
     export LLVM_CONFIG="/usr/bin/llvm-config32"
 
     arch-meson "$_pkgname" build \
+        --wrap-mode=default \
         --libdir lib32
         -Dinclude_doc=false \
         -Dwith_server=false \
         -Dmangoapp=false \
-        -Dmangohudctl=false
+        -Dmangohudctl=false \
+        -Dwith_mangohud_next=false
 
     meson compile -C build
 }
