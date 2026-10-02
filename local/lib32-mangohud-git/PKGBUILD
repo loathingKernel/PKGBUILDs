@@ -38,7 +38,6 @@ build() {
     export LLVM_CONFIG="/usr/bin/llvm-config32"
 
     arch-meson "$_pkgname" build \
-        --wrap-mode=default \
         -Dinclude_doc=false \
         --libdir lib32
 
