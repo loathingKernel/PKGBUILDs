@@ -59,7 +59,7 @@ packages = {
         'lgogdownloader-git',
         'lgogdownloader-qt-git',
         'mangohud-git',
-        'lib32-mangohud-git',
+#        'lib32-mangohud-git',
         'ppsspp-git',
         'rbdoom-3-bfg',
         'dhewm3',
