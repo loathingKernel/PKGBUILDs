@@ -4,7 +4,7 @@
 # Contributor: Mark Wagie <mark dot wagie at proton dot me>
 _pkgname=MangoHud
 pkgname=mangohud-git
-pkgver=0.8.4.r24.g77b4bbea
+pkgver=0.8.4.r130.g8bd15ed9
 pkgrel=1
 pkgdesc="A Vulkan overlay layer for monitoring FPS, temperatures, CPU/GPU load and more."
 arch=('x86_64')
@@ -15,7 +15,8 @@ depends=('dbus' 'fmt' 'glfw' 'hicolor-icon-theme' 'libglvnd' 'libx11' 'libxkbcom
 optdepends=('gamescope: Use MangoApp as an overlay within gamescope'
             'libxnvctrl: NVIDIA GPU stats by XNVCtrl')
 provides=("${pkgname//-git}")
-conflicts=("${pkgname//-git}")
+conflicts=("${pkgname//-git}" 'magnoapp')
+replaces=('mangoapp')
 source=("git+https://github.com/flightlessmango/MangoHud.git")
 b2sums=('SKIP')
 
@@ -46,8 +47,4 @@ package() {
 
     install -Dm 0644 "$srcdir/$_pkgname/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
     rm --force "$pkgdir/usr/lib/libimgui.a"
-}
-
-check() {
-    meson test -C build --print-errorlogs || :
 }
