@@ -35,8 +35,10 @@ prepare() {
 
 build() {
     arch-meson "$_pkgname" build \
+        --wrap-mode=default \
         -Dmangoapp=true \
-        -Dmangohudctl=true
+        -Dmangohudctl=true \
+        -Dwith_mangohud_next=false
 
     meson compile -C build
 }
