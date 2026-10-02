@@ -43,8 +43,7 @@ build() {
         -Dinclude_doc=false \
         -Dwith_server=false \
         -Dmangoapp=false \
-        -Dmangohudctl=false \
-        -Dwith_mangohud_next=false
+        -Dmangohudctl=false
 
     meson compile -C build
 }
