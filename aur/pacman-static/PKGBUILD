@@ -5,24 +5,24 @@
 pkgname=pacman-static
 pkgver=7.1.0.r9.g54d9411
 _nghttp2_ver=1.70.0
-_curlver=8.21.0
-_sslver=3.6.4
+_curlver=8.22.0
+_sslver=3.6.5
 _brotliver=1.2.0
 _zlibver=1.3.2
-_xzver=5.8.3
+_xzver=5.8.4
 _bzipver=1.0.8
 _zstdver=1.5.7
 _libarchive_ver=3.8.9
 _gpgerrorver=1.61
 _libassuanver=3.0.0
-_gpgmever=2.1.2
+_gpgmever=2.2.0
 _libseccompver=2.6.0
-pkgrel=17
+pkgrel=20
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.1.0
 _git_patch_level_commit=54d94116164b0b2202c6061c4a59c6f3e70820d8
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
-arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
+arch=('i486' 'i686' 'pentium4' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
 license=('GPL-2.0-or-later')
 depends=('pacman')
@@ -94,17 +94,17 @@ sha512sums=('512c5096c82e00730c884e5d4d452928a66d35b42a831a2b4b8b17af9215140d6b2
             '1a108c4384b6104e627652488659de0b1ac3330640fc3250f0a283af7c5884daab187c1efc024b2545262da1911d2b0b7b0d5e4e5b68bb98db25a760c9f1fb1a'
             '7ca20c2ab350f72552544004b37c5c920ae32b852e7f5315b8b29ee8acb86ca8e1f9f9678792842723908e3cb894f63904af8488cb4d49066a3dba5fc14518aa'
             '8d8a95dcd05dfe8a032b78d99b7d32a9f0ad2c952c4548de4c6b4af0d2f3c584b0a2854b31516eca20b0c9c30f20d0d040edfe9961a3084e96353012f711b9d1'
-            '1a1c88d7e52200d0a8879f61868accd7eb7edacb730e09db8e1f741535e9906005c897c2ce39b562c20e1b3ef2c84512f5b4fda9aa50c67e2364c473d15a1f65'
+            'ff7e7825d570333e211c8f68954cfd404f5abad62a7d6505504162a8bd9cb489f13a42da7507933eca55a2104cdb988dd0c65646535b429b03c279ef802963f5'
             'SKIP'
             'c9fa1e8b3e684f260e51ace59654dff4e45c97f986313a10c205cb22c69186569a2c2ec0e98e2f5c3beb8bdea480dc6fa4e2408bcc6e83566b77490193f5c8e4'
-            '9e7f4039082880357969c0857f33b20a6a4306d1b5e4f8fcbd7ec8dc41edc96e87c526a1db0b8259f5000c4ced84149b03547562ce4f9df35194634a7576dac0'
+            '1243d8ef75be54d38233251a06609eef1f1f1085999bfd85d509cc298498d2820956465eed7bba094d940f08c0f7cf9c5247eca78bb978d12a3c3ea16f2afa4e'
             'SKIP'
             'b1873dbb7a49460b007255689102062756972de5cc2d38b12cc9f389b6be412da6797579b1acd3717a8cd2ee118fd9801b94e55f063d4328f050f0876a5eb53c'
             'b5887ea77417fae49b6cb1e9fa782d3021f268d5219701d87a092235964f73fa72a31428b630445517f56f2bb69dcbbb24119ef9dbf8b4e40a753369a9f9a16f'
             '36b8fadb3e5de540746eea19c758234095fafc0a4a687bd70fc70b0f74036c03cf9c70a7339aa1626f1197b5ac707bf5b01e393f6cd26c90b78519529724871a'
             '70963771ea5d763614278a69b474f09b7d237ef8f53b675a10fe31d9923aeef601504b35d7ebd1b1e7f347e9ebb048e6b3b47fffdf137e7bdc7e8d5eb4ec4692'
             'SKIP'
-            '47f7d0cdd200c0db0bee0cf5d1419993d02219ee7c52dc3ea017a9b6af5c2dc5c0d80eab485715f2eb7016829ad14963e836bf07b32b11b9743fd933df2476d0'
+            'd669b66a7dcea627c88c077f3f3f23b42c1dd477bd240b5c26b6f473b0f2ea1b9db3c0a7b153cece3172e657e7d734a5f51c84b4174c98ba567d0b36535b28d6'
             '083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3'
             'SKIP'
             '2af02be3df319556b65403450acc55964d971fe263fed87dea823fb264a862db807a2a3d89358564277a83e5b303302cc677f66b5e523e3d224120b884e5ef1b'
@@ -113,7 +113,7 @@ sha512sums=('512c5096c82e00730c884e5d4d452928a66d35b42a831a2b4b8b17af9215140d6b2
             'SKIP'
             '7c5c95c1b85bef2d4890c068a5a8ea8a1fe0d8def6ab09e5f34fc2746d8808bbb0fc168e3bd66d52ee5ed799dcf9f258f4125cda98c8384f6411bcad8d8b3139'
             'SKIP'
-            '21ec03ea83b6178fdcf89d691053d4c3e356916ec6926ae33b045424c6e960ef2fe11249775a415a345f9b18c3db7f631423e0eac84f7b22ef24f37d4f8ad0bd'
+            '76c382bdc73b1c6ed523a0803dd2ec100b95f84e768787beaeb656ce84820fc37bc74229816a527ab17944c0ef7b937713298d9b3b87e70d7613e03b6dae4840'
             'SKIP'
             'f37425417a9e3fdc194a2b892137452ddba6601c69e822598692d4d776c573a90e70aac4598d47c915615facc45d0c83fc46c24856ddf04afd7494b63bb9f137'
             'SKIP'
@@ -187,7 +187,7 @@ prepare() {
     cd "${srcdir}"/openssl-${_sslver}
     patch -Np1 -i "${srcdir}/ca-dir.patch"
     case ${CARCH} in
-        arm|armv6h|armv7h)
+        armv6h|armv7h)
             # special patch to omit -latomic when installing pkgconfig files
             msg2 "Applying openssl patch openssl-3.0.7-no-atomic.patch..."
             patch -Np1 -i "${srcdir}/openssl-3.0.7-no-atomic.patch"
@@ -253,7 +253,7 @@ build() {
             openssltarget='linux-elf'
             optflags='386 no-threads'
             ;;
-        arm|armv6h|armv7h)
+        armv6h|armv7h)
             openssltarget='linux-armv4'
             optflags=''
             ;;
