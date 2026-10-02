@@ -8,7 +8,6 @@ pkgbase = go2tv
 	makedepends = go
 	makedepends = pkg-config
 	makedepends = libxcursor
-	makedepends = libxkbcommon
 	makedepends = libxrandr
 	makedepends = libxinerama
 	makedepends = libxi
