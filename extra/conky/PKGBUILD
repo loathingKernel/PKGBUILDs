@@ -6,7 +6,7 @@
 # Contributor: Partha Chowdhury <kira.laucas@gmail.com>
 
 pkgname=conky
-pkgver=1.25.3
+pkgver=1.25.4
 pkgrel=1
 pkgdesc='Light-weight system monitor for X, Wayland, and other things, too'
 arch=('x86_64')
@@ -61,9 +61,9 @@ source=(
   "git+$url.git#tag=v${pkgver}?signed"
   "$pkgname-use-system-cmake.patch"
 )
-sha512sums=('16207f8c932a64cdd541cf1e0f0863fb59638cec4a1afacea0c948d6e96e0d09d0d8aadd17b3e3f5de90a205d85887615306900826b343c938c784f247aac792'
+sha512sums=('0868b8baa50337bfe24ef802d303eba3b4b842e0d9b10f7116a724c1ee8305914affaffaafd75710d77f7f31ef3a4a6d7187417b229b46875d1a14140901553b'
             'ae743df6ef9c94764195e39e89d0be735309d8a50773dedc49ddd5ea27ec089997e4d49f8d646da024796f5b744adefdeec31d4231d34a49c07bae159f6fa60c')
-b2sums=('7a86228ff92558ffb6f3db88cbc59adb7af16c07f257f71a982057c6d14eaccf1b028c2840294eb8c544ccb115cdf7cd68452a036c4d1539296d66a55511c0f2'
+b2sums=('556199cfdbcf516505e66ccfe380fd4396f79a266c9dbde5c8b67e9f6e7482647f734bd7c0c27e0a0c78de92a47913a5c62d8c66d71e6525602aabd651654b13'
         '4d729aad72586ec13e077e6a38ba7805797a1302bd53e4e3c5359d536dcdbf08d952bc9ddc58ff5434db1ffbd8f3e57a2aa33649a1c35c3980daa48bf0e64d25')
 validpgpkeys=(
   'AF310802C8EFA20499CF3556137B7AC2BDFD8DF0' # Brenden Matthews <github@brenden.brndn.io>
