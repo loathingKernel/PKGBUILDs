@@ -78,6 +78,7 @@ prepare() {
 build() {
     cd "$pkgname"
     arch-meson build \
+        --wrap-mode=default \
         -Db_sanitize=none \
         -Dwerror=false \
         -Dlua_pkg="$_lua_pkg"
