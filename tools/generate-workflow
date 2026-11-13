@@ -11,10 +11,9 @@ format = "%(levelname)s: %(message)s"
 logging.basicConfig(stream=sys.stderr, format=format, level=logging.DEBUG)
 logger = logging.getLogger(os.path.basename(__file__))
 
-script_name = os.path.basename(__file__)
+script_name = str(os.path.basename(__file__))
 
-workflows_folder = ".github/workflows/"
-workflows_path = Path(workflows_folder)
+workflows_path = Path(".github/workflows/")
 
 workflow_base = """
 name: {pkgname}
@@ -77,7 +76,7 @@ if __name__ == "__main__":
         )
         sys.exit(2)
 
-    if not os.path.isdir(workflows_folder):
+    if not workflows_path.is_dir():
         logger.error(
             "'%s' is not a configured GitHub repository.", os.getcwd()
         )
