@@ -23,12 +23,8 @@ jobs:
     needs: vicious
     uses: ./.github/workflows/lgogdownloader-git.yml
 
-  mangohud-git:
-    needs: lgogdownloader-git
-    uses: ./.github/workflows/mangohud-git.yml
-
   ppsspp-git:
-    needs: mangohud-git
+    needs: lgogdownloader-git
     uses: ./.github/workflows/ppsspp-git.yml
 
   rbdoom-3-bfg:
@@ -39,6 +35,10 @@ jobs:
     needs: rbdoom-3-bfg
     uses: ./.github/workflows/dhewm3.yml
 
-  lib32-mangohud-git:
+  mangohud-git:
     needs: dhewm3
+    uses: ./.github/workflows/mangohud-git.yml
+
+  lib32-mangohud-git:
+    needs: mangohud-git
     uses: ./.github/workflows/lib32-mangohud-git.yml
