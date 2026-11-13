@@ -11,7 +11,7 @@ arch=('x86_64')
 url="https://github.com/flightlessmango/MangoHud"
 license=('MIT')
 makedepends=('appstream' 'cmocka' 'git' 'glslang' 'libxnvctrl' 'libxrandr' 'meson' 'python-mako' 'vulkan-headers' 'wayland-protocols' 'yaml-cpp')
-depends=('dbus' 'fmt' 'glfw' 'hicolor-icon-theme' 'libglvnd' 'libx11' 'libxkbcommon' 'python' 'python-matplotlib' 'python-numpy' 'vulkan-icd-loader' 'wayland')
+depends=('dbus' 'fmt' 'glfw' 'hicolor-icon-theme' 'libglvnd' 'libx11' 'libxkbcommon' 'libxi' 'python' 'python-matplotlib' 'python-numpy' 'vulkan-icd-loader' 'wayland')
 optdepends=('gamescope: Use MangoApp as an overlay within gamescope'
             'libxnvctrl: NVIDIA GPU stats by XNVCtrl')
 provides=("${pkgname//-git}")

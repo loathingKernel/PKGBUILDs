@@ -23,6 +23,7 @@ pkgbase = mangohud-git
 	depends = libglvnd
 	depends = libx11
 	depends = libxkbcommon
+	depends = libxi
 	depends = python
 	depends = python-matplotlib
 	depends = python-numpy
