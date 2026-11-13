@@ -13,8 +13,7 @@ logger = logging.getLogger(os.path.basename(__file__))
 
 script_name = os.path.basename(__file__)
 
-workflows_folder = ".github/workflows/"
-workflows_path = Path(workflows_folder)
+workflows_path = Path(".github/workflows/")
 
 workflow_base = """
 name: _job_schedule_{name}
@@ -89,7 +88,7 @@ if __name__ == "__main__":
         )
         sys.exit(2)
 
-    if not os.path.isdir(workflows_folder):
+    if not workflows_path.is_dir():
         logger.error(
             "'%s' is not a configured GitHub repository.", os.getcwd()
         )
@@ -105,12 +104,13 @@ if __name__ == "__main__":
     with workflow_file.open("w") as wf:
         wf.write(workflow_base.format(name=args.schedule, cron=cron[args.schedule]))
 
-        package = packages[args.schedule][0]
-        wf.write(job_first.format(current=package))
+        pkgs = [p for p in packages[args.schedule] if workflows_path.joinpath(p).with_suffix(".yml").is_file()]
 
-        previous = package
-        for package in packages[args.schedule][1:]:
-            wf.write(job_base.format(current=package, previous=previous))
+        for idx, package in enumerate(pkgs):
+            if not idx:
+                wf.write(job_first.format(current=package))
+            else:
+                wf.write(job_base.format(current=package, previous=previous))
             previous = package
 
     subprocess.run(['git', 'add', workflow_file.as_posix()])
