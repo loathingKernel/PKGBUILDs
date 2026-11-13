@@ -28,12 +28,14 @@ jobs:
 
 job_first = """
   {current}:
+    if: ${{ !cancelled() }}
     uses: ./.github/workflows/{current}.yml
 """
 
 job_base = """
   {current}:
     needs: {previous}
+    if: ${{ !cancelled() }}
     uses: ./.github/workflows/{current}.yml
 """
 

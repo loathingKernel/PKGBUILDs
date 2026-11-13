@@ -9,40 +9,50 @@ on:
 jobs:
 
   cwc-git:
+    if: ${ !cancelled() }
     uses: ./.github/workflows/cwc-git.yml
 
   auracle-git:
     needs: cwc-git
+    if: ${ !cancelled() }
     uses: ./.github/workflows/auracle-git.yml
 
   awesome:
     needs: auracle-git
+    if: ${ !cancelled() }
     uses: ./.github/workflows/awesome.yml
 
   vicious:
     needs: awesome
+    if: ${ !cancelled() }
     uses: ./.github/workflows/vicious.yml
 
   lgogdownloader-git:
     needs: vicious
+    if: ${ !cancelled() }
     uses: ./.github/workflows/lgogdownloader-git.yml
 
   ppsspp-git:
     needs: lgogdownloader-git
+    if: ${ !cancelled() }
     uses: ./.github/workflows/ppsspp-git.yml
 
   rbdoom-3-bfg:
     needs: ppsspp-git
+    if: ${ !cancelled() }
     uses: ./.github/workflows/rbdoom-3-bfg.yml
 
   dhewm3:
     needs: rbdoom-3-bfg
+    if: ${ !cancelled() }
     uses: ./.github/workflows/dhewm3.yml
 
   mangohud-git:
     needs: dhewm3
+    if: ${ !cancelled() }
     uses: ./.github/workflows/mangohud-git.yml
 
   lib32-mangohud-git:
     needs: mangohud-git
+    if: ${ !cancelled() }
     uses: ./.github/workflows/lib32-mangohud-git.yml
