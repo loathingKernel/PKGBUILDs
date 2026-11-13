@@ -7,7 +7,7 @@ pkgname=(
   dolphin-emu-git
   dolphin-emu-tool-git
 )
-pkgver=2509.r213.06b4c89c51
+pkgver=2609.r221.e36cd326c0
 pkgrel=1
 epoch=1
 pkgdesc='A Gamecube and Wii emulator'
@@ -17,63 +17,58 @@ license=(GPL-2.0-or-later)
 depends=(
   bluez-libs
   bzip2
+  curl
   enet
-  gcc-libs
+  ffmpeg
   glibc
+  glslang
   hidapi
-  libavcodec.so
-  libavformat.so
-  libavutil.so
-  libcurl.so
-  #libfmt.so
+  #fmt
+  libgcc
   libgl
-  #libsfml-network.so
-  #libsfml-system.so
-  libspng.so
-  libswscale.so
-  libusb-1.0.so
+  libspng
+  libstdc++
+  libusb
   libx11
   libxi
   libxrandr
   lz4
   lzo
-  mbedtls2
   pugixml
-  sdl2
+  sdl3
+  sfml
   speexdsp
+  systemd-libs
   xxhash
   xz
+  zlib
+  zlib-ng
   zstd
 )
 makedepends=(
   alsa-lib
   cmake
   git
-  glslang
   libevdev
-  libminiupnpc.so
+  miniupnpc
   libpulse
-  libudev.so
   ninja
   python
   qt6-base
   qt6-svg
-  #sfml
+  vulkan-headers
 )
 optdepends=('pulseaudio: PulseAudio backend')
 options=(!emptydirs !lto)
 source=(
   dolphin-emu::git+https://github.com/dolphin-emu/dolphin.git
-  cmake-mgba.diff
 )
-b2sums=('SKIP'
-        '442983a8887078ead6b503aa92f8d93a5d07e747792003775d15a4abe3e394a914e45abe25d00c39b7ad9a6d3f982af5d8a7055a15e95fa3b53d040b5167b217')
+b2sums=('SKIP')
 
 prepare() {
   cd dolphin-emu
   git remote set-url origin https://github.com/dolphin-emu/dolphin.git
   git submodule update --init --filter=tree:0 --recursive
-  patch -Np1 -i ${srcdir}/cmake-mgba.diff
 }
 
 pkgver() {
@@ -82,20 +77,16 @@ pkgver() {
 }
 
 build() {
-  export CFLAGS+=' -I/usr/include/mbedtls2'
-  export CXXFLAGS+=' -I/usr/include/mbedtls2'
-  export LDFLAGS+=' -L/usr/lib/mbedtls2'
   cmake -S dolphin-emu -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DDISTRIBUTOR=archlinux.org \
-    -DQT_NO_PRIVATE_MODULE_WARNING=ON \
     -DENABLE_ANALYTICS=OFF \
     -DENABLE_AUTOUPDATE=OFF \
     -DENABLE_LTO=OFF \
     -DENABLE_TESTS=OFF \
-    -DUSE_SYSTEM_FMT=OFF \
     -DUSE_MGBA=ON \
     -Wno-dev
   cmake --build build
@@ -106,9 +97,8 @@ package_dolphin-emu-git() {
     alsa-lib
     hicolor-icon-theme
     libevdev
-    libminiupnpc.so
+    miniupnpc
     libpulse
-    libudev.so
     qt6-base
     qt6-svg
   )
@@ -117,13 +107,18 @@ package_dolphin-emu-git() {
 
   DESTDIR="${pkgdir}" cmake --install build
   install -Dm 644 dolphin-emu/Data/51-usb-device.rules -t "${pkgdir}"/usr/lib/udev/rules.d/
+  install -Dm 644 build/Flatpak/org.DolphinEmu.dolphin-emu.metainfo.xml -t "${pkgdir}"/usr/share/metainfo/
   rm -rf "${pkgdir}"/usr/{bin/dolphin-tool,include,lib/libdiscord-rpc.a}
 }
 
 package_dolphin-emu-tool-git() {
   provides=(dolphin-emu-tool)
   conflicts=(dolphin-emu-tool)
+  depends+=(
+    alsa-lib
+    libevdev
+    libpulse
+    qt6-base
+  )
   install -Dm 755 build/Binaries/dolphin-tool -t "${pkgdir}"/usr/bin/
 }
-
-# vim: ts=2 sw=2 et:
