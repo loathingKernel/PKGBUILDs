@@ -8,7 +8,11 @@ on:
 
 jobs:
 
+  cwc-git:
+    uses: ./.github/workflows/cwc-git.yml
+
   auracle-git:
+    needs: cwc-git
     uses: ./.github/workflows/auracle-git.yml
 
   awesome:

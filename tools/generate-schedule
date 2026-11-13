@@ -50,6 +50,7 @@ packages = {
         'dolphin-emu-git',
     ),
     "biweekly": (
+        'cwc-git',
         'auracle-git',
         'awesome',
         'vicious',
