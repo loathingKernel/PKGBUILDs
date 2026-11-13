@@ -11,7 +11,7 @@ format = "%(levelname)s: %(message)s"
 logging.basicConfig(stream=sys.stderr, format=format, level=logging.DEBUG)
 logger = logging.getLogger(os.path.basename(__file__))
 
-script_name = os.path.basename(__file__)
+script_name = str(os.path.basename(__file__))
 
 workflows_path = Path(".github/workflows/")
 
@@ -40,12 +40,10 @@ job_base = """
 packages = {
     "daily": (),
     "weekly": (
-        'somewm-git',
         'dxvk-mingw-git',
         'dxvk-msvc-git',
         'dxvk-nvapi-mingw-git',
         'dxvk-nvapi-vkreflex-layer-git',
-        'dxvk-gplasync-mingw-git',
         'vkd3d-proton-mingw-git',
         'dxvk-sarek-mingw-git',
         'rare-git',
@@ -56,10 +54,10 @@ packages = {
         'awesome',
         'vicious',
         'lgogdownloader-git',
-        'mangohud-git',
         'ppsspp-git',
         'rbdoom-3-bfg',
         'dhewm3',
+        'mangohud-git',
         'lib32-mangohud-git',
     ),
     "monthly": (),
