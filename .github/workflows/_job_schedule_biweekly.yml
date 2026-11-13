@@ -38,3 +38,7 @@ jobs:
   dhewm3:
     needs: rbdoom-3-bfg
     uses: ./.github/workflows/dhewm3.yml
+
+  lib32-mangohud-git:
+    needs: dhewm3
+    uses: ./.github/workflows/lib32-mangohud-git.yml
