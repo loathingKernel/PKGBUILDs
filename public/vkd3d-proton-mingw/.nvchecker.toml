@@ -1,0 +1,4 @@
+[vkd3d-proton]
+source = "git"
+git = "https://github.com/HansKristian-Work/vkd3d-proton.git"
+prefix = "v"
