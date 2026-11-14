@@ -1,0 +1,4 @@
+[dxvk-nvapi]
+source = "git"
+git = "https://github.com/jp7677/dxvk-nvapi.git"
+prefix = "v"
