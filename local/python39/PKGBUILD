@@ -8,14 +8,14 @@ shopt -s extglob
 
 pkgname=(python39 python39-tests)
 pkgver=3.9.25
-pkgrel=1
+pkgrel=2
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="The Python programming language, version 3.9"
 arch=('x86_64')
 license=('PSF-2.0')
 url="https://www.python.org/"
-depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib' 'tzdata' 'mpdecimal')
+depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl-1.1' 'zlib' 'tzdata' 'mpdecimal')
 makedepends=('tk' 'sqlite' 'bluez-libs' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-font')
 source=("https://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"{,.asc}
         mpdecimal-2.5.1.patch
@@ -59,6 +59,7 @@ build() {
 
   # Disable bundled pip & setuptools
   export ax_cv_c_float_words_bigendian=no
+  PKG_CONFIG_PATH=/usr/lib/openssl-1.1/pkgconfig \
   ./configure --prefix=/usr \
               --enable-shared \
               --with-computed-gotos \

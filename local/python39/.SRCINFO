@@ -1,7 +1,7 @@
 pkgbase = python39
 	pkgdesc = The Python programming language, version 3.9
 	pkgver = 3.9.25
-	pkgrel = 1
+	pkgrel = 2
 	url = https://www.python.org/
 	arch = x86_64
 	license = PSF-2.0
@@ -18,7 +18,7 @@ pkgbase = python39
 	depends = libffi
 	depends = libnsl
 	depends = libxcrypt
-	depends = openssl
+	depends = openssl-1.1
 	depends = zlib
 	depends = tzdata
 	depends = mpdecimal
