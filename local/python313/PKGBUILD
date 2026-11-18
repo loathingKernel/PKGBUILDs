@@ -8,19 +8,19 @@
 shopt -s extglob
 
 pkgname=(python313 python313-tests)
-pkgver=3.13.16
-pkgrel=1
+pkgver=3.13.18
+pkgrel=2
 _pybasever=${pkgver%.*}
 _pymajver=${pkgver%%.*}
 pkgdesc="The Python programming language, version 3.13"
 arch=('x86_64')
 license=('PSF-2.0')
 url="https://www.python.org/"
-depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib' 'tzdata' 'mpdecimal')
+depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl-3' 'zlib' 'tzdata' 'mpdecimal')
 makedepends=('tk' 'sqlite' 'bluez-libs' 'llvm' 'gdb' 'xorg-server-xvfb' 'ttf-font')
 source=("https://www.python.org/ftp/python/${pkgver%rc*}/Python-${pkgver}.tar.xz"{,.asc}
         EXTERNALLY-MANAGED)
-sha512sums=('7283884583b181161aff5ce523c0cdf03904a1d7a172db2727f7d3f42ae6e4d44f1ac86f7960df4a0203740cc04ab5adba3f404aafd562afe761d9052cc4f32c'
+sha512sums=('ef5cd2e1f31411cddb0f1ee8fe64cdcd94b6a3ab260d42e57182859d45345f447b0c0b0be0cd3302fad653e919af39881cd8368e0cb7932df6d90999b5335953'
             'SKIP'
             '62a6fbfbaeaa3ba7c54e109d9c3b7f67e73bb21986da4c1fcc5d28cca83d71e0fcae28e1fc70ee8ddce7dea8cd0b64e18d1031dae3a2eae5eaa379c53efd53a0')
 validpgpkeys=('0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D'  # Ned Deily (Python release signing key) <nad@python.org>
@@ -47,6 +47,7 @@ build() {
   LDFLAGS="$LDFLAGS -fno-semantic-interposition"
 
   # Disable bundled pip & setuptools
+  PKG_CONFIG_PATH=/usr/lib/openssl-3/pkgconfig \
   ./configure --prefix=/usr \
               --enable-shared \
               --with-computed-gotos \
