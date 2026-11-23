@@ -1,4 +1,5 @@
 ac97_bus
+aead
 aesni_intel
 af_alg
 agpgart
@@ -39,6 +40,7 @@ drm
 drm_buddy
 drm_display_helper
 drm_dp_helper
+drm_exec
 drm_kms_helper
 e1000e
 ecc
@@ -47,6 +49,7 @@ f2fs
 fat
 fb_sys_fops
 ff_memless
+firmware_attributes_class
 ftdi_sio
 fuse
 gf128mul
@@ -57,6 +60,7 @@ hid_logitech_dj
 hid_logitech_hidpp
 hid_rmi
 hp_accel
+hp_bioscfg
 hp_wmi
 i2c_algo_bit
 i2c_dev
@@ -66,6 +70,11 @@ i2c_mux
 i2c_smbus
 i8042
 i915
+iio_trig_hrtimer
+industrialio
+industrialio_configfs
+industrialio_sw_trigger
+inet_diag
 intel_cstate
 intel_gtt
 intel_pmc_bxt
@@ -104,6 +113,7 @@ kvm_intel
 ledtrig_audio
 libarc4
 libcrc32c
+libcurve25519
 libcurve25519_generic
 libps2
 lis3lv02d
@@ -177,6 +187,7 @@ rndis_host
 rng_core
 rtsx_pci
 rtsx_pci_sdmmc
+sch_fq
 serio
 serio_raw
 sg
@@ -221,6 +232,7 @@ stp
 syscopyarea
 sysfillrect
 sysimgblt
+tcp_diag
 tls
 tpm
 tpm_infineon
